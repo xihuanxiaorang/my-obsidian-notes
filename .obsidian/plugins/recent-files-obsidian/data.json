@@ -1,6 +1,30 @@
 {
   "recentFiles": [
     {
+      "basename": "手摸手教你搭建部署Vitepress博客",
+      "path": "Docs/杂记/手摸手教你搭建部署Vitepress博客.md"
+    },
+    {
+      "basename": "PicList & Github & jsDelivr 搭建个人云图床",
+      "path": "Docs/杂记/PicList & Github & jsDelivr 搭建个人云图床.md"
+    },
+    {
+      "basename": "手绘风格的开源白板 Excalidraw 搭建教程",
+      "path": "Docs/杂记/手绘风格的开源白板 Excalidraw 搭建教程.md"
+    },
+    {
+      "basename": "美化 Github 个人主页",
+      "path": "Docs/杂记/美化 Github 个人主页.md"
+    },
+    {
+      "basename": "更换 Windows 默认字体",
+      "path": "Docs/杂记/更换 Windows 默认字体.md"
+    },
+    {
+      "basename": "如何选择开源协议",
+      "path": "Docs/杂记/如何选择开源协议.md"
+    },
+    {
       "basename": "内网穿透工具",
       "path": "Docs/工具/开发工具/内网穿透工具.md"
     },
@@ -15,30 +39,6 @@
     {
       "basename": "MySQL",
       "path": "Docs/工具/开发工具/MySQL.md"
-    },
-    {
-      "basename": "Navicat",
-      "path": "Docs/工具/开发工具/Navicat.md"
-    },
-    {
-      "basename": "Node.js",
-      "path": "Docs/工具/开发工具/Node.js.md"
-    },
-    {
-      "basename": "nvm",
-      "path": "Docs/工具/开发工具/nvm.md"
-    },
-    {
-      "basename": "pnpm",
-      "path": "Docs/工具/开发工具/pnpm.md"
-    },
-    {
-      "basename": "Typora",
-      "path": "Docs/工具/开发工具/Typora.md"
-    },
-    {
-      "basename": "Windows Terminal",
-      "path": "Docs/工具/开发工具/Windows Terminal.md"
     }
   ],
   "omittedPaths": [],
