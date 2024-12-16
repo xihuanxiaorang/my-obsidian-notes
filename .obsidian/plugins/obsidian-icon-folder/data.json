@@ -6,16 +6,16 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "LiAtom",
+      "LiAward",
+      "LiAlarmClockCheck",
+      "RiFontSize2",
       "RiToolsLine",
       "RiBookletLine",
       "LiArrowDownZa",
       "RiJavaLine",
       "RiCodeLine",
-      "RiInboxArchiveLine",
-      "RiInbox2Line",
-      "RiMarkdownLine",
-      "RiOrganizationChart",
-      "RiAttachment2"
+      "RiInboxArchiveLine"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -49,5 +49,8 @@
   "Docs/CodeSnippet": "RiCodeLine",
   "Docs/Java核心技术": "RiJavaLine",
   "Docs/杂记": "RiBookletLine",
-  "Docs/工具": "RiToolsLine"
+  "Docs/工具": "RiToolsLine",
+  "Excalidraw/fonts": "RiFontSize2",
+  "Docs/源码剖析": "LiAtom",
+  "Docs/源码剖析/Java": "RiJavaLine"
 }
