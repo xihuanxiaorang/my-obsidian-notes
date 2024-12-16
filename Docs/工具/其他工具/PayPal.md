@@ -14,7 +14,7 @@ tags:
    ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412152305699.png)
 5. 填写 "手机号码"。
    ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412152305118.png)
-6. 填写 "6位数的短信验证码"。
+6. 填写 "6 位数的短信验证码"。
    ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412152306850.png)
 7. 点击 "通过 Goole 创建 PayPal 账号" 中的登录按钮，会帮助我们填写并验证 Gmail 邮箱地址。
    ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412152306995.png)

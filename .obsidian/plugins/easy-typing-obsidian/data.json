@@ -17,9 +17,9 @@
   "AutoCapital": false,
   "AutoCapitalMode": "typing",
   "PunctuationSpaceMode": "typing",
-  "InlineCodeSpaceMode": 2,
+  "InlineCodeSpaceMode": 1,
   "InlineFormulaSpaceMode": 1,
-  "InlineLinkSpaceMode": 2,
+  "InlineLinkSpaceMode": 1,
   "InlineLinkSmartSpace": true,
   "UserDefinedRegSwitch": true,
   "UserDefinedRegExp": "{{.*?}}|++\n<.*?>|--\n\\[\\!.*?\\][-+]{0,1}|-+\n(file:///|https?://|ftp://|obsidian://|zotero://|www.)[^\\s（）《》。,，！？;；：“”‘’\\)\\(\\[\\]\\{\\}']+|--\n\n[a-zA-Z0-9_\\-.]+@[a-zA-Z0-9_\\-.]+|++\n(?<!#)#[\\u4e00-\\u9fa5\\w-\\/]+|++",
@@ -57,7 +57,7 @@
   "StrictLineMode": "enter_twice",
   "EnhanceModA": false,
   "TryFixChineseIM": true,
-  "PuncRectify": false,
+  "PuncRectify": true,
   "FixMacOSContextMenu": false,
   "TryFixMSIME": false
 }

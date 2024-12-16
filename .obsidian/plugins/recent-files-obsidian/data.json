@@ -1,20 +1,44 @@
 {
   "recentFiles": [
     {
-      "basename": "PayPal",
-      "path": "Docs/工具/其他工具/PayPal.md"
+      "basename": "内网穿透工具",
+      "path": "Docs/工具/开发工具/内网穿透工具.md"
     },
     {
-      "basename": "Office Tool Plus",
-      "path": "Docs/工具/其他工具/Office Tool Plus.md"
+      "basename": "IntelliJ IDEA",
+      "path": "Docs/工具/开发工具/IntelliJ IDEA.md"
     },
     {
-      "basename": "ABDownloadManager",
-      "path": "Docs/工具/其他工具/ABDownloadManager.md"
+      "basename": "JDK",
+      "path": "Docs/工具/开发工具/JDK.md"
     },
     {
-      "basename": "软件卸载工具",
-      "path": "Docs/工具/其他工具/软件卸载工具.md"
+      "basename": "MySQL",
+      "path": "Docs/工具/开发工具/MySQL.md"
+    },
+    {
+      "basename": "Navicat",
+      "path": "Docs/工具/开发工具/Navicat.md"
+    },
+    {
+      "basename": "Node.js",
+      "path": "Docs/工具/开发工具/Node.js.md"
+    },
+    {
+      "basename": "nvm",
+      "path": "Docs/工具/开发工具/nvm.md"
+    },
+    {
+      "basename": "pnpm",
+      "path": "Docs/工具/开发工具/pnpm.md"
+    },
+    {
+      "basename": "Typora",
+      "path": "Docs/工具/开发工具/Typora.md"
+    },
+    {
+      "basename": "Windows Terminal",
+      "path": "Docs/工具/开发工具/Windows Terminal.md"
     }
   ],
   "omittedPaths": [],
