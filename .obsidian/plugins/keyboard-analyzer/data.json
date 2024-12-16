@@ -1,0 +1,23 @@
+{
+  "showStatusBarItem": true,
+  "filterSettings": {
+    "FeaturedFirst": true,
+    "StrictSearch": false,
+    "HighlightCustom": false,
+    "HighlightDuplicates": false,
+    "DisplayWOhotkeys": false,
+    "DisplayIDs": true
+  },
+  "featuredCommandIDs": [
+    "command-palette:open",
+    "app:open-settings",
+    "global-search:open",
+    "switcher:open",
+    "cmdr:macro-0",
+    "keyboard-analyzer:show-shortcuts-analyzer-view",
+    "workspace:close",
+    "editor:insert-link",
+    "editor:insert-wikilink",
+    "editor:toggle-checklist-status"
+  ]
+}

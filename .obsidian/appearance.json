@@ -1,0 +1,14 @@
+{
+  "theme": "obsidian",
+  "cssTheme": "AnuPpuccin",
+  "interfaceFontFamily": "HarmonyOS Sans SC",
+  "monospaceFontFamily": "JetBrains Mono",
+  "textFontFamily": "iA Writer Quattro S,霞鹜文楷 屏幕阅读版",
+  "baseFontSize": 15,
+  "baseFontSizeAction": true,
+  "enabledCssSnippets": [
+    "extended-colorschemes",
+    "ChatBubble"
+  ],
+  "accentColor": ""
+}

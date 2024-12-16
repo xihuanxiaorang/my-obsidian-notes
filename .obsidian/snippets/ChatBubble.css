@@ -1,0 +1,120 @@
+/**
+ * 聊天气泡样式 (Callout)
+ * @author: 稻米鼠
+ * @description: 用于在 Obsidian 中显示聊天气泡效果的 Callout 视图
+ * @created: 2024-05-06
+ * @updated: 2024-05-09
+ * @version: 0.0.2
+ */
+
+/* 定义整体 Callout 样式 */
+.callout[data-callout="chat-bubble"] {
+  --callout-color: 48, 48, 48; /* 深色模式下的气泡背景色 */
+  --callout-text-color: 180, 180, 180; /* 标题文字颜色 */
+  --callout-tip-color: 200, 200, 200; /* 提示文字颜色 */
+  --bubble-left: 70, 70, 70; /* 左侧气泡背景色 */
+  --bubble-right: 70, 140, 70; /* 右侧气泡背景色 */
+  --callout-icon: chevron-left; /* 默认图标 */
+  background: rgb(var(--callout-color)); /* 设置整体背景颜色 */
+  max-width: 480px; /* 最大宽度 */
+  border-radius: 0.8rem; /* 圆角效果 */
+  margin-left: 0 !important; /* 靠左对齐 */
+  margin-right: auto !important; /* 靠左对齐 */
+}
+
+/* 标题部分的样式 */
+.callout[data-callout="chat-bubble"] > .callout-title,
+.callout[data-callout="chat-bubble"] > .callout-title > .callout-icon,
+.callout[data-callout="chat-bubble"]
+  > .callout-title
+  > .callout-icon
+  > .svg-icon {
+  color: rgb(var(--callout-text-color)); /* 设置标题文字和图标颜色 */
+}
+
+/* 标题居中对齐 */
+.callout[data-callout="chat-bubble"] > .callout-title > .callout-title-inner {
+  text-align: center; /* 标题文字居中 */
+  flex-grow: 1; /* 填充剩余空间 */
+}
+
+/* 内容区域的样式 */
+.callout[data-callout="chat-bubble"] > .callout-content {
+  padding: 1rem 0; /* 上下内边距 */
+}
+
+/* 提示文字样式 */
+.callout[data-callout="chat-bubble"] > .callout-content > p {
+  text-align: center; /* 提示文字居中对齐 */
+  color: rgb(var(--callout-tip-color)); /* 提示文字颜色 */
+  font-size: 0.8rem; /* 提示文字字体大小 */
+  padding: 0 2rem; /* 提示文字左右留白 */
+}
+
+/* 定义聊天气泡列表的样式 */
+.callout[data-callout="chat-bubble"] > .callout-content ul {
+  display: flex;
+  flex-direction: column; /* 垂直排列列表项 */
+  margin: 0 1rem; /* 列表整体左右边距 */
+  padding: 0; /* 去除默认内边距 */
+}
+
+/* 单条聊天气泡的样式 */
+.callout[data-callout="chat-bubble"] > .callout-content ul > li {
+  position: relative;
+  max-width: 80%; /* 限制气泡宽度 */
+  flex-shrink: 1; /* 防止过长内容溢出 */
+  padding: 0.5rem 1rem; /* 内边距 */
+  border-radius: 1rem; /* 圆角气泡 */
+  margin: 0.5rem 0; /* 气泡之间的间距 */
+  list-style: none; /* 去除列表默认样式 */
+}
+
+/* 隐藏默认列表符号 */
+.callout[data-callout="chat-bubble"] > .callout-content ul > li > .list-bullet {
+  display: none;
+}
+
+/* 定义气泡三角形的基本样式 */
+.callout[data-callout="chat-bubble"] > .callout-content ul > li::before {
+  position: absolute;
+  box-sizing: content-box;
+  content: " "; /* 空内容 */
+  width: 0; /* 三角形宽度 */
+  height: 0; /* 三角形高度 */
+  border: 1rem solid transparent; /* 默认透明边框 */
+  top: 0; /* 对齐顶部 */
+}
+
+/* 左侧气泡样式 */
+.callout[data-callout="chat-bubble"] > .callout-content ul:nth-child(2n + 1) {
+  align-items: start; /* 靠左对齐 */
+}
+.callout[data-callout="chat-bubble"]
+  > .callout-content
+  ul:nth-child(2n + 1)
+  > li {
+  background: rgb(var(--bubble-left)); /* 左侧气泡背景色 */
+}
+.callout[data-callout="chat-bubble"]
+  > .callout-content
+  ul:nth-child(2n + 1)
+  > li::before {
+  left: -1rem; /* 三角形位置 */
+  border-top: 1rem solid rgb(var(--bubble-left)); /* 三角形颜色匹配气泡背景色 */
+}
+
+/* 右侧气泡样式 */
+.callout[data-callout="chat-bubble"] > .callout-content ul:nth-child(2n) {
+  align-items: end; /* 靠右对齐 */
+}
+.callout[data-callout="chat-bubble"] > .callout-content ul:nth-child(2n) > li {
+  background: rgb(var(--bubble-right)); /* 右侧气泡背景色 */
+}
+.callout[data-callout="chat-bubble"]
+  > .callout-content
+  ul:nth-child(2n)
+  > li::before {
+  right: -1rem; /* 三角形位置 */
+  border-top: 1rem solid rgb(var(--bubble-right)); /* 三角形颜色匹配气泡背景色 */
+}

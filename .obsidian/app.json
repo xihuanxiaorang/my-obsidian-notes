@@ -1,0 +1,19 @@
+{
+  "promptDelete": false,
+  "tabSize": 4,
+  "readableLineLength": false,
+  "attachmentFolderPath": "Attachments",
+  "spellcheck": false,
+  "newFileLocation": "folder",
+  "newFileFolderPath": "Inbox",
+  "defaultViewMode": "source",
+  "autoConvertHtml": true,
+  "showUnsupportedFiles": true,
+  "pdfExportSettings": {
+    "includeName": true,
+    "pageSize": "A4",
+    "landscape": false,
+    "margin": "0",
+    "downscalePercent": 100
+  }
+}

@@ -1,0 +1,245 @@
+{
+  "main": {
+    "id": "9d631a4286ef94c0",
+    "type": "split",
+    "children": [
+      {
+        "id": "f824262980152bf9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "61c5dae8dd36868e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Docs/工具/其他工具/PayPal.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "PayPal"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "3a47b769af8f293c",
+    "type": "split",
+    "children": [
+      {
+        "id": "594555d6553cc8e5",
+        "type": "tabs",
+        "dimension": 72.4742268041237,
+        "children": [
+          {
+            "id": "cd440ffabd7c79fa",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-folder-closed",
+              "title": "文件列表"
+            }
+          },
+          {
+            "id": "6c31f0c7ef32fd19",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "plantuml",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜索"
+            }
+          },
+          {
+            "id": "76335a251dadd2c3",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
+          }
+        ]
+      },
+      {
+        "id": "17b521f712e5e035",
+        "type": "tabs",
+        "dimension": 27.52577319587629,
+        "children": [
+          {
+            "id": "70662c336b1925d9",
+            "type": "leaf",
+            "state": {
+              "type": "recent-files",
+              "state": {},
+              "icon": "clock",
+              "title": "Recent Files"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 397
+  },
+  "right": {
+    "id": "18e4f182b17f06f1",
+    "type": "split",
+    "children": [
+      {
+        "id": "ab06ada49f4d896d",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e7dc74e8c567982a",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Inbox/reduce.md",
+                "collapseAll": true,
+                "extraContext": true,
+                "sortOrder": "alphabetical",
+                "showSearch": true,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "reduce 的反向链接列表"
+            }
+          },
+          {
+            "id": "ff62e760fc974f20",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Docs/Java核心技术/基础/嵌套类.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "嵌套类 的出链列表"
+            }
+          },
+          {
+            "id": "2bf37931a4a9bed0",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
+          },
+          {
+            "id": "8f69a94747b12c4d",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Docs/工具/其他工具/PayPal.md"
+              },
+              "icon": "lucide-list",
+              "title": "PayPal 的大纲"
+            }
+          },
+          {
+            "id": "8ea2a4482f804a56",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
+          }
+        ],
+        "currentTab": 4
+      }
+    ],
+    "direction": "horizontal",
+    "width": 324
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": true,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": true,
+      "obsidian-excalidraw-plugin:新建绘图文件": false,
+      "table-editor-obsidian:Advanced Tables Toolbar": false,
+      "obsidian-git:Open Git source control": false
+    }
+  },
+  "active": "8ea2a4482f804a56",
+  "lastOpenFiles": [
+    "新建 文本文档.txt",
+    "Docs/杂记/如何选择开源协议.md",
+    "Docs/工具/其他工具/PayPal.md",
+    "Docs/工具/其他工具/Office Tool Plus.md",
+    "Docs/工具/其他工具/ABDownloadManager.md",
+    "Docs/工具/其他工具/软件卸载工具.md",
+    "Inbox/2024-12-16.md",
+    "Excalidraw/JDBC 架构图.excalidraw.md",
+    "Excalidraw/Java SPI 机制栗子.excalidraw.md",
+    "Excalidraw/Java SPI & SpringBoot 自动配置设计思想.excalidraw.md",
+    "Docs/Java核心技术/基础/SPI 机制.md",
+    "Inbox/Inbox/2024-12-16.md",
+    "Inbox/Inbox",
+    "Docs/工具/其他工具",
+    "Docs/工具/开发工具",
+    "Docs/工具",
+    "Excalidraw/Java SPI 机制栗子架构图.excalidraw.md",
+    "Excalidraw/Java SPI 运行流程.excalidraw.md",
+    "Excalidraw/JDBC 调用流程.excalidraw.md",
+    "Excalidraw/SpringBoot 自动配置.excalidraw.md",
+    "Inbox/Java 集合架构体系图.md",
+    "Docs/Java核心技术/基础/嵌套类.md",
+    "Docs/杂记",
+    "Docs/CodeSnippet/JDBC 调用流程.md",
+    "Excalidraw/无标题-2024-04-01-1958.excalidraw",
+    "Excalidraw/SpringBoot 自动配置核心流程.excalidraw.md",
+    "Excalidraw/SpringBoot 自动配置核心流程.excalidraw.md",
+    "Excalidraw/未命名.md",
+    "Docs/Java核心技术/基础/Java8 新特性.md",
+    "Inbox/使用 nrm 切换镜像源.md",
+    "Attachments/中国移动 (1).svg",
+    "Attachments/chinaMobile.svg",
+    "Attachments/Company.svg",
+    "Attachments/chinaUnicom.svg",
+    "Attachments/Pasted Image 20241215180451_302.svg",
+    "Attachments/Company (1).svg",
+    "Inbox/Java 代码块.md",
+    "Excalidraw/Java 集合架构体系图.excalidraw.md",
+    "Docs/Java核心技术/基础/未命名.canvas",
+    "Excalidraw/fonts/XiaolaiMonoSC-Regular.ttf",
+    "Excalidraw/fonts/HarmonyOS_SansSC_Regular.ttf",
+    "Excalidraw/fonts/Muyao-Softbrush-2.ttf",
+    "Excalidraw/fonts",
+    "Docs/CodeSnippet/未命名.canvas",
+    "Inbox/Untitled Diagram.svg",
+    "Inbox/未命名.canvas",
+    "未命名.canvas"
+  ]
+}
