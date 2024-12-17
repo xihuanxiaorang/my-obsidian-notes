@@ -1,44 +1,40 @@
 {
   "recentFiles": [
     {
+      "basename": "任务清单",
+      "path": "Dashboard/任务清单.md"
+    },
+    {
+      "basename": "ArrayList源码分析",
+      "path": "Articles/源码剖析/Java/ArrayList源码分析.md"
+    },
+    {
+      "basename": "嵌套类",
+      "path": "Articles/Java/基础/嵌套类.md"
+    },
+    {
+      "basename": "更换 Windows 默认字体",
+      "path": "Misc/更换 Windows 默认字体.md"
+    },
+    {
+      "basename": "Snippets & Misc & Ideas & Inbox & Articles",
+      "path": "Misc/Snippets & Misc & Ideas & Inbox & Articles.md"
+    },
+    {
+      "basename": "ArrayList 底层结构与源码分析.excalidraw",
+      "path": "Excalidraw/ArrayList 底层结构与源码分析.excalidraw.md"
+    },
+    {
       "basename": "寻找2的幂次方最小值的示意图.excalidraw",
       "path": "Excalidraw/寻找2的幂次方最小值的示意图.excalidraw.md"
-    },
-    {
-      "basename": "HashMap源码分析",
-      "path": "Docs/源码剖析/Java/HashMap源码分析.md"
-    },
-    {
-      "basename": "HashMap数组下标计算.excalidraw",
-      "path": "Excalidraw/HashMap数组下标计算.excalidraw.md"
     },
     {
       "basename": "链表中删除元素演示.excalidraw",
       "path": "Excalidraw/链表中删除元素演示.excalidraw.md"
     },
     {
-      "basename": "HashMap底层数据结构.excalidraw",
-      "path": "Excalidraw/HashMap底层数据结构.excalidraw.md"
-    },
-    {
-      "basename": "SPI 机制",
-      "path": "Docs/Java核心技术/基础/SPI 机制.md"
-    },
-    {
-      "basename": "LinkedList 底层结构与源码分析.excalidraw",
-      "path": "Excalidraw/LinkedList 底层结构与源码分析.excalidraw.md"
-    },
-    {
-      "basename": "Vector 底层结构与源码分析.excalidraw",
-      "path": "Excalidraw/Vector 底层结构与源码分析.excalidraw.md"
-    },
-    {
       "basename": "红黑树插入操作演示.excalidraw",
       "path": "Excalidraw/红黑树插入操作演示.excalidraw.md"
-    },
-    {
-      "basename": "ArrayList 底层结构与源码分析.excalidraw",
-      "path": "Excalidraw/ArrayList 底层结构与源码分析.excalidraw.md"
     }
   ],
   "omittedPaths": [],

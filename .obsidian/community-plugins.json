@@ -20,5 +20,7 @@
   "obsidian-linter",
   "obsidian-emoji-toolbar",
   "obsidian-list-callouts",
-  "obsidian-git"
+  "obsidian-git",
+  "obsidian-kanban",
+  "obsidian-projects"
 ]

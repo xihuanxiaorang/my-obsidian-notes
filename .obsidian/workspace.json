@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "31c01c88a25a43d6",
+        "id": "b2c86d9d44eaa0f2",
         "type": "tabs",
         "children": [
           {
-            "id": "14946e7825e84789",
+            "id": "678d183724425985",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -49,7 +49,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "plantuml",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -102,47 +102,16 @@
       }
     ],
     "direction": "horizontal",
-    "width": 397
+    "width": 302
   },
   "right": {
     "id": "18e4f182b17f06f1",
     "type": "split",
     "children": [
       {
-        "id": "ab06ada49f4d896d",
+        "id": "1edfcf0d75c90421",
         "type": "tabs",
         "children": [
-          {
-            "id": "e7dc74e8c567982a",
-            "type": "leaf",
-            "state": {
-              "type": "backlink",
-              "state": {
-                "collapseAll": true,
-                "extraContext": true,
-                "sortOrder": "alphabetical",
-                "showSearch": true,
-                "searchQuery": "",
-                "backlinkCollapsed": false,
-                "unlinkedCollapsed": true
-              },
-              "icon": "links-coming-in",
-              "title": "反向链接"
-            }
-          },
-          {
-            "id": "ff62e760fc974f20",
-            "type": "leaf",
-            "state": {
-              "type": "outgoing-link",
-              "state": {
-                "linksCollapsed": false,
-                "unlinkedCollapsed": true
-              },
-              "icon": "links-going-out",
-              "title": "出链"
-            }
-          },
           {
             "id": "2bf37931a4a9bed0",
             "type": "leaf",
@@ -157,13 +126,36 @@
             }
           },
           {
-            "id": "8f69a94747b12c4d",
+            "id": "ff62e760fc974f20",
             "type": "leaf",
             "state": {
-              "type": "outline",
-              "state": {},
-              "icon": "lucide-list",
-              "title": "大纲"
+              "type": "outgoing-link",
+              "state": {
+                "file": "Excalidraw/链表中删除元素演示.excalidraw.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "链表中删除元素演示.excalidraw 的出链列表"
+            }
+          },
+          {
+            "id": "e7dc74e8c567982a",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Excalidraw/链表中删除元素演示.excalidraw.md",
+                "collapseAll": true,
+                "extraContext": true,
+                "sortOrder": "alphabetical",
+                "showSearch": true,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "链表中删除元素演示.excalidraw 的反向链接列表"
             }
           },
           {
@@ -172,12 +164,22 @@
             "state": {
               "type": "advanced-tables-toolbar",
               "state": {},
-              "icon": "lucide-file",
-              "title": "插件不再活动"
+              "icon": "spreadsheet",
+              "title": "Advanced Tables"
+            }
+          },
+          {
+            "id": "8f69a94747b12c4d",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {},
+              "icon": "lucide-list",
+              "title": "大纲"
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
@@ -186,54 +188,58 @@
   "left-ribbon": {
     "hiddenItems": {
       "switcher:打开快速切换": true,
-      "graph:查看关系图谱": false,
       "canvas:新建白板": false,
+      "obsidian-excalidraw-plugin:新建绘图文件": false,
+      "obsidian-kanban:创建新看板": false,
       "templates:插入模板": false,
       "command-palette:打开命令面板": true,
-      "obsidian-excalidraw-plugin:新建绘图文件": false,
-      "table-editor-obsidian:Advanced Tables Toolbar": false,
-      "obsidian-git:Open Git source control": false
+      "table-editor-obsidian:Advanced Tables Toolbar": true,
+      "graph:查看关系图谱": false,
+      "obsidian-git:Open Git source control": true,
+      "obsidian-projects:打开项目": false
     }
   },
   "active": "8ea2a4482f804a56",
   "lastOpenFiles": [
+    "Canvas/未命名.canvas",
+    "Dashboard/任务清单.md",
+    "Articles/源码剖析/Java/ArrayList源码分析.md",
+    "Articles/Java/基础/嵌套类.md",
+    "Dashboard/未命名.md",
+    "Misc/更换 Windows 默认字体.md",
+    "Misc/Snippets & Misc & Ideas & Inbox & Articles.md",
+    "Excalidraw/ArrayList 底层结构与源码分析.excalidraw.md",
     "Excalidraw/寻找2的幂次方最小值的示意图.excalidraw.md",
-    "Docs/源码剖析/Java/HashMap源码分析.md",
-    "Excalidraw/HashMap数组下标计算.excalidraw.md",
     "Excalidraw/链表中删除元素演示.excalidraw.md",
+    "Excalidraw/红黑树插入操作演示.excalidraw.md",
+    "Excalidraw/Vector 底层结构与源码分析.excalidraw.md",
+    "Excalidraw/SpringBoot 自动配置核心流程.excalidraw.md",
+    "Excalidraw/SpringBoot 自动配置.excalidraw.md",
+    "Excalidraw/LinkedList 底层结构与源码分析.excalidraw.md",
+    "Excalidraw/JDBC 架构图.excalidraw.md",
+    "Excalidraw/JDBC 调用流程.excalidraw.md",
+    "Excalidraw/Java SPI 运行流程.excalidraw.md",
+    "Excalidraw/Java SPI 机制栗子架构图.excalidraw.md",
+    "Excalidraw/Java SPI 机制栗子.excalidraw.md",
+    "Excalidraw/Java SPI & SpringBoot 自动配置设计思想.excalidraw.md",
+    "Excalidraw/HashMap数组下标计算.excalidraw.md",
+    "Excalidraw/HashMap底层数据结构.excalidraw.md",
+    "Canvas/代码生成器.canvas",
+    "Excalidraw/fonts/站酷文艺体.ttf",
+    "BrainBoard/MindMap/未命名.md",
+    "BrainBoard/MindMap",
+    "BrainBoard",
+    "Snippets/Java 集合架构体系图.md",
+    "Snippets/reduce.md",
+    "_Overview/未命名.canvas",
+    "Dashboard",
+    "Ideas",
+    "Snippets",
+    "Canvas",
     "Excalidraw/链表中删除元素演示.excalidraw",
     "Excalidraw/寻找2的幂次方最小值的示意图.excalidraw",
-    "Excalidraw/HashMap 数据结构.excalidraw.md",
-    "Excalidraw/HashMap底层数据结构.excalidraw.md",
     "Excalidraw/HashMap底层数据结构.excalidraw",
-    "Docs/Java核心技术/基础/SPI 机制.md",
-    "Excalidraw/LinkedList 底层结构与源码分析.excalidraw.md",
-    "Excalidraw/Vector 底层结构与源码分析.excalidraw.md",
-    "Excalidraw/红黑树插入操作演示.excalidraw.md",
-    "Excalidraw/ArrayList 底层结构与源码分析.excalidraw.md",
-    "Docs/源码剖析/Java/ArrayList源码分析.md",
-    "Inbox/Java 集合架构体系图.md",
-    "Docs/杂记/手摸手教你搭建部署Vitepress博客.md",
-    "Docs/Java核心技术/基础/嵌套类.md",
-    "Docs/Java核心技术/基础/Java8 新特性.md",
-    "Excalidraw/JDBC 架构图.excalidraw.md",
-    "Docs/工具/开发工具/内网穿透工具.md",
-    "Excalidraw/Java SPI & SpringBoot 自动配置设计思想.excalidraw.md",
-    "Docs/源码剖析/Java",
-    "Docs/工具/其他工具/PayPal.md",
-    "Excalidraw/JDBC 调用流程.excalidraw.md",
-    "Docs/源码剖析",
-    "Docs/新建文件夹",
-    "Docs/工具/其他工具/软件卸载工具.md",
-    "Inbox/Java 代码块.md",
-    "Inbox/使用 nrm 切换镜像源.md",
-    "Docs/工具/开发工具/Typora.md",
-    "Docs/杂记/PicList & Github & jsDelivr 搭建个人云图床.md",
     "未命名.canvas",
-    "新建 文本文档.txt",
-    "Inbox/Inbox",
-    "Docs/工具/其他工具",
-    "Docs/工具/开发工具",
     "Attachments/中国移动 (1).svg",
     "Attachments/chinaMobile.svg",
     "Attachments/Company.svg",

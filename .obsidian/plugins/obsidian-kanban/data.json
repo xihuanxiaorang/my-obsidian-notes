@@ -1,0 +1,33 @@
+{
+  "new-note-folder": "Inbox",
+  "date-colors": [
+    {
+      "distance": 1,
+      "unit": "days",
+      "direction": "after",
+      "isToday": true,
+      "color": "rgba(93, 165, 249, 1)"
+    },
+    {
+      "distance": 1,
+      "unit": "days",
+      "direction": "after",
+      "isBefore": true,
+      "color": "rgba(255, 167, 167, 1)"
+    },
+    {
+      "distance": 1,
+      "unit": "days",
+      "direction": "after",
+      "isAfter": true,
+      "color": "rgba(70, 216, 70, 1)"
+    }
+  ],
+  "move-dates": false,
+  "show-relative-date": true,
+  "archive-with-date": false,
+  "lane-width": 300,
+  "show-checkboxes": true,
+  "move-tags": true,
+  "tag-sort": []
+}

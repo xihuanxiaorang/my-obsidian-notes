@@ -400,7 +400,7 @@
   "alternateHighlightColorName": "",
   "languageBorderColorName": "",
   "foldAllCommand": false,
-  "settingsType": "languageSpecific",
+  "settingsType": "inlineCode",
   "langSpecificSettingsType": "",
   "languageSpecificLanguageName": ""
 }
