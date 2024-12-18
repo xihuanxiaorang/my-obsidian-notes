@@ -1,6 +1,6 @@
 ---
 tags:
-  - java
+  - Java
 ---
 
 Lambda 表达式、强大的 Stream API、全新时间日期 API；新特性使得 Java 的运行速度更快、代码更少（Lambda 表达式）、便于并行、最大化减少空指针异常！

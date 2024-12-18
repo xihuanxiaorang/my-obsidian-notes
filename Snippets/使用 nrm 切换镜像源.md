@@ -1,7 +1,7 @@
 ---
 tags:
-  - 前端
-  - 环境搭建
+  - Frontend
+  - EnvironmentSetup
 ---
 1. 首先，使用 `npm install nrm -g` 命令全局安装 nrm，安装完成之后，可以使用 `nrm -v` 命令查看是否安装成功，如下所示：
    ![img](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412122346193.png)

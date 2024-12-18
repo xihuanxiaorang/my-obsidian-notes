@@ -1,6 +1,6 @@
 ---
 tags:
-  - 工具
+  - Tool
 ---
 
 > [!quote]

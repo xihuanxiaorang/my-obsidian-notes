@@ -3,9 +3,8 @@
   "date-colors": [
     {
       "distance": 1,
-      "unit": "days",
+      "unit": "hours",
       "direction": "after",
-      "isToday": true,
       "color": "rgba(93, 165, 249, 1)"
     },
     {
@@ -23,11 +22,11 @@
       "color": "rgba(70, 216, 70, 1)"
     }
   ],
-  "move-dates": false,
+  "move-dates": true,
   "show-relative-date": true,
   "archive-with-date": false,
   "lane-width": 300,
-  "show-checkboxes": true,
   "move-tags": true,
-  "tag-sort": []
+  "tag-sort": [],
+  "show-checkboxes": true
 }

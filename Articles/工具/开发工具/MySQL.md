@@ -1,8 +1,8 @@
 ---
 tags:
-  - 工具
-  - 环境搭建
-  - java
+  - Tool
+  - EnvironmentSetup
+  - Java
 ---
 
 ## 下载 & 安装

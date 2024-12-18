@@ -1,6 +1,6 @@
 ---
 tags:
-  - 工具
+  - Tool
 ---
 
 对于没有安装 Windows Terminal 终端的小伙伴，可以在 Microsoft Store 中进行下载安装。

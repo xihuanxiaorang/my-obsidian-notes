@@ -1,40 +1,32 @@
 {
   "recentFiles": [
     {
-      "basename": "任务清单",
-      "path": "Dashboard/任务清单.md"
+      "basename": "yt-dlp",
+      "path": "Inbox/yt-dlp.md"
     },
     {
-      "basename": "ArrayList源码分析",
-      "path": "Articles/源码剖析/Java/ArrayList源码分析.md"
+      "basename": "FFmpeg",
+      "path": "Articles/工具/其他工具/FFmpeg.md"
     },
     {
-      "basename": "嵌套类",
-      "path": "Articles/Java/基础/嵌套类.md"
+      "basename": "代码生成器",
+      "path": "Canvas/代码生成器.canvas"
     },
     {
-      "basename": "更换 Windows 默认字体",
-      "path": "Misc/更换 Windows 默认字体.md"
+      "basename": "pnpm",
+      "path": "Articles/工具/开发工具/pnpm.md"
+    },
+    {
+      "basename": "Node.js",
+      "path": "Articles/工具/开发工具/Node.js.md"
     },
     {
       "basename": "Snippets & Misc & Ideas & Inbox & Articles",
       "path": "Misc/Snippets & Misc & Ideas & Inbox & Articles.md"
     },
     {
-      "basename": "ArrayList 底层结构与源码分析.excalidraw",
-      "path": "Excalidraw/ArrayList 底层结构与源码分析.excalidraw.md"
-    },
-    {
-      "basename": "寻找2的幂次方最小值的示意图.excalidraw",
-      "path": "Excalidraw/寻找2的幂次方最小值的示意图.excalidraw.md"
-    },
-    {
-      "basename": "链表中删除元素演示.excalidraw",
-      "path": "Excalidraw/链表中删除元素演示.excalidraw.md"
-    },
-    {
-      "basename": "红黑树插入操作演示.excalidraw",
-      "path": "Excalidraw/红黑树插入操作演示.excalidraw.md"
+      "basename": "SpringBoot 自动配置核心流程.excalidraw",
+      "path": "Excalidraw/SpringBoot 自动配置核心流程.excalidraw.md"
     }
   ],
   "omittedPaths": [],

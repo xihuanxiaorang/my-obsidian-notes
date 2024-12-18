@@ -1,7 +1,7 @@
 ---
 tags:
-  - java
-  - 代码片段
+  - Java
+  - CodeSnippet
 ---
 ```java
 public class ApiTest {

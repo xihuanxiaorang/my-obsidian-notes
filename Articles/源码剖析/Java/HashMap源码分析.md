@@ -1,8 +1,8 @@
 ---
 tags:
-  - 集合
-  - java
-  - 源码剖析
+  - Collection
+  - Java
+  - SourceCodeAnalysis
 ---
 
 > [!note]

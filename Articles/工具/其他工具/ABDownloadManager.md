@@ -1,6 +1,6 @@
 ---
 tags:
-  - 工具
+  - Tool
 ---
 
 [AB Download Manager](https://abdownloadmanager.com/) 是一款开源免费的下载管理工具，具备以下特点和功能：

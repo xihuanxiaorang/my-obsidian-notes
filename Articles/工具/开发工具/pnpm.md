@@ -1,8 +1,8 @@
 ---
 tags:
-  - 工具
-  - 环境搭建
-  - 前端
+  - Tool
+  - EnvironmentSetup
+  - Frontend
 ---
 
 前期准备： [[Node.js]] & [[nvm]]

@@ -1,8 +1,8 @@
 ---
 tags:
-  - java
-  - 集合
-  - 面试
+  - Java
+  - Collection
+  - Interview
 ---
 
 ```plantuml
