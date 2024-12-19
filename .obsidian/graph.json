@@ -6,17 +6,39 @@
   "hideUnresolved": false,
   "showOrphans": true,
   "collapse-color-groups": true,
-  "colorGroups": [],
+  "colorGroups": [
+    {
+      "query": "tag:#Tool  ",
+      "color": {
+        "a": 1,
+        "rgb": 8877537
+      }
+    },
+    {
+      "query": "tag:#SourceCodeAnalysis  ",
+      "color": {
+        "a": 1,
+        "rgb": 15360353
+      }
+    },
+    {
+      "query": "tag:#Java  ",
+      "color": {
+        "a": 1,
+        "rgb": 4320355
+      }
+    }
+  ],
   "collapse-display": true,
-  "showArrow": false,
-  "textFadeMultiplier": 0,
-  "nodeSizeMultiplier": 1,
-  "lineSizeMultiplier": 1,
+  "showArrow": true,
+  "textFadeMultiplier": 0.5,
+  "nodeSizeMultiplier": 0.891145833333333,
+  "lineSizeMultiplier": 1.2484375,
   "collapse-forces": true,
   "centerStrength": 0.518713248970312,
   "repelStrength": 10,
   "linkStrength": 1,
-  "linkDistance": 250,
-  "scale": 0.5087618855792636,
-  "close": true
+  "linkDistance": 30,
+  "scale": 0.7132754626224554,
+  "close": false
 }

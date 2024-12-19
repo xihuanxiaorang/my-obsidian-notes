@@ -19,7 +19,7 @@ tags:
 ## 下载 & 安装
 
 1. 访问 FFmpeg [下载](https://ffmpeg.org/download.html) 页面。
-2. 选择 Windows 版本：在页面中，选择 **"Windows builds from gyan.dev"** 作为下载源。点击进入该链接，访问由 `gyan.dev` 提供的 FFmpeg Windows 构建包页面。
+2. 选择 Windows 版本：在页面中，选择 **"Windows builds from gyan. dev"** 作为下载源。点击进入该链接，访问由 `gyan.dev` 提供的 FFmpeg Windows 构建包页面。
    ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412181619293.png)
 3. 选择正式发行版本：在 `gyan.dev` 页面中，选择 **"release builds"** 下的正式发行版本 **`ffmpeg-release-full.7z`**。该版本包含 FFmpeg 的所有功能，适合大部分用户。
    ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412181721557.png)

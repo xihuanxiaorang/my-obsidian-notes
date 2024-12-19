@@ -12,7 +12,7 @@
   "compress": true,
   "decompressForMDView": false,
   "onceOffCompressFlagReset": true,
-  "onceOffGPTVersionReset": false,
+  "onceOffGPTVersionReset": true,
   "autosave": true,
   "autosaveIntervalDesktop": 60000,
   "autosaveIntervalMobile": 30000,
@@ -99,7 +99,7 @@
   "library2": {
     "type": "excalidrawlib",
     "version": 2,
-    "source": "https://github.com/zsviczian/obsidian-excalidraw-plugin/releases/tag/2.6.8",
+    "source": "https://github.com/zsviczian/obsidian-excalidraw-plugin/releases/tag/2.7.0",
     "libraryItems": [
       {
         "status": "unpublished",
@@ -35346,7 +35346,7 @@
   "mdCSS": "",
   "scriptEngineSettings": {},
   "defaultTrayMode": true,
-  "previousRelease": "2.6.8",
+  "previousRelease": "2.7.1",
   "showReleaseNotes": true,
   "showNewVersionNotification": true,
   "latexBoilerplate": "\\color{blue}",

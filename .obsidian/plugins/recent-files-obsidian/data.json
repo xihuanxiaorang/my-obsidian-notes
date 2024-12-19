@@ -2,19 +2,31 @@
   "recentFiles": [
     {
       "basename": "yt-dlp",
-      "path": "Inbox/yt-dlp.md"
+      "path": "Articles/工具/其他工具/yt-dlp.md"
     },
     {
       "basename": "FFmpeg",
       "path": "Articles/工具/其他工具/FFmpeg.md"
     },
     {
-      "basename": "代码生成器",
-      "path": "Canvas/代码生成器.canvas"
+      "basename": "任务清单",
+      "path": "Dashboard/任务清单.md"
     },
     {
-      "basename": "pnpm",
-      "path": "Articles/工具/开发工具/pnpm.md"
+      "basename": "ABDownloadManager",
+      "path": "Articles/工具/其他工具/ABDownloadManager.md"
+    },
+    {
+      "basename": "thefuck",
+      "path": "Inbox/thefuck.md"
+    },
+    {
+      "basename": "python",
+      "path": "Inbox/python.md"
+    },
+    {
+      "basename": "代码生成器",
+      "path": "Canvas/代码生成器.canvas"
     },
     {
       "basename": "Node.js",
