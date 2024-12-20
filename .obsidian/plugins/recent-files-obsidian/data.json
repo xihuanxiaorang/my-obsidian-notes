@@ -1,44 +1,36 @@
 {
   "recentFiles": [
     {
-      "basename": "yt-dlp",
-      "path": "Articles/工具/其他工具/yt-dlp.md"
+      "basename": "任务清单",
+      "path": "Dashboard/任务清单.md"
+    },
+    {
+      "basename": "thefuck",
+      "path": "Articles/工具/开发工具/thefuck.md"
+    },
+    {
+      "basename": "python",
+      "path": "Articles/工具/开发工具/python.md"
+    },
+    {
+      "basename": "Office Tool Plus",
+      "path": "Articles/工具/其他工具/Office Tool Plus.md"
     },
     {
       "basename": "FFmpeg",
       "path": "Articles/工具/其他工具/FFmpeg.md"
     },
     {
-      "basename": "任务清单",
-      "path": "Dashboard/任务清单.md"
+      "basename": "软件卸载工具",
+      "path": "Articles/工具/其他工具/软件卸载工具.md"
     },
     {
-      "basename": "ABDownloadManager",
-      "path": "Articles/工具/其他工具/ABDownloadManager.md"
+      "basename": "WLS2",
+      "path": "Articles/工具/开发工具/WLS2.md"
     },
     {
-      "basename": "thefuck",
-      "path": "Inbox/thefuck.md"
-    },
-    {
-      "basename": "python",
-      "path": "Inbox/python.md"
-    },
-    {
-      "basename": "代码生成器",
-      "path": "Canvas/代码生成器.canvas"
-    },
-    {
-      "basename": "Node.js",
-      "path": "Articles/工具/开发工具/Node.js.md"
-    },
-    {
-      "basename": "Snippets & Misc & Ideas & Inbox & Articles",
-      "path": "Misc/Snippets & Misc & Ideas & Inbox & Articles.md"
-    },
-    {
-      "basename": "SpringBoot 自动配置核心流程.excalidraw",
-      "path": "Excalidraw/SpringBoot 自动配置核心流程.excalidraw.md"
+      "basename": "Windows Terminal",
+      "path": "Articles/工具/开发工具/Windows Terminal.md"
     }
   ],
   "omittedPaths": [],

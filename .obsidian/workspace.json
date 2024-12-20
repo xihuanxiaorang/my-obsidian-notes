@@ -4,17 +4,23 @@
     "type": "split",
     "children": [
       {
-        "id": "5a316f9702cdf08e",
+        "id": "18886898ef35734f",
         "type": "tabs",
         "children": [
           {
-            "id": "73f96e8d1f09e22f",
+            "id": "37d0c97c1b619970",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "新标签页"
+              "type": "kanban",
+              "state": {
+                "file": "Dashboard/任务清单.md",
+                "kanbanViewState": {
+                  "kanban-plugin": "board",
+                  "list-collapse": []
+                }
+              },
+              "icon": "lucide-trello",
+              "title": "任务清单"
             }
           }
         ]
@@ -173,9 +179,11 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {},
+              "state": {
+                "file": "Dashboard/任务清单.md"
+              },
               "icon": "lucide-list",
-              "title": "大纲"
+              "title": "任务清单 的大纲"
             }
           }
         ],
@@ -200,34 +208,35 @@
   },
   "active": "8ea2a4482f804a56",
   "lastOpenFiles": [
-    "Articles/工具/其他工具/yt-dlp.md",
-    "Articles/工具/其他工具/FFmpeg.md",
+    "Articles/工具/开发工具/thefuck.md",
     "Dashboard/任务清单.md",
+    "Articles/工具/开发工具/python.md",
     "Articles/工具/其他工具/ABDownloadManager.md",
-    "Inbox/thefuck.md",
-    "Inbox/python.md",
+    "Articles/工具/其他工具/PayPal.md",
+    "Articles/工具/其他工具/yt-dlp.md",
+    "Articles/工具/其他工具/Office Tool Plus.md",
+    "Articles/工具/其他工具/FFmpeg.md",
+    "Articles/工具/其他工具/软件卸载工具.md",
+    "Articles/工具/开发工具/WLS2.md",
+    "Articles/工具/开发工具/Windows Terminal.md",
+    "Articles/工具/开发工具/Typora.md",
+    "Articles/工具/开发工具/pnpm.md",
+    "Articles/工具/开发工具/nvm.md",
+    "Articles/工具/开发工具/Node.js.md",
+    "Articles/工具/开发工具/Navicat.md",
+    "Articles/工具/开发工具/MySQL.md",
+    "Articles/工具/开发工具/JDK.md",
+    "Articles/工具/开发工具/IntelliJ IDEA.md",
+    "Articles/工具/开发工具/内网穿透工具.md",
+    "Announcements/未命名.md",
+    "Announcements",
+    "Canvas/代码生成器.canvas",
     "Articles/源码剖析/Java/HashMap源码分析.md",
     "Misc/美化 Github 个人主页.md",
-    "Articles/工具/开发工具/MySQL.md",
-    "Articles/工具/开发工具/Typora.md",
     "Excalidraw/红黑树插入操作演示.excalidraw.md",
-    "Articles/工具/其他工具/软件卸载工具.md",
     "Snippets/使用 nrm 切换镜像源.md",
     "Excalidraw/SpringBoot 自动配置.excalidraw.md",
-    "Articles/工具/开发工具/WLS2.md",
-    "Articles/工具/开发工具/pnpm.md",
-    "Articles/工具/其他工具/Office Tool Plus.md",
-    "Snippets/Java 代码块.md",
-    "Articles/Java/基础/SPI 机制.md",
-    "Canvas/代码生成器.canvas",
-    "Dashboard/未命名看板.md",
     "Canvas/未命名.canvas",
-    "Articles/工具/开发工具/Node.js.md",
-    "Misc/Snippets & Misc & Ideas & Inbox & Articles.md",
-    "Dashboard/未命名.md",
-    "Excalidraw/SpringBoot 自动配置核心流程.excalidraw.md",
-    "Excalidraw/JDBC 调用流程.excalidraw.md",
-    "Articles/Java/基础/Java8 新特性.md",
     "Excalidraw/fonts/站酷文艺体.ttf",
     "BrainBoard/MindMap",
     "BrainBoard",
@@ -238,7 +247,6 @@
     "Canvas",
     "Excalidraw/链表中删除元素演示.excalidraw",
     "Excalidraw/寻找2的幂次方最小值的示意图.excalidraw",
-    "Excalidraw/HashMap底层数据结构.excalidraw",
     "未命名.canvas",
     "Attachments/中国移动 (1).svg",
     "Attachments/chinaMobile.svg",

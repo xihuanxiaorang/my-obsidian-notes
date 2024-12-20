@@ -3,6 +3,7 @@ tags:
   - Tool
   - EnvironmentSetup
   - Frontend
+  - DevTool
 ---
 
 > [!quote]
