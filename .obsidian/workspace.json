@@ -4,23 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "18886898ef35734f",
+        "id": "96157abd44d43605",
         "type": "tabs",
         "children": [
           {
-            "id": "37d0c97c1b619970",
+            "id": "6d754b0b125822d7",
             "type": "leaf",
             "state": {
-              "type": "kanban",
+              "type": "markdown",
               "state": {
-                "file": "Dashboard/任务清单.md",
-                "kanbanViewState": {
-                  "kanban-plugin": "board",
-                  "list-collapse": []
-                }
+                "file": "Misc/全面了解 RSS.md",
+                "mode": "preview",
+                "source": false
               },
-              "icon": "lucide-trello",
-              "title": "任务清单"
+              "icon": "lucide-file",
+              "title": "全面了解 RSS"
             }
           }
         ]
@@ -180,10 +178,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Dashboard/任务清单.md"
+                "file": "Misc/全面了解 RSS.md"
               },
               "icon": "lucide-list",
-              "title": "任务清单 的大纲"
+              "title": "全面了解 RSS 的大纲"
             }
           }
         ],
@@ -208,34 +206,34 @@
   },
   "active": "8ea2a4482f804a56",
   "lastOpenFiles": [
-    "Articles/工具/开发工具/thefuck.md",
     "Dashboard/任务清单.md",
-    "Articles/工具/开发工具/python.md",
-    "Articles/工具/其他工具/ABDownloadManager.md",
-    "Articles/工具/其他工具/PayPal.md",
-    "Articles/工具/其他工具/yt-dlp.md",
-    "Articles/工具/其他工具/Office Tool Plus.md",
-    "Articles/工具/其他工具/FFmpeg.md",
-    "Articles/工具/其他工具/软件卸载工具.md",
-    "Articles/工具/开发工具/WLS2.md",
-    "Articles/工具/开发工具/Windows Terminal.md",
-    "Articles/工具/开发工具/Typora.md",
     "Articles/工具/开发工具/pnpm.md",
-    "Articles/工具/开发工具/nvm.md",
-    "Articles/工具/开发工具/Node.js.md",
-    "Articles/工具/开发工具/Navicat.md",
-    "Articles/工具/开发工具/MySQL.md",
-    "Articles/工具/开发工具/JDK.md",
+    "Excalidraw/JDBC 调用流程.excalidraw.md",
+    "Excalidraw/红黑树插入操作演示.excalidraw.md",
+    "Articles/工具/其他工具/软件卸载工具.md",
+    "Misc/全面了解 RSS.md",
+    "Inbox/探索 Follow：全新的社交媒体体验.md",
+    "Inbox/全面了解 RSS.md",
+    "Articles/工具/其他工具/ABDownloadManager.md",
+    "Articles/工具/其他工具/FFmpeg.md",
+    "Articles/工具/其他工具/yt-dlp.md",
+    "Articles/工具/其他工具/PayPal.md",
+    "Articles/工具/其他工具/Office Tool Plus.md",
     "Articles/工具/开发工具/IntelliJ IDEA.md",
     "Articles/工具/开发工具/内网穿透工具.md",
-    "Announcements/未命名.md",
+    "Articles/工具/开发工具/JDK.md",
+    "Articles/工具/开发工具/MySQL.md",
+    "Articles/工具/开发工具/Navicat.md",
+    "Articles/工具/开发工具/Node.js.md",
+    "Articles/工具/开发工具/nvm.md",
+    "Articles/工具/开发工具/python.md",
+    "Articles/工具/开发工具/thefuck.md",
+    "Articles/工具/开发工具/Typora.md",
+    "Articles/工具/开发工具/Windows Terminal.md",
+    "Articles/源码剖析/Java/HashMap源码分析.md",
+    "Excalidraw/HashMap底层数据结构.excalidraw.md",
     "Announcements",
     "Canvas/代码生成器.canvas",
-    "Articles/源码剖析/Java/HashMap源码分析.md",
-    "Misc/美化 Github 个人主页.md",
-    "Excalidraw/红黑树插入操作演示.excalidraw.md",
-    "Snippets/使用 nrm 切换镜像源.md",
-    "Excalidraw/SpringBoot 自动配置.excalidraw.md",
     "Canvas/未命名.canvas",
     "Excalidraw/fonts/站酷文艺体.ttf",
     "BrainBoard/MindMap",

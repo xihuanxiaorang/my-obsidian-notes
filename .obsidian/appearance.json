@@ -3,8 +3,8 @@
   "cssTheme": "AnuPpuccin",
   "interfaceFontFamily": "HarmonyOS Sans SC",
   "monospaceFontFamily": "JetBrains Mono",
-  "textFontFamily": "iA Writer Quattro S,霞鹜文楷 屏幕阅读版",
-  "baseFontSize": 17,
+  "textFontFamily": "iA Writer Quattro S,霞鹜文楷 GB 屏幕阅读版",
+  "baseFontSize": 14,
   "baseFontSizeAction": true,
   "enabledCssSnippets": [
     "extended-colorschemes",

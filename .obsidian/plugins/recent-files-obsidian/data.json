@@ -1,36 +1,44 @@
 {
   "recentFiles": [
     {
+      "basename": "全面了解 RSS",
+      "path": "Misc/全面了解 RSS.md"
+    },
+    {
       "basename": "任务清单",
       "path": "Dashboard/任务清单.md"
     },
     {
-      "basename": "thefuck",
-      "path": "Articles/工具/开发工具/thefuck.md"
+      "basename": "pnpm",
+      "path": "Articles/工具/开发工具/pnpm.md"
     },
     {
-      "basename": "python",
-      "path": "Articles/工具/开发工具/python.md"
+      "basename": "JDBC 调用流程.excalidraw",
+      "path": "Excalidraw/JDBC 调用流程.excalidraw.md"
     },
     {
-      "basename": "Office Tool Plus",
-      "path": "Articles/工具/其他工具/Office Tool Plus.md"
-    },
-    {
-      "basename": "FFmpeg",
-      "path": "Articles/工具/其他工具/FFmpeg.md"
+      "basename": "红黑树插入操作演示.excalidraw",
+      "path": "Excalidraw/红黑树插入操作演示.excalidraw.md"
     },
     {
       "basename": "软件卸载工具",
       "path": "Articles/工具/其他工具/软件卸载工具.md"
     },
     {
-      "basename": "WLS2",
-      "path": "Articles/工具/开发工具/WLS2.md"
+      "basename": "ABDownloadManager",
+      "path": "Articles/工具/其他工具/ABDownloadManager.md"
     },
     {
-      "basename": "Windows Terminal",
-      "path": "Articles/工具/开发工具/Windows Terminal.md"
+      "basename": "FFmpeg",
+      "path": "Articles/工具/其他工具/FFmpeg.md"
+    },
+    {
+      "basename": "yt-dlp",
+      "path": "Articles/工具/其他工具/yt-dlp.md"
+    },
+    {
+      "basename": "PayPal",
+      "path": "Articles/工具/其他工具/PayPal.md"
     }
   ],
   "omittedPaths": [],
