@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "96157abd44d43605",
+        "id": "e3f7c30e1a3d356c",
         "type": "tabs",
         "children": [
           {
-            "id": "6d754b0b125822d7",
+            "id": "7bea872efaed6da6",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -206,12 +206,15 @@
   },
   "active": "8ea2a4482f804a56",
   "lastOpenFiles": [
+    "Misc/如何选择开源协议.md",
+    "Misc/全面了解 RSS.md",
+    "Articles/工具/开发工具/Node.js.md",
+    "Articles/工具/开发工具/WLS2.md",
     "Dashboard/任务清单.md",
     "Articles/工具/开发工具/pnpm.md",
     "Excalidraw/JDBC 调用流程.excalidraw.md",
     "Excalidraw/红黑树插入操作演示.excalidraw.md",
     "Articles/工具/其他工具/软件卸载工具.md",
-    "Misc/全面了解 RSS.md",
     "Inbox/探索 Follow：全新的社交媒体体验.md",
     "Inbox/全面了解 RSS.md",
     "Articles/工具/其他工具/ABDownloadManager.md",
@@ -224,14 +227,11 @@
     "Articles/工具/开发工具/JDK.md",
     "Articles/工具/开发工具/MySQL.md",
     "Articles/工具/开发工具/Navicat.md",
-    "Articles/工具/开发工具/Node.js.md",
     "Articles/工具/开发工具/nvm.md",
     "Articles/工具/开发工具/python.md",
     "Articles/工具/开发工具/thefuck.md",
     "Articles/工具/开发工具/Typora.md",
     "Articles/工具/开发工具/Windows Terminal.md",
-    "Articles/源码剖析/Java/HashMap源码分析.md",
-    "Excalidraw/HashMap底层数据结构.excalidraw.md",
     "Announcements",
     "Canvas/代码生成器.canvas",
     "Canvas/未命名.canvas",
