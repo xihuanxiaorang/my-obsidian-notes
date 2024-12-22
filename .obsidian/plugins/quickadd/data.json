@@ -1,9 +1,101 @@
 {
-  "choices": [],
-  "macros": [],
+  "choices": [
+    {
+      "id": "90d5d2bd-fd5c-47c3-aca8-06de5a2b8f0c",
+      "name": "capture - add a task",
+      "type": "Capture",
+      "command": true,
+      "appendLink": false,
+      "captureTo": "Overview/任务清单.md",
+      "captureToActiveFile": false,
+      "createFileIfItDoesntExist": {
+        "enabled": false,
+        "createWithTemplate": false,
+        "template": ""
+      },
+      "format": {
+        "enabled": true,
+        "format": "[[{{value:task}}]] @{{{date}}} @@{{{time}}}"
+      },
+      "insertAfter": {
+        "enabled": true,
+        "after": "## BackLog",
+        "insertAtEnd": true,
+        "considerSubsections": false,
+        "createIfNotFound": false,
+        "createIfNotFoundLocation": "top"
+      },
+      "prepend": false,
+      "task": true,
+      "openFileInNewTab": {
+        "enabled": false,
+        "direction": "vertical",
+        "focus": true
+      },
+      "openFile": false,
+      "openFileInMode": "default"
+    },
+    {
+      "id": "221ad2d1-0d47-449b-be80-69df44b99032",
+      "name": "macro - add a task & create the task file",
+      "type": "Macro",
+      "command": true,
+      "macroId": "b61ed318-8685-442b-873c-50164f25fc42"
+    }
+  ],
+  "macros": [
+    {
+      "name": "add a task & create the task file",
+      "id": "b61ed318-8685-442b-873c-50164f25fc42",
+      "commands": [
+        {
+          "name": "capture - add a task",
+          "type": "Choice",
+          "id": "7775532e-b2ef-42e9-8667-f1ab710a2e3b",
+          "choiceId": "90d5d2bd-fd5c-47c3-aca8-06de5a2b8f0c"
+        },
+        {
+          "name": "template - create the task file",
+          "type": "NestedChoice",
+          "id": "138500d0-ce0a-4d82-bb13-069aff91c4b8",
+          "choice": {
+            "id": "e5d8d4ef-2a90-4796-b1b2-b92c0afb16d7",
+            "name": "template - create the task file",
+            "type": "Template",
+            "command": false,
+            "templatePath": "Templates/Basic.md",
+            "fileNameFormat": {
+              "enabled": true,
+              "format": "{{value:task}}"
+            },
+            "folder": {
+              "enabled": true,
+              "folders": [
+                "Inbox"
+              ],
+              "chooseWhenCreatingNote": false,
+              "createInSameFolderAsActiveFile": false,
+              "chooseFromSubfolders": false
+            },
+            "appendLink": false,
+            "openFileInNewTab": {
+              "enabled": false,
+              "direction": "vertical",
+              "focus": true
+            },
+            "openFile": true,
+            "openFileInMode": "default",
+            "fileExistsMode": "Nothing",
+            "setFileExistsBehavior": true
+          }
+        }
+      ],
+      "runOnStartup": false
+    }
+  ],
   "inputPrompt": "single-line",
   "devMode": false,
-  "templateFolderPath": "",
+  "templateFolderPath": "Templates",
   "announceUpdates": true,
   "version": "1.11.5",
   "disableOnlineFeatures": true,

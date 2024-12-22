@@ -1,5 +1,5 @@
 ---
-tags 前端 代码:
+tags:
   - 前端
   - 代码片段
   - javascript

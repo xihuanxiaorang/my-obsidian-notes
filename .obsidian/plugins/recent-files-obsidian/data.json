@@ -1,44 +1,44 @@
 {
   "recentFiles": [
     {
+      "basename": "Basic",
+      "path": "Templates/Basic.md"
+    },
+    {
+      "basename": "Insert Callouts",
+      "path": "Templates/Insert Callouts.md"
+    },
+    {
+      "basename": "SPI 机制",
+      "path": "Articles/Java/基础/SPI 机制.md"
+    },
+    {
+      "basename": "任务清单",
+      "path": "Overview/任务清单.md"
+    },
+    {
+      "basename": "reduce",
+      "path": "Snippets/reduce.md"
+    },
+    {
+      "basename": "HashMap源码剖析",
+      "path": "Articles/源码剖析/Java/HashMap源码剖析.md"
+    },
+    {
+      "basename": "ArrayList源码剖析",
+      "path": "Articles/源码剖析/Java/ArrayList源码剖析.md"
+    },
+    {
+      "basename": "未命名",
+      "path": "Announcements/未命名.md"
+    },
+    {
       "basename": "全面了解 RSS",
       "path": "Misc/全面了解 RSS.md"
     },
     {
-      "basename": "如何选择开源协议",
-      "path": "Misc/如何选择开源协议.md"
-    },
-    {
-      "basename": "pnpm",
-      "path": "Articles/工具/开发工具/pnpm.md"
-    },
-    {
-      "basename": "JDBC 调用流程.excalidraw",
-      "path": "Excalidraw/JDBC 调用流程.excalidraw.md"
-    },
-    {
-      "basename": "红黑树插入操作演示.excalidraw",
-      "path": "Excalidraw/红黑树插入操作演示.excalidraw.md"
-    },
-    {
-      "basename": "软件卸载工具",
-      "path": "Articles/工具/其他工具/软件卸载工具.md"
-    },
-    {
-      "basename": "ABDownloadManager",
-      "path": "Articles/工具/其他工具/ABDownloadManager.md"
-    },
-    {
-      "basename": "FFmpeg",
-      "path": "Articles/工具/其他工具/FFmpeg.md"
-    },
-    {
-      "basename": "yt-dlp",
-      "path": "Articles/工具/其他工具/yt-dlp.md"
-    },
-    {
-      "basename": "PayPal",
-      "path": "Articles/工具/其他工具/PayPal.md"
+      "basename": "美化 Github 个人主页",
+      "path": "Misc/美化 Github 个人主页.md"
     }
   ],
   "omittedPaths": [],

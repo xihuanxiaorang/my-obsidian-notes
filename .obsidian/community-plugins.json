@@ -23,5 +23,7 @@
   "obsidian-git",
   "obsidian-kanban",
   "obsidian-image-toolkit",
-  "tag-wrangler"
+  "tag-wrangler",
+  "quickadd",
+  "templater-obsidian"
 ]

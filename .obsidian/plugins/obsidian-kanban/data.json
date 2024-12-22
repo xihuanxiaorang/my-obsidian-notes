@@ -28,5 +28,6 @@
   "lane-width": 300,
   "move-tags": true,
   "tag-sort": [],
-  "show-checkboxes": true
+  "show-checkboxes": true,
+  "append-archive-date": false
 }

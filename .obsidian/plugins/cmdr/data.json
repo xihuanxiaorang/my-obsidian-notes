@@ -35,10 +35,10 @@
     "statusbar": [],
     "leftRibbon": [
       "打开命令面板",
-      "打开快速切换"
+      "Open Git source control"
     ]
   },
-  "spacing": 8,
+  "spacing": "8",
   "advancedToolbar": {
     "rowHeight": 48,
     "rowCount": 1,

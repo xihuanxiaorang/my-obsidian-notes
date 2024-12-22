@@ -36,5 +36,41 @@
       "modifiers": [],
       "key": "F10"
     }
+  ],
+  "quickadd:choice:1ce394c3-30ba-4b74-844f-32390d507039": [
+    {
+      "modifiers": [],
+      "key": "F9"
+    }
+  ],
+  "quickadd:choice:6d926129-64b8-4155-8a2b-7ff10ef19af1": [
+    {
+      "modifiers": [],
+      "key": "F9"
+    }
+  ],
+  "quickadd:choice:cccb4426-f348-4702-88cf-bc05b94319f1": [
+    {
+      "modifiers": [],
+      "key": "F9"
+    }
+  ],
+  "quickadd:choice:90d5d2bd-fd5c-47c3-aca8-06de5a2b8f0c": [
+    {
+      "modifiers": [],
+      "key": "F8"
+    }
+  ],
+  "quickadd:choice:221ad2d1-0d47-449b-be80-69df44b99032": [
+    {
+      "modifiers": [],
+      "key": "F9"
+    }
+  ],
+  "templater-obsidian:Templates/Insert Callouts.md": [
+    {
+      "modifiers": [],
+      "key": "F7"
+    }
   ]
 }
