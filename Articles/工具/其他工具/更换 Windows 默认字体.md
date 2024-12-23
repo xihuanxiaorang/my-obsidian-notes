@@ -1,3 +1,8 @@
+---
+tags:
+  - Tool
+---
+
 操作步骤非常简单，如下所示：
 
 1. [noMeiryoUI](https://github.com/Tatsu-syo/noMeiryoUI)：进入[下载列表页面](https://github.com/Tatsu-syo/noMeiryoUI/releases)，选择最新版本；

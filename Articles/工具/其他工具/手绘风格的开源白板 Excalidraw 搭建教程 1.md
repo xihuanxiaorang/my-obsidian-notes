@@ -1,3 +1,8 @@
+---
+tags:
+  - Tool
+---
+
 > [!quote]
 > [GitHub - excalidraw/excalidraw: Virtual whiteboard for sketching hand-drawn like diagrams](https://github.com/excalidraw/excalidraw)
 
