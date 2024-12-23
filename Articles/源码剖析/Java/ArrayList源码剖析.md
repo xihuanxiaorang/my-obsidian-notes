@@ -5,14 +5,21 @@ tags:
   - SourceCodeAnalysis
 ---
 
-> [!note]
->
-> 本文记录 ArrayList 源码分析，基于 JDK1.8。
+---
+tags:
+  - Collection
+  - Java
+  - SourceCodeAnalysis
+  - DataStructure
+version: 8
+---
+
+![[ArrayList源码剖析.canvas|ArrayList源码剖析]]
 
 ## 基本介绍
 
-1. ArrayList 可以看成是 "**长度可调节的数组**"，因此又称之为**动态数组**，可以包含任何类型数据（包括 null，可重复）。
-2. ArrayList 继承自 AbstractList 抽象类，实现了 List、[RandomAccess](#randomaccess接口)、Cloneable 和 Serializable 接口，其继承关系体系图如下所示：
+1. ArrayList 是**动态数组**，即"长度可调节的数组"，可以包含任何类型的数据（包括 `null`），并且支持**重复元素**。
+2. ArrayList 继承自 AbstractList，实现了 `List`、[RandomAccess](#randomaccess接口)、`Cloneable` 和 `Serializable` 接口，其继承关系如下图所示：
 
 	```plantuml
 	@startuml
@@ -51,11 +58,13 @@ tags:
 	```
 
 3. ArrayList 存取元素是**有序**的；
-4. ArrayList 大体和 Vector 一致，唯一的区别是 ArrayList 是**非线程安全**的，Vector 是线程安全的，但 Vector 线程安全的代价比较大，推荐使用 CopyOnWriteArrayList，后面文章再做记录。
+4. ArrayList 与 Vector 类似，唯一的区别是 ArrayList 是**非线程安全**的，Vector 是线程安全的。不过，由于 Vector 实现线程安全的开销较大，推荐使用 CopyOnWriteArrayList 替代 Vector，在后面的文章中会详细介绍。
 
 ## 底层数据结构（顺序表）
 
-> [!tip]
+ArrayList 底层使用的是**顺序表**，即基于数组实现的线性表。它通过连续存储单元依次存储数据元素，逻辑上和物理上都保持元素的相邻性。
+
+> [!info]
 >
 > 线性表是由 n（n >= 0）相同类型的数据元素组成的有限序列，它是最基本、最常用的一种线性结构。
 >
@@ -64,7 +73,7 @@ tags:
 >
 > 表中 ai-1 领先于 ai，ai 领先于 ai+1，称 ai-1 是 ai 的**直接前驱**元素，ai+1 是 ai 的**直接后继**元素。
 >
-> 当 i = 1,2,...,n-1 时，ai 有且仅有一个直接后继，当 i=2,3,...,n 时，ai 有且仅有一个直接前驱。<br />
+> 当 i = 1,2,..., n-1 时，ai 有且仅有一个直接后继，当 i=2,3,..., n 时，ai 有且仅有一个直接前驱。<br />
 > 等价于⬇️ <br />
 > 除第一个元素外，每个元素都有唯一的**直接前驱**；除最后一个元素外，每个元素都有唯一的**直接后继**。
 >
@@ -72,15 +81,17 @@ tags:
 >
 > 在非空表中的每个数据元素都有一个确定的位置，如 a1 是第一个数据元素，an 是最后一个数据元素，ai 是第 i 个数据元素，称 i 为数据元素 ai 在线性表中的**位序**。
 
-顺序表是一种用**一段连续的存储单元依次存储数据元素的线性结构**，即**逻辑上相邻的数据元素在物理上的存储位置也是相邻的**。
-
 其特点如下所示：
 
-1. **连续存储**： 顺序表中的元素在内存中是连续存储的，每个元素的地址是紧挨着的；
-2. **随机访问**： 由于元素连续存储，可以**通过下标或索引来快速访问顺序表中的任意元素**。这种随机访问的时间复杂度为 O(1)，即不受顺序表长度的影响，具有高效的特点。
-3. **插入和删除效率相对较低**： 在顺序表中插入或删除元素，特别是在中间位置，可能需要移动大量元素。这会导致插入和删除的平均时间复杂度为 O(n)。
-4. **动态扩展的代价**： 如果顺序表容量不足，需要进行动态扩展，即**重新分配更大的数组并复制数据**。这个过程可能会带来一定的时间开销。
-5. **适用场景**： 顺序表适用于对随机访问较为频繁，插入和删除操作较少的场景。例如，用于快速索引数据、需要高效访问大量数据的情况。
+1. **连续存储**：所有元素在内存中按顺序连续存储，地址相邻。
+2. **随机访问**： 由于元素连续存储，可以**通过下标或索引来快速访问顺序表中的任意元素**。这种随机访问的时间复杂度为 O (1)，即不受顺序表长度的影响，具有高效的特点。
+3. **插入和删除效率相对较低**： 在顺序表中插入或删除元素，特别是在中间位置，可能需要移动大量元素。这会导致插入和删除的平均时间复杂度为 O (n)。
+4. **动态扩容开销**：如果顺序表容量不足，需要进行动态扩容，即**重新分配更大的数组并复制数据**。这个过程可能会带来一定的时间开销。
+5. **适用场景**： 适合频繁访问和随机读取的场景，但不适合频繁插入或删除。
+
+## 知识储备
+
+![[Arrays#copyOf]]
 
 ## 重要属性
 
@@ -102,91 +113,33 @@ private int size;
 
 ```java
 /**
- * 默认的初始容量
+ * 默认初始容量
  */
 private static final int DEFAULT_CAPACITY = 10;
 /**
- * 用于空实例的共享空数组实例
+ * 空实例的共享空数组（用于指定容量为 0 的初始化）
  */
 private static final Object[] EMPTY_ELEMENT_DATA = {};
 
 /**
- * 用于默认大小(10)的空实例的共享空数组实例。
- * 将它与 EMPTY_ELEMENT_DATA 区别开来，以了解添加第一个元素时要膨胀多少
+ * 默认大小(10)的共享空数组（用于无参构造器初始化）。
+ * 与 EMPTY_ELEMENT_DATA 区分开，以便了解在添加第一个元素时数组容量要扩容至多少
  */
 private static final Object[] DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA = {};
 ```
 
 1. DEFAULT_CAPACITY：**默认初始化容量** = 10。
-2. EMPTY_ELEMENTDATA：用于空实例的共享空数组实例，如果**使用有参构造器进行初始化时并且指定初始化容量参数 = 0** 的话，此时 elementData 被赋值为 EMPTY_ELEMENTDATA，这种情况下，**在添加第一个元素时数组容量会变为 1**。
-3. DEFAULTCAPACITY_EMPTY_ELEMENTDATA：用于默认大小(10)的空实例的共享空数组实例，将它与 EMPTY_ELEMENTDATA 区别开来，以便了解添加第一个元素时数组容量要扩容至多少。如果**使用无参构造器进行初始化**的话，此时 elementData 被赋值为 DEFAULTCAPACITY_EMPTY_ELEMENTDATA，这种情况下，**在第一次添加元素时数组容量会变为默认初始化容量（10）**。
-
-## 知识储备
-
-Arrays 类的 `copyOf(U[] original, int newLength, Class<? extends T[]> newType)` 方法用于复制指定数组 original 到新数组，新数组的长度为 newLength，新数组元素类型为 newType。
-
-1. 如果新数组的长度大于旧数组，那么多出的那部分用 null 填充；
-2. 如果新数组的长度小于旧数组，那么少的那部分直接截取掉。
-
-举两个栗子：
-
-```java
-Long[] array1 = new Long[]{1L, 2L, 3L};
-Object[] array2 = Arrays.copyOf(array1, 5, Object[].class);
-System.out.println(Arrays.toString(array2)); // [1, 2, 3, null, null]
-
-Object[] array3 = Arrays.copyOf(array1, 1, Object[].class);
-System.out.println(Arrays.toString(array3)); // [1]
-```
-
-重载方法 `copyOf(T[] original, int newLength)` 用于复制指定数组 original 到新数组，新数组的长度为 newLength，新数组元素类型和旧数组一致。
-
-`copyOf(U[] original, int newLength, Class<? extends T[]> newType)` 方法的大概逻辑如下所示：
-
-```java
-public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) {
-  T[] copy = (T[]) new Object[newLength];
-  System.arraycopy(original, 0, copy, 0, Math.min(original.length, newLength));
-  return copy;
-}
-```
-
-`copyOf()` 方法内部调用 System 类的 native 方法 `arraycopy(Object src, int srcPos, Object dest, int destPos, int length)`：
-
-1. `src`：需要被拷贝的旧数组；
-2. `srcPos`：旧数组开始拷贝的起始位置；
-3. `dest`：拷贝目标数组；
-4. `destPos`：目标数组的起始拷贝位置；
-5. `length`：拷贝的长度。
-
-举例：
-
-```java
-Long[] array1 = new Long[]{1L, 2L, 3L};
-Object[] array2 = new Object[5];
-System.arraycopy(array1, 0, array2, 0, 3);
-System.out.println(Arrays.toString(array2)); // [1, 2, 3, null, null]
-```
-
-指定位置插入元素：
-
-```java
-Long[] array1 = new Long[]{1L, 2L, 3L, null, null, null};
-int index = 1;
-System.arraycopy(array1, index, array1, index + 1, 3 - index);
-array1[index] = 0L;
-System.out.println(Arrays.toString(array1)); // [1, 0, 2, 3, null, null]
-```
+2. EMPTY_ELEMENTDATA：如果**使用有参构造器，且指定的初始化容量为 0**，则 `elementData` 会被赋值为该常量，并且**在添加第一个元素时扩容至 1**。
+3. DEFAULTCAPACITY_EMPTY_ELEMENTDATA：如果**使用无参构造器**，则 `elementData` 会被赋值为该常量，并且**在添加第一个元素时扩容至默认容量（10）**。
 
 ## 主要操作
 
 ### 初始化
 
-> [!important]
->
-> **在无参构造函数和指定初始容量为0的有参构造参数中并没有对数组进行初始化**，而是**在第一次添加元素的时候才会对数组进行初始化**，这样设计的目的主要是为了**延迟初始化，避免内存的浪费**，因为有可能发生数组在初始化了之后用户后面并没有向其中添加任何元素，这样就会造成不必要的浪费。
+> [!note]+
+> **无参构造函数和初始容量为 0 的有参构造函数不会立即分配内存，而是在第一次添加元素时才对数组进行初始化**。这种设计旨在**延迟初始化**，避免不必要的内存浪费。例如，如果数组初始化后未添加任何元素，则会浪费内存。
 
-无参构造函数，elementData 为 DEFAULTCAPACITY_EMPTY_ELEMENTDATA。
+无参构造函数将 `elementData` 初始化为 `DEFAULTCAPACITY_EMPTY_ELEMENTDATA`，即默认大小为 10 的空数组。
 
 ```java
 /**
@@ -197,7 +150,7 @@ public ArrayList() {
 }
 ```
 
-创建容量大小为 initialCapacity 的 ArrayList，如果 initialCapacity < 0，则抛出 IllegalArgumentException 异常；如果 initialCapacity = 0，则 elementData 为 EMPTY_ELEMENTDATA。
+该构造函数创建一个具有指定初始容量的数组。如果 `initialCapacity < 0`，抛出 <span style="background:rgba(255, 183, 139, 0.55)">IllegalArgumentException</span> 异常；如果 `initialCapacity = 0`，将 `elementData` 初始化为 `EMPTY_ELEMENTDATA`。
 
 ```java
 /**
@@ -217,7 +170,7 @@ public ArrayList(int initialCapacity) {
 }
 ```
 
-创建一个包含指定集合 c 数据的 ArrayList。
+该构造函数通过指定集合 `c` 初始化 `ArrayList`，用于将集合中的元素复制到内部数组 `elementData` 中。
 
 ```java
 public ArrayList(Collection<? extends E> c) {
@@ -233,7 +186,8 @@ public ArrayList(Collection<? extends E> c) {
 }
 ```
 
-不知道小伙伴们有没有注意到，上面为什么要多此一举使用 `Arrays.copyOf(elementData, size, Object[].class)` 复制一遍数组呢？这是因为在某些情况下调用集合的 `toArray()` 方法返回的类型并不是 `Object[].class`，比如：
+🤔为什么需要 `Arrays.copyOf`？
+🤓：因为在某些情况下，集合中的 `toArray()` 方法返回的数组类型可能不是 `Object[].class`，因此需要通过 ` Arrays.copyOf ` 复制为 Object[] 类型。例如：
 
 ```java
 Long[] array1 = {1L, 2L};
@@ -244,6 +198,8 @@ System.out.println(array2.getClass() == Object[].class); // false
 List<Long> list2 = new ArrayList<>();
 System.out.println(list2.toArray().getClass() == Object[].class); // true
 ```
+
+在上例中，`list1.toArray()` 返回的数组类型与 `Object[].class` 不一致，导致潜在的类型安全问题。因此，`Arrays.copyOf` 用于确保内部数组的正确类型。
 
 ### 添加元素
 
@@ -329,8 +285,8 @@ private void rangeCheckForAdd(int index) {
    2. 如果 elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA 的话，则取 minCapacity（size + 1） 与 DEFAULT_CAPACITY（10）两者较大的数赋值给 minCapacity；
 2. 数组所需最小的容量确定之后，需要判断当前数组的容量是否小于所需的最小容量，如果是的话，则需要进行扩容操作；
 3. 扩容操作：
-   1. **确定新数组容量大小**。公式：`newCapacity = oldCapacity + (oldCapacity >> 1)`，其中 oldCapacity >> 1 进行位运算，右移一位，即为 oldCapacity 的一半 => **新数组的容量 = 原数组容量的1.5倍** = 原数组容量 + 原数组容量 >> 1；
-   2. **数据拷贝**。新数组容量大小确定之后，则需要进行数据拷贝操作。 `Arrays.copyOf()` 方法实际上就是创建一个新的数组，然后在方法的内部调用 `System.arraycopy()` 方法将原数组中的所有数据全部拷贝到新创建的数组中。
+   1. **确定新数组容量大小**。公式：`newCapacity = oldCapacity + (oldCapacity >> 1)`，其中 oldCapacity >> 1 进行位运算，右移一位，即为 oldCapacity 的一半 => **新数组的容量 = 原数组容量的 1.5 倍** = 原数组容量 + 原数组容量 >> 1；
+   2. **数据拷贝**。新数组容量大小确定之后，则需要进行数据拷贝操作。 `Arrays.copyOf ()` 方法实际上就是创建一个新的数组，然后在方法的内部调用 `System.arraycopy ()` 方法将原数组中的所有数据全部拷贝到新创建的数组中。
 
 ```java
 private void ensureCapacityInternal(int minCapacity) {
@@ -442,7 +398,7 @@ public E remove(int index) {
 
 1. 遍历数组；
 2. 找到第一个目标元素的索引位置；
-3. `fastRemove()` 方法的实现方式与 `remove(index)` 方法一致，都是采用数组拷贝的方式实现将索引 index 后面的元素全部依次往前移动一位，覆盖 index 处的元素，该过程需要移动的元素个数 = size - index - 1；
+3. `fastRemove ()` 方法的实现方式与 `remove (index)` 方法一致，都是采用数组拷贝的方式实现将索引 index 后面的元素全部依次往前移动一位，覆盖 index 处的元素，该过程需要移动的元素个数 = size - index - 1；
 
 ```java
 /**
@@ -492,7 +448,7 @@ public void trimToSize() {
 }
 ```
 
-## RandomAccess接口
+## RandomAccess 接口
 
 RandomAccess 接口是一个空接口，不包含任何方法，只是作为一个**标识**：
 
@@ -505,7 +461,7 @@ public interface RandomAccess {
 
 实现该接口的类说明其支持**快速随机访问**，比如 ArrayList 实现了该接口，说明 ArrayList 支持快速随机访问。**所谓快速随机访问指的是通过元素的下标即可快速获取元素对象，无需遍历**，而 LinkedList 则没有这个特性，元素获取必须遍历链表。
 
-在 Collections 类的 `binarySearch(List<? extends Comparable<? super T>> list, T key)` 方法中，可以看到 RandomAccess 的应用：
+在 Collections 类的 `binarySearch (List<? extends Comparable<? super T>> list, T key)` 方法中，可以看到 RandomAccess 的应用：
 
 ```java
 public static <T>
@@ -517,4 +473,4 @@ public static <T>
 }
 ```
 
-当 list 实现了 RandomAccess 接口时，调用 `indexedBinarySearch()` 方法，否则调用 `iteratorBinarySearch()` 方法。所以当我们遍历集合时，如果集合实现了 RandomAccess 接口，优先选择普通 for 循环，其次 foreach；遍历未实现 RandomAccess 的接口，优先选择 iterator 遍历。
+当 list 实现了 RandomAccess 接口时，调用 `indexedBinarySearch ()` 方法，否则调用 `iteratorBinarySearch ()` 方法。所以当我们遍历集合时，如果集合实现了 RandomAccess 接口，优先选择普通 for 循环，其次 foreach；遍历未实现 RandomAccess 的接口，优先选择 iterator 遍历。
