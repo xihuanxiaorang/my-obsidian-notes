@@ -3,18 +3,8 @@ tags:
   - Collection
   - Java
   - SourceCodeAnalysis
----
-
----
-tags:
-  - Collection
-  - Java
-  - SourceCodeAnalysis
-  - DataStructure
 version: 8
 ---
-
-![[ArrayList源码剖析.canvas|ArrayList源码剖析]]
 
 ## 基本介绍
 
@@ -134,7 +124,7 @@ private static final Object[] DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA = {};
 
 ## 主要操作
 
-### 初始化
+### 初始化✨
 
 > [!note]+
 > **无参构造函数和初始容量为 0 的有参构造函数不会立即分配内存，而是在第一次添加元素时才对数组进行初始化**。这种设计旨在**延迟初始化**，避免不必要的内存浪费。例如，如果数组初始化后未添加任何元素，则会浪费内存。
@@ -206,8 +196,8 @@ System.out.println(list2.toArray().getClass() == Object[].class); // true
 #### 在尾部添加元素
 
 1. 先判断当前数组是否已满无法再添加元素，如果已满的话，则说明数组此时容量不足需要先进行[扩容](#扩容)操作；
-2. 在数组的末尾添加元素；
-3. 元素个数加一 size++；
+2. 然后在数组的末尾添加元素；
+3. 最后元素个数加一 `size++`；
 
 ```java
 /**
@@ -223,11 +213,12 @@ public boolean add(E e) {
 }
 ```
 
-#### 在指定位置添加元素
+#### 在指定位置添加元素✨
 
 1. **索引合法性检查**，如果索引 `index < 0 || index > size` 的话，则抛出**索引越界异常**！
 2. 判断数组目前是否已满无法再添加元素，如果已满的话，则说明数组此时容量不足需要先进行[扩容](#扩容)操作；
-3. 由于数组元素在内存中是"紧挨着的"，它们之间没有空间再存放任何数据，所以在指定的位置添加元素时，需要**将该元素之后的所有元素都向后移动一位，也就是用前一个元素的值覆盖后一个元素的值，最后再用新元素的值覆盖指定位置上的值即可**。
+3. 由于数组元素在内存中是"紧挨着的"，它们之间没有空间再存放任何数据，所以在指定的位置添加元素时，需要**将指定位置及其之后的所有元素向后移动一位。也就是用前一个元素的值覆盖后一个元素的值，最后再用新元素的值覆盖指定位置上的值即可**。
+4. 元素个数加一 `size++`；
 
    > [!Note]
    >
@@ -241,7 +232,7 @@ public boolean add(E e) {
 	}
 	```
 
-   等价于使用 `System.arraycopy()` 方法从原数组 index 位置开始，拷贝到原数组 index + 1 位置开始，拷贝的数量 = size - index。
+   等价于使用 `System.arraycopy()` 方法从原数组 index 位置开始，拷贝到原数组 index + 1 位置开始，拷贝的数量 = size - index。[[Arrays#^30f810]]
 
 	```java
 	System.arraycopy(data, index, data, index + 1, size - index);
@@ -249,7 +240,7 @@ public boolean add(E e) {
 
    ![image-20230823183333737](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412162236793.png)
 
-4. 元素个数加一 size++；
+5. 元素个数加一 size++；
 
 ```java
 public void add(int index, E element) {
@@ -257,7 +248,7 @@ public void add(int index, E element) {
   rangeCheckForAdd(index);
   // 确定数组容量，如果数组容量不足的话则需要进行扩容
   ensureCapacityInternal(size + 1);  // Increments modCount!!
-  // 数组指定位置插入元素 => 将指定位置后面的所有元素往后面移动一个位置
+  // 数组指定位置插入元素 => 将指定位置及其之后的所有元素向后移动一位
   System.arraycopy(elementData, index, elementData, index + 1, size - index);
   // 在指定位置处放入新元素
   elementData[index] = element;
@@ -278,15 +269,15 @@ private void rangeCheckForAdd(int index) {
 }
 ```
 
-#### 扩容
+#### 扩容✨
 
-1. 计算数组所需的最小容量 minCapacity；
+1. 确定数组所需的最小容量 minCapacity；
    1. 目前 minCapacity 为方法实参 = size + 1 = 目前数组中的元素个数 + 1；
    2. 如果 elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA 的话，则取 minCapacity（size + 1） 与 DEFAULT_CAPACITY（10）两者较大的数赋值给 minCapacity；
 2. 数组所需最小的容量确定之后，需要判断当前数组的容量是否小于所需的最小容量，如果是的话，则需要进行扩容操作；
 3. 扩容操作：
    1. **确定新数组容量大小**。公式：`newCapacity = oldCapacity + (oldCapacity >> 1)`，其中 oldCapacity >> 1 进行位运算，右移一位，即为 oldCapacity 的一半 => **新数组的容量 = 原数组容量的 1.5 倍** = 原数组容量 + 原数组容量 >> 1；
-   2. **数据拷贝**。新数组容量大小确定之后，则需要进行数据拷贝操作。 `Arrays.copyOf ()` 方法实际上就是创建一个新的数组，然后在方法的内部调用 `System.arraycopy ()` 方法将原数组中的所有数据全部拷贝到新创建的数组中。
+   2. **数据拷贝**。新数组容量大小确定之后，则需要进行数据拷贝操作。 `Arrays.copyOf()` 方法实际上就是创建一个新的数组，然后在方法的内部调用 [[Arrays#System.arraycopy 方法]] 将原数组中的所有数据全部拷贝到新创建的数组中。
 
 ```java
 private void ensureCapacityInternal(int minCapacity) {
@@ -294,7 +285,7 @@ private void ensureCapacityInternal(int minCapacity) {
 }
 
 /**
- * 计算数组目前所需的最小容量
+ * 确定数组目前所需的最小容量
  */
 private static int calculateCapacity(Object[] elementData, int minCapacity) {
   if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {

@@ -52,7 +52,7 @@ public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]>
     - 使用 `System.arraycopy` 将源数组的元素复制到新数组中。
     - 复制长度为 `Math.min(original.length, newLength)`，确保不越界。
 
-### `System.arraycopy` 方法详解
+### System.arraycopy 方法
 
 `System.arraycopy(Object src, int srcPos, Object dest, int destPos, int length)` 是一个 native 方法，专门用于高效复制数组内容，其参数说明如下：
 
@@ -73,7 +73,7 @@ System.arraycopy(array1, 0, array2, 0, 3);
 System.out.println(Arrays.toString(array2)); // [1, 2, 3, null, null]
 ```
 
-通过 `System.arraycopy` 可以实现在数组指定位置处插入元素的功能。如下所示：
+通过 `System.arraycopy` 可以实现在数组指定位置处插入元素的功能。如下所示： ^30f810
 
 ```java
 Long[] array1 = new Long[]{1L, 2L, 3L, null, null, null};
