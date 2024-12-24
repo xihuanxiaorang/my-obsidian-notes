@@ -1,6 +1,10 @@
 {
   "recentFiles": [
     {
+      "basename": "任务清单",
+      "path": "Overview/任务清单.md"
+    },
+    {
       "basename": "ArrayList源码剖析",
       "path": "Articles/源码剖析/Java/ArrayList源码剖析.md"
     },
@@ -9,8 +13,8 @@
       "path": "Articles/Java/基础/Arrays.md"
     },
     {
-      "basename": "任务清单",
-      "path": "Overview/任务清单.md"
+      "basename": "参考资料",
+      "path": "Overview/参考资料.md"
     },
     {
       "basename": "手摸手教你搭建部署 Vitepress 博客",
@@ -35,10 +39,6 @@
     {
       "basename": "reduce",
       "path": "Snippets/reduce.md"
-    },
-    {
-      "basename": "参考资料",
-      "path": "Overview/参考资料.md"
     }
   ],
   "omittedPaths": [],

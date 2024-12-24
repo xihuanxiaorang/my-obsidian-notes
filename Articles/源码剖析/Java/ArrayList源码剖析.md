@@ -357,12 +357,12 @@ public E set(int index, E element) {
 
 ### 删除元素
 
-#### 删除指定位置元素
+#### 删除指定位置元素✨
 
 1. **索引合法性检查**，如果索引 `index >= size` 的话，则抛出**索引越界异常**！
-2. 获取指定位置元素（需要被删除的元素）；
-3. 采用数组拷贝的方式实现将索引 index 后面的元素全部依次往前移动一位，覆盖 index 处的元素，该过程需要移动的元素个数 = size - index - 1;
-4. 将将删除元素前数组中的最后一个元素置为 `null`，以便进行垃圾回收；
+2. 获取指定位置的元素（即需要被删除的元素）；
+3. 采用数组拷贝的方式实现将索引 index 之后的所有元素全部依次向前移动一位，该过程需要移动的元素数量 = size - index - 1;
+4. 将数组中的最后一个元素置为 `null`，以便进行垃圾回收；
 5. 元素个数减一 size--；
 
 ```java
@@ -376,7 +376,7 @@ public E remove(int index) {
   // 计算删除指定位置元素时总共需要移动的元素个数
   int numMoved = size - index - 1;
   if (numMoved > 0)
-    // 采用数组拷贝的方式实现将索引index后面的元素全部依次往前移动一位，覆盖index处的元素
+    // 采用数组拷贝的方式实现将索引 index 之后的所有元素全部依次向前移动一位
     System.arraycopy(elementData, index+1, elementData, index, numMoved);
   // 将删除元素前数组中的最后一个元素置为空以便进行垃圾回收 && 数组中元素的个数减一
   elementData[--size] = null; // clear to let GC do its work
@@ -387,61 +387,73 @@ public E remove(int index) {
 
 #### 删除指定元素
 
-1. 遍历数组；
-2. 找到第一个目标元素的索引位置；
-3. `fastRemove ()` 方法的实现方式与 `remove (index)` 方法一致，都是采用数组拷贝的方式实现将索引 index 后面的元素全部依次往前移动一位，覆盖 index 处的元素，该过程需要移动的元素个数 = size - index - 1；
+1. 遍历数组，找到目标元素的索引位置；
+2. 如果找到目标元素，则调用 `fastRemove(index)` 进行删除。
+3. `fastRemove(index)` 方法的实现方式与 ` remove(index) ` 方法一致，都是采用数组拷贝的方式实现将索引 index 之后的所有元素全部依次向前移动一位，该过程需要移动的元素数量 = size - index - 1;
 
 ```java
 /**
- * 遍历数组，找到第一个目标元素，然后删除
+ * 删除数组中第一个匹配的目标元素
  */
 public boolean remove(Object o) {
   if (o == null) {
+  	// 遍历找到第一个 null 值
     for (int index = 0; index < size; index++)
       if (elementData[index] == null) {
         fastRemove(index);
         return true;
       }
   } else {
+  	// 遍历找到第一个匹配的目标元素
     for (int index = 0; index < size; index++)
       if (o.equals(elementData[index])) {
         fastRemove(index);
         return true;
       }
   }
+  // 未找到匹配元素
   return false;
 }
 
 /**
- * 实现方式与和remove(index)一致，都是采用数组拷贝的方式实现将索引index后面的元素全部依次往前移动一位，覆盖index处的元素
+ * 快速删除指定位置的元素，内部使用
  */
 private void fastRemove(int index) {
   modCount++;
   int numMoved = size - index - 1;
   if (numMoved > 0)
+  	// 将索引 index 之后的所有元素全部依次向前移动一位
     System.arraycopy(elementData, index+1, elementData, index, numMoved);
   elementData[--size] = null; // clear to let GC do its work
 }
 ```
 
-### 将数组容量调整为数组中的元素个数
+### 调整数组容量至实际元素个数
 
-该方法用于将数组容量调整为实际元素个数大小，当一个 ArrayList 元素个数不会发生改变时，可以调用该方法减少内存占用。
+该方法用于将数组容量调整为实际元素个数的大小。当 `ArrayList` 的元素个数已经固定不变时，调用此方法可以释放多余的内存，提高内存利用率。
+
+实现逻辑：
+
+1. **修改计数器（modCount）**：增加修改计数，用于支持**快速失败机制**。
+2. **检查当前数组容量**：只有当数组的实际容量大于元素个数时才进行调整。
+3. **处理空列表**：如果 `ArrayList` 为空（`size == 0`），直接将 `elementData` 指向共享的空数组 `EMPTY_ELEMENTDATA`。
+4. **调整数组容量**：通过 [[Arrays#copyOf]] 方法将 `elementData` 数组缩小到 `size` 大小。
 
 ```java
 public void trimToSize() {
   modCount++;
+  // 仅在数组容量大于实际元素个数时才进行调整
   if (size < elementData.length) {
     elementData = (size == 0)
-      ? EMPTY_ELEMENTDATA
-      : Arrays.copyOf(elementData, size);
+      ? EMPTY_ELEMENTDATA // 空数组优化
+      : Arrays.copyOf(elementData, size); // 缩容至实际元素个数
   }
 }
 ```
 
 ## RandomAccess 接口
 
-RandomAccess 接口是一个空接口，不包含任何方法，只是作为一个**标识**：
+`RandomAccess` 是一个**标识**接口，不包含任何方法，仅用于标识实现类是否支持**快速随机访问**。
 
 ```java
 package java.util;
@@ -450,9 +462,16 @@ public interface RandomAccess {
 }
 ```
 
-实现该接口的类说明其支持**快速随机访问**，比如 ArrayList 实现了该接口，说明 ArrayList 支持快速随机访问。**所谓快速随机访问指的是通过元素的下标即可快速获取元素对象，无需遍历**，而 LinkedList 则没有这个特性，元素获取必须遍历链表。
+特性与用途：
 
-在 Collections 类的 `binarySearch (List<? extends Comparable<? super T>> list, T key)` 方法中，可以看到 RandomAccess 的应用：
+- **快速随机访问**：实现该接口的类**支持通过元素下标快速访问元素，而无需遍历**。例如：
+    - `ArrayList` 实现了 `RandomAccess` 接口，支持**快速随机访问**。
+    - `LinkedList` 未实现该接口，访问元素需要遍历链表，效率较低。
+- **标识作用**：`RandomAccess` 的存在使得 Java 标准库可以根据集合类型优化操作。例如，区分**随机访问集合**（如 `ArrayList`）和**顺序访问集合**（如 `LinkedList`），从而使用不同的算法实现更高效的操作。
+
+实现应用：
+
+在 `Collections` 类的 `binarySearch` 方法中，可以看到 `RandomAccess` 的具体应用：
 
 ```java
 public static <T>
@@ -464,4 +483,17 @@ public static <T>
 }
 ```
 
-当 list 实现了 RandomAccess 接口时，调用 `indexedBinarySearch ()` 方法，否则调用 `iteratorBinarySearch ()` 方法。所以当我们遍历集合时，如果集合实现了 RandomAccess 接口，优先选择普通 for 循环，其次 foreach；遍历未实现 RandomAccess 的接口，优先选择 iterator 遍历。
+- 判断集合类型：
+    - 如果 `list` 实现了 `RandomAccess` 接口或集合的大小小于某个阈值（`BINARYSEARCH_THRESHOLD`），则调用**索引二分搜索**（`indexedBinarySearch`）。
+    - 否则，调用**迭代器二分搜索**（`iteratorBinarySearch`）。
+- 优化操作：
+    - `indexedBinarySearch` 使用索引直接访问元素，适合随机访问集合（如 `ArrayList`）。
+    - `iteratorBinarySearch` 使用迭代器逐个遍历，适合顺序访问集合（如 `LinkedList`）。
+
+遍历集合的建议：
+
+- 实现了 `RandomAccess` 接口的集合（如 `ArrayList`）：
+    - 优先使用**普通 for 循环**（基于索引访问）。
+    - 次选 **foreach 循环**。
+- 未实现 `RandomAccess` 接口的集合（如 `LinkedList`）：
+    - 优先使用**迭代器遍历**（如 `Iterator` 或 `ListIterator`）。
