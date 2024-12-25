@@ -5,40 +5,36 @@
       "path": "Articles/源码剖析/Java/HashMap源码剖析.md"
     },
     {
-      "basename": "ArrayList源码剖析",
-      "path": "Articles/源码剖析/Java/ArrayList源码剖析.md"
+      "basename": "HashMap数组下标计算.excalidraw",
+      "path": "Excalidraw/HashMap数组下标计算.excalidraw.md"
     },
     {
-      "basename": "寻找2的幂次方最小值的示意图.excalidraw",
-      "path": "Excalidraw/寻找2的幂次方最小值的示意图.excalidraw.md"
-    },
-    {
-      "basename": "任务清单",
-      "path": "Overview/任务清单.md"
-    },
-    {
-      "basename": "Snippets & Misc & Ideas & Inbox & Articles",
-      "path": "Misc/Snippets & Misc & Ideas & Inbox & Articles.md"
-    },
-    {
-      "basename": "快速失败机制（fail-fast）",
-      "path": "Inbox/快速失败机制（fail-fast）.md"
+      "basename": "代码生成器",
+      "path": "Canvas/代码生成器.canvas"
     },
     {
       "basename": "HashMap底层数据结构.excalidraw",
       "path": "Excalidraw/HashMap底层数据结构.excalidraw.md"
     },
     {
-      "basename": "未命名",
-      "path": "Announcements/未命名.md"
+      "basename": "ArrayList源码剖析",
+      "path": "Articles/源码剖析/Java/ArrayList源码剖析.md"
     },
     {
-      "basename": "Java8 新特性",
-      "path": "Articles/Java/基础/Java8 新特性.md"
+      "basename": "任务清单",
+      "path": "Overview/任务清单.md"
     },
     {
-      "basename": "软件卸载工具",
-      "path": "Articles/工具/其他工具/软件卸载工具.md"
+      "basename": "反射",
+      "path": "Inbox/反射.md"
+    },
+    {
+      "basename": "快速失败机制（fail-fast）",
+      "path": "Inbox/快速失败机制（fail-fast）.md"
+    },
+    {
+      "basename": "寻找2的幂次方最小值的示意图.excalidraw",
+      "path": "Excalidraw/寻找2的幂次方最小值的示意图.excalidraw.md"
     }
   ],
   "omittedPaths": [],
