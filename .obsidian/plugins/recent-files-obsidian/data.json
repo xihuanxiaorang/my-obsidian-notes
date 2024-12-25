@@ -5,8 +5,24 @@
       "path": "Articles/源码剖析/Java/HashMap源码剖析.md"
     },
     {
+      "basename": "ArrayList源码剖析",
+      "path": "Articles/源码剖析/Java/ArrayList源码剖析.md"
+    },
+    {
+      "basename": "寻找2的幂次方最小值的示意图.excalidraw",
+      "path": "Excalidraw/寻找2的幂次方最小值的示意图.excalidraw.md"
+    },
+    {
       "basename": "任务清单",
       "path": "Overview/任务清单.md"
+    },
+    {
+      "basename": "Snippets & Misc & Ideas & Inbox & Articles",
+      "path": "Misc/Snippets & Misc & Ideas & Inbox & Articles.md"
+    },
+    {
+      "basename": "快速失败机制（fail-fast）",
+      "path": "Inbox/快速失败机制（fail-fast）.md"
     },
     {
       "basename": "HashMap底层数据结构.excalidraw",
@@ -23,22 +39,6 @@
     {
       "basename": "软件卸载工具",
       "path": "Articles/工具/其他工具/软件卸载工具.md"
-    },
-    {
-      "basename": "手绘风格的开源白板 Excalidraw 搭建教程",
-      "path": "Articles/工具/其他工具/手绘风格的开源白板 Excalidraw 搭建教程.md"
-    },
-    {
-      "basename": "手摸手教你搭建部署 Vitepress 博客",
-      "path": "Articles/工具/其他工具/手摸手教你搭建部署 Vitepress 博客.md"
-    },
-    {
-      "basename": "noMeiryoUI - 更换 Windows 默认字体",
-      "path": "Articles/工具/其他工具/noMeiryoUI - 更换 Windows 默认字体.md"
-    },
-    {
-      "basename": "yt-dlp",
-      "path": "Articles/工具/其他工具/yt-dlp.md"
     }
   ],
   "omittedPaths": [],

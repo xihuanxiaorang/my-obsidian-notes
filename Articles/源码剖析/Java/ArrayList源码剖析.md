@@ -436,7 +436,7 @@ private void fastRemove(int index) {
 
 实现逻辑：
 
-1. **修改计数器（modCount）**：增加修改计数，用于支持**快速失败机制**。
+1. **修改计数器（modCount）**：增加修改计数，用于支持[[快速失败机制（fail-fast）]]。
 2. **检查当前数组容量**：只有当数组的实际容量大于元素个数时才进行调整。
 3. **处理空列表**：如果 `ArrayList` 为空（`size == 0`），直接将 `elementData` 指向共享的空数组 `EMPTY_ELEMENTDATA`。
 4. **调整数组容量**：通过 [[Arrays#copyOf]] 方法将 `elementData` 数组缩小到 `size` 大小。
