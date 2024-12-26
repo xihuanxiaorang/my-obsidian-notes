@@ -4,7 +4,7 @@ tags:
   - Java
   - SourceCodeAnalysis
 create_time: 2024-12-24 17:50
-update_time: 2024-12-24 17:50
+update_time: 2024/12/26 23:22
 version: 8
 ---
 
@@ -274,7 +274,7 @@ public HashMap(int initialCapacity, float loadFactor) {
 
 1. 校验参数 `initialCapacity`（初始容量）和 `loadFactor`（加载因子）的合法性，不符合要求时抛出异常。
 2. 调用 [[#tableSizeFor 方法]]，计算 >= initialCapacity 的最小 2 的幂（如 16、32），以确保数组容量始终为 2 的幂次方。
-3. `threshold` 暂时保存了计算出的数组容量，而不是正常的扩容阈值（`capacity * loadFactor`）。这是因为数组尚未初始化，只有在首次[[#添加元素]]时才会：
+3. `threshold` 暂时保存了计算出的数组容量，而不是正常的扩容阈值（`capacity * loadFactor`）。这是因为数组尚未初始化，只有在首次[[#添加元素]]时才会： ^f1dccd
    - 利用 `threshold` 初始化数组容量；
    - 重新计算正确的扩容阈值 `capacity * loadFactor`。
 
@@ -345,218 +345,209 @@ static final int hash(Object key) {
 
 #### 添加元素主流程✨
 
-1. 判断数组是否为空 `tab == null || tab.length == 0`，若为真，则调用 `resize` 方法完成初始化。
-2. 通过公式 `index = (n - 1) & hash` 计算当前元素的数组下标 `i`，并取出该位置的元素 `p = tab[i]`：
-   - 如果 `p == null`，说明当前位置为空，直接插入新元素，**元素个数 size + 1**。
-   - 如果 `p != null`，说明当前位置已有元素，处理如下：
-     1. 若 `p` 的哈希值和键值与要插入元素相等，表示是同一元素 [[#^4ae9ff]]，则让**节点 e 指向该元素**。
-     2. 如果 `p` 是红黑树节点，则调用红黑树的插入逻辑，寻找匹配的树节点并让**节点 e 指向该树节点**。
-     3. 若 `p` 是链表节点，则遍历链表寻找匹配节点：
-        - 找到匹配节点后，让**节点 e 指向链表中的该节点**。
-        - 未找到匹配节点时，将新元素添加到链表末尾。如果链表长度超过 8 且数组长度 >= 64，链表会转化为红黑树。**元素个数 size + 1**。
-3. 如果节点 `e` 不为空，说明在数组或链表或红黑树中找到了与要插入元素相同的节点：
-   - 如果 `onlyIfAbsent == false` 或 `oldValue == null`，则用新值覆盖旧值，并返回旧值；
-   - 否则的话直接返回旧值即可。
-4. 如果 `e == null`，说明是新增节点，此时会触发以下操作：
-   - **modCount + 1** 标记结构发生变化。
-   - 若元素数量大于扩容阈值（`size > threshold`），则调用 `resize` 方法扩容数组。
-5. 最终返回操作结果。如果插入的是新节点，返回 `null`；否则返回旧值。
+1. 检查数组 `table` 是否已初始化：
+   - 若未初始化（`tab == null || tab.length == 0`），则调用 `resize` 方法先完成初始化。
+2. 根据公式 `index = (n - 1) & hash` 计算插入位置索引 `i`，并取出该位置节点 `p = tab[i]`：
+   - 若 `p == null`（位置为空），直接插入新节点，**元素个数 size + 1**。
+   - 若 `p != null`（位置已有节点），按以下情况处理：
+     1. 若 `p` 的哈希值和键值与新节点相同，表示是同一节点 [[#^4ae9ff]]，**指针 e 指向该节点**。
+     2. 若 `p` 是红黑树节点，则调用红黑树插入逻辑，找到目标节点后，**指针 e 指向该节点**。
+     3. 若 `p` 是链表节点，则遍历链表：
+        - 找到相同节点，**指针 e 指向该节点**；
+        - 未找到相同节点，就将新节点添加到链表末尾。若链表长度超出阈值（8），且数组长度 >= 64，链表转化为红黑树。**元素个数 size + 1**。
+3. 如果找到相同节点（`e != null`），判断是否需要覆盖旧值：
+   - 若 `onlyIfAbsent == false` 或 `oldValue == null`，则用新值覆盖旧值，并返回旧值。
+   - 否则直接返回旧值。
+4. 若为新节点（`e == null`），触发以下操作：
+   - **modCount + 1** 标记结构变化。
+   - 如果节点总数超过扩容阈值（`size > threshold`），调用 `resize` 方法扩容。
+5. 返回结果：
+   - 若插入的是新节点，则返回 `null`；
+   - 否则返回旧值。
 
 > [!tip]
-> **在使用自定义对象作为 key 时，需要重写对象的 `hashCode` 和 `equals` 方法**。
-> - `hashCode` 方法决定对象会被放到哪个 bucket 中。
-> - 当多个对象的哈希值冲突时，通过 `equals` 方法判断它们是否为同一对象。
+> **使用自定义对象作为 key 时，需要重写 `hashCode` 和 `equals` 方法：**。
+> - `hashCode` 决定对象的哈希分布。
+> - `equals` 用于判断哈希冲突时是否为同一对象。
 
 ^4ae9ff
 
 ```java
-// 参数 onlyIfAbsent 表示是否覆盖原来的值：true 表示不覆盖，false 表示覆盖，默认为 false
-final V putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) {
- // tab：存放节点的数组，n：数组长度，i：当前插入元素的数组下标，p：数组下标位置的节点
- Node<K,V>[] tab; Node<K,V> p; int n, i;
- // 若 table 未初始化或长度为 0，则调用 resize 方法初始化
- if ((tab = table) == null || (n = tab.length) == 0)
-     n = (tab = resize()).length;
- // 计算数组下标 index = (n - 1) & hash，并检查该位置是否已有元素
- if ((p = tab[i = (n - 1) & hash]) == null)
-	 // 若当前位置为空，直接插入新节点
-     tab[i] = newNode(hash, key, value, null);
- else {
-	// e: 当前处理节点引用，k: 临时存储 key
-     Node<K,V> e; K k;
-     // 若当前位置节点的 hash 和 key 与新节点相同，表示是同一节点
-     if (p.hash == hash && ((k = p.key) == key || (key != null && key.equals(k))))
-         // 条件成立，表示当前要插入的元素与当前位置处已有元素是同一个元素
-         e = p;
-     // 若当前位置为红黑树节点，则调用树节点插入方法
-     else if (p instanceof TreeNode)
-         e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
-     // 否则，处理链表节点插入逻辑
-     else {
-         for (int binCount = 0; ; ++binCount) {
-             // 遍历链表，若找到相同节点则停止
-             if ((e = p.next) == null) {
-             	// 遍历到链表尾部，插入新节点
-                 p.next = newNode(hash, key, value, null);
-                 // 判断链表是否需要转化为红黑树
-                 if (binCount >= TREEIFY_THRESHOLD - 1)
-	                   // 在treeifyBin方法中还会继续判断数组长度是否小于64?
-	                   // 如果数组长度小于64的话，则优先进行扩容而不是树化；
-                     // 如果数组长度大于等于64的话，再加上上面当前链表元素个数大于8的条件，就会将当前链表转化为红黑树
-                     treeifyBin(tab, hash);
-                 // 跳出循环，停止链表遍历
-                 break;
-             }
-             // 判断当前要插入元素的hash值和key值是否与正在遍历的链表中的e节点的hash值和key值相同
-             if (e.hash == hash && ((k = e.key) == key || (key != null && key.equals(k))))
-                 // 条件成立，表明要插入的元素与e节点是同一个元素，则不执行插入操作，跳出循环，停止链表遍历
-                 break;
-             p = e;
-         }
-     }
-     // 若找到相同节点，根据 onlyIfAbsent 判断是否覆盖旧值
-     if (e != null) {
-	       // 取出e节点的value值赋值给oldValue
-         V oldValue = e.value;
-         // 判断onlyIfAbsent是否为false或者原来的值是否为null
-         if (!onlyIfAbsent || oldValue == null)
-	           // 条件成立，表明onlyIfAbsent为false或者原来的值为null，则用要插入元素的value值覆盖掉原来的值
-             e.value = value;
-         afterNodeAccess(e);
-         // 返回原来的值
-         return oldValue;
-     }
- }
- // modCount+1表示HashMap此时结构已经发生变化
- // 更新结构修改计数器 modCount，并检查是否需要扩容
- ++modCount;
- // 不管是在数组上添加一个元素还是在链表中添加一个元素，size都会加1
- // 判断节点数量是否已经大于阈值?
- if (++size > threshold)
-	   // 条件成立，表明节点数量已经大于扩容阈值，需要使用resize方法对数组进行扩容
-     resize();
- afterNodeInsertion(evict);
- // 返回 null，表示插入的是新节点
- return null;
+// 参数 onlyIfAbsent 表示是否覆盖已有值，true 不覆盖，false 覆盖，默认为 falseV putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) {  
+  // tab: 存放节点的数组，n: 数组长度，i: 目标插入位置索引，p: 目标位置的节点  
+  Node<K, V>[] tab;  
+  Node<K, V> p;  
+  int n, i;  
+  // 若 table 未初始化或长度为 0，则调用 resize 方法初始化  
+  if ((tab = table) == null || (n = tab.length) == 0) n = (tab = resize()).length;  
+  // 计算数组下标 index = (n - 1) & hash，并检查该位置是否已有元素  
+  if ((p = tab[i = (n - 1) & hash]) == null)  
+    // 若当前位置为空，直接插入新节点  
+    tab[i] = newNode(hash, key, value, null);  
+  else {  
+    // e: 临时存储目标节点，k: 临时存储 key    Node<K, V> e;  
+    K k;  
+    // 若当前位置节点的 hash 和 key 与新节点相同，则表示是同一节点  
+    if (p.hash == hash && ((k = p.key) == key || (key != null && key.equals(k)))) e = p;  
+      // 若当前位置为红黑树节点，则调用树节点插入方法  
+    else if (p instanceof TreeNode) e = ((TreeNode<K, V>) p).putTreeVal(this, tab, hash, key, value);  
+      // 否则，处理链表节点插入逻辑  
+    else {  
+      // 遍历链表，若找到相同节点则停止  
+      for (int binCount = 0; ; ++binCount) {  
+        // 遍历到链表尾部  
+        if ((e = p.next) == null) {  
+          // 尾插法新增节点  
+          p.next = newNode(hash, key, value, null);  
+          // 如果链表长度超过树化阈值，则尝试转化为红黑树  
+          if (binCount >= TREEIFY_THRESHOLD - 1) treeifyBin(tab, hash);  
+          break;  
+        }        if (e.hash == hash && ((k = e.key) == key || (key != null && key.equals(k))))  
+          // 找到相同节点，停止插入  
+          break;  
+        p = e;  
+      }    }    // 若找到相同节点，根据 onlyIfAbsent 判断是否覆盖旧值  
+    if (e != null) {  
+      V oldValue = e.value;  
+      if (!onlyIfAbsent || oldValue == null)  
+        // 覆盖旧值  
+        e.value = value;  
+      afterNodeAccess(e);  
+      // 返回旧值  
+      return oldValue;  
+    }  }  // 更新结构修改计数器  
+  ++modCount;  
+  // 增加节点数量，检查是否需要扩容  
+  if (++size > threshold) resize();  
+  afterNodeInsertion(evict);  
+  // 返回 null，表示插入的是新节点  
+  return null;  
 }
 ```
 
-#### 数组初始化 & 扩容
+#### 数组初始化 & 扩容✨
 
 > [!important]
-> `resize` 方法有两个作用：<strong style="font-size:19px;">初始化数组</strong>和<strong style="font-size:19px;">对数组进行扩容（包括数据迁移操作）</strong>。
+> `resize` 方法主要用于<strong style="font-size:19px;">初始化数组</strong>或<strong style="font-size:19px;">扩容并迁移数据</strong>。
 
-1. 在计算新数组的容量和扩容阈值之前，先用 oldTab、oldCap 和 oldThr 三个变量分别保存扩容前数组的引用、容量以及扩容阈值。
-   1. 当旧数组容量大于 0 时，说明数组已经初始化过，此时走的是数组**扩容**流程，新数组的容量 newCap = oldCap << 1 <=> newCap = oldCap * 2，等于旧数组容量的两倍；新扩容阈值 newThr = oldThr << 1 <=> oldThr * 2，等于旧扩容阈值的两倍；
-   2. 当 **旧扩容阈值>0&&旧数组容量=0** 时，对应的情况是**使用指定数组初始容量和加载因子的构造器进行初始化**。大家应该还记得在上面 [[#初始化 | 初始化.构造函数分析.第三点]] 的中曾提到过将使用 `tableSizeFor` 方法获取到的容量大小保存在扩容阈值变量中，此时刚好从旧扩容阈值 oldThr 中取出数组应该初始化的容量大小赋值给 newCap；新扩容阈值 newThr = newCap \* loadFactor = 新数组容量 * 指定的加载因子参数；
-   3. 当 **旧扩容阈值=0&&旧数组容量=0** 时，对应的情况是**使用默认的无参构造进行初始化**。新数组容量 newCap = DEFAULT_INITIAL_CAPACITY = 16，扩容阈值 newThr = DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY = 0.75 * 16 = 12；
-2. 创建一个新的数组，数组初始容量大小为 newCap：`Node<K,V>[] newTab = (Node<K,V>[]) new Node[newCap]`。让 table 指向新创建出来的数组，至此数组的初始化和扩容工作就已经完成了，接下来的工作就是进行**数据拷贝（即将原数组中的数据迁移到新数组中）**。
-3. 数据迁移：遍历原数组，将原数组中的非空元素拷贝到新数组中。当遍历到某一个索引位置时，判断原数组中该位置的元素是否为 NULL，即判断原数组中该位置是否存在元素？
-   1. 条件成立的话，判断当前元素是否有下一个节点？即判断该节点是否为链表或者红黑树结构；
-      1. 条件成立的话，判断当前节点是不是树节点，即判断当前索引位置处的元素是否已经由链表转化为红黑树结构？
-         1. 条件成立的话，则走红黑树的扩容流程；
-         2. 条件不成立的话，说明当前索引位置处的元素是一个链表结构。**在迁移数据时会把原链表拆成一个<u>低位链表</u>和一个<u>高位链表</u>，然后再分别插入到新数组的两个位置上，这两个位置分别为<u>当前索引位置</u>和<u>当前索引位置 + 原数组长度</u>**。这个结论是怎么来的？举个栗子，如下图所示：图 a 和图 b 分别表示扩容前和扩容后 key1 和 key2 在数组中的索引位置。
-            ![image.png](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412162334584.png)
+1. 确定新数组的容量和扩容阈值
+   1. **旧数组容量 `oldCap > 0`**，说明数组已经初始化过，当前流程为扩容：
+      - 新数组容量： `newCap = oldCap << 1`，（即旧数组容量的两倍）。
+      - 新扩容阈值： `newThr = oldThr << 1`（即旧扩容阈值的两倍）。
+   2. **旧扩容阈值 > 0 && 旧数组容量 = 0**，说明数组尚未初始化，但已通过有参构造器指定了初始容量和加载因子，当前流程为数组初始化：
+      - 新数组容量：直接使用 `oldThr` 的值作为 `newCap`，即目标初始容量。 [[#^f1dccd]]
+      - 新扩容阈值：根据加载因子计算，`newThr = newCap * loadFactor`。
+   3. **旧扩容阈值 = 0 && 旧数组容量 = 0**，说明数组尚未初始化，且未通过构造器指定初始容量，当前流程为默认初始化：
+      - 新数组容量： `newCap = DEFAULT_INITIAL_CAPACITY = 16`。
+      - 新扩容阈值： `newThr = DEFAULT_INITIAL_CAPACITY * DEFAULT_LOAD_FACTOR = 12`。
+2. 创建新数组 & 更新指针
+   - 用新数组容量 `newCap` 创建数组 `newTab`，并将其赋值给 `table`。
+   - 同时将新扩容阈值 `newThr` 更新到 `threshold`。
+3. 迁移数据（将旧数组的数据拷贝到新数组），遍历旧数组的每个位置 `j`，判断节点类型并进行相应迁移：
+   1. **位置为空**：直接跳过。
+   2. **仅有一个节点**：无需拆分，直接计算新索引并插入新数组。
+   3. **链表结构**：根据节点的高位 bit 拆分为 **低位链表** 和 **高位链表**：[[#^e07431]]
+      - 低位链表：新索引 = 原索引位置。
+      - 高位链表：新索引 = 原索引位置 + 原数组长度。
+   4. **红黑树结构**：调用树节点的 `split` 方法完成迁移。
 
-            1. 扩容前 key1 和 key2 的 hash 值后四位相等，所以在旧数组中的索引位置相同，都等于 5，两个节点处在同一个链表上；
-            2. 数组在扩容后，因为数组长度 n 变为原来的 2 倍，即 n - 1 就会比原来在高位处多 1 个 bit 位，因此新的数组下标就会发生这样的变化：
-               ![image.png](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412162335948.png)
+在迁移数据时，原链表会被拆分为<u>低位链表</u>和<u>高位链表</u>，然后分别插入到新数组的<u>当前索引位置</u>和<u>当前索引位置 + 原数组长度</u>。这个结论是怎么来的呢？举个栗子，如下图所示：（a）和 (b) 分别表示扩容前和扩容后 key1 和 key2 在数组中的索引位置。
+![image.png](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412162334584.png) ^e07431
+- 扩容前：
+	- 如 (a) 所示，key1 和 key2 的 hash 值后四位相同，所以在旧数组中计算出的索引位置相同，都等于 5，它们在同一个链表上。
+- 扩容后：
+  ![image.png](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412162335948.png)
+	- 数组长度 `n` 扩展为原来的两倍（从 16 到 32），此时 `n-1` 的二进制表示在高位多了 1 个 bit 位，用于区分高位与低位节点。
+	- 新数组下标计算的变化：
+	  - `key1` 的索引位置不变，仍为 5。
+	  - `key2` 的索引位置变为 `21 = 5 + 16`（原索引位置 + 原数组长度）。
+	- 如（b）所示，`key1` 和 `key2` 被分配到了不同的链表位置。
 
-               导致在计算节点位于新数组中的索引位置时，key1 的索引位置还是等于 5，而 key2 的索引位置 = 21 <== 5 + 16，即原位置 + 原数组长度。所以在扩容时，只需要看 hash 值所对应二进制的最高位的位置是 0 还是 1 即可，如果是 0 的话表示还是位于原位置，是 1 的话则表示当前节点所在新数组的位置 = 原位置 + 原来的数组长度。
-
-      2. 条件不成立的话，则表示当前索引位置在原数组中只存在一个元素，所以只需要计算该元素位于新数组中的数组下标即可。
-   2. 条件不成立的话，直接跳过进入下一次循环。
+扩容时，只需要根据节点 hash 值的高位 bit 来判断新索引位置：
+- **高位 bit 为 0**：节点仍位于原索引位置。
+- **高位 bit 为 1**：节点的新位置为原索引位置加上原数组长度。
 
 ```java
 final Node<K,V>[] resize() {
- // 将原来的table交由oldTab保存
+ // 保存旧数组到 oldTab
  Node<K,V>[] oldTab = table;
- // 获取原来的数组长度赋值给oldCap
+ // 保存旧数组容量到 oldCap
  int oldCap = (oldTab == null) ? 0 : oldTab.length;
- // 将原来的阈值大小threshold交由oldThr保存
+ // 保存旧扩容阈值到 oldThr
  int oldThr = threshold;
- // 预定义新数组的大小和阈值
+ // 预定义新数组容量和扩容阈值
  int newCap, newThr = 0;
- // 如果原来的数组长度大于0
+ 
+ // 如果旧数组容量大于 0，说明已经初始化过
  if (oldCap > 0) {
-     // 如果原来的数组长度已经大于等于最大的数组长度(1<<30)，即超过最大值就不再扩容了
+     // 如果旧数组容量已达到最大容量限制，则不再扩容
      if (oldCap >= MAXIMUM_CAPACITY) {
-	       // 直接把阈值大小设置为最大整数2^31-1
+	     // 设置阈值为整数最大值 2^31-1
          threshold = Integer.MAX_value;
-         // 返回原来的数组
+         // 返回旧数组
          return oldTab;
      }
-     // oldCap<<1 => 将原来的数组大小*2，即扩大容量为当前容量的两倍，但不能超过 MAXIMUM_CAPACITY
+     // 否则扩容为旧数组容量的两倍，但不超过最大容量
      else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY && oldCap >= DEFAULT_INITIAL_CAPACITY)
-         // 将阈值也扩大1倍 <=> oldThr * 2
+         // 扩容阈值也扩大为原来的两倍
          newThr = oldThr << 1;
  }
- // 当原来的阈值大于0但数组长度=0时，对应的情况就是使用带有指定数组长度和加载因子的构造器创建HashMap
+ // 如果旧扩容阈值 > 0 && 旧数组容量 = 0，则说明数组尚未初始化，但已通过有参构造器指定了初始容量和加载因子
  else if (oldThr > 0)
-	   // 新数组的长度等于原来的阈值大小
+	 // 新数组容量为旧扩容阈值
      newCap = oldThr;
- // 对应的情况是使用默认的构造器创建HashMap
+ // 默认初始化流程（无参构造器）
  else {
-	   // 默认的数组大小为16
+	 // 默认数组容量 16
      newCap = DEFAULT_INITIAL_CAPACITY;
-     // 默认的阈值大小 = 16 * 0.75(加载因子) = 12
+     // 默认扩容阈值 = 16 * 0.75 = 12
      newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
  }
- // 当新的阈值大小为0时，对应的情况就是使用带有指定数组长度和加载因子的构造器创建HashMap
+ // 计算新阈值（如果未设置）
  if (newThr == 0) {
-     // 使用阀值公式计算新的阈值 = 新的容量 * 加载因子
+     // 扩容阀值公式：数组容量 * 加载因子
      float ft = (float)newCap * loadFactor;
      newThr = (newCap < MAXIMUM_CAPACITY && ft < (float)MAXIMUM_CAPACITY ?
                (int)ft : Integer.MAX_value);
  }
- // 将新的阈值大小赋值给threshold
+ // 更新扩容阈值
  threshold = newThr;
+ // 初始化新数组
  @SuppressWarnings({"rawtypes","unchecked"})
- // 此时数组初始化或者扩容已经完成，接下来的工作就是进行数据拷贝，将原数组中的数据迁移到新数组中
- // 创建新的数组，数组长度为上面计算出来的新数组的大小newCap
  Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];
- // table指向新数组
  table = newTab;
+ // 如果旧数组不为空，迁移数据到新数组
  if (oldTab != null) {
-     // 根据容量遍历原数组，复制非空元素到新数组
      for (int j = 0; j < oldCap; ++j) {
-         // 当前节点变量
          Node<K,V> e;
-         // 首先使用e指向原数组中该位置处的元素，然后判断数组中该位置处的元素是否为null，即判断原数组中该位置是否存在元素
+         // 旧数组当前位置有节点
          if ((e = oldTab[j]) != null) {
-	           // 条件成立，说明原数组中该位置存在元素，则将原数组中该位置的元素清空
+	         // 清空旧数组当前位置
              oldTab[j] = null;
-             // 判断当前元素是否有下一个节点，即判断该位置是否存在链表，如果为null，则表示当前位置只存在一个元素，所以只需要计算该元素位于新数组中的数组下标即可
+             // 当前节点无后续节点
              if (e.next == null)
-	               // 那么再次使用 hash & (n - 1) 来计算当前元素位于新数组中的数组下标，在新数组的该位置存放当前节点
+	               // 计算新索引并插入新数组
                  newTab[e.hash & (newCap - 1)] = e;
-             // 该节点存在下一个节点，所以有可能是链表或者红黑树结构
+             // 当前节点是红黑树
              else if (e instanceof TreeNode)
-                 // 判断当前节点是不是树节点，即判断当前位置是否已经转化为红黑树结构
+                 // 分裂红黑树
                  ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);
-             // 表明该节点是一个链表结构
+             // 当前节点是链表
              else {
-	                // 新的位置只有两种可能：原位置 或者 原位置+原数组长度
-	                // 把原链表拆成两个链表，然后再分别插入到新数组的两个位置上
-	                // loXXX表示数组下标位置不变的链表，低位链表
+	             // 拆分链表为低位链表和高位链表
                  Node<K,V> loHead = null, loTail = null;
                  // hiXXX表示原数组下标+原数组长度的位置处的链表，高位链表
                  Node<K,V> hiHead = null, hiTail = null;
-                 // next节点，用于递归该位置的链表
                  Node<K,V> next;
                  do {
-	                    // next节点指向当前节点的下一个节点
+	                 // 保存下一个节点
                      next = e.next;
-                     // 使用hash & 原数组长度(如16 = 10000)，如果最高位为0，表示该节点位于原位置，即存在于低位链表中
+                     // 判断当前节点位于低位链表还是高位链表
                      if ((e.hash & oldCap) == 0) {
-                         // 判断低位链表的尾节点是否为null，如果为null，表示当前低位链表还没有节点，则将低位链表的头节点指向当前节点
                          if (loTail == null)
-                             // 将低位链表的头节点指向当前节点，作为该链表的第一个节点
                              loHead = e;
-                         // 如果不为null，则让低位链表的尾节点的下一个节点指向当前节点，即将整个低位链表串起来
                          else
                              loTail.next = e;
-                         // 最后让低位链表的尾节点指向当前节点，即移动低位链表的尾节点
                          loTail = e;
                      }
                      else {
@@ -566,37 +557,43 @@ final Node<K,V>[] resize() {
                              hiTail.next = e;
                          hiTail = e;
                      }
-                 } while ((e = next) != null); // 递归当前链表直至结束
-                 // 如果低位链表不为空
+                 } while ((e = next) != null);
+                 // 将低位链表插入到新数组原位置
                  if (loTail != null) {
-	                    // 将低位链表的尾节点的下一个节点清空
                      loTail.next = null;
-                     // 在新数组的原位置处放入低位链表
                      newTab[j] = loHead;
                  }
-                 // 如果高位链表不为空
+                 // 将高位链表插入到新数组原位置 + 旧数组容量
                  if (hiTail != null) {
-	                    // 将高位链表的尾节点的下一个节点清空
                      hiTail.next = null;
-                     // 在新数组的原位置+原来数组长度大小处放入高位链表
                      newTab[j + oldCap] = hiHead;
                  }
              }
          }
      }
  }
- // 返回新的数组
+ // 返回新数组
  return newTab;
 }
 ```
 
 ### 获取元素
 
-1. 首先**判断数组是否不为空 && 数组长度是否大于 0 && 当前下标位置（`(n-1) & hash`）处的元素是否不为空**，如果三个条件中有一个条件不满足的话，则直接返回 null；
-2. 走到这一步，表示上述三个条件都满足 => 数组已经初始化 && 数组中已添加过元素 && 数组在当前下标位置处存在元素。现在只需**通过比较两者的 hash 值与 key 值判断当前下标位置处的元素是否刚好就是要找的元素**，如果是的话，则直接返回该元素；
-3. 走到这一步，说明当前下标位置处的元素与目标元素不相等，需要判断当前下标位置处的元素的下一个节点是否不为空，如果不为空的话，则说明当前下标位置处是一个链表或者红黑树结构；
-   1. 判断当前下标位置处的元素是否是一个树节点，如果是一个树节点的话，则走红黑树获取元素的流程；
-   2. 经过上一步，说明当前下标位置处是一个链表结构，需要从头到尾**遍历链表，依次比较链表中的各个节点的 hash 值与 key 值是否与目标元素的 hash 值与 key 值相等**。如果在链表中找到满足条件的节点的话则返回该节点，如果找不到的话则返回 null。
+1. 初步检查条件, 如果以下任意条件不满足，则直接返回 `null`：
+   - 数组是否已初始化 (`table != null`)。
+   - 数组长度是否大于 0 (`n > 0`)。
+   - 目标下标位置的元素是否存在 (`tab[(n - 1) & hash] != null`)。
+2. 定位目标节点：
+   - 检查首节点 (`first`)： [[#^4ae9ff]]
+     - 比较其 `hash` 值是否相等。
+     - 检查 `key` 引用是否相同或通过 `equals` 方法判定为相等。
+   - 若匹配，则直接返回该节点。
+3. 处理链表或树结构：
+   - 若首节点不匹配，但存在下一个节点 (`first.next != null`)，则进一步判断：
+     - 如果首节点是树节点 (`TreeNode`)，调用树节点的 `getTreeNode` 方法。
+     - 如果是链表结构，遍历链表节点：
+       - 对每个节点，逐一比较 `hash` 值和 `key` 值，找到匹配的节点则返回。
+   - 遍历结束后仍未匹配，则返回 `null`。
 
 ```java
 public V get(Object key) {
@@ -606,19 +603,19 @@ public V get(Object key) {
 
 final Node<K,V> getNode(int hash, Object key) {
   Node<K,V>[] tab; Node<K,V> first, e; int n; K k;
-  // 判断数组是否不为空 && 数组长度是否大于0 && 当前下标位置处的元素是否不为空，如果三个条件中有一个条件不满足的话，则直接返回null
+  // 检查基本条件：数组初始化、长度、目标下标位置是否有元素
   if ((tab = table) != null && (n = tab.length) > 0 &&
       (first = tab[(n - 1) & hash]) != null) {
-      // 条件成立的话，判断当前下标位置处的元素的 hash 值和 key 值是否刚好与目标元素的 hash 值和 key 值刚好相等，如果是的话，则直接返回该元素
+      // 检查首节点是否匹配目标
       if (first.hash == hash && // always check first node
           ((k = first.key) == key || (key != null && key.equals(k))))
           return first;
-      // 判断当前下标位置处的元素的下一个节点是否不为空，如果不为空的话，则说明当前下标位置处是一个链表或者红黑树结构
+      // 如果首节点不匹配，但存在下一个节点
       if ((e = first.next) != null) {
-          // 判断当前下标位置处的元素是否是一个树节点，如果是一个树节点的话，则走红黑树获取元素的流程
+      	  // 判断是否为树节点
           if (first instanceof TreeNode)
               return ((TreeNode<K,V>)first).getTreeNode(hash, key);
-          // 走到这一步说明当前下标位置处是一个链表结构，需要从头到尾遍历链表，依次判断链表中的各个节点的 hash 值与 key 值是否与目标元素的 hash 值与 key 值相等
+          // 遍历链表查找匹配节点
           do {
               if (e.hash == hash &&
                   ((k = e.key) == key || (key != null && key.equals(k))))
