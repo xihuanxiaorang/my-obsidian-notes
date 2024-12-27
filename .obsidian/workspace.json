@@ -4,21 +4,23 @@
     "type": "split",
     "children": [
       {
-        "id": "5bce83924cc93d2e",
+        "id": "7500909dd7ac226c",
         "type": "tabs",
         "children": [
           {
-            "id": "73a7485b7de3fcaf",
+            "id": "76303539493fbcdb",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "kanban",
               "state": {
-                "file": "Articles/源码剖析/Java/HashMap源码剖析.md",
-                "mode": "source",
-                "source": false
+                "file": "Overview/任务清单.md",
+                "kanbanViewState": {
+                  "kanban-plugin": "board",
+                  "list-collapse": []
+                }
               },
-              "icon": "lucide-file",
-              "title": "HashMap源码剖析"
+              "icon": "lucide-trello",
+              "title": "任务清单"
             }
           }
         ]
@@ -33,7 +35,7 @@
       {
         "id": "594555d6553cc8e5",
         "type": "tabs",
-        "dimension": 56.831042845594176,
+        "dimension": 59.08163265306122,
         "children": [
           {
             "id": "cd440ffabd7c79fa",
@@ -90,7 +92,7 @@
       {
         "id": "17b521f712e5e035",
         "type": "tabs",
-        "dimension": 43.168957154405824,
+        "dimension": 40.91836734693878,
         "children": [
           {
             "id": "70662c336b1925d9",
@@ -122,10 +124,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Articles/源码剖析/Java/HashMap源码剖析.md"
+                "file": "Overview/任务清单.md"
               },
               "icon": "lucide-list",
-              "title": "HashMap源码剖析 的大纲"
+              "title": "任务清单 的大纲"
             }
           },
           {
@@ -204,17 +206,34 @@
       "canvas:新建白板": false,
       "random-note:开始漫游笔记": false,
       "markdown-importer:打开 Markdown 格式转换器": true,
-      "workspaces:管理工作区布局": false
+      "workspaces:管理工作区布局": false,
+      "obsidian-projects:打开项目": false
     }
   },
   "active": "8ea2a4482f804a56",
   "lastOpenFiles": [
-    "Excalidraw/HashMap数组下标计算.excalidraw.md",
+    "Articles/工具/其他工具/FFmpeg.md",
+    "Articles/工具/其他工具/yt-dlp.md",
+    "Overview/参考资料.md",
+    "Overview/任务清单.md",
+    "Templates/Auto Callout.md",
+    "Articles/工具/其他工具/PayPal.md",
+    "Articles/源码剖析/Java/ArrayList源码剖析.md",
+    "Inbox/Suspense.md",
+    "Inbox/Teleport.md",
+    "Articles/Vue",
+    "Projects - Demo Project/5 Mistakes I Made When I Started Using Obsidian.md",
+    "Projects - Demo Project/Why You Should Be Taking More Notes.md",
+    "Projects - Demo Project/What I Learned From Taking 15,000 Notes.md",
+    "Projects - Demo Project/The Easiest Way to Start Taking Notes.md",
+    "Projects - Demo Project/The Best Notes You'll Ever Make.md",
+    "Projects - Demo Project",
+    "Announcements/未命名.md",
+    "Articles/工具/开发工具/python.md",
     "Articles/源码剖析/Java/HashMap源码剖析.md",
+    "Excalidraw/HashMap数组下标计算.excalidraw.md",
     "Excalidraw/HashMap底层数据结构.excalidraw.md",
     "Excalidraw/Vector 底层结构与源码分析.excalidraw.md",
-    "Articles/源码剖析/Java/ArrayList源码剖析.md",
-    "Overview/任务清单.md",
     "Articles/工具/其他工具/PicList & Github & jsDelivr 搭建个人云图床.md",
     "Articles/工具/开发工具/IntelliJ IDEA.md",
     "Articles/Java/基础/Java8 新特性.md",
@@ -223,20 +242,6 @@
     "Inbox/^4ae9ff.md",
     "Canvas/代码生成器.canvas",
     "Inbox/反射.md",
-    "Inbox/快速失败机制（fail-fast）.md",
-    "Excalidraw/寻找2的幂次方最小值的示意图.excalidraw.md",
-    "Misc/Snippets & Misc & Ideas & Inbox & Articles.md",
-    "Announcements/未命名.md",
-    "Articles/工具/其他工具/软件卸载工具.md",
-    "Articles/工具/其他工具/手绘风格的开源白板 Excalidraw 搭建教程.md",
-    "Articles/工具/其他工具/手摸手教你搭建部署 Vitepress 博客.md",
-    "Articles/工具/其他工具/noMeiryoUI - 更换 Windows 默认字体.md",
-    "Articles/工具/其他工具/PayPal.md",
-    "Articles/工具/其他工具/Office Tool Plus.md",
-    "Articles/工具/其他工具/yt-dlp.md",
-    "Articles/工具/其他工具/更换 Windows 默认字体.md",
-    "Articles/工具/其他工具/手绘风格的开源白板 Excalidraw 搭建教程 1.md",
-    "Excalidraw/红黑树插入操作演示.excalidraw.md",
     "Scripts/my-script.js",
     "Scripts/新建 文本文档.txt",
     "Scripts",
@@ -247,8 +252,6 @@
     "Excalidraw/fonts/杨任东竹石体-Regular.ttf",
     "Excalidraw/fonts",
     "Articles/源码剖析/Java/未命名.canvas",
-    "Articles/Java/工具类",
-    "Announcements",
     "_Overview/未命名.canvas",
     "未命名.canvas",
     "Attachments/中国移动 (1).svg",

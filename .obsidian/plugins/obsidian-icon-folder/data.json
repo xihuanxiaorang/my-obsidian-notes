@@ -6,6 +6,7 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiVuejsLine",
       "RiTaskLine",
       "RiBookmark3Line",
       "RiLayoutLine",
@@ -14,8 +15,7 @@
       "RiBubbleChartLine",
       "RiBrainLine",
       "RiDashboardLine",
-      "RiTerminalLine",
-      "RiShapeLine"
+      "RiTerminalLine"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -58,5 +58,6 @@
   "Announcements": "RiMegaphoneLine",
   "Overview": "RiDashboardLine",
   "Overview/参考资料.md": "RiBookmark3Line",
-  "Overview/任务清单.md": "RiTaskLine"
+  "Overview/任务清单.md": "RiTaskLine",
+  "Articles/Vue": "RiVuejsLine"
 }

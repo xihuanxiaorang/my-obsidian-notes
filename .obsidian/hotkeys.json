@@ -67,10 +67,13 @@
       "key": "F9"
     }
   ],
-  "templater-obsidian:Templates/Insert Callouts.md": [
+  "templater-obsidian:Templates/Auto Callout.md": [
     {
-      "modifiers": [],
-      "key": "F7"
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "C"
     }
   ]
 }
