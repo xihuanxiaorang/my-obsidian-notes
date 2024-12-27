@@ -5,6 +5,7 @@ published: 2024-12-19
 description: 加入 GitHub 上的 1.5 亿开发者，现在可在 VS Code 中免费使用 Copilot！
 tags:
   - Announcement
+  - Github
 ---
 
 GitHub 一直致力于为开发者提供免费的产品和服务。从最初的免费开源和公共协作开始，到后来的免费私有仓库、GitHub Actions 和 GitHub Codespaces 的免费运行时，以及免费的包和发布存储，GitHub 为开发者的工作提供了更多便利。今天，我们更进一步，推出 [GitHub Copilot Free](https://github.com/features/copilot?utm_source=topcopilotfree&utm_medium=blog&utm_campaign=launch)，将 GitHub Copilot 免费提供给大家。

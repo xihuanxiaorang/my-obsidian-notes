@@ -4,23 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "7500909dd7ac226c",
+        "id": "3d7e7ee0665b6ef9",
         "type": "tabs",
         "children": [
           {
-            "id": "76303539493fbcdb",
+            "id": "08a3a59ba0460122",
             "type": "leaf",
             "state": {
-              "type": "kanban",
-              "state": {
-                "file": "Overview/任务清单.md",
-                "kanbanViewState": {
-                  "kanban-plugin": "board",
-                  "list-collapse": []
-                }
-              },
-              "icon": "lucide-trello",
-              "title": "任务清单"
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "新标签页"
             }
           }
         ]
@@ -35,7 +29,7 @@
       {
         "id": "594555d6553cc8e5",
         "type": "tabs",
-        "dimension": 59.08163265306122,
+        "dimension": 59.08163265306123,
         "children": [
           {
             "id": "cd440ffabd7c79fa",
@@ -123,11 +117,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "Overview/任务清单.md"
-              },
+              "state": {},
               "icon": "lucide-list",
-              "title": "任务清单 的大纲"
+              "title": "大纲"
             }
           },
           {
@@ -205,24 +197,23 @@
       "templater-obsidian:Templater": true,
       "canvas:新建白板": false,
       "random-note:开始漫游笔记": false,
-      "markdown-importer:打开 Markdown 格式转换器": true,
-      "workspaces:管理工作区布局": false,
-      "obsidian-projects:打开项目": false
+      "media-extended:Open media": false
     }
   },
   "active": "8ea2a4482f804a56",
   "lastOpenFiles": [
+    "Announcements/宣布：GitHub Copilot 在 VS Code 中推出免费版，GitHub 开发者已达 1.5 亿！.md",
+    "Inbox/Media Note - 【新的思维方式】用Obsidian实现卢曼的卡片盒笔记法？｜改变了我的知识内化系统.md",
+    "Overview/参考资料.md",
+    "Overview/任务清单.md",
     "Templates/Auto Callout.md",
     "Templates/Basic.md",
-    "Announcements/宣布：GitHub Copilot 在 VS Code 中推出免费版，GitHub 开发者已达 1.5 亿！.md",
     "Clippings/Announcing 150M developers and a new free tier for GitHub Copilot in VS Code.md",
     "Inbox/Thomas Dohmke.md",
     "Announcements/未命名.md",
     "Clippings",
-    "Overview/任务清单.md",
     "Articles/工具/其他工具/FFmpeg.md",
     "Articles/工具/其他工具/yt-dlp.md",
-    "Overview/参考资料.md",
     "Articles/工具/其他工具/PayPal.md",
     "Articles/源码剖析/Java/ArrayList源码剖析.md",
     "Inbox/Suspense.md",
@@ -240,7 +231,6 @@
     "Excalidraw/HashMap底层数据结构.excalidraw.md",
     "Excalidraw/Vector 底层结构与源码分析.excalidraw.md",
     "Articles/工具/其他工具/PicList & Github & jsDelivr 搭建个人云图床.md",
-    "Articles/工具/开发工具/IntelliJ IDEA.md",
     "Canvas/未命名.canvas",
     "Canvas/代码生成器.canvas",
     "Scripts/my-script.js",
