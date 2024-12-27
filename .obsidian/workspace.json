@@ -4,23 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "53f22469c62b0f6b",
+        "id": "5bce83924cc93d2e",
         "type": "tabs",
         "children": [
           {
-            "id": "02fc79a97649b768",
+            "id": "73a7485b7de3fcaf",
             "type": "leaf",
             "state": {
-              "type": "kanban",
+              "type": "markdown",
               "state": {
-                "file": "Overview/任务清单.md",
-                "kanbanViewState": {
-                  "kanban-plugin": "board",
-                  "list-collapse": []
-                }
+                "file": "Articles/源码剖析/Java/HashMap源码剖析.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-trello",
-              "title": "任务清单"
+              "icon": "lucide-file",
+              "title": "HashMap源码剖析"
             }
           }
         ]
@@ -35,7 +33,7 @@
       {
         "id": "594555d6553cc8e5",
         "type": "tabs",
-        "dimension": 72.4742268041237,
+        "dimension": 56.831042845594176,
         "children": [
           {
             "id": "cd440ffabd7c79fa",
@@ -67,6 +65,16 @@
             }
           },
           {
+            "id": "76335a251dadd2c3",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
+          },
+          {
             "id": "8ea2a4482f804a56",
             "type": "leaf",
             "state": {
@@ -77,12 +85,12 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       },
       {
         "id": "17b521f712e5e035",
         "type": "tabs",
-        "dimension": 27.52577319587629,
+        "dimension": 43.168957154405824,
         "children": [
           {
             "id": "70662c336b1925d9",
@@ -92,16 +100,6 @@
               "state": {},
               "icon": "clock",
               "title": "Recent Files"
-            }
-          },
-          {
-            "id": "76335a251dadd2c3",
-            "type": "leaf",
-            "state": {
-              "type": "bookmarks",
-              "state": {},
-              "icon": "lucide-bookmark",
-              "title": "书签"
             }
           }
         ]
@@ -124,10 +122,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Overview/任务清单.md"
+                "file": "Articles/源码剖析/Java/HashMap源码剖析.md"
               },
               "icon": "lucide-list",
-              "title": "任务清单 的大纲"
+              "title": "HashMap源码剖析 的大纲"
             }
           },
           {
@@ -211,19 +209,19 @@
   },
   "active": "8ea2a4482f804a56",
   "lastOpenFiles": [
-    "Excalidraw/HashMap底层数据结构.excalidraw.md",
     "Excalidraw/HashMap数组下标计算.excalidraw.md",
-    "Articles/工具/其他工具/PicList & Github & jsDelivr 搭建个人云图床.md",
-    "Articles/工具/开发工具/IntelliJ IDEA.md",
+    "Articles/源码剖析/Java/HashMap源码剖析.md",
+    "Excalidraw/HashMap底层数据结构.excalidraw.md",
     "Excalidraw/Vector 底层结构与源码分析.excalidraw.md",
     "Articles/源码剖析/Java/ArrayList源码剖析.md",
+    "Overview/任务清单.md",
+    "Articles/工具/其他工具/PicList & Github & jsDelivr 搭建个人云图床.md",
+    "Articles/工具/开发工具/IntelliJ IDEA.md",
     "Articles/Java/基础/Java8 新特性.md",
-    "Articles/源码剖析/Java/HashMap源码剖析.md",
     "Excalidraw/链表中删除元素示意图.excalidraw.md",
     "Canvas/未命名.canvas",
     "Inbox/^4ae9ff.md",
     "Canvas/代码生成器.canvas",
-    "Overview/任务清单.md",
     "Inbox/反射.md",
     "Inbox/快速失败机制（fail-fast）.md",
     "Excalidraw/寻找2的幂次方最小值的示意图.excalidraw.md",

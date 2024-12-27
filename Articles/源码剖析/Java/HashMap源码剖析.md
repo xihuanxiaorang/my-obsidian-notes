@@ -4,7 +4,7 @@ tags:
   - Java
   - SourceCodeAnalysis
 create_time: 2024-12-24 17:50
-update_time: 2024/12/27 11:26
+update_time: 2024/12/27 11:37
 version: 8
 ---
 
@@ -241,7 +241,7 @@ transient int modCount;
       - `table` 数组通常不会被完全填满，仅存储实际存在的键值对，而未使用的部分占用内存但没有实际意义。
       - 如果直接序列化整个 `table`，不仅会浪费空间，还会导致时间开销显著增加。因此，`transient` 修饰符可以有效避免这种浪费。
    2. **跨 JVM 环境的数据一致性**：
-      - 如果键（key）的类型没有重写 `hashCode` 方法，默认会调用 `Object.hashCode` 方法，而该方法是 native 的，在不同 JVM 中可能有不同的实现。
+      - 如果键（key）的类型没有重写 `hashCode` 方法，默认会调用 `Object. hashCode` 方法，而该方法是 native 的，在不同 JVM 中可能有不同的实现。
       - 因此，同一个键值对可能在不同的 JVM 环境下计算出不同的哈希值，导致其在 `table` 中的存储位置发生变化。
       - 通过序列化时只存储键值对数据，而在反序列化时重新计算哈希值并存储，可以避免这些潜在问题，保证数据在不同 JVM 下的一致性。
 
@@ -326,7 +326,7 @@ static final int hash(Object key) {
 ```
 
 - 如果 `key` 为 `null`，直接返回 `0`。
-- 如果 `key` 不为 `null`，通过公式 `(h = key.hashCode()) ^ (h >>> 16)` 计算哈希值：
+- 如果 `key` 不为 `null`，通过公式 `(h = key.hashCode ()) ^ (h >>> 16)` 计算哈希值：
   1. 先获取 `key` 的哈希值 `h`。
   2. 再将 `h` 无符号右移 16 位（高位补 0），与 `h` 本身按位异或。
   3. 高 16 位保持不变（与 0 异或仍为自身），而低 16 位与高 16 位发生异或。
@@ -346,7 +346,7 @@ static final int hash(Object key) {
 #### 添加元素主流程✨
 
 1. 检查数组 `table` 是否已初始化：
-   - 若未初始化（`tab == null || tab.length == 0`），则调用 `resize` 方法先完成初始化。
+   - 若未初始化（`tab == null || tab. length == 0`），则调用 `resize` 方法先完成初始化。
 2. 根据公式 `index = (n - 1) & hash` 计算插入位置索引 `i`，并取出该位置节点 `p = tab[i]`：
    - 若 `p == null`（位置为空），直接插入新节点，**元素个数 size + 1**。
    - 若 `p != null`（位置已有节点），按以下情况处理：
@@ -591,7 +591,7 @@ final Node<K,V>[] resize() {
      - 检查 `key` 引用是否相同或通过 `equals` 方法判定为相等。
    - 若匹配，则直接返回该节点。
 3. 处理链表或树结构：
-   - 若首节点不匹配，但存在下一个节点 (`first.next != null`)，则进一步判断：
+   - 若首节点不匹配，但存在下一个节点 (`first. next != null`)，则进一步判断：
      - 如果首节点是树节点 (`TreeNode`)，调用树节点的 `getTreeNode` 方法。
      - 如果是链表结构，遍历链表节点：
        - 对每个节点，逐一比较 `hash` 值和 `key` 值，找到匹配的节点则返回。
