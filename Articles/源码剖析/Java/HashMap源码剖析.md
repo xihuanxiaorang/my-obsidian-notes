@@ -4,7 +4,7 @@ tags:
   - Java
   - SourceCodeAnalysis
 create_time: 2024-12-24 17:50
-update_time: 2024/12/26 23:22
+update_time: 2024/12/27 11:26
 version: 8
 ---
 
@@ -415,9 +415,11 @@ static final int hash(Object key) {
       afterNodeAccess(e);  
       // 返回旧值  
       return oldValue;  
-    }  }  // 更新结构修改计数器  
+    }  
+  }  
+  // 更新结构修改计数器  
   ++modCount;  
-  // 增加节点数量，检查是否需要扩容  
+  // 节点数量加一，检查是否需要扩容  
   if (++size > threshold) resize();  
   afterNodeInsertion(evict);  
   // 返回 null，表示插入的是新节点  
@@ -629,12 +631,12 @@ final Node<K,V> getNode(int hash, Object key) {
 
 ### 删除元素
 
-`remove` 方法中的前半部分其实就是 `get` 方法的逻辑，从集合中找到目标元素，至于这一部分的文字描述可以参考[[#获取元素]]，咱们就直接从后半部分开始。如果找到了目标元素（也就是当前准备要删除的元素）的话，存在如下三种情况：
+`remove` 方法的前半部分逻辑与 `get` 方法一致，用于定位目标元素。具体描述可参考[[#获取元素]]，这里直接讨论目标元素找到后的处理逻辑。找到目标元素后，根据其所在结构类型执行删除操作：
 
-1. 判断目标元素是否是一个树节点，如果是的话，则走红黑树删除元素的流程；
-2. 判断目标元素是否刚好等于当前下标位置处的元素，如果是的话，则将目标元素的下一个节点替换当前下标位置处的元素；
-3. 走到这一步说明当前下标位置处是一个链表结构，则直接让目标元素的前一个节点（也就是节点 p）的 next 指向目标元素的 next，从而实现从链表中删除目标元素。
-   ![[链表中删除元素演示.excalidraw | 600]]
+1. 如果目标元素是红黑树中的节点，调用红黑树的删除方法完成操作。
+2. 如果目标元素是当前下标位置的首节点，将目标元素的下一个节点 (`next`) 替换为当前下标位置处的首节点，实现删除。
+3. 如果目标元素在链表中：调整链表结构，使目标元素的前一个节点 (`p`) 的 `next` 指向目标元素的 `next` 节点，实现删除。示意图如下所示：
+   ![[链表中删除元素示意图.excalidraw| 600]]
 
 ```java
 public V remove(Object key) {
@@ -646,21 +648,17 @@ public V remove(Object key) {
 final Node<K,V> removeNode(int hash, Object key, Object value,
                                boolean matchValue, boolean movable) {
   Node<K,V>[] tab; Node<K,V> p; int n, index;
-  // 判断数组是否不为空 && 数组长度是否大于0 && 当前下标位置处的元素是否不为空，如果三个条件中有一个条件不满足的话，则直接返回null
-  if ((tab = table) != null && (n = tab.length) > 0 &&
-      (p = tab[index = (n - 1) & hash]) != null) {
+  // 确认表非空，长度有效，且当前索引位置有元素
+  if ((tab = table) != null && (n = tab.length) > 0 && (p = tab[index = (n - 1) & hash]) != null) {
       Node<K,V> node = null, e; K k; V v;
-      // 条件成立的话，判断当前下标位置处的元素的 hash 值和 key 值是否刚好与目标元素的 hash 值和 key 值刚好相等，如果是的话，说明找到目标元素赋值给节点node
-      if (p.hash == hash &&
-          ((k = p.key) == key || (key != null && key.equals(k))))
+      // 检查首节点是否为目标节点
+      if (p.hash == hash && ((k = p.key) == key || (key != null && key.equals(k))))
           node = p;
-      // 判断当前下标位置处的元素的下一个节点是否不为空，如果不为空的话，则说明当前下标位置处是一个链表或者红黑树结构
+      // 遍历链表或树结构寻找目标节点
       else if ((e = p.next) != null) {
-          // 判断当前下标位置处的元素是否是一个树节点，如果是一个树节点的话，则走红黑树获取元素的流程
           if (p instanceof TreeNode)
               node = ((TreeNode<K,V>)p).getTreeNode(hash, key);
           else {
-              // 走到这一步说明当前下标位置处是一个链表结构，需要从头到尾遍历链表，依次判断链表中的各个节点的 hash 值与 key 值是否与目标元素的 hash 值与 key 值相等，如果找到与目标元素相等的节点则赋值给节点node
               do {
                   if (e.hash == hash &&
                       ((k = e.key) == key ||
@@ -672,20 +670,20 @@ final Node<K,V> removeNode(int hash, Object key, Object value,
               } while ((e = e.next) != null);
           }
       }
-      // 如果节点node不为空的话，则说明已经找到目标元素
-      // 至于判断是否需要 value 值相等才删除的逻辑无关紧要，不做重点分析
-      if (node != null && (!matchValue || (v = node.value) == value ||
-                           (value != null && value.equals(v)))) {
-          // 判断节点node是否是一个树节点，如果是的话，则走红黑树删除元素的流程
+      // 删除节点
+      if (node != null && (!matchValue || (v = node.value) == value || (value != null && value.equals(v)))) {
+          // 红黑树节点删除
           if (node instanceof TreeNode)
               ((TreeNode<K,V>)node).removeTreeNode(this, tab, movable);
-          // 判断节点node是否刚好等于当前下标位置处的元素，如果是的话，则将node节点的下一个节点作为当前下标位置处的元素
+          // 删除首节点
           else if (node == p)
               tab[index] = node.next;
-          // 走到这一步说明当前下标位置处是一个链表结构，则直接让node节点的前一个节点（也就是节点p）的next指向node节点的next，从而实现从链表中删除node节点
+          // 删除链表节点
           else
               p.next = node.next;
+		  // 更新结构修改计数器
           ++modCount;
+          // 节点数量加一
           --size;
           afterNodeRemoval(node);
           return node;

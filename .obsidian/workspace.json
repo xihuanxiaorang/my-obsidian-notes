@@ -4,35 +4,23 @@
     "type": "split",
     "children": [
       {
-        "id": "0902f99ad00ad99d",
+        "id": "53f22469c62b0f6b",
         "type": "tabs",
         "children": [
           {
-            "id": "cf3f3ec9dbea58ba",
+            "id": "02fc79a97649b768",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "kanban",
               "state": {
-                "file": "Articles/源码剖析/Java/HashMap源码剖析.md",
-                "mode": "source",
-                "source": false
+                "file": "Overview/任务清单.md",
+                "kanbanViewState": {
+                  "kanban-plugin": "board",
+                  "list-collapse": []
+                }
               },
-              "icon": "lucide-file",
-              "title": "HashMap源码剖析"
-            }
-          },
-          {
-            "id": "0fedcb4e3ab748b3",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Articles/源码剖析/Java/ArrayList源码剖析.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "ArrayList源码剖析"
+              "icon": "lucide-trello",
+              "title": "任务清单"
             }
           }
         ]
@@ -136,10 +124,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Articles/源码剖析/Java/HashMap源码剖析.md"
+                "file": "Overview/任务清单.md"
               },
               "icon": "lucide-list",
-              "title": "HashMap源码剖析 的大纲"
+              "title": "任务清单 的大纲"
             }
           },
           {
@@ -215,25 +203,32 @@
       "table-editor-obsidian:Advanced Tables Toolbar": true,
       "obsidian-git:Open Git source control": true,
       "templater-obsidian:Templater": true,
-      "canvas:新建白板": false
+      "canvas:新建白板": false,
+      "random-note:开始漫游笔记": false,
+      "markdown-importer:打开 Markdown 格式转换器": true,
+      "workspaces:管理工作区布局": false
     }
   },
   "active": "8ea2a4482f804a56",
   "lastOpenFiles": [
+    "Excalidraw/HashMap底层数据结构.excalidraw.md",
+    "Excalidraw/HashMap数组下标计算.excalidraw.md",
+    "Articles/工具/其他工具/PicList & Github & jsDelivr 搭建个人云图床.md",
+    "Articles/工具/开发工具/IntelliJ IDEA.md",
+    "Excalidraw/Vector 底层结构与源码分析.excalidraw.md",
+    "Articles/源码剖析/Java/ArrayList源码剖析.md",
+    "Articles/Java/基础/Java8 新特性.md",
     "Articles/源码剖析/Java/HashMap源码剖析.md",
+    "Excalidraw/链表中删除元素示意图.excalidraw.md",
     "Canvas/未命名.canvas",
     "Inbox/^4ae9ff.md",
-    "Excalidraw/HashMap数组下标计算.excalidraw.md",
     "Canvas/代码生成器.canvas",
-    "Excalidraw/HashMap底层数据结构.excalidraw.md",
-    "Articles/源码剖析/Java/ArrayList源码剖析.md",
     "Overview/任务清单.md",
     "Inbox/反射.md",
     "Inbox/快速失败机制（fail-fast）.md",
     "Excalidraw/寻找2的幂次方最小值的示意图.excalidraw.md",
     "Misc/Snippets & Misc & Ideas & Inbox & Articles.md",
     "Announcements/未命名.md",
-    "Articles/Java/基础/Java8 新特性.md",
     "Articles/工具/其他工具/软件卸载工具.md",
     "Articles/工具/其他工具/手绘风格的开源白板 Excalidraw 搭建教程.md",
     "Articles/工具/其他工具/手摸手教你搭建部署 Vitepress 博客.md",
@@ -241,12 +236,9 @@
     "Articles/工具/其他工具/PayPal.md",
     "Articles/工具/其他工具/Office Tool Plus.md",
     "Articles/工具/其他工具/yt-dlp.md",
-    "Articles/工具/其他工具/PicList & Github & jsDelivr 搭建个人云图床.md",
     "Articles/工具/其他工具/更换 Windows 默认字体.md",
     "Articles/工具/其他工具/手绘风格的开源白板 Excalidraw 搭建教程 1.md",
-    "Excalidraw/链表中删除元素演示.excalidraw.md",
     "Excalidraw/红黑树插入操作演示.excalidraw.md",
-    "Excalidraw/SpringBoot 自动配置核心流程.excalidraw.md",
     "Scripts/my-script.js",
     "Scripts/新建 文本文档.txt",
     "Scripts",
