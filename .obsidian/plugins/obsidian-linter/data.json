@@ -278,7 +278,8 @@
   "displayLintOnFileChangeNotice": false,
   "settingsConvertedToConfigKeyValues": true,
   "foldersToIgnore": [
-    "Templates"
+    "Templates",
+    "Announcements"
   ],
   "filesToIgnore": [],
   "linterLocale": "system-default",
