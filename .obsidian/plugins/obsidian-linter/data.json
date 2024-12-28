@@ -279,7 +279,7 @@
   "settingsConvertedToConfigKeyValues": true,
   "foldersToIgnore": [
     "Templates",
-    "Announcements"
+    "Articles/Announcements"
   ],
   "filesToIgnore": [],
   "linterLocale": "system-default",

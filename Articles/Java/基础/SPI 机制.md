@@ -1,3 +1,10 @@
+---
+tags:
+  - Java
+create_time: 2024-12-28T17:52:00
+update_time: 2024/12/28 17:52
+---
+
 ## 简介
 
 SPI，全称为 Service Provider Interface，是一种**基于 ClassLoader 的服务发现和加载机制**，自 Java 6 开始引入。SPI 的核心思想是通过标准化的方式动态加载服务的实现类。
