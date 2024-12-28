@@ -1,22 +1,37 @@
 {
   "collapse-filter": false,
-  "search": "",
+  "search": "-file:任务清单 -path:Excalidraw  ",
   "showTags": false,
   "showAttachments": false,
   "hideUnresolved": false,
   "showOrphans": true,
-  "collapse-color-groups": true,
-  "colorGroups": [],
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "tag:#Java  ",
+      "color": {
+        "a": 1,
+        "rgb": 14701138
+      }
+    },
+    {
+      "query": "tag:#Vue  ",
+      "color": {
+        "a": 1,
+        "rgb": 14725458
+      }
+    }
+  ],
   "collapse-display": false,
   "showArrow": true,
-  "textFadeMultiplier": 0.5,
-  "nodeSizeMultiplier": 0.763541666666667,
-  "lineSizeMultiplier": 1.478125,
+  "textFadeMultiplier": 1.5,
+  "nodeSizeMultiplier": 0.993229166666667,
+  "lineSizeMultiplier": 0.738020833333333,
   "collapse-forces": false,
-  "centerStrength": 0.796875,
-  "repelStrength": 12.1875,
-  "linkStrength": 0.65625,
+  "centerStrength": 0.786458333333333,
+  "repelStrength": 9.375,
+  "linkStrength": 0.875,
   "linkDistance": 30,
-  "scale": 1.0000000000000329,
+  "scale": 1.4019828977761628,
   "close": true
 }

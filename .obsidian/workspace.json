@@ -11,14 +11,10 @@
             "id": "4e722bd9f91b7222",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Overview/参考资料.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "参考资料"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "关系图谱"
             }
           }
         ]
@@ -111,7 +107,6 @@
             "state": {
               "type": "localgraph",
               "state": {
-                "file": "Overview/参考资料.md",
                 "options": {
                   "collapse-filter": true,
                   "search": "-file:任务清单",
@@ -139,7 +134,7 @@
                 }
               },
               "icon": "lucide-git-fork",
-              "title": "参考资料 的关系图"
+              "title": "关系图谱"
             }
           }
         ]
@@ -161,11 +156,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "Overview/参考资料.md"
-              },
+              "state": {},
               "icon": "lucide-list",
-              "title": "参考资料 的大纲"
+              "title": "大纲"
             }
           },
           {
@@ -201,14 +194,20 @@
       "media-extended:Open media": true
     }
   },
-  "active": "4e722bd9f91b7222",
+  "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "Overview/任务清单.md",
-    "Inbox/反射.md",
+    "Articles/Tools/开发工具/Node.js.md",
+    "Articles/SourceCodeAnalysis/Java/HashMap源码剖析.md",
+    "Articles/Tools/其他工具/ABDownloadManager.md",
+    "Articles/Tools/开发工具/JDK.md",
+    "Articles/Tools/开发工具/MySQL.md",
     "Inbox/快速失败机制（fail-fast）.md",
+    "Articles/Tools/其他工具/Office Tool Plus.md",
+    "Overview/任务清单.md",
+    "Overview/参考资料.md",
+    "Inbox/反射.md",
     "Inbox/Suspense.md",
     "Inbox/Teleport.md",
-    "Overview/参考资料.md",
     "Articles/Misc/Misc & Ideas & Inbox & Articles.md",
     "Articles/Misc/如何选择开源协议.md",
     "Articles/Misc/全面了解 RSS.md",
@@ -224,13 +223,7 @@
     "Articles/Java/基础/Java8 新特性.md",
     "Articles/Java/基础/SPI 机制.md",
     "Articles/JavaScript",
-    "Snippets/使用 nrm 切换镜像源.md",
-    "Snippets/reduce.md",
-    "Snippets/Java 集合架构体系图.md",
-    "Snippets/Java 代码块.md",
     "Snippets",
-    "Articles/Tools/其他工具/noMeiryoUI - 更换 Windows 默认字体.md",
-    "Articles/Tools/其他工具/yt-dlp.md",
     "Articles/Java/SourceCodeAnalysis",
     "Clippings",
     "Articles/Vue",
