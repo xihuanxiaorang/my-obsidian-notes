@@ -1,6 +1,6 @@
 {
-  "collapse-filter": false,
-  "search": "-file:任务清单 -path:Excalidraw  ",
+  "collapse-filter": true,
+  "search": "-path:Overview -path:Excalidraw -path:Templates  -path:Articles/Announcements  ",
   "showTags": false,
   "showAttachments": false,
   "hideUnresolved": false,
@@ -20,18 +20,25 @@
         "a": 1,
         "rgb": 14725458
       }
+    },
+    {
+      "query": "tag:#Tool  ",
+      "color": {
+        "a": 1,
+        "rgb": 11657298
+      }
     }
   ],
   "collapse-display": false,
   "showArrow": true,
-  "textFadeMultiplier": 1.5,
+  "textFadeMultiplier": 0.4,
   "nodeSizeMultiplier": 0.993229166666667,
   "lineSizeMultiplier": 0.738020833333333,
   "collapse-forces": false,
-  "centerStrength": 0.786458333333333,
-  "repelStrength": 9.375,
-  "linkStrength": 0.875,
+  "centerStrength": 0.322916666666667,
+  "repelStrength": 5,
+  "linkStrength": 0.458333333333333,
   "linkDistance": 30,
-  "scale": 1.4019828977761628,
+  "scale": 1.0000000000000502,
   "close": true
 }

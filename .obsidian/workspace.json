@@ -4,17 +4,23 @@
     "type": "split",
     "children": [
       {
-        "id": "da7495ba1bd11ff0",
+        "id": "9210bb6e0000464d",
         "type": "tabs",
         "children": [
           {
-            "id": "4e722bd9f91b7222",
+            "id": "71bd37454d4ff84f",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "关系图谱"
+              "type": "kanban",
+              "state": {
+                "file": "Overview/任务清单.md",
+                "kanbanViewState": {
+                  "kanban-plugin": "board",
+                  "list-collapse": []
+                }
+              },
+              "icon": "lucide-trello",
+              "title": "任务清单"
             }
           }
         ]
@@ -29,7 +35,7 @@
       {
         "id": "594555d6553cc8e5",
         "type": "tabs",
-        "dimension": 71.73469387755102,
+        "dimension": 68.06122448979592,
         "children": [
           {
             "id": "cd440ffabd7c79fa",
@@ -99,7 +105,7 @@
       {
         "id": "179a4b11753a29f1",
         "type": "tabs",
-        "dimension": 28.26530612244898,
+        "dimension": 31.93877551020408,
         "children": [
           {
             "id": "8740b433f29a972a",
@@ -107,9 +113,10 @@
             "state": {
               "type": "localgraph",
               "state": {
+                "file": "Overview/任务清单.md",
                 "options": {
-                  "collapse-filter": true,
-                  "search": "-file:任务清单",
+                  "collapse-filter": false,
+                  "search": "",
                   "localJumps": 1,
                   "localBacklinks": true,
                   "localForelinks": true,
@@ -129,12 +136,12 @@
                   "repelStrength": 10,
                   "linkStrength": 1,
                   "linkDistance": 250,
-                  "scale": 0.7132754626224446,
+                  "scale": 0.5087618855792622,
                   "close": true
                 }
               },
               "icon": "lucide-git-fork",
-              "title": "关系图谱"
+              "title": "任务清单 的关系图"
             }
           }
         ]
@@ -170,6 +177,39 @@
               "icon": "spreadsheet",
               "title": "Advanced Tables"
             }
+          },
+          {
+            "id": "d3f90fae39a3925f",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Overview/任务清单.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "任务清单 的反向链接列表"
+            }
+          },
+          {
+            "id": "279676ca288eb75b",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Overview/任务清单.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "任务清单 的出链列表"
+            }
           }
         ],
         "currentTab": 1
@@ -196,6 +236,12 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
+    "Inbox/Teleport.md",
+    "Overview/任务清单.md",
+    "Overview/参考资料.md",
+    "Articles/Tools/开发工具/Navicat.md",
+    "Articles/JavaScript/reduce.md",
+    "Articles/Tools/开发工具/WLS2.md",
     "Articles/Tools/开发工具/Node.js.md",
     "Articles/SourceCodeAnalysis/Java/HashMap源码剖析.md",
     "Articles/Tools/其他工具/ABDownloadManager.md",
@@ -203,11 +249,8 @@
     "Articles/Tools/开发工具/MySQL.md",
     "Inbox/快速失败机制（fail-fast）.md",
     "Articles/Tools/其他工具/Office Tool Plus.md",
-    "Overview/任务清单.md",
-    "Overview/参考资料.md",
     "Inbox/反射.md",
     "Inbox/Suspense.md",
-    "Inbox/Teleport.md",
     "Articles/Misc/Misc & Ideas & Inbox & Articles.md",
     "Articles/Misc/如何选择开源协议.md",
     "Articles/Misc/全面了解 RSS.md",
@@ -215,13 +258,10 @@
     "Articles/SourceCodeAnalysis/Java/ArrayList源码剖析.md",
     "Articles/Snippets/Arrays.md",
     "Articles/Java/基础/代码块.md",
-    "Articles/JavaScript/reduce.md",
     "Articles/Snippets/JDBC 调用流程.md",
     "Articles/Announcements/宣布：GitHub Copilot 在 VS Code 中推出免费版，GitHub 开发者已达 1.5 亿！.md",
     "Articles/Java/基础/嵌套类.md",
     "Articles/Snippets/Java 集合架构体系图.md",
-    "Articles/Java/基础/Java8 新特性.md",
-    "Articles/Java/基础/SPI 机制.md",
     "Articles/JavaScript",
     "Snippets",
     "Articles/Java/SourceCodeAnalysis",
