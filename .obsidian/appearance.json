@@ -3,7 +3,7 @@
   "cssTheme": "AnuPpuccin",
   "interfaceFontFamily": "HarmonyOS Sans SC",
   "monospaceFontFamily": "JetBrains Mono",
-  "textFontFamily": "JetBrains Mono NL,DejaVuSansM Nerd Font Mono,未来圆SC",
+  "textFontFamily": "JetBrains Mono NL,未来圆SC",
   "baseFontSize": 17,
   "baseFontSizeAction": true,
   "enabledCssSnippets": [

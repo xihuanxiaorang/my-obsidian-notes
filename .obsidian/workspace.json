@@ -4,23 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "9210bb6e0000464d",
+        "id": "3d73a5dbe3530b65",
         "type": "tabs",
         "children": [
           {
-            "id": "71bd37454d4ff84f",
+            "id": "eafb7dd3171c53eb",
             "type": "leaf",
             "state": {
-              "type": "kanban",
+              "type": "markdown",
               "state": {
-                "file": "Overview/任务清单.md",
-                "kanbanViewState": {
-                  "kanban-plugin": "board",
-                  "list-collapse": []
-                }
+                "file": "Inbox/快速上手.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-trello",
-              "title": "任务清单"
+              "icon": "lucide-file",
+              "title": "快速上手"
             }
           }
         ]
@@ -113,7 +111,7 @@
             "state": {
               "type": "localgraph",
               "state": {
-                "file": "Overview/任务清单.md",
+                "file": "Inbox/快速上手.md",
                 "options": {
                   "collapse-filter": false,
                   "search": "",
@@ -126,7 +124,7 @@
                   "hideUnresolved": false,
                   "collapse-color-groups": true,
                   "colorGroups": [],
-                  "collapse-display": true,
+                  "collapse-display": false,
                   "showArrow": true,
                   "textFadeMultiplier": 0,
                   "nodeSizeMultiplier": 1,
@@ -136,12 +134,12 @@
                   "repelStrength": 10,
                   "linkStrength": 1,
                   "linkDistance": 250,
-                  "scale": 0.5087618855792622,
+                  "scale": 0.3628873693012154,
                   "close": true
                 }
               },
               "icon": "lucide-git-fork",
-              "title": "任务清单 的关系图"
+              "title": "快速上手 的关系图"
             }
           }
         ]
@@ -163,9 +161,11 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {},
+              "state": {
+                "file": "Inbox/快速上手.md"
+              },
               "icon": "lucide-list",
-              "title": "大纲"
+              "title": "快速上手 的大纲"
             }
           },
           {
@@ -184,7 +184,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Overview/任务清单.md",
+                "file": "Inbox/创建一个 Vue 应用.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -194,7 +194,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "任务清单 的反向链接列表"
+              "title": "创建一个 Vue 应用 的反向链接列表"
             }
           },
           {
@@ -203,16 +203,15 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Overview/任务清单.md",
+                "file": "Inbox/快速上手.md",
                 "linksCollapsed": false,
-                "unlinkedCollapsed": true
+                "unlinkedCollapsed": false
               },
               "icon": "links-going-out",
-              "title": "任务清单 的出链列表"
+              "title": "快速上手 的出链列表"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -236,39 +235,40 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "Inbox/Teleport.md",
     "Overview/任务清单.md",
-    "Overview/参考资料.md",
-    "Articles/Tools/开发工具/Navicat.md",
-    "Articles/JavaScript/reduce.md",
-    "Articles/Tools/开发工具/WLS2.md",
-    "Articles/Tools/开发工具/Node.js.md",
+    "Inbox/快速上手.md",
+    "Articles/Tools/开发工具/UNPKG.md",
     "Articles/SourceCodeAnalysis/Java/HashMap源码剖析.md",
-    "Articles/Tools/其他工具/ABDownloadManager.md",
-    "Articles/Tools/开发工具/JDK.md",
-    "Articles/Tools/开发工具/MySQL.md",
-    "Inbox/快速失败机制（fail-fast）.md",
-    "Articles/Tools/其他工具/Office Tool Plus.md",
-    "Inbox/反射.md",
     "Inbox/Suspense.md",
-    "Articles/Misc/Misc & Ideas & Inbox & Articles.md",
-    "Articles/Misc/如何选择开源协议.md",
-    "Articles/Misc/全面了解 RSS.md",
-    "Articles/Misc/美化 Github 个人主页.md",
-    "Articles/SourceCodeAnalysis/Java/ArrayList源码剖析.md",
-    "Articles/Snippets/Arrays.md",
-    "Articles/Java/基础/代码块.md",
-    "Articles/Snippets/JDBC 调用流程.md",
-    "Articles/Announcements/宣布：GitHub Copilot 在 VS Code 中推出免费版，GitHub 开发者已达 1.5 亿！.md",
-    "Articles/Java/基础/嵌套类.md",
-    "Articles/Snippets/Java 集合架构体系图.md",
+    "Inbox/Teleport.md",
+    "Articles/Tools/开发工具/nvm.md",
+    "Overview/参考资料.md",
+    "Canvas/未命名.canvas",
+    "Articles/Tools/其他工具/yt-dlp.md",
+    "Articles/Tools/其他工具/PicList & Github & jsDelivr 搭建个人云图床.md",
+    "Articles/Tools/其他工具/PayPal.md",
+    "Articles/Tools/其他工具/Office Tool Plus.md",
+    "Articles/Tools/其他工具/noMeiryoUI - 更换 Windows 默认字体.md",
+    "Articles/Tools/其他工具/FFmpeg.md",
+    "Articles/Tools/其他工具/ABDownloadManager.md",
+    "Articles/Tools/其他工具/手摸手教你搭建部署 Vitepress 博客.md",
+    "Articles/Tools/其他工具/手绘风格的开源白板 Excalidraw 搭建教程.md",
+    "Articles/Tools/其他工具/软件卸载工具.md",
+    "Articles/Tools/开发工具/WLS2.md",
+    "Articles/Tools/开发工具/Windows Terminal.md",
+    "Articles/Tools/开发工具/Typora.md",
+    "Articles/Tools/开发工具/thefuck.md",
+    "Articles/Tools/开发工具/python.md",
+    "Articles/Tools/开发工具/pnpm.md",
+    "Articles/Tools/开发工具/nrm.md",
+    "Articles/Tools/开发工具/Navicat.md",
+    "Articles/Vue/未命名.canvas",
     "Articles/JavaScript",
     "Snippets",
     "Articles/Java/SourceCodeAnalysis",
     "Clippings",
     "Articles/Vue",
     "Projects - Demo Project",
-    "Canvas/未命名.canvas",
     "Canvas/代码生成器.canvas",
     "Scripts/my-script.js",
     "Scripts/新建 文本文档.txt",
