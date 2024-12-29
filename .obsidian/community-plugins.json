@@ -3,7 +3,6 @@
   "cmdr",
   "mysnippets-plugin",
   "obsidian-icon-folder",
-  "obsidian-image-auto-upload-plugin",
   "obsidian-excalidraw-plugin",
   "keyboard-analyzer",
   "settings-search",
@@ -24,5 +23,6 @@
   "tag-wrangler",
   "quickadd",
   "templater-obsidian",
-  "media-extended"
+  "media-extended",
+  "hide-folders"
 ]
