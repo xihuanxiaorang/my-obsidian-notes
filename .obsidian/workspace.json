@@ -11,16 +11,14 @@
             "id": "7c26c82f9e2cf9e5",
             "type": "leaf",
             "state": {
-              "type": "kanban",
+              "type": "markdown",
               "state": {
-                "file": "Overview/任务清单.md",
-                "kanbanViewState": {
-                  "kanban-plugin": "board",
-                  "list-collapse": []
-                }
+                "file": "Articles/Vue/通过 CDN 使用 Vue.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-trello",
-              "title": "任务清单"
+              "icon": "lucide-file",
+              "title": "通过 CDN 使用 Vue"
             }
           }
         ]
@@ -113,7 +111,7 @@
             "state": {
               "type": "localgraph",
               "state": {
-                "file": "Overview/任务清单.md",
+                "file": "Articles/Vue/通过 CDN 使用 Vue.md",
                 "options": {
                   "collapse-filter": false,
                   "search": "",
@@ -141,7 +139,7 @@
                 }
               },
               "icon": "lucide-git-fork",
-              "title": "任务清单 的关系图"
+              "title": "通过 CDN 使用 Vue 的关系图"
             }
           }
         ]
@@ -164,10 +162,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Overview/任务清单.md"
+                "file": "Articles/Vue/通过 CDN 使用 Vue.md"
               },
               "icon": "lucide-list",
-              "title": "任务清单 的大纲"
+              "title": "通过 CDN 使用 Vue 的大纲"
             }
           },
           {
@@ -205,12 +203,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Overview/任务清单.md",
+                "file": "Articles/Vue/通过 CDN 使用 Vue.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               },
               "icon": "links-going-out",
-              "title": "任务清单 的出链列表"
+              "title": "通过 CDN 使用 Vue 的出链列表"
             }
           }
         ]
@@ -238,9 +236,9 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "Inbox/Suspense.md",
-    "Overview/任务清单.md",
     "Inbox/创建一个 Vue 应用.md",
+    "Overview/任务清单.md",
+    "Inbox/Suspense.md",
     "Articles/Vue/通过 CDN 使用 Vue.md",
     "Excalidraw/Java SPI 机制栗子架构图.excalidraw.md",
     "Articles/Tools/其他工具/软件卸载工具.md",
