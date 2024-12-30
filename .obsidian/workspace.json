@@ -4,21 +4,23 @@
     "type": "split",
     "children": [
       {
-        "id": "b107c16cb6d643e8",
+        "id": "1ccc3ec117c7fee3",
         "type": "tabs",
         "children": [
           {
-            "id": "7c26c82f9e2cf9e5",
+            "id": "840e600165fb6827",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "kanban",
               "state": {
-                "file": "Articles/Vue/通过 CDN 使用 Vue.md",
-                "mode": "source",
-                "source": false
+                "file": "Overview/任务清单.md",
+                "kanbanViewState": {
+                  "kanban-plugin": "board",
+                  "list-collapse": []
+                }
               },
-              "icon": "lucide-file",
-              "title": "通过 CDN 使用 Vue"
+              "icon": "lucide-trello",
+              "title": "任务清单"
             }
           }
         ]
@@ -111,7 +113,7 @@
             "state": {
               "type": "localgraph",
               "state": {
-                "file": "Articles/Vue/通过 CDN 使用 Vue.md",
+                "file": "Overview/任务清单.md",
                 "options": {
                   "collapse-filter": false,
                   "search": "",
@@ -134,12 +136,12 @@
                   "repelStrength": 10,
                   "linkStrength": 1,
                   "linkDistance": 250,
-                  "scale": 0.3628873693012154,
+                  "scale": 0.36288736930121607,
                   "close": true
                 }
               },
               "icon": "lucide-git-fork",
-              "title": "通过 CDN 使用 Vue 的关系图"
+              "title": "任务清单 的关系图"
             }
           }
         ]
@@ -162,10 +164,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Articles/Vue/通过 CDN 使用 Vue.md"
+                "file": "Overview/任务清单.md"
               },
               "icon": "lucide-list",
-              "title": "通过 CDN 使用 Vue 的大纲"
+              "title": "任务清单 的大纲"
             }
           },
           {
@@ -203,12 +205,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Articles/Vue/通过 CDN 使用 Vue.md",
+                "file": "Overview/任务清单.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               },
               "icon": "links-going-out",
-              "title": "通过 CDN 使用 Vue 的出链列表"
+              "title": "任务清单 的出链列表"
             }
           }
         ]
@@ -229,52 +231,51 @@
       "obsidian-git:Open Git source control": true,
       "templater-obsidian:Templater": true,
       "canvas:新建白板": false,
-      "random-note:开始漫游笔记": true,
       "media-extended:Open media": true,
       "hide-folders:Show hidden folders": true
     }
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
+    "Inbox/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md",
+    "Articles/Announcements/WebStorm 和 Rider 现在对非商业用途免费了.md",
     "Inbox/创建一个 Vue 应用.md",
+    "Articles/Announcements/宣布：GitHub Copilot 在 VS Code 中推出免费版，GitHub 开发者已达 1.5 亿！.md",
+    "Announcements",
+    "Articles/Tools/其他工具/Github + PicList 搭建个人图床.md",
     "Overview/任务清单.md",
-    "Inbox/Suspense.md",
+    "Articles/Tools/其他工具/PayPal.md",
+    "Articles/Misc/生成 Github Token.md",
+    "Articles/Misc/如何选择开源协议.md",
+    "Overview/参考资料.md",
+    "Cloudflare R2 & PicList 搭建最佳个人云图床！免费、稳定、国内/国外都能访问.md",
+    "Cloudflare R2 & PicList 搭建最佳个人云图床！免费、稳定、国内",
+    "Inbox/Cloudflare R2 + PicList 搭建最佳个人云图床！免费、稳定、国内/国外都能访问.md",
+    "Inbox/Cloudflare R2 + PicList 搭建最佳个人云图床！免费、稳定、国内",
+    "Excalidraw/LinkedList 底层结构与源码分析.excalidraw.md",
+    "Excalidraw/Vector 底层结构与源码分析.excalidraw.md",
+    "Excalidraw/HashMap数组下标计算.excalidraw.md",
+    "Excalidraw/HashMap底层数据结构.excalidraw.md",
+    "Excalidraw/ArrayList 底层结构与源码分析.excalidraw.md",
     "Articles/Vue/通过 CDN 使用 Vue.md",
+    "Articles/Tools/开发工具/UNPKG.md",
+    "Inbox/Suspense.md",
     "Excalidraw/Java SPI 机制栗子架构图.excalidraw.md",
     "Articles/Tools/其他工具/软件卸载工具.md",
     "Inbox/反射.md",
-    "Excalidraw/HashMap底层数据结构.excalidraw.md",
     "Excalidraw/JDBC 调用流程.excalidraw.md",
     "Articles/Misc/美化 Github 个人主页.md",
-    "Articles/Tools/其他工具/PicList & Github & jsDelivr 搭建个人云图床.md",
     "Articles/Tools/开发工具/Typora.md",
-    "Articles/Tools/其他工具/PayPal.md",
-    "Articles/Misc/全面了解 RSS.md",
-    "Overview/参考资料.md",
     "Tags",
-    "Articles/Tools/开发工具/UNPKG.md",
-    "Articles/Misc/Git 添加远程仓库.md",
     "LICENSE",
-    "Articles/SourceCodeAnalysis/Java/HashMap源码剖析.md",
-    "Inbox/Teleport.md",
-    "Articles/Tools/开发工具/nvm.md",
     "Canvas/未命名.canvas",
-    "Articles/Tools/其他工具/yt-dlp.md",
-    "Articles/Tools/其他工具/Office Tool Plus.md",
-    "Articles/Tools/其他工具/noMeiryoUI - 更换 Windows 默认字体.md",
-    "Articles/Tools/其他工具/FFmpeg.md",
-    "Articles/Tools/其他工具/ABDownloadManager.md",
-    "Articles/Tools/其他工具/手摸手教你搭建部署 Vitepress 博客.md",
     "Articles/Vue/未命名.canvas",
     "Articles/JavaScript",
     "Snippets",
     "Articles/Java/SourceCodeAnalysis",
     "Clippings",
     "Articles/Vue",
-    "Projects - Demo Project",
     "Canvas/代码生成器.canvas",
-    "Scripts/my-script.js",
-    "Scripts/新建 文本文档.txt",
     "Canvas/ArrayList源码剖析.canvas",
     "Articles/源码剖析/Java/未命名.canvas",
     "_Overview/未命名.canvas",
