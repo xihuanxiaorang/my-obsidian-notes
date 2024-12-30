@@ -11,16 +11,14 @@
             "id": "840e600165fb6827",
             "type": "leaf",
             "state": {
-              "type": "kanban",
+              "type": "markdown",
               "state": {
-                "file": "Overview/任务清单.md",
-                "kanbanViewState": {
-                  "kanban-plugin": "board",
-                  "list-collapse": []
-                }
+                "file": "Inbox/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-trello",
-              "title": "任务清单"
+              "icon": "lucide-file",
+              "title": "Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问"
             }
           }
         ]
@@ -113,7 +111,7 @@
             "state": {
               "type": "localgraph",
               "state": {
-                "file": "Overview/任务清单.md",
+                "file": "Inbox/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md",
                 "options": {
                   "collapse-filter": false,
                   "search": "",
@@ -141,7 +139,7 @@
                 }
               },
               "icon": "lucide-git-fork",
-              "title": "任务清单 的关系图"
+              "title": "Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问 的关系图"
             }
           }
         ]
@@ -164,10 +162,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Overview/任务清单.md"
+                "file": "Inbox/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md"
               },
               "icon": "lucide-list",
-              "title": "任务清单 的大纲"
+              "title": "Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问 的大纲"
             }
           },
           {
@@ -237,14 +235,14 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
+    "Articles/Tools/其他工具/PayPal.md",
     "Inbox/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md",
+    "Overview/任务清单.md",
     "Articles/Announcements/WebStorm 和 Rider 现在对非商业用途免费了.md",
     "Inbox/创建一个 Vue 应用.md",
     "Articles/Announcements/宣布：GitHub Copilot 在 VS Code 中推出免费版，GitHub 开发者已达 1.5 亿！.md",
     "Announcements",
     "Articles/Tools/其他工具/Github + PicList 搭建个人图床.md",
-    "Overview/任务清单.md",
-    "Articles/Tools/其他工具/PayPal.md",
     "Articles/Misc/生成 Github Token.md",
     "Articles/Misc/如何选择开源协议.md",
     "Overview/参考资料.md",
