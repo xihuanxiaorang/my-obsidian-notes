@@ -1,7 +1,7 @@
 {
-  "collapse-filter": true,
-  "search": "-path:Overview -path:Excalidraw -path:Templates  -path:Articles/Announcements  ",
-  "showTags": false,
+  "collapse-filter": false,
+  "search": "",
+  "showTags": true,
   "showAttachments": false,
   "hideUnresolved": false,
   "showOrphans": true,
@@ -33,12 +33,12 @@
   "showArrow": true,
   "textFadeMultiplier": 0.4,
   "nodeSizeMultiplier": 0.993229166666667,
-  "lineSizeMultiplier": 0.738020833333333,
+  "lineSizeMultiplier": 1.73333333333333,
   "collapse-forces": false,
   "centerStrength": 0.322916666666667,
   "repelStrength": 5,
   "linkStrength": 0.458333333333333,
   "linkDistance": 30,
-  "scale": 1.0000000000000517,
+  "scale": 1.0000000000000637,
   "close": true
 }
