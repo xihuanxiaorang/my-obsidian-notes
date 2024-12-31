@@ -11,44 +11,17 @@
             "id": "73263e1e56049ae6",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "关系图谱"
-            }
-          },
-          {
-            "id": "57504327864d44e0",
-            "type": "leaf",
-            "state": {
-              "type": "kanban",
-              "state": {
-                "file": "Overview/任务清单.md",
-                "kanbanViewState": {
-                  "kanban-plugin": "board",
-                  "list-collapse": []
-                }
-              },
-              "icon": "lucide-trello",
-              "title": "任务清单"
-            }
-          },
-          {
-            "id": "684980fc72d5b7cb",
-            "type": "leaf",
-            "state": {
               "type": "markdown",
               "state": {
-                "file": "Articles/Tools/其他工具/Github + PicList 搭建个人图床.md",
+                "file": "Articles/Tools/其他工具/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Github + PicList 搭建个人图床"
+              "title": "Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -138,7 +111,7 @@
             "state": {
               "type": "localgraph",
               "state": {
-                "file": "Overview/任务清单.md",
+                "file": "Articles/Tools/其他工具/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md",
                 "options": {
                   "collapse-filter": false,
                   "search": "",
@@ -166,7 +139,7 @@
                 }
               },
               "icon": "lucide-git-fork",
-              "title": "任务清单 的关系图"
+              "title": "Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问 的关系图"
             }
           }
         ]
@@ -189,10 +162,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Overview/任务清单.md"
+                "file": "Articles/Tools/其他工具/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md"
               },
               "icon": "lucide-list",
-              "title": "任务清单 的大纲"
+              "title": "Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问 的大纲"
             }
           },
           {
@@ -262,10 +235,15 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "Inbox/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md",
-    "Articles/Tools/其他工具/Github + PicList 搭建个人图床.md",
-    "Articles/Misc/Cloudflare 托管阿里云域名.md",
     "Overview/任务清单.md",
+    "Articles/Tools/其他工具/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md",
+    "Articles/Tools/其他工具/Github + PicList 搭建个人图床.md",
+    "Articles/Misc/如何将阿里云域名托管至 Cloudflare？.md",
+    "Attachments/Pasted image 20241231115406.png",
+    "Attachments/Pasted image 20241231112503.png",
+    "Attachments/Pasted image 20241231111557.png",
+    "Attachments/Pasted image 20241230234721.png",
+    "Articles/Misc/生成 Github Token.md",
     "Attachments/Pasted image 20241230184812.png",
     "Attachments/Pasted image 20241230184026.png",
     "Attachments/Pasted image 20241230183912.png",
@@ -275,7 +253,6 @@
     "Inbox/创建一个 Vue 应用.md",
     "Articles/Announcements/宣布：GitHub Copilot 在 VS Code 中推出免费版，GitHub 开发者已达 1.5 亿！.md",
     "Announcements",
-    "Articles/Misc/生成 Github Token.md",
     "Articles/Misc/如何选择开源协议.md",
     "Overview/参考资料.md",
     "Cloudflare R2 & PicList 搭建最佳个人云图床！免费、稳定、国内/国外都能访问.md",
@@ -294,7 +271,6 @@
     "Articles/Tools/其他工具/软件卸载工具.md",
     "Inbox/反射.md",
     "Excalidraw/JDBC 调用流程.excalidraw.md",
-    "Articles/Misc/美化 Github 个人主页.md",
     "Tags",
     "LICENSE",
     "Canvas/未命名.canvas",
@@ -311,10 +287,6 @@
     "未命名.canvas",
     "Attachments/中国移动 (1).svg",
     "Attachments/chinaMobile.svg",
-    "Attachments/Company.svg",
-    "Attachments/chinaUnicom.svg",
-    "Attachments/Pasted Image 20241215180451_302.svg",
-    "Attachments/Company (1).svg",
     "Docs/Java核心技术/基础/未命名.canvas",
     "Docs/CodeSnippet/未命名.canvas",
     "Inbox/未命名.canvas"

@@ -2,7 +2,7 @@
 tags:
   - Github
 create_time: 2024-12-29 22:22
-update_time: 2024/12/29 22:35
+update_time: 2024/12/30 23:42
 ---
 
 Github 的 Token 是一种用于身份验证的密钥，允许你在脚本、命令行工具或应用中安全地访问你的账户。以下是生成 Personal Access Token 的详细步骤：
