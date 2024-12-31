@@ -24,5 +24,6 @@
   "quickadd",
   "templater-obsidian",
   "media-extended",
-  "hide-folders"
+  "hide-folders",
+  "file-order"
 ]

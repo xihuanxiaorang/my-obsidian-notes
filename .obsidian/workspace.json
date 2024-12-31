@@ -4,21 +4,23 @@
     "type": "split",
     "children": [
       {
-        "id": "b6ff65434ae92a37",
+        "id": "30adb96717ec19cb",
         "type": "tabs",
         "children": [
           {
-            "id": "73263e1e56049ae6",
+            "id": "3636577f7768dcfd",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "kanban",
               "state": {
-                "file": "Articles/Tools/其他工具/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md",
-                "mode": "source",
-                "source": false
+                "file": "00. Overview/01 - 任务清单.md",
+                "kanbanViewState": {
+                  "kanban-plugin": "board",
+                  "list-collapse": []
+                }
               },
-              "icon": "lucide-file",
-              "title": "Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问"
+              "icon": "lucide-trello",
+              "title": "01 - 任务清单"
             }
           }
         ]
@@ -111,7 +113,7 @@
             "state": {
               "type": "localgraph",
               "state": {
-                "file": "Articles/Tools/其他工具/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md",
+                "file": "00. Overview/01 - 任务清单.md",
                 "options": {
                   "collapse-filter": false,
                   "search": "",
@@ -139,7 +141,7 @@
                 }
               },
               "icon": "lucide-git-fork",
-              "title": "Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问 的关系图"
+              "title": "01 - 任务清单 的关系图"
             }
           }
         ]
@@ -162,10 +164,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Articles/Tools/其他工具/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md"
+                "file": "00. Overview/01 - 任务清单.md"
               },
               "icon": "lucide-list",
-              "title": "Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问 的大纲"
+              "title": "01 - 任务清单 的大纲"
             }
           },
           {
@@ -235,52 +237,53 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "Overview/任务清单.md",
-    "Articles/Tools/其他工具/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md",
-    "Articles/Tools/其他工具/Github + PicList 搭建个人图床.md",
-    "Articles/Misc/如何将阿里云域名托管至 Cloudflare？.md",
+    "02. Inbox/创建一个 Vue 应用.md",
+    "00. Overview/01 - 任务清单.md",
+    "01. Articles/Java/基础/04  - SPI 机制.md",
+    "01. Articles/Java/基础/02  - 嵌套类.md",
+    "01. Articles/Java/基础/03  - Java8 新特性.md",
+    "01. Articles/Java/基础/01  - 代码块.md",
+    "01. Articles/Vue/01 - 通过 CDN 使用 Vue.md",
+    "01. Articles/Tools/其他工具/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md",
+    "01. Articles/Tools/其他工具/Github + PicList 搭建个人图床.md",
+    "01. Articles/Misc/如何将阿里云域名托管至 Cloudflare？.md",
     "Attachments/Pasted image 20241231115406.png",
     "Attachments/Pasted image 20241231112503.png",
     "Attachments/Pasted image 20241231111557.png",
     "Attachments/Pasted image 20241230234721.png",
-    "Articles/Misc/生成 Github Token.md",
+    "01. Articles/Misc/生成 Github Token.md",
     "Attachments/Pasted image 20241230184812.png",
     "Attachments/Pasted image 20241230184026.png",
     "Attachments/Pasted image 20241230183912.png",
     "Attachments/Pasted image 20241230182423.png",
-    "Articles/Tools/其他工具/PayPal.md",
-    "Articles/Announcements/WebStorm 和 Rider 现在对非商业用途免费了.md",
-    "Inbox/创建一个 Vue 应用.md",
-    "Articles/Announcements/宣布：GitHub Copilot 在 VS Code 中推出免费版，GitHub 开发者已达 1.5 亿！.md",
+    "01. Articles/Tools/其他工具/PayPal.md",
+    "01. Articles/Announcements/WebStorm 和 Rider 现在对非商业用途免费了.md",
+    "01. Articles/Announcements/宣布：GitHub Copilot 在 VS Code 中推出免费版，GitHub 开发者已达 1.5 亿！.md",
     "Announcements",
-    "Articles/Misc/如何选择开源协议.md",
-    "Overview/参考资料.md",
+    "01. Articles/Misc/如何选择开源协议.md",
+    "00. Overview/02 - 参考资料.md",
     "Cloudflare R2 & PicList 搭建最佳个人云图床！免费、稳定、国内/国外都能访问.md",
     "Cloudflare R2 & PicList 搭建最佳个人云图床！免费、稳定、国内",
     "Inbox/Cloudflare R2 + PicList 搭建最佳个人云图床！免费、稳定、国内/国外都能访问.md",
     "Inbox/Cloudflare R2 + PicList 搭建最佳个人云图床！免费、稳定、国内",
-    "Excalidraw/LinkedList 底层结构与源码分析.excalidraw.md",
+    "03. Excalidraw/LinkedList 底层结构与源码分析.excalidraw.md",
     "Excalidraw/Vector 底层结构与源码分析.excalidraw.md",
-    "Excalidraw/HashMap数组下标计算.excalidraw.md",
-    "Excalidraw/HashMap底层数据结构.excalidraw.md",
+    "03. Excalidraw/HashMap数组下标计算.excalidraw.md",
+    "03. Excalidraw/HashMap底层数据结构.excalidraw.md",
     "Excalidraw/ArrayList 底层结构与源码分析.excalidraw.md",
-    "Articles/Vue/通过 CDN 使用 Vue.md",
-    "Articles/Tools/开发工具/UNPKG.md",
-    "Inbox/Suspense.md",
-    "Excalidraw/Java SPI 机制栗子架构图.excalidraw.md",
-    "Articles/Tools/其他工具/软件卸载工具.md",
-    "Inbox/反射.md",
-    "Excalidraw/JDBC 调用流程.excalidraw.md",
+    "01. Articles/Tools/开发工具/UNPKG.md",
+    "02. Inbox/Suspense.md",
+    "03. Excalidraw/Java SPI 机制栗子架构图.excalidraw.md",
     "Tags",
     "LICENSE",
     "Canvas/未命名.canvas",
     "Articles/Vue/未命名.canvas",
-    "Articles/JavaScript",
+    "01. Articles/JavaScript",
     "Snippets",
     "Articles/Java/SourceCodeAnalysis",
     "Clippings",
-    "Articles/Vue",
-    "Canvas/代码生成器.canvas",
+    "01. Articles/Vue",
+    "04. Canvas/代码生成器.canvas",
     "Canvas/ArrayList源码剖析.canvas",
     "Articles/源码剖析/Java/未命名.canvas",
     "_Overview/未命名.canvas",
