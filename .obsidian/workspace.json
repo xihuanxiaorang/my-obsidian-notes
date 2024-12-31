@@ -4,26 +4,40 @@
     "type": "split",
     "children": [
       {
-        "id": "30adb96717ec19cb",
+        "id": "1cc3471c0c88e971",
         "type": "tabs",
         "children": [
           {
-            "id": "3636577f7768dcfd",
+            "id": "a2b98f6eaeea6ee5",
             "type": "leaf",
             "state": {
-              "type": "kanban",
+              "type": "markdown",
               "state": {
-                "file": "00. Overview/01 - 任务清单.md",
-                "kanbanViewState": {
-                  "kanban-plugin": "board",
-                  "list-collapse": []
-                }
+                "file": "02.Inbox/Live Server.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-trello",
-              "title": "01 - 任务清单"
+              "icon": "lucide-file",
+              "title": "Live Server"
+            }
+          },
+          {
+            "id": "ac0da9609acb32c4",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "01.Articles/Vue/01 - 通过 CDN 使用 Vue.md",
+                "mode": "source",
+                "backlinks": false,
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "01 - 通过 CDN 使用 Vue"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -55,7 +69,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#Cloudflare",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -113,7 +127,7 @@
             "state": {
               "type": "localgraph",
               "state": {
-                "file": "00. Overview/01 - 任务清单.md",
+                "file": "01.Articles/Vue/01 - 通过 CDN 使用 Vue.md",
                 "options": {
                   "collapse-filter": false,
                   "search": "",
@@ -141,7 +155,7 @@
                 }
               },
               "icon": "lucide-git-fork",
-              "title": "01 - 任务清单 的关系图"
+              "title": "01 - 通过 CDN 使用 Vue 的关系图"
             }
           }
         ]
@@ -164,10 +178,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "00. Overview/01 - 任务清单.md"
+                "file": "01.Articles/Vue/01 - 通过 CDN 使用 Vue.md"
               },
               "icon": "lucide-list",
-              "title": "01 - 任务清单 的大纲"
+              "title": "01 - 通过 CDN 使用 Vue 的大纲"
             }
           },
           {
@@ -186,7 +200,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Inbox/创建一个 Vue 应用.md",
+                "file": "01.Articles/Vue/01 - 通过 CDN 使用 Vue.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -196,7 +210,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "创建一个 Vue 应用 的反向链接列表"
+              "title": "01 - 通过 CDN 使用 Vue 的反向链接列表"
             }
           },
           {
@@ -205,12 +219,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Overview/任务清单.md",
+                "file": "01.Articles/Vue/01 - 通过 CDN 使用 Vue.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               },
               "icon": "links-going-out",
-              "title": "任务清单 的出链列表"
+              "title": "01 - 通过 CDN 使用 Vue 的出链列表"
             }
           }
         ]
@@ -237,53 +251,53 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "02. Inbox/创建一个 Vue 应用.md",
-    "00. Overview/01 - 任务清单.md",
-    "01. Articles/Java/基础/04  - SPI 机制.md",
-    "01. Articles/Java/基础/02  - 嵌套类.md",
-    "01. Articles/Java/基础/03  - Java8 新特性.md",
-    "01. Articles/Java/基础/01  - 代码块.md",
-    "01. Articles/Vue/01 - 通过 CDN 使用 Vue.md",
-    "01. Articles/Tools/其他工具/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md",
-    "01. Articles/Tools/其他工具/Github + PicList 搭建个人图床.md",
-    "01. Articles/Misc/如何将阿里云域名托管至 Cloudflare？.md",
+    "00.Overview/01 - 任务清单.md",
+    "02.Inbox/创建一个 Vue 应用.md",
+    "02.Inbox/Live Server.md",
+    "01.Articles/Vue/01 - 通过 CDN 使用 Vue.md",
+    "Inbox",
+    "01.Articles/Java/基础/04  - SPI 机制.md",
+    "01.Articles/Java/基础/02  - 嵌套类.md",
+    "01.Articles/Java/基础/03  - Java8 新特性.md",
+    "01.Articles/Java/基础/01  - 代码块.md",
+    "01.Articles/Tools/其他工具/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md",
+    "01.Articles/Tools/其他工具/Github + PicList 搭建个人图床.md",
+    "01.Articles/Misc/如何将阿里云域名托管至 Cloudflare？.md",
     "Attachments/Pasted image 20241231115406.png",
     "Attachments/Pasted image 20241231112503.png",
     "Attachments/Pasted image 20241231111557.png",
     "Attachments/Pasted image 20241230234721.png",
-    "01. Articles/Misc/生成 Github Token.md",
+    "01.Articles/Misc/生成 Github Token.md",
     "Attachments/Pasted image 20241230184812.png",
     "Attachments/Pasted image 20241230184026.png",
     "Attachments/Pasted image 20241230183912.png",
     "Attachments/Pasted image 20241230182423.png",
-    "01. Articles/Tools/其他工具/PayPal.md",
-    "01. Articles/Announcements/WebStorm 和 Rider 现在对非商业用途免费了.md",
-    "01. Articles/Announcements/宣布：GitHub Copilot 在 VS Code 中推出免费版，GitHub 开发者已达 1.5 亿！.md",
+    "01.Articles/Tools/其他工具/PayPal.md",
+    "01.Articles/Announcements/WebStorm 和 Rider 现在对非商业用途免费了.md",
+    "01.Articles/Announcements/宣布：GitHub Copilot 在 VS Code 中推出免费版，GitHub 开发者已达 1.5 亿！.md",
     "Announcements",
-    "01. Articles/Misc/如何选择开源协议.md",
-    "00. Overview/02 - 参考资料.md",
+    "01.Articles/Misc/如何选择开源协议.md",
+    "00.Overview/02 - 参考资料.md",
     "Cloudflare R2 & PicList 搭建最佳个人云图床！免费、稳定、国内/国外都能访问.md",
     "Cloudflare R2 & PicList 搭建最佳个人云图床！免费、稳定、国内",
     "Inbox/Cloudflare R2 + PicList 搭建最佳个人云图床！免费、稳定、国内/国外都能访问.md",
     "Inbox/Cloudflare R2 + PicList 搭建最佳个人云图床！免费、稳定、国内",
-    "03. Excalidraw/LinkedList 底层结构与源码分析.excalidraw.md",
+    "03.Excalidraw/LinkedList 底层结构与源码分析.excalidraw.md",
     "Excalidraw/Vector 底层结构与源码分析.excalidraw.md",
-    "03. Excalidraw/HashMap数组下标计算.excalidraw.md",
-    "03. Excalidraw/HashMap底层数据结构.excalidraw.md",
+    "03.Excalidraw/HashMap数组下标计算.excalidraw.md",
+    "03.Excalidraw/HashMap底层数据结构.excalidraw.md",
     "Excalidraw/ArrayList 底层结构与源码分析.excalidraw.md",
-    "01. Articles/Tools/开发工具/UNPKG.md",
-    "02. Inbox/Suspense.md",
-    "03. Excalidraw/Java SPI 机制栗子架构图.excalidraw.md",
+    "01.Articles/Tools/开发工具/UNPKG.md",
+    "02.Inbox/Suspense.md",
     "Tags",
     "LICENSE",
     "Canvas/未命名.canvas",
     "Articles/Vue/未命名.canvas",
-    "01. Articles/JavaScript",
+    "01.Articles/JavaScript",
     "Snippets",
     "Articles/Java/SourceCodeAnalysis",
     "Clippings",
-    "01. Articles/Vue",
-    "04. Canvas/代码生成器.canvas",
+    "04.Canvas/代码生成器.canvas",
     "Canvas/ArrayList源码剖析.canvas",
     "Articles/源码剖析/Java/未命名.canvas",
     "_Overview/未命名.canvas",

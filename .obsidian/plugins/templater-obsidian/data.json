@@ -1,6 +1,6 @@
 {
   "command_timeout": 5,
-  "templates_folder": "Templates",
+  "templates_folder": "07.Templates",
   "templates_pairs": [
     [
       "",
@@ -15,8 +15,8 @@
   "enable_folder_templates": true,
   "folder_templates": [
     {
-      "folder": "Inbox",
-      "template": "Templates/Basic.md"
+      "folder": "02.Inbox",
+      "template": "07.Templates/Basic.md"
     }
   ],
   "enable_file_templates": false,
@@ -29,7 +29,7 @@
   "syntax_highlighting": true,
   "syntax_highlighting_mobile": false,
   "enabled_templates_hotkeys": [
-    "Templates/Auto Callout.md"
+    "07.Templates/Auto Callout.md"
   ],
   "startup_templates": []
 }

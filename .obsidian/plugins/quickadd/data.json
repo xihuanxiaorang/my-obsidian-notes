@@ -6,7 +6,7 @@
       "type": "Capture",
       "command": true,
       "appendLink": false,
-      "captureTo": "Overview/任务清单.md",
+      "captureTo": "00.Overview/01 - 任务清单.md",
       "captureToActiveFile": false,
       "createFileIfItDoesntExist": {
         "enabled": false,
@@ -63,7 +63,7 @@
             "name": "template - create the task file",
             "type": "Template",
             "command": false,
-            "templatePath": "Templates/Basic.md",
+            "templatePath": "07.Templates/Basic.md",
             "fileNameFormat": {
               "enabled": true,
               "format": "{{value:task}}"
@@ -71,7 +71,7 @@
             "folder": {
               "enabled": true,
               "folders": [
-                "Inbox"
+                "02.Inbox"
               ],
               "chooseWhenCreatingNote": false,
               "createInSameFolderAsActiveFile": false,

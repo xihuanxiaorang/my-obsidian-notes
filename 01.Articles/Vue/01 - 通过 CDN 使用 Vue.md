@@ -3,7 +3,7 @@ tags:
   - Frontend
   - Vue
 create_time: 2024-12-28 22:06
-update_time: 2024/12/29 18:55
+update_time: 2024/12/31 21:27
 ---
 
 我们可以借助 script 标签直接通过 CDN（如 [[UNPKG]]、[jsDelivr](https://www.jsdelivr.com/package/npm/vue) 或 [cdnjs](https://cdnjs.com/libraries/vue)） 来使用 Vue：
@@ -123,3 +123,52 @@ import { createApp } from 'vue'
 
 > [!info] 导入映射表的浏览器支持情况
 > 导入映射表是一个相对较新的浏览器功能。请确保使用其[支持范围](https://caniuse.com/import-maps)内的浏览器。请注意，只有 Safari 16.4 以上版本支持。
+
+### 拆分模块
+
+随着对这份指南的逐步深入，我们可能需要将代码分割成单独的 JavaScript 文件，以便更容易管理。例如：
+
+```html hl:20,22
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>通过 CDN 使用 Vue</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script type="module">
+      import { createApp } from "vue";
+      import MyComponent from "./my-component.js";
+
+      createApp(MyComponent).mount("#app");
+    </script>
+  </body>
+</html>
+```
+
+```js
+// my-component.js
+export default {
+  data() {
+    return {
+      count: 0
+    }
+  },
+  template: `<div>Count is: {{ count }}</div>`
+}
+```
+
+如果直接在浏览器中打开了上面的 `index.html`，你会发现它抛出了一个错误，因为 ES 模块不能通过 `file://` 协议工作，也即是当你打开一个本地文件时浏览器使用的协议。
+
+由于安全原因，**ES 模块只能通过 `http://` 协议工作**，也即是浏览器在打开网页时使用的协议。咱们可以通过 [[Live Server]] 插件在本地快速启动一个 HTTP 服务器。
