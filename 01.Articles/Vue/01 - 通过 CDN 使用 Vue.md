@@ -3,20 +3,25 @@ tags:
   - Frontend
   - Vue
 create_time: 2024-12-28 22:06
-update_time: 2024/12/31 21:27
+update_time: 2024/12/31 22:01
 ---
 
-我们可以借助 script 标签直接通过 CDN（如 [[UNPKG]]、[jsDelivr](https://www.jsdelivr.com/package/npm/vue) 或 [cdnjs](https://cdnjs.com/libraries/vue)） 来使用 Vue：
+Vue 提供了灵活的使用方式，通过直接在 HTML 文件中引入 CDN 链接，可以快速搭建开发环境，无需复杂的构建工具。以下是详细的指南和示例，展示如何通过 CDN 使用 Vue。
+
+---
+
+使用 `<script>` 标签从 CDN 引入 Vue，可以快速启动开发。常用的 CDN 包括 [[UNPKG]]、[jsDelivr](https://www.jsdelivr.com/package/npm/vue) 和 [cdnjs](https://cdnjs.com/libraries/vue)。
 
 ```html
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 ```
 
-通过 CDN 使用 Vue 时，虽然不涉及 "构建步骤"，但是**无法使用单文件组件（SFC）语法**。
+> [!note]
+> 使用 CDN 引入 Vue 不涉及构建步骤，因此**无法使用单文件组件（SFC）语法**。
 
 ## 全局构建版本
 
-上面的链接使用了全局构建版本的 Vue，该版本的所有顶层 API 都以属性的形式暴露在了<u>全局</u>的 `Vue` 对象上。
+通过全局构建版本引入 Vue 的所有 API 都暴露在全局的 `Vue` 对象中。
 
 ```html
 <!DOCTYPE html>
@@ -80,13 +85,7 @@ update_time: 2024/12/31 21:27
 
 ### 启用 Import maps
 
-在上面的示例中，我们使用了完整的 CDN URL 来导入，但在日常开发过程中，你将看到如下代码：
-
-```js
-import { createApp } from 'vue'
-```
-
-我们可以使用导入映射表（Import Maps）来告诉浏览器如何定位到导入的 `vue`：
+为了避免使用完整的 CDN URL 导入，开发中可以通过 **Import Maps** 映射模块路径。这种方法更加简洁和可维护。
 
 ```html hl:7-12,19
 <!DOCTYPE html>
@@ -122,14 +121,15 @@ import { createApp } from 'vue'
 ```
 
 > [!info] 导入映射表的浏览器支持情况
-> 导入映射表是一个相对较新的浏览器功能。请确保使用其[支持范围](https://caniuse.com/import-maps)内的浏览器。请注意，只有 Safari 16.4 以上版本支持。
+> 导入映射表是一个新功能，请参考[浏览器支持情况](https://caniuse.com/import-maps)，确保使用支持的浏览器版本（如 Safari 16.4+）。
 
 ### 拆分模块
 
-随着对这份指南的逐步深入，我们可能需要将代码分割成单独的 JavaScript 文件，以便更容易管理。例如：
+在复杂项目中，可以通过模块拆分的方式组织代码，以提高可维护性。
+
+`index.html`
 
 ```html hl:20,22
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -157,18 +157,24 @@ import { createApp } from 'vue'
 </html>
 ```
 
-```js
-// my-component.js
+`my-component.js`
+
+```js hl:7
 export default {
   data() {
     return {
       count: 0
     }
   },
-  template: `<div>Count is: {{ count }}</div>`
+  template: /*html*/`<div>Count is: {{ count }}</div>`
 }
 ```
 
-如果直接在浏览器中打开了上面的 `index.html`，你会发现它抛出了一个错误，因为 ES 模块不能通过 `file://` 协议工作，也即是当你打开一个本地文件时浏览器使用的协议。
+> [!note]
+> ES 模块无法通过 `file://` 协议加载，因为浏览器出于安全原因要求通过 `http://` 协议工作。可以使用 [[Live Server]] 插件在本地启动 HTTP 服务器。
 
-由于安全原因，**ES 模块只能通过 `http://` 协议工作**，也即是浏览器在打开网页时使用的协议。咱们可以通过 [[Live Server]] 插件在本地快速启动一个 HTTP 服务器。
+在上面的代码中，**组件模板是以内联 JavaScript 字符串形式存在的**。如果使用 VS Code，可以安装 [es6-string-html](https://marketplace.visualstudio.com/items?itemName=Tobermory.es6-string-html) 扩展，让模板字符串支持高亮显示。在字符串前添加 `/*html*/` 注释即可。
+
+## 总结
+
+通过 CDN 使用 Vue 是快速启动项目的理想选择，特别适合小型项目或测试环境。它无需构建工具，但受限于无法使用 SFC（单文件组件）。使用 ES 模块版本结合 Import Maps 可以优化开发体验，而模块拆分和工具支持（如 Live Server 和模板高亮扩展）则能进一步提升开发效率。
