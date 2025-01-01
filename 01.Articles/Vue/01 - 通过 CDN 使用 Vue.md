@@ -3,7 +3,7 @@ tags:
   - Frontend
   - Vue
 create_time: 2024-12-28 22:06
-update_time: 2024/12/31 22:01
+update_time: 2025/01/01 18:48
 ---
 
 Vue 提供了灵活的使用方式，通过直接在 HTML 文件中引入 CDN 链接，可以快速搭建开发环境，无需复杂的构建工具。以下是详细的指南和示例，展示如何通过 CDN 使用 Vue。
@@ -17,7 +17,7 @@ Vue 提供了灵活的使用方式，通过直接在 HTML 文件中引入 CDN �
 ```
 
 > [!note]
-> 使用 CDN 引入 Vue 不涉及构建步骤，因此**无法使用单文件组件（SFC）语法**。
+> 使用 CDN 引入 Vue 不涉及构建步骤，因此**无法使用[[单文件组件]]（SFC）语法**。
 
 ## 全局构建版本
 
@@ -83,9 +83,9 @@ Vue 提供了灵活的使用方式，通过直接在 HTML 文件中引入 CDN �
 > [!note]
 > 使用了 `<script type="module">`，并且导入的 CDN URL 指向的是 Vue 的 ES 模块构建版本。
 
-### 启用 Import maps
+### 启用 Import maps✨
 
-为了避免使用完整的 CDN URL 导入，开发中可以通过 **Import Maps** 映射模块路径。这种方法更加简洁和可维护。
+为了避免使用完整的 CDN URL 导入，开发中可以通过 Import Maps 映射模块路径。这种方法更加简洁和可维护。
 
 ```html hl:7-12,19
 <!DOCTYPE html>
