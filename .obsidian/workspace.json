@@ -4,17 +4,23 @@
     "type": "split",
     "children": [
       {
-        "id": "685b850e6f1f30d2",
+        "id": "44832efabf6ebe21",
         "type": "tabs",
         "children": [
           {
-            "id": "600cd56dc645a52d",
+            "id": "bae04fa02d3cec2a",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "新标签页"
+              "type": "kanban",
+              "state": {
+                "file": "00.Overview/01 - 任务清单.md",
+                "kanbanViewState": {
+                  "kanban-plugin": "board",
+                  "list-collapse": []
+                }
+              },
+              "icon": "lucide-trello",
+              "title": "01 - 任务清单"
             }
           }
         ]
@@ -29,7 +35,7 @@
       {
         "id": "594555d6553cc8e5",
         "type": "tabs",
-        "dimension": 68.06122448979592,
+        "dimension": 71.3265306122449,
         "children": [
           {
             "id": "cd440ffabd7c79fa",
@@ -74,16 +80,6 @@
             }
           },
           {
-            "id": "76335a251dadd2c3",
-            "type": "leaf",
-            "state": {
-              "type": "bookmarks",
-              "state": {},
-              "icon": "lucide-bookmark",
-              "title": "书签"
-            }
-          },
-          {
             "id": "9bbed510414b75b1",
             "type": "leaf",
             "state": {
@@ -94,47 +90,21 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 3
       },
       {
-        "id": "179a4b11753a29f1",
+        "id": "2e550143e01bb0d3",
         "type": "tabs",
-        "dimension": 31.93877551020408,
+        "dimension": 28.6734693877551,
         "children": [
           {
-            "id": "8740b433f29a972a",
+            "id": "76335a251dadd2c3",
             "type": "leaf",
             "state": {
-              "type": "localgraph",
-              "state": {
-                "options": {
-                  "collapse-filter": false,
-                  "search": "",
-                  "localJumps": 1,
-                  "localBacklinks": true,
-                  "localForelinks": true,
-                  "localInterlinks": true,
-                  "showTags": false,
-                  "showAttachments": false,
-                  "hideUnresolved": false,
-                  "collapse-color-groups": true,
-                  "colorGroups": [],
-                  "collapse-display": false,
-                  "showArrow": true,
-                  "textFadeMultiplier": 0,
-                  "nodeSizeMultiplier": 1,
-                  "lineSizeMultiplier": 1,
-                  "collapse-forces": true,
-                  "centerStrength": 0.518713248970312,
-                  "repelStrength": 10,
-                  "linkStrength": 1,
-                  "linkDistance": 250,
-                  "scale": 0.18462326225858397,
-                  "close": true
-                }
-              },
-              "icon": "lucide-git-fork",
-              "title": "关系图谱"
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
             }
           }
         ]
@@ -157,20 +127,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "03.Excalidraw/Java SPI 机制栗子.excalidraw.md"
+                "file": "00.Overview/01 - 任务清单.md"
               },
               "icon": "lucide-list",
-              "title": "Java SPI 机制栗子.excalidraw 的大纲"
-            }
-          },
-          {
-            "id": "287c4e2cf1623af8",
-            "type": "leaf",
-            "state": {
-              "type": "advanced-tables-toolbar",
-              "state": {},
-              "icon": "spreadsheet",
-              "title": "Advanced Tables"
+              "title": "01 - 任务清单 的大纲"
             }
           },
           {
@@ -179,7 +139,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "02.Inbox/创建一个 Vue 应用.md",
+                "file": "00.Overview/01 - 任务清单.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -189,7 +149,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "创建一个 Vue 应用 的反向链接列表"
+              "title": "01 - 任务清单 的反向链接列表"
             }
           },
           {
@@ -198,20 +158,19 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "03.Excalidraw/Java SPI 机制栗子.excalidraw.md",
+                "file": "00.Overview/01 - 任务清单.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               },
               "icon": "links-going-out",
-              "title": "Java SPI 机制栗子.excalidraw 的出链列表"
+              "title": "01 - 任务清单 的出链列表"
             }
           }
         ]
       }
     ],
     "direction": "horizontal",
-    "width": 365,
-    "collapsed": true
+    "width": 365
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -232,7 +191,10 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
+    "00.Overview/01 - 任务清单.md",
+    "01.Articles/Misc/Misc & Ideas & Inbox & Articles.md",
     "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList源码剖析.md",
+    "06.Reading/Algorithm/Hello 算法/01 - 数组.canvas",
     "01.Articles/Java/基础/03  - Java8 新特性.md",
     "01.Articles/Java/基础/04  - SPI 机制.md",
     "01.Articles/Java/基础/01  - 代码块.md",
@@ -250,7 +212,6 @@
     "06.Reading/Algorithm/Hello 算法/未命名.md",
     "03.Excalidraw/fonts/杨任东竹石体.ttf",
     "03.Excalidraw/fonts",
-    "06.Reading/Algorithm/Hello 算法/未命名.canvas",
     "06.Reading/Algorithm/Hello 算法/Drawing 2025-01-02 18.12.08.excalidraw.md",
     "03.Excalidraw/Drawing 2025-01-02 18.06.39.excalidraw.md",
     "03.Excalidraw/HashMap底层数据结构.excalidraw.md",
@@ -265,10 +226,8 @@
     "08.Zttachments/Company.svg",
     "08.Zttachments/chinaUnicom.svg",
     "08.Zttachments",
-    "00.Overview/01 - 任务清单.md",
     "01.Articles/Vue/01 - 通过 CDN 使用 Vue.md",
     "props.md",
-    "`props`.md",
     "01.Articles/Cloudreve 能助您以最低的成本快速搭建公私兼备的网盘系统.xmind",
     "Inbox",
     "Attachments/Pasted image 20241231115406.png",
