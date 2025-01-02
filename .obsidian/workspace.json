@@ -4,24 +4,24 @@
     "type": "split",
     "children": [
       {
-        "id": "44832efabf6ebe21",
+        "id": "efefd8ad121d28f6",
         "type": "tabs",
         "children": [
           {
-            "id": "bae04fa02d3cec2a",
+            "id": "a3b54de02ddac531",
             "type": "leaf",
             "state": {
               "type": "canvas",
               "state": {
-                "file": "06.Reading/Algorithm/Hello 算法/01 - 数组.canvas",
+                "file": "06.Reading/Algorithm/Hello 算法/02 - 链表.canvas",
                 "viewState": {
-                  "x": -47.5,
-                  "y": -352.5,
-                  "zoom": -1.6461467356561126
+                  "x": -1052.1146364838728,
+                  "y": -213.04255698760866,
+                  "zoom": -0.6666666666666667
                 }
               },
               "icon": "lucide-layout-dashboard",
-              "title": "01 - 数组"
+              "title": "02 - 链表"
             }
           }
         ]
@@ -96,7 +96,7 @@
       {
         "id": "2e550143e01bb0d3",
         "type": "tabs",
-        "dimension": 28.6734693877551,
+        "dimension": 28.673469387755105,
         "children": [
           {
             "id": "76335a251dadd2c3",
@@ -127,11 +127,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "06.Reading/Algorithm/Hello 算法/01 - 数组.canvas"
-              },
+              "state": {},
               "icon": "lucide-list",
-              "title": "01 - 数组 的大纲"
+              "title": "大纲"
             }
           },
           {
@@ -140,7 +138,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "06.Reading/Algorithm/Hello 算法/01 - 数组.canvas",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -150,7 +147,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "01 - 数组 的反向链接列表"
+              "title": "反向链接"
             }
           },
           {
@@ -159,12 +156,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "06.Reading/Algorithm/Hello 算法/01 - 数组.canvas",
+                "file": "06.Reading/Algorithm/Hello 算法/02 - 链表.canvas",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               },
               "icon": "links-going-out",
-              "title": "01 - 数组 的出链列表"
+              "title": "02 - 链表 的出链列表"
             }
           }
         ],
@@ -194,6 +191,7 @@
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
     "06.Reading/Algorithm/Hello 算法/01 - 数组.canvas",
+    "06.Reading/Algorithm/Hello 算法/02 - 链表.canvas",
     "00.Overview/01 - 任务清单.md",
     "01.Articles/Misc/Misc & Ideas & Inbox & Articles.md",
     "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList源码剖析.md",
@@ -246,7 +244,6 @@
     "Canvas/ArrayList源码剖析.canvas",
     "Articles/源码剖析/Java/未命名.canvas",
     "_Overview/未命名.canvas",
-    "未命名.canvas",
-    "Docs/Java核心技术/基础/未命名.canvas"
+    "未命名.canvas"
   ]
 }
