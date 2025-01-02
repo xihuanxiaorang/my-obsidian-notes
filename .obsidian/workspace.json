@@ -11,16 +11,17 @@
             "id": "bae04fa02d3cec2a",
             "type": "leaf",
             "state": {
-              "type": "kanban",
+              "type": "canvas",
               "state": {
-                "file": "00.Overview/01 - 任务清单.md",
-                "kanbanViewState": {
-                  "kanban-plugin": "board",
-                  "list-collapse": []
+                "file": "06.Reading/Algorithm/Hello 算法/01 - 数组.canvas",
+                "viewState": {
+                  "x": -47.5,
+                  "y": -352.5,
+                  "zoom": -1.6461467356561126
                 }
               },
-              "icon": "lucide-trello",
-              "title": "01 - 任务清单"
+              "icon": "lucide-layout-dashboard",
+              "title": "01 - 数组"
             }
           }
         ]
@@ -55,7 +56,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#VSCode",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -127,10 +128,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "00.Overview/01 - 任务清单.md"
+                "file": "06.Reading/Algorithm/Hello 算法/01 - 数组.canvas"
               },
               "icon": "lucide-list",
-              "title": "01 - 任务清单 的大纲"
+              "title": "01 - 数组 的大纲"
             }
           },
           {
@@ -139,7 +140,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "00.Overview/01 - 任务清单.md",
+                "file": "06.Reading/Algorithm/Hello 算法/01 - 数组.canvas",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -149,7 +150,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "01 - 任务清单 的反向链接列表"
+              "title": "01 - 数组 的反向链接列表"
             }
           },
           {
@@ -158,15 +159,16 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "00.Overview/01 - 任务清单.md",
+                "file": "06.Reading/Algorithm/Hello 算法/01 - 数组.canvas",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               },
               "icon": "links-going-out",
-              "title": "01 - 任务清单 的出链列表"
+              "title": "01 - 数组 的出链列表"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "horizontal",
@@ -191,10 +193,10 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
+    "06.Reading/Algorithm/Hello 算法/01 - 数组.canvas",
     "00.Overview/01 - 任务清单.md",
     "01.Articles/Misc/Misc & Ideas & Inbox & Articles.md",
     "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList源码剖析.md",
-    "06.Reading/Algorithm/Hello 算法/01 - 数组.canvas",
     "01.Articles/Java/基础/03  - Java8 新特性.md",
     "01.Articles/Java/基础/04  - SPI 机制.md",
     "01.Articles/Java/基础/01  - 代码块.md",
@@ -227,7 +229,6 @@
     "08.Zttachments/chinaUnicom.svg",
     "08.Zttachments",
     "01.Articles/Vue/01 - 通过 CDN 使用 Vue.md",
-    "props.md",
     "01.Articles/Cloudreve 能助您以最低的成本快速搭建公私兼备的网盘系统.xmind",
     "Inbox",
     "Attachments/Pasted image 20241231115406.png",
