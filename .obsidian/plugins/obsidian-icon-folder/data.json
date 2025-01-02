@@ -6,16 +6,16 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiBrainLine",
+      "🧠",
+      "RiAttachment2",
       "RiJavascriptFill",
       "RiJavascriptLine",
       "RiVuejsLine",
       "RiTaskLine",
       "RiBookmark3Line",
       "RiLayoutLine",
-      "LiLayoutPanelLeft",
-      "RiMegaphoneLine",
-      "RiBubbleChartLine",
-      "RiBrainLine"
+      "LiLayoutPanelLeft"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -39,7 +39,6 @@
     "debugMode": false,
     "useInternalPlugins": false
   },
-  "Attachments": "RiAttachment2",
   "07.Templates": "RiShapeLine",
   "06.Reading": "RiBookOpenLine",
   "05.Ideas": "RiLightbulbLine",
@@ -59,5 +58,7 @@
   "01.Articles/SourceCodeAnalysis/Java": "RiJavaLine",
   "00.Overview": "RiDashboardLine",
   "00.Overview/01 - 任务清单.md": "RiTaskLine",
-  "00.Overview/02 - 参考资料.md": "RiBookmark3Line"
+  "00.Overview/02 - 参考资料.md": "RiBookmark3Line",
+  "08.Zttachments": "RiAttachment2",
+  "06.Reading/Algorithm": "RiBrainLine"
 }

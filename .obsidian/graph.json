@@ -1,7 +1,7 @@
 {
   "collapse-filter": false,
   "search": "",
-  "showTags": true,
+  "showTags": false,
   "showAttachments": false,
   "hideUnresolved": false,
   "showOrphans": true,
@@ -15,7 +15,7 @@
       }
     },
     {
-      "query": "tag:#Vue  ",
+      "query": "tag:#Vue ",
       "color": {
         "a": 1,
         "rgb": 14725458
@@ -39,6 +39,6 @@
   "repelStrength": 5,
   "linkStrength": 0.458333333333333,
   "linkDistance": 30,
-  "scale": 0.7132754626224935,
+  "scale": 0.5087618855792987,
   "close": true
 }

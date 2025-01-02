@@ -4,38 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "1e7231179abdfb1e",
+        "id": "685b850e6f1f30d2",
         "type": "tabs",
         "children": [
           {
-            "id": "59292b930086ff4e",
+            "id": "600cd56dc645a52d",
             "type": "leaf",
             "state": {
-              "type": "kanban",
-              "state": {
-                "file": "00.Overview/01 - 任务清单.md",
-                "kanbanViewState": {
-                  "kanban-plugin": "board",
-                  "list-collapse": []
-                }
-              },
-              "icon": "lucide-trello",
-              "title": "01 - 任务清单"
-            }
-          },
-          {
-            "id": "6593aa261dceae73",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "01.Articles/Vue/02 - 创建一个 Vue 应用.md",
-                "mode": "source",
-                "backlinks": false,
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "02 - 创建一个 Vue 应用"
+              "title": "新标签页"
             }
           }
         ]
@@ -128,7 +107,6 @@
             "state": {
               "type": "localgraph",
               "state": {
-                "file": "00.Overview/01 - 任务清单.md",
                 "options": {
                   "collapse-filter": false,
                   "search": "",
@@ -151,12 +129,12 @@
                   "repelStrength": 10,
                   "linkStrength": 1,
                   "linkDistance": 250,
-                  "scale": 0.5087618855792663,
+                  "scale": 0.18462326225858397,
                   "close": true
                 }
               },
               "icon": "lucide-git-fork",
-              "title": "01 - 任务清单 的关系图"
+              "title": "关系图谱"
             }
           }
         ]
@@ -179,10 +157,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "00.Overview/01 - 任务清单.md"
+                "file": "03.Excalidraw/Java SPI 机制栗子.excalidraw.md"
               },
               "icon": "lucide-list",
-              "title": "01 - 任务清单 的大纲"
+              "title": "Java SPI 机制栗子.excalidraw 的大纲"
             }
           },
           {
@@ -220,19 +198,20 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "00.Overview/01 - 任务清单.md",
+                "file": "03.Excalidraw/Java SPI 机制栗子.excalidraw.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               },
               "icon": "links-going-out",
-              "title": "01 - 任务清单 的出链列表"
+              "title": "Java SPI 机制栗子.excalidraw 的出链列表"
             }
           }
         ]
       }
     ],
     "direction": "horizontal",
-    "width": 365
+    "width": 365,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -247,66 +226,67 @@
       "templater-obsidian:Templater": true,
       "canvas:新建白板": false,
       "media-extended:Open media": true,
-      "hide-folders:Show hidden folders": true
+      "hide-folders:Show hidden folders": true,
+      "improved-random-note:Open improved random note": false
     }
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
+    "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList源码剖析.md",
+    "01.Articles/Java/基础/03  - Java8 新特性.md",
+    "01.Articles/Java/基础/04  - SPI 机制.md",
+    "01.Articles/Java/基础/01  - 代码块.md",
+    "01.Articles/SourceCodeAnalysis/Java/02 - HashMap源码剖析.md",
+    "01.Articles/Announcements/WebStorm 和 Rider 现在对非商业用途免费了.md",
+    "01.Articles/Java/基础/02  - 嵌套类.md",
+    "01.Articles/JavaScript/reduce.md",
     "01.Articles/Vue/02 - 创建一个 Vue 应用.md",
+    "01.Articles/Misc/如何将阿里云域名托管至 Cloudflare？.md",
+    "01.Articles/Tools/其他工具/PayPal.md",
+    "07.Templates/Auto Callout.md",
+    "07.Templates/Basic.md",
+    "03.Excalidraw/JDBC 调用流程.excalidraw.md",
+    "03.Excalidraw/JDBC 架构图.excalidraw.md",
+    "06.Reading/Algorithm/Hello 算法/未命名.md",
+    "03.Excalidraw/fonts/杨任东竹石体.ttf",
+    "03.Excalidraw/fonts",
+    "06.Reading/Algorithm/Hello 算法/未命名.canvas",
+    "06.Reading/Algorithm/Hello 算法/Drawing 2025-01-02 18.12.08.excalidraw.md",
+    "03.Excalidraw/Drawing 2025-01-02 18.06.39.excalidraw.md",
+    "03.Excalidraw/HashMap底层数据结构.excalidraw.md",
+    "Excalidraw/Drawing 2025-01-02 18.03.49.excalidraw.md",
+    "Excalidraw",
+    "06.Reading/Algorithm",
+    "03.Excalidraw/Java SPI 机制栗子.excalidraw.md",
+    "08.Zttachments/chinaMobile.svg",
+    "06.Reading/Hello 算法/Drawing 2025-01-01 23.02.15.excalidraw.md",
+    "06.Reading/Hello 算法/未命名.canvas",
+    "06.Reading/Algorithm/Hello 算法",
+    "08.Zttachments/Company.svg",
+    "08.Zttachments/chinaUnicom.svg",
+    "08.Zttachments",
+    "00.Overview/01 - 任务清单.md",
     "01.Articles/Vue/01 - 通过 CDN 使用 Vue.md",
     "props.md",
     "`props`.md",
-    "00.Overview/01 - 任务清单.md",
-    "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList源码剖析.md",
     "01.Articles/Cloudreve 能助您以最低的成本快速搭建公私兼备的网盘系统.xmind",
-    "01.Articles/Tools/开发工具/UNPKG.md",
-    "01.Articles/Tools/开发工具/Live Server.md",
     "Inbox",
-    "01.Articles/Java/基础/04  - SPI 机制.md",
-    "01.Articles/Java/基础/02  - 嵌套类.md",
-    "01.Articles/Java/基础/03  - Java8 新特性.md",
-    "01.Articles/Java/基础/01  - 代码块.md",
-    "01.Articles/Tools/其他工具/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md",
-    "01.Articles/Tools/其他工具/Github + PicList 搭建个人图床.md",
-    "01.Articles/Misc/如何将阿里云域名托管至 Cloudflare？.md",
     "Attachments/Pasted image 20241231115406.png",
     "Attachments/Pasted image 20241231112503.png",
     "Attachments/Pasted image 20241231111557.png",
     "Attachments/Pasted image 20241230234721.png",
-    "01.Articles/Misc/生成 Github Token.md",
     "Attachments/Pasted image 20241230184812.png",
     "Attachments/Pasted image 20241230184026.png",
     "Attachments/Pasted image 20241230183912.png",
-    "Attachments/Pasted image 20241230182423.png",
-    "01.Articles/Tools/其他工具/PayPal.md",
-    "01.Articles/Announcements/WebStorm 和 Rider 现在对非商业用途免费了.md",
-    "01.Articles/Announcements/宣布：GitHub Copilot 在 VS Code 中推出免费版，GitHub 开发者已达 1.5 亿！.md",
     "Announcements",
-    "01.Articles/Misc/如何选择开源协议.md",
-    "00.Overview/02 - 参考资料.md",
-    "Cloudflare R2 & PicList 搭建最佳个人云图床！免费、稳定、国内/国外都能访问.md",
     "Cloudflare R2 & PicList 搭建最佳个人云图床！免费、稳定、国内",
-    "Inbox/Cloudflare R2 + PicList 搭建最佳个人云图床！免费、稳定、国内/国外都能访问.md",
-    "Inbox/Cloudflare R2 + PicList 搭建最佳个人云图床！免费、稳定、国内",
-    "03.Excalidraw/LinkedList 底层结构与源码分析.excalidraw.md",
-    "Excalidraw/Vector 底层结构与源码分析.excalidraw.md",
-    "03.Excalidraw/HashMap数组下标计算.excalidraw.md",
-    "Tags",
-    "LICENSE",
     "Canvas/未命名.canvas",
     "Articles/Vue/未命名.canvas",
-    "01.Articles/JavaScript",
-    "Snippets",
-    "Articles/Java/SourceCodeAnalysis",
     "04.Canvas/代码生成器.canvas",
     "Canvas/ArrayList源码剖析.canvas",
     "Articles/源码剖析/Java/未命名.canvas",
     "_Overview/未命名.canvas",
     "未命名.canvas",
-    "Attachments/中国移动 (1).svg",
-    "Attachments/chinaMobile.svg",
-    "Docs/Java核心技术/基础/未命名.canvas",
-    "Docs/CodeSnippet/未命名.canvas",
-    "Inbox/未命名.canvas"
+    "Docs/Java核心技术/基础/未命名.canvas"
   ]
 }

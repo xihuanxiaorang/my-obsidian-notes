@@ -3,8 +3,9 @@ tags:
   - Collection
   - Java
   - SourceCodeAnalysis
+  - DataStructure
 create_time: 2024-12-24 17:50
-update_time: 2024/12/27 11:20
+update_time: 2025/01/01 22:28
 version: 8
 ---
 
@@ -279,7 +280,7 @@ private void rangeCheckForAdd(int index) {
 2. 数组所需最小的容量确定之后，需要判断当前数组的容量是否小于所需的最小容量，如果是的话，则需要进行扩容操作；
 3. 扩容操作：
    1. **确定新数组容量大小**。公式：`newCapacity = oldCapacity + (oldCapacity >> 1)`，其中 oldCapacity >> 1 进行位运算，右移一位，即为 oldCapacity 的一半 => **新数组的容量 = 原数组容量的 1.5 倍** = 原数组容量 + 原数组容量 >> 1；
-   2. **数据拷贝**。新数组容量大小确定之后，则需要进行数据拷贝操作。 `Arrays.copyOf()` 方法实际上就是创建一个新的数组，然后在方法的内部调用 [[Arrays#System.arraycopy 方法]] 将原数组中的所有数据全部拷贝到新创建的数组中。
+   2. **数据拷贝**。新数组容量大小确定之后，则需要进行数据拷贝操作。 `Arrays.copyOf ()` 方法实际上就是创建一个新的数组，然后在方法的内部调用 [[Arrays#System.arraycopy 方法]] 将原数组中的所有数据全部拷贝到新创建的数组中。
 
 ```java
 private void ensureCapacityInternal(int minCapacity) {
@@ -390,8 +391,8 @@ public E remove(int index) {
 #### 删除指定元素
 
 1. 遍历数组，找到目标元素的索引位置；
-2. 如果找到目标元素，则调用 `fastRemove(index)` 进行删除。
-3. `fastRemove(index)` 方法的实现方式与 ` remove(index) ` 方法一致，都是采用数组拷贝的方式实现将索引 index 之后的所有元素全部依次向前移动一位，该过程需要移动的元素数量 = size - index - 1;
+2. 如果找到目标元素，则调用 `fastRemove (index)` 进行删除。
+3. `fastRemove (index)` 方法的实现方式与 ` remove (index) ` 方法一致，都是采用数组拷贝的方式实现将索引 index 之后的所有元素全部依次向前移动一位，该过程需要移动的元素数量 = size - index - 1;
 
 ```java
 /**

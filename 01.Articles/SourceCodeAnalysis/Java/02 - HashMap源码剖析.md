@@ -3,8 +3,9 @@ tags:
   - Collection
   - Java
   - SourceCodeAnalysis
+  - DataStructure
 create_time: 2024-12-24 17:50
-update_time: 2024/12/28 21:57
+update_time: 2025/01/01 22:28
 version: 8
 ---
 
@@ -326,7 +327,7 @@ static final int hash(Object key) {
 ```
 
 - 如果 `key` 为 `null`，直接返回 `0`。
-- 如果 `key` 不为 `null`，通过公式 `(h = key.hashCode ()) ^ (h >>> 16)` 计算哈希值：
+- 如果 `key` 不为 `null`，通过公式 `(h = key. hashCode ()) ^ (h >>> 16)` 计算哈希值：
   1. 先获取 `key` 的哈希值 `h`。
   2. 再将 `h` 无符号右移 16 位（高位补 0），与 `h` 本身按位异或。
   3. 高 16 位保持不变（与 0 异或仍为自身），而低 16 位与高 16 位发生异或。
