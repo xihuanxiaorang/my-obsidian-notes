@@ -3,7 +3,7 @@ tags:
   - Frontend
   - Vue
 create_time: 2024-12-29 19:03
-update_time: 2025/01/01 18:49
+update_time: 2025/01/03 11:52
 ---
 
 ## 应用实例✨
@@ -83,7 +83,7 @@ interface App {
 	```
 
 > [!note]
-> 1. 如果组件定义了[[#DOM 中的根组件模板|模板]]或[[渲染函数]]，它将**替换容器内的所有现存 DOM 节点**。否则在运行时编译器可用的情况下，Vue 会使用容器的 `innerHTML` 作为模板。[[#^c7b9dd]]
+> 1. 如果组件定义了[[模板]]或[[渲染函数]]，它将**替换容器内的所有现存 DOM 节点**。否则在运行时编译器可用的情况下，Vue 会使用容器的 `innerHTML` 作为模板。[[#^c7b9dd]]
 > 2. **对于每个应用实例，`.mount()` 方法仅能调用一次**。
 > 3. **`.mount()` 方法应该始终在整个应用配置和资源注册完成后才被调用**。[[#^995d22]] 同时请注意，不同于其他资源注册方法，它的**返回值是根组件实例**而非应用实例。
 
@@ -111,7 +111,7 @@ const app = createApp({
 app.mount('#app')
 ```
 
-**当根组件没有设置 `template` 选项时，Vue 将自动使用容器的 `innerHTML` 作为模板**。 ^c7b9dd
+**当根组件没有设置 [`template`](https://cn.vuejs.org/api/options-rendering.html#template) 和  [`render`](https://cn.vuejs.org/api/options-rendering.html#render) 选项时，Vue 将自动使用容器的 `innerHTML` 作为模板**。 ^c7b9dd
 
 适用场景：
 - 无构建步骤的应用：DOM 内模板常用于简单的 Vue 应用，例如 [[01 - 通过 CDN 使用 Vue]] 的场景。

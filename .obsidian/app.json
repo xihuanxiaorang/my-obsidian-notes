@@ -6,7 +6,7 @@
   "spellcheck": false,
   "newFileLocation": "folder",
   "newFileFolderPath": "02.Inbox",
-  "defaultViewMode": "preview",
+  "defaultViewMode": "source",
   "autoConvertHtml": true,
   "showUnsupportedFiles": true,
   "pdfExportSettings": {
@@ -17,5 +17,6 @@
     "downscalePercent": 100
   },
   "showRibbon": true,
-  "alwaysUpdateLinks": true
+  "alwaysUpdateLinks": true,
+  "propertiesInDocument": "visible"
 }
