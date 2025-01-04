@@ -5,7 +5,7 @@ tags:
   - SourceCodeAnalysis
   - DataStructure
 create_time: 2025-01-02 23:31
-update_time: 2025/01/03 23:38
+update_time: 2025/01/04 22:36
 ---
 
 ## 基本介绍
@@ -52,19 +52,40 @@ update_time: 2025/01/03 23:38
 	```
 
 3. LinkedList 存取元素是**有序**的；
-4. `LinkedList` 是**非线程安全**的。和 [[01 - ArrayList 源码剖析|ArrayList]] 类似，在多线程环境下，若需要保证线程安全，必须使用外部同步机制来确保操作的安全性。
+4. LinkedList 是**非线程安全**的。和 [[01 - ArrayList 源码剖析|ArrayList]] 类似，在多线程环境下，若需要保证线程安全，必须使用外部同步机制来确保操作的安全性。
 
 ## 底层数据结构（链表）
 
-LinkedList 底层采用双向链表结构存储数据。与顺序存储的 [[01 - ArrayList 源码剖析|ArrayList]] 相比，链表不需要连续的内存空间，它由一系列的节点（`Node`）通过指针连接起来。
+LinkedList 的底层采用[[#^18f741|双向链表]]结构存储数据。与 [[01 - ArrayList 源码剖析|ArrayList]] 的顺序存储不同，链表结构不需要连续的内存空间，而是由一系列节点（`Node`）通过指针连接起来。其底层结构如下图所示：
 
 ![[LinkedList 底层数据结构.excalidraw | 1000]]
 
-链表通常分为：
+每一个 `Node` 节点包含：
 
-- **单向链表**：每个节点只包含一个指向后继节点的引用。
-- **双向链表**：每个节点包含两个指针，一个指向前驱节点，另一个指向后继节点。
-- **循环链表**：链表的最后一个节点指向链表的头节点，形成一个环。
+1. **数据域 (`item`)**：存储节点中的元素。
+2. **前驱指针 (`prev`)**：指向前一个节点的引用。
+3. **后继指针 (`next`)**：指向下一个节点的引用。
+
+### Node
+
+LinkedList 的核心是 `Node` 类，**每个节点存储元素数据及其前后节点的引用**：
+
+```java
+private static class Node<E> {
+  // 节点存储的元素
+  E item;
+  // 指向下一个节点的引用          
+  Node<E> next; 
+  // 指向前一个节点的引用   
+  Node<E> prev;    
+
+  Node(Node<E> prev, E element, Node<E> next) {
+    this.item = element;
+    this.next = next;
+    this.prev = prev;
+  }
+}
+```
 
 其特点如下所示：
 

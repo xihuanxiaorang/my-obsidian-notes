@@ -1,17 +1,5 @@
 {
-  "keyboard-analyzer:show-shortcuts-analyzer-view": [
-    {
-      "modifiers": [],
-      "key": "F12"
-    }
-  ],
   "workspace:new-tab": [],
-  "cmdr:macro-0": [
-    {
-      "modifiers": [],
-      "key": "F11"
-    }
-  ],
   "editor:insert-link": [
     {
       "modifiers": [
@@ -74,6 +62,18 @@
         "Shift"
       ],
       "key": "C"
+    }
+  ],
+  "keyboard-analyzer:show-shortcuts-analyzer-view": [
+    {
+      "modifiers": [],
+      "key": "F11"
+    }
+  ],
+  "media-extended:take-timestamp": [
+    {
+      "modifiers": [],
+      "key": "F12"
     }
   ]
 }

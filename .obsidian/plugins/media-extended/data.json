@@ -2,7 +2,7 @@
   "defaultVolume": 80,
   "devices": [],
   "defaultMxLinkClick": {
-    "click": null,
+    "click": "split",
     "alt": null
   },
   "linkHandler": {
@@ -18,7 +18,7 @@
     "mx-url-video": [],
     "mx-webpage": []
   },
-  "speedStep": 0.1,
+  "speedStep": 1,
   "loadStrategy": "eager",
   "timestampTemplate": "\n- {{TIMESTAMP}} ",
   "screenshotTemplate": "\n- !{{SCREENSHOT}} {{TIMESTAMP}} ",
