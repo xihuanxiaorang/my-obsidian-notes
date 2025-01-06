@@ -5,7 +5,7 @@ tags:
   - SourceCodeAnalysis
   - DataStructure
 create_time: 2024-12-24 17:50
-update_time: 2025/01/04 11:20
+update_time: 2025/01/06 11:07
 version: 8
 ---
 
@@ -55,7 +55,7 @@ version: 8
 
 ## 底层数据结构（顺序表）
 
-ArrayList 底层使用的是**顺序表**，即基于数组实现的[[01 - 线性表]]。它通过连续存储单元依次存储数据元素，逻辑上和物理上都保持元素的相邻性。
+ArrayList 底层使用的是**顺序表**，即基于[[01 - 数组.canvas|数组]]实现的[[01 - 线性表|线性表]]。它通过连续存储单元依次存储数据元素，逻辑上和物理上都保持元素的相邻性。
 
 其特点如下所示：
 
@@ -437,7 +437,9 @@ public void trimToSize() {
 }
 ```
 
-## RandomAccess 接口
+## 扩展
+
+### RandomAccess 接口
 
 `RandomAccess` 是一个**标识**接口，不包含任何方法，仅用于标识实现类是否支持**快速随机访问**。
 

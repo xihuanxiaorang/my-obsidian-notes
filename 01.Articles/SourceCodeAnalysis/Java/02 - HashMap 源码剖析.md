@@ -5,7 +5,7 @@ tags:
   - SourceCodeAnalysis
   - DataStructure
 create_time: 2024-12-24 17:50
-update_time: 2025/01/04 22:42
+update_time: 2025/01/06 17:40
 version: 8
 ---
 
@@ -51,7 +51,7 @@ version: 8
 
 ## 底层数据结构（哈希表）
 
-HashMap 底层采用 **哈希表结构（数组+链表+红黑树）** 实现，结合了数组和链表的优点：
+HashMap 底层采用 **哈希表结构（数组 + 链表 +红黑树）** 实现，结合了[[01 - 数组.canvas|数组]]和[[02 - 链表.canvas|链表]]的优点：
 1. 数组优点：通过下标快速访问元素，查询效率高。
 2. 链表优点：插入或删除元素时，无需移动其他元素，只需调整节点的引用。
 
@@ -201,14 +201,21 @@ final float loadFactor;
 transient int modCount;
 ```
 
-1. **`size`**：存储的键值对数量。注意，`size` 记录的是实际存储的键值对总数，而非数组的长度（因为数组中的某些索引可能已形成链表或红黑树）。
-2. **`modCount`**：结构修改次数。用于实现[[快速失败机制（fail-fast）]]。当遍历集合过程中，若发现集合结构被修改（如 `put` 或 `remove` 操作），会立刻抛出 `ConcurrentModificationException`，避免因并发修改导致的不一致性。在 `java.util` 包下的集合类如 `ArrayList`、`HashMap` 均支持快速失败机制，但并不适用于多线程环境。
-3. **`threshold`**：扩容阈值，决定数组何时需要扩容，计算公式为：`threshold = capacity * loadFactor`；例如，初始容量为 16，加载因子为 0.75，则扩容阈值为 `16 * 0.75 = 12`。当键值对数量 ≥ 12 时触发扩容。
-4. **`loadFactor`**：加载因子（扩容因子），表示允许填充数组的比例。默认值为 0.75，在容量和性能之间提供良好的平衡：
-   - **加载因子过大**：减少扩容频率，降低空间占用，但增加哈希碰撞概率，导致链表长度增加，查询性能下降。
-   - **加载因子过小**：降低哈希碰撞概率，提升查询效率，但会频繁扩容，浪费内存空间。
-
-   那么，为什么会选择 0.75 呢？为什么不是其他数？背后是有什么考虑吗？在源码中有这样一段描述：
+1. **`size`**：
+   - 表示 `HashMap` 中实际存储的键值对数量，不包括空槽位。
+   - 与数组长度不同，因为数组中的部分槽位可能形成链表或红黑树。
+2. **`threshold`**：
+   - 扩容阈值，决定数组何时需要扩容，计算公式为当前数组容量乘以加载因子：`threshold = capacity * loadFactor`。
+   - 例如，初始容量为 16，加载因子为 0.75，则扩容阈值为 `16 * 0.75 = 12`。当键值对数量 ≥ 12 时触发扩容。
+3. `table`：
+   - 用于存储数据的核心数组，类型为 `Node<K, V>[]`，其元素可能为空或指向链表/红黑树。
+   - 使用 `transient` 修饰，表示不会直接参与序列化，而是通过自定义序列化方法保存和恢复数据（见[[#序列化机制]]）。
+4. **`loadFactor`**：
+   - 加载因子，表示允许填充数组的比例，用于控制扩容的频率。
+   - 默认值为 0.75，在性能和内存占用之间提供了良好的平衡：
+     - 加载因子越高（如 1.0）：减少扩容次数，节省内存，但增加哈希碰撞的可能性，导致链表长度增加，查询性能下降。
+     - 加载因子越低（如 0.5）：降低哈希碰撞概率，提高查询效率，但会频繁扩容，浪费内存。
+     那么，为什么会选择 0.75 呢？为什么不是其他数？背后是有什么考虑吗？在源码中有这样一段描述：
 
 	```java
 	/**
@@ -224,31 +231,11 @@ transient int modCount;
    - 较高的加载因子可以减少空间占用，但会增加查找成本（尤其是 `get` 和 `put` 操作中的查找时间）。
    - 应根据预计存储的键值对数量和加载因子合理设置初始容量，以尽量减少 **重新哈希（rehash）** 操作的次数。
    - 如果初始容量大于键值对总数除以加载因子，则不会触发任何 rehash 操作。
-
-   通俗点来说就是：
-   - **加载因子过大（如 1.0）**：
-	   - **优点**：减少数组扩容，节省内存。
-	   - **缺点**：哈希碰撞概率更高，链表或红黑树更长，`get` 和 `put` 操作的效率降低。
-   - **加载因子过小（如 0.5）**：
-	   - **优点**：哈希碰撞概率降低，查询效率提升。
-	   - **缺点**：更频繁地触发扩容，浪费内存空间，扩容过程耗时，影响性能。
-   - **选择 0.75 的原因**：
-	   - 默认加载因子 0.75 在**性能和内存占用之间找到了最佳平衡点**。
-	   - 0.75 的设计经验表明，既能避免频繁扩容，又能有效降低哈希碰撞概率，从而提升查询和插入操作的效率。
-
-	不推荐随意更改加载因子，特别是在构造器中指定，除非有非常明确的优化需求。
-5. **`Node<K,V>[] table`**：用于存储数据的核心数组，类型为 `Node<K, V>[]`。该字段使用了 `transient` 修饰符，意味着它在序列化过程中会被排除。这是为了避免序列化时的不必要开销，同时确保反序列化后的数据一致性。在 HashMap 中，通过自定义的 `readObject` 和 `writeObject` 方法实现序列化和反序列化。这种设计主要基于以下两点考虑：
-   1. **节省时间和空间**：
-      - `table` 数组通常不会被完全填满，仅存储实际存在的键值对，而未使用的部分占用内存但没有实际意义。
-      - 如果直接序列化整个 `table`，不仅会浪费空间，还会导致时间开销显著增加。因此，`transient` 修饰符可以有效避免这种浪费。
-   2. **跨 JVM 环境的数据一致性**：
-      - 如果键（key）的类型没有重写 `hashCode` 方法，默认会调用 `Object. hashCode` 方法，而该方法是 native 的，在不同 JVM 中可能有不同的实现。
-      - 因此，同一个键值对可能在不同的 JVM 环境下计算出不同的哈希值，导致其在 `table` 中的存储位置发生变化。
-      - 通过序列化时只存储键值对数据，而在反序列化时重新计算哈希值并存储，可以避免这些潜在问题，保证数据在不同 JVM 下的一致性。
-
-   在 Java 的集合类中（如 `HashTable`、`HashSet`、`LinkedHashMap` 等），用于存储数据的核心字段通常也被 `transient` 修饰。这些类通过自定义 `readObject` 和 `writeObject` 方法处理序列化和反序列化，以达到相同目的。
-
-   如需深入了解 `readObject` 和 `writeObject` 方法的具体实现，可以参考源码。这部分内容可以帮助更清楚地理解 HashMap 的序列化逻辑及其对一致性和性能的设计考量。
+5. **`modCount`**：
+   - 记录结构修改次数（如 `put`、`remove` 等操作）。
+   - 用于实现[[快速失败机制（fail-fast）]]：在遍历集合时，如果检测到集合结构被修改（如通过非迭代器的方式 `put` 或 `remove` 元素），会立刻抛出 `ConcurrentModificationException` 异常，避免因并发修改导致的数据不一致或逻辑错误。
+   - 在 `java.util` 包的集合类（如 `ArrayList`、`LinkedList`、`HashMap` 等）中广泛使用 `modCount` 变量来支持快速失败机制。
+   - 快速失败机制仅用于检测单线程中的意外修改，并不适用于多线程环境。在多线程场景下，需要使用 `ConcurrentHashMap` 或通过外部同步机制（如 `Collections.synchronizedMap`）保证线程安全。
 
 ## 主要操作
 
@@ -691,5 +678,199 @@ final Node<K,V> removeNode(int hash, Object key, Object value,
       }
   }
   return null;
+}
+```
+
+## 扩展
+
+### 序列化机制
+
+🤔 为什么 `table` 和其他字段使用 [[transient]] 修饰？
+
+🤓 `table` 是 `HashMap` 存储数据的核心数组，但在序列化时不会直接保存，而是通过 `transient` 修饰跳过。这种设计有以下两个主要目的：
+1. **节省空间**
+    - `table` 中包含大量未使用的空槽位，直接序列化整个数组会浪费存储空间。
+    - 自定义序列化逻辑可以仅保存实际存在的键值对，避免存储无效数据，从而减少存储和传输的开销。
+2. **保证跨 JVM 一致性**
+    - `HashMap` 的数据存储位置依赖于键的 `hashCode`，而 `Object.hashCode()` 是基于 native 实现的，在不同 JVM 上可能有不同的结果。
+    - 通过序列化键值对而非直接保存数组，反序列化时重新计算哈希值并重新存储数据，可以确保在不同 JVM 环境下的数据一致性。
+
+#### writeObject 方法
+
+通过自定义 `writeObject` 方法实现序列化控制，避免直接序列化整个 `table` 数组，从而提升存储效率并保证数据一致性。
+
+1. **保存元数据**
+    - 序列化非 `transient` 字段，如扩容阈值（`threshold`）和加载因子（`loadFactor`）。
+2. **保存键值对**
+    - 遍历 `table` 数组，将每个非空槽位中的链表或红黑树节点逐一序列化。
+
+```java
+private void writeObject(java.io.ObjectOutputStream s) throws IOException {  
+    // 获取当前数组容量（槽位数）
+    int buckets = capacity();  
+
+    // 序列化非 transient 字段，如 loadFactor 和 threshold
+    s.defaultWriteObject();  
+
+    // 写入槽位数量，用于反序列化时恢复 HashMap 的结构
+    s.writeInt(buckets);  
+
+    // 写入实际存储的键值对数量
+    s.writeInt(size);     
+
+    // 写入所有键值对
+    internalWriteEntries(s);  
+}
+
+final int capacity() {  
+    // 如果 table 不为空，返回数组长度（槽位数）
+    // 如果 table 未初始化但 threshold > 0，返回扩容阈值
+    // 否则返回默认初始容量 DEFAULT_INITIAL_CAPACITY
+    return (table != null) ? table.length :  
+           (threshold > 0) ? threshold :  
+           DEFAULT_INITIAL_CAPACITY;  
+}
+
+void internalWriteEntries(java.io.ObjectOutputStream s) throws IOException {
+    // 存储槽位的数组
+    Node<K,V>[] tab;  
+    // 如果有键值对存在且 table 不为空
+    if (size > 0 && (tab = table) != null) {  
+        // 遍历槽位数组
+        for (Node<K,V> e : tab) {             
+            // 遍历槽位中的链表或红黑树节点
+            for (; e != null; e = e.next) {   
+                // 序列化键
+                s.writeObject(e.key);         
+                // 序列化值
+                s.writeObject(e.value);       
+            }
+        }
+    }
+}
+```
+
+#### readObject 方法
+
+`readObject` 是自定义的反序列化方法，用于根据序列化流中的数据重建 `HashMap` 的元数据和存储内容。
+1. **读取元数据**
+    - 通过 `defaultReadObject` 方法读取非 `transient` 字段（如 `threshold` 和 `loadFactor`）。
+    - 读取槽位数量（`buckets`）和键值对数量（`size`），为恢复数据结构提供基础信息。
+2. **重建数据结构**
+    - 初始化 `table` 数组，根据 `loadFactor` 和键值对数量计算扩容阈值和容量。
+    - 遍历键值对，重新计算哈希值并将其存入 `table`。
+
+```java
+private void readObject(ObjectInputStream s)
+  throws IOException, ClassNotFoundException {
+
+  ObjectInputStream.GetField fields = s.readFields();
+
+  // Read loadFactor (ignore threshold)
+  float lf = fields.get("loadFactor", 0.75f);
+  if (lf <= 0 || Float.isNaN(lf))
+    throw new InvalidObjectException("Illegal load factor: " + lf);
+
+  lf = Math.min(Math.max(0.25f, lf), 4.0f);
+  HashMap.UnsafeHolder.putLoadFactor(this, lf);
+
+  reinitialize();
+
+  s.readInt();                // Read and ignore number of buckets
+  int mappings = s.readInt(); // Read number of mappings (size)
+  if (mappings < 0) {
+    throw new InvalidObjectException("Illegal mappings count: " + mappings);
+  } else if (mappings == 0) {
+    // use defaults
+  } else if (mappings > 0) {
+    float fc = (float)mappings / lf + 1.0f;
+    int cap = ((fc < DEFAULT_INITIAL_CAPACITY) ?
+               DEFAULT_INITIAL_CAPACITY :
+               (fc >= MAXIMUM_CAPACITY) ?
+               MAXIMUM_CAPACITY :
+               tableSizeFor((int)fc));
+    float ft = (float)cap * lf;
+    threshold = ((cap < MAXIMUM_CAPACITY && ft < MAXIMUM_CAPACITY) ?
+                 (int)ft : Integer.MAX_VALUE);
+
+    // Check Map.Entry[].class since it's the nearest public type to
+    // what we're actually creating.
+    SharedSecrets.getJavaObjectInputStreamAccess().checkArray(s, Map.Entry[].class, cap);
+    @SuppressWarnings({"rawtypes","unchecked"})
+    Node<K,V>[] tab = (Node<K,V>[])new Node[cap];
+    table = tab;
+
+    // Read the keys and values, and put the mappings in the HashMap
+    for (int i = 0; i < mappings; i++) {
+      @SuppressWarnings("unchecked")
+      K key = (K) s.readObject();
+      @SuppressWarnings("unchecked")
+      V value = (V) s.readObject();
+      putVal(hash(key), key, value, false, false);
+    }
+  }
+}
+```
+
+```java
+private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
+
+  // 读取非 transient 字段，如 loadFactor 和 threshold
+  ObjectInputStream.GetField fields = s.readFields();
+
+  // 获取加载因子 loadFactor，默认值为 0.75
+  float lf = fields.get("loadFactor", 0.75f);
+  if (lf <= 0 || Float.isNaN(lf)) {
+    throw new InvalidObjectException("Illegal load factor: " + lf);
+  }
+
+  // 限制加载因子的范围在 [0.25, 4.0]
+  lf = Math.min(Math.max(0.25f, lf), 4.0f);
+
+  // 设置加载因子到当前对象
+  HashMap.UnsafeHolder.putLoadFactor(this, lf);
+
+  // 初始化 HashMap 的结构
+  reinitialize();
+
+  // 读取槽位数量（buckets），但忽略实际值
+  s.readInt();
+
+  // 读取实际存储的键值对数量
+  int mappings = s.readInt();
+  if (mappings < 0) {
+    throw new InvalidObjectException("Illegal mappings count: " + mappings);
+  }
+
+  // 如果有存储的键值对，则重新初始化结构
+  if (mappings > 0) {
+    // 计算扩容阈值和容量
+    float fc = (float)mappings / lf + 1.0f;
+    int cap = ((fc < DEFAULT_INITIAL_CAPACITY) ?
+               DEFAULT_INITIAL_CAPACITY :
+               (fc >= MAXIMUM_CAPACITY) ?
+               MAXIMUM_CAPACITY :
+               tableSizeFor((int)fc));
+
+    // 设置扩容阈值，确保不会超过最大容量
+    threshold = Math.min((int)(cap * lf), Integer.MAX_VALUE);
+
+    // 初始化存储数组 table
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    Node<K,V>[] tab = (Node<K,V>[]) new Node[cap];
+    table = tab;
+
+    // 逐个读取键值对并插入 HashMap
+    for (int i = 0; i < mappings; i++) {
+      @SuppressWarnings("unchecked")
+      // 读取键
+      K key = (K) s.readObject();
+      @SuppressWarnings("unchecked")
+      // 读取值
+      V value = (V) s.readObject();
+      // 插入键值对 
+      putVal(hash(key), key, value, false, false); 
+    }
+  }
 }
 ```

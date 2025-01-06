@@ -29,18 +29,15 @@
             }
           },
           {
-            "id": "24f7f5981c3b9c0a",
+            "id": "b4582d7083c74aa8",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "excalidraw",
               "state": {
-                "file": "02.Inbox/03 - LinkedList 源码剖析.md",
-                "mode": "source",
-                "backlinks": false,
-                "source": false
+                "file": "03.Excalidraw/LinkedList 在指定位置添加元素.excalidraw.md"
               },
-              "icon": "lucide-file",
-              "title": "03 - LinkedList 源码剖析"
+              "icon": "excalidraw-icon",
+              "title": "LinkedList 在指定位置添加元素.excalidraw"
             }
           }
         ],
@@ -148,10 +145,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "01.Articles/SourceCodeAnalysis/Java/02 - HashMap 源码剖析.md"
+                "file": "03.Excalidraw/LinkedList 在指定位置添加元素.excalidraw.md"
               },
               "icon": "lucide-list",
-              "title": "02 - HashMap 源码剖析 的大纲"
+              "title": "LinkedList 在指定位置添加元素.excalidraw 的大纲"
             }
           },
           {
@@ -187,8 +184,7 @@
               "title": "03 - LinkedList 源码剖析 的出链列表"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "horizontal",
@@ -213,20 +209,30 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "00.Overview/01 - 任务清单.md",
+    "03.Excalidraw/LinkedList 在尾部添加元素.excalidraw.md",
+    "03.Excalidraw/LinkedList 在头部添加元素.excalidraw.md",
+    "03.Excalidraw/LinkedList 底层数据结构.excalidraw.md",
     "02.Inbox/03 - LinkedList 源码剖析.md",
-    "01.Articles/数据结构与算法/数据结构/01 - 线性表.md",
+    "03.Excalidraw/LinkedList",
+    "03.Excalidraw/LinkedList 在指定位置添加元素.excalidraw.md",
     "06.Reading/Algorithm/Hello 算法/01 - 数组.canvas",
-    "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList 源码剖析.md",
     "06.Reading/Algorithm/Hello 算法/02 - 链表.canvas",
-    "01.Articles/数据结构与算法/算法",
-    "01.Articles/数据结构与算法/数据结构/02 - 链表.md",
     "01.Articles/SourceCodeAnalysis/Java/02 - HashMap 源码剖析.md",
+    "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList 源码剖析.md",
+    "00.Overview/01 - 任务清单.md",
+    "03.Excalidraw/LinkedList 底层结构与源码分析.excalidraw.md",
+    "01.Articles/DataStructure & Algorithm/DataStructure/01 - 线性表.md",
+    "01.Articles/DataStructure & Algorithm",
+    "01.Articles/Snippets/transient.md",
+    "02.Inbox/快速失败机制（fail-fast）.md",
+    "01.Articles/Java/基础/03  - Java8 新特性.md",
+    "01.Articles/DataStructure & Algorithm/Algorithm",
+    "01.Articles/数据结构与算法/数据结构/02 - 链表.md",
     "01.Articles/Vue/02 - 创建一个 Vue 应用.md",
     "02.Inbox/ArrayList 源码剖析.md",
     "03.Excalidraw/线性表.excalidraw.md",
-    "01.Articles/数据结构与算法/数据结构",
-    "01.Articles/数据结构与算法",
+    "01.Articles/DataStructure & Algorithm/DataStructure",
+    "01.Articles/DataStructure&Algorithm",
     "00.Overview/02 - 参考资料.md",
     "02.Inbox/Media Note - 【Vue简明教程】新的开始！_ 课程介绍-01.md",
     "01.Articles/Vue/Media Note - 【Vue简明教程】新的开始！_ 课程介绍-01.md",
@@ -238,14 +244,6 @@
     "08.Zttachments/【Vue简明教程】新的开始！_ 课程介绍-01PT5M28S.webp",
     "02.Inbox/Media Note - OB打开bili视频，并用时间戳做笔记——obsidian插件media.md",
     "02.Inbox/Media Note - 尚硅谷微信小程序开发教程，2024最新版微信小程序项目实战！ 2.md",
-    "02.Inbox/Media Note - 003-小程序基础-注册微信小程序账号.md",
-    "02.Inbox/Media Note - 002-小程序基础-初识微信小程序.md",
-    "02.Inbox/Media Note - 尚硅谷微信小程序开发教程，2024最新版微信小程序项目实战！ 1.md",
-    "02.Inbox/Media Note - 尚硅谷微信小程序开发教程，2024最新版微信小程序项目实战！.md",
-    "02.Inbox/Media Note - OB打开bili视频，并用时间戳做笔记——obsidian插件media 1.md",
-    "03.Excalidraw/LinkedList 底层结构与源码分析.excalidraw.md",
-    "03.Excalidraw/LinkedList 底层数据结构.excalidraw.md",
-    "02.Inbox/响应式状态.md",
     "未命名.canvas",
     "03.Excalidraw/fonts/杨任东竹石体.ttf",
     "03.Excalidraw/fonts",
@@ -256,8 +254,6 @@
     "06.Reading/Algorithm/Hello 算法",
     "08.Zttachments/Company.svg",
     "08.Zttachments/chinaUnicom.svg",
-    "08.Zttachments",
-    "01.Articles/Cloudreve 能助您以最低的成本快速搭建公私兼备的网盘系统.xmind",
     "Attachments/Pasted image 20241231115406.png",
     "Attachments/Pasted image 20241231112503.png",
     "Attachments/Pasted image 20241231111557.png",

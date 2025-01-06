@@ -61,7 +61,7 @@
   "08.Zttachments": "RiAttachment2",
   "06.Reading/Algorithm": "RiBrainLine",
   "00.Overview/01 - 任务清单.md": "RiTaskLine",
-  "01.Articles/数据结构与算法": "RiFlowChart",
-  "01.Articles/数据结构与算法/数据结构": "RiOrganizationChart",
-  "01.Articles/数据结构与算法/算法": "RiFunctions"
+  "01.Articles/DataStructure & Algorithm": "RiFlowChart",
+  "01.Articles/DataStructure & Algorithm/DataStructure": "RiOrganizationChart",
+  "01.Articles/DataStructure & Algorithm/Algorithm": "RiFunctions"
 }
