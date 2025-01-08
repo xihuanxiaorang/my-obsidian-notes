@@ -6,6 +6,7 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiPlayCircleLine",
       "RiFunctions",
       "RiOrganizationChart",
       "RiFlowChart",
@@ -14,8 +15,7 @@
       "🧠",
       "RiAttachment2",
       "RiJavascriptFill",
-      "RiJavascriptLine",
-      "RiVuejsLine"
+      "RiJavascriptLine"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -39,8 +39,6 @@
     "debugMode": false,
     "useInternalPlugins": false
   },
-  "07.Templates": "RiShapeLine",
-  "06.Reading": "RiBookOpenLine",
   "05.Ideas": "RiLightbulbLine",
   "04.Canvas": "LiLayoutPanelLeft",
   "03.Excalidraw": "RiPaletteLine",
@@ -58,10 +56,12 @@
   "01.Articles/SourceCodeAnalysis/Java": "RiJavaLine",
   "00.Overview": "RiDashboardLine",
   "00.Overview/02 - 参考资料.md": "RiBookmark3Line",
-  "08.Zttachments": "RiAttachment2",
-  "06.Reading/Algorithm": "RiBrainLine",
   "00.Overview/01 - 任务清单.md": "RiTaskLine",
   "01.Articles/DataStructure & Algorithm": "RiFlowChart",
   "01.Articles/DataStructure & Algorithm/DataStructure": "RiOrganizationChart",
-  "01.Articles/DataStructure & Algorithm/Algorithm": "RiFunctions"
+  "01.Articles/DataStructure & Algorithm/Algorithm": "RiFunctions",
+  "01.Articles/Reading": "RiBookOpenLine",
+  "Templates": "RiShapeLine",
+  "Zttachments": "RiAttachment2",
+  "01.Articles/Tutorial": "RiPlayCircleLine"
 }

@@ -63,7 +63,7 @@
             "name": "template - create the task file",
             "type": "Template",
             "command": false,
-            "templatePath": "07.Templates/Basic.md",
+            "templatePath": "Templates/Basic.md",
             "fileNameFormat": {
               "enabled": true,
               "format": "{{value:task}}"
