@@ -29,12 +29,12 @@
             }
           },
           {
-            "id": "471bc27cd23b66bb",
+            "id": "1e8f00e343b13d72",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "02.Inbox/03 - LinkedList 源码剖析.md",
+                "file": "01.Articles/SourceCodeAnalysis/Java/03 - LinkedList 源码剖析.md",
                 "mode": "source",
                 "backlinks": false,
                 "source": false
@@ -42,21 +42,8 @@
               "icon": "lucide-file",
               "title": "03 - LinkedList 源码剖析"
             }
-          },
-          {
-            "id": "8a27594847b98b41",
-            "type": "leaf",
-            "state": {
-              "type": "excalidraw",
-              "state": {
-                "file": "03.Excalidraw/双向链表-删除指定位置节点.excalidraw.md"
-              },
-              "icon": "excalidraw-icon",
-              "title": "双向链表-删除指定位置节点.excalidraw"
-            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -160,10 +147,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "02.Inbox/03 - LinkedList 源码剖析.md"
+                "file": "00.Overview/01 - 任务清单.md"
               },
               "icon": "lucide-list",
-              "title": "03 - LinkedList 源码剖析 的大纲"
+              "title": "01 - 任务清单 的大纲"
             }
           },
           {
@@ -172,7 +159,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "01.Articles/SourceCodeAnalysis/Java/02 - HashMap 源码剖析.md",
+                "file": "00.Overview/01 - 任务清单.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -182,7 +169,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "02 - HashMap 源码剖析 的反向链接列表"
+              "title": "01 - 任务清单 的反向链接列表"
             }
           },
           {
@@ -191,12 +178,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "02.Inbox/03 - LinkedList 源码剖析.md",
+                "file": "00.Overview/01 - 任务清单.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               },
               "icon": "links-going-out",
-              "title": "03 - LinkedList 源码剖析 的出链列表"
+              "title": "01 - 任务清单 的出链列表"
             }
           }
         ]
@@ -225,19 +212,20 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "03.Excalidraw/双向链表-删除指定位置节点.excalidraw.md",
-    "02.Inbox/03 - LinkedList 源码剖析.md",
+    "01.Articles/SourceCodeAnalysis/Java/03 - LinkedList 源码剖析.md",
     "00.Overview/01 - 任务清单.md",
+    "03.Excalidraw/单向链表-删除元素.excalidraw.md",
+    "01.Articles/SourceCodeAnalysis/Java/02 - HashMap 源码剖析.md",
+    "03.Excalidraw/双向链表-删除指定位置节点.excalidraw.md",
+    "03.Excalidraw/双向链表-在头部添加节点.excalidraw.md",
+    "03.Excalidraw/双向链表-在尾部添加节点.excalidraw.md",
+    "03.Excalidraw/双向链表-删除头节点.excalidraw.md",
+    "03.Excalidraw/双向链表-删除尾节点.excalidraw.md",
+    "03.Excalidraw/双向链表-在指定位置插入节点.excalidraw.md",
     "06.Reading/Algorithm/Hello 算法/02 - 链表.canvas",
     "06.Reading/Algorithm/Hello 算法/01 - 数组.canvas",
-    "03.Excalidraw/双向链表-删除尾节点.excalidraw.md",
-    "03.Excalidraw/双向链表-删除头节点.excalidraw.md",
-    "03.Excalidraw/双向链表-在头部添加节点.excalidraw.md",
     "03.Excalidraw/双向链表数据结构.excalidraw.md",
-    "03.Excalidraw/双向链表-在指定位置插入节点.excalidraw.md",
-    "03.Excalidraw/双向链表-在尾部添加节点.excalidraw.md",
     "03.Excalidraw/LinkedList",
-    "01.Articles/SourceCodeAnalysis/Java/02 - HashMap 源码剖析.md",
     "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList 源码剖析.md",
     "03.Excalidraw/LinkedList 底层结构与源码分析.excalidraw.md",
     "01.Articles/DataStructure & Algorithm/DataStructure/01 - 线性表.md",
@@ -259,7 +247,6 @@
     "08.Zttachments/【Vue简明教程】新的开始！_ 课程介绍-01PT1M40.095S.webp",
     "02.Inbox/Media Note - 【Vue简明教程】新的开始！_ 课程介绍-01 1.md",
     "02.Inbox/Media Note - 【Vue简明教程】第一个Vue应用-02 1.md",
-    "02.Inbox/Media Note - 【Vue简明教程】第一个Vue应用-02.md",
     "08.Zttachments/【Vue简明教程】新的开始！_ 课程介绍-01PT5M28S.webp",
     "未命名.canvas",
     "03.Excalidraw/fonts/杨任东竹石体.ttf",
