@@ -3,7 +3,7 @@ tags:
   - Frontend
   - Vue
 create_time: 2024-12-28 22:06
-update_time: 2025/01/01 18:48
+update_time: 2025/01/08 22:48
 ---
 
 Vue 提供了灵活的使用方式，通过直接在 HTML 文件中引入 CDN 链接，可以快速搭建开发环境，无需复杂的构建工具。以下是详细的指南和示例，展示如何通过 CDN 使用 Vue。
@@ -17,11 +17,11 @@ Vue 提供了灵活的使用方式，通过直接在 HTML 文件中引入 CDN �
 ```
 
 > [!note]
-> 使用 CDN 引入 Vue 不涉及构建步骤，因此**无法使用[[单文件组件]]（SFC）语法**。
+> 使用 CDN 引入 Vue 不涉及构建步骤，因此**无法使用单文件组件（SFC）语法**。
 
 ## 全局构建版本
 
-通过全局构建版本引入 Vue 的所有 API 都暴露在全局的 `Vue` 对象中。
+该版本的所有顶层 API 都以属性的形式暴露在了全局的 `Vue` 对象上。
 
 ```html
 <!DOCTYPE html>
@@ -36,15 +36,16 @@ Vue 提供了灵活的使用方式，通过直接在 HTML 文件中引入 CDN �
     <div id="app">{{message}}</div>
 
     <script>
-      const { createApp } = Vue;
+      const { createApp, ref } = Vue
 
       createApp({
-        data() {
+        setup() {
+          const message = ref('Hello vue!')
           return {
-            message: "Hello Vue!",
-          };
-        },
-      }).mount("#app");
+            message
+          }
+        }
+      }).mount('#app')
     </script>
   </body>
 </html>
@@ -52,7 +53,7 @@ Vue 提供了灵活的使用方式，通过直接在 HTML 文件中引入 CDN �
 
 ## ES 模块构建版本
 
-现代浏览器大多都已原生支持 [ES 模块](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Modules)。因此我们可以像这样通过 CDN 以及原生 ES 模块使用 Vue：
+现代浏览器大多都已原生支持 [ES 模块](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Modules)，因此我们可以像这样通过 CDN 以及原生 ES 模块使用 Vue：
 
 ```html hl:11,12
 <!DOCTYPE html>
@@ -66,15 +67,16 @@ Vue 提供了灵活的使用方式，通过直接在 HTML 文件中引入 CDN �
     <div id="app">{{message}}</div>
 
     <script type="module">
-      import { createApp } from "https://unpkg.com/vue@3/dist/vue.esm-browser.js";
+      import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
 
       createApp({
-        data() {
+        setup() {
+          const message = ref('Hello Vue!')
           return {
-            message: "Hello Vue!",
-          };
-        },
-      }).mount("#app");
+            message
+          }
+        }
+      }).mount('#app')
     </script>
   </body>
 </html>
@@ -106,15 +108,16 @@ Vue 提供了灵活的使用方式，通过直接在 HTML 文件中引入 CDN �
     <div id="app">{{message}}</div>
 
     <script type="module">
-      import { createApp } from "vue";
+      import { createApp, ref } from 'vue'
 
       createApp({
-        data() {
+        setup() {
+          const message = ref('Hello Vue!')
           return {
-            message: "Hello Vue!",
-          };
-        },
-      }).mount("#app");
+            message
+          }
+        }
+      }).mount('#app')
     </script>
   </body>
 </html>
@@ -160,11 +163,11 @@ Vue 提供了灵活的使用方式，通过直接在 HTML 文件中引入 CDN �
 `my-component.js`
 
 ```js hl:7
+import { ref } from 'vue'
 export default {
-  data() {
-    return {
-      count: 0
-    }
+  setup() {
+    const count = ref(0)
+    return { count }
   },
   template: /*html*/`<div>Count is: {{ count }}</div>`
 }
@@ -174,6 +177,10 @@ export default {
 > ES 模块无法通过 `file://` 协议加载，因为浏览器出于安全原因要求通过 `http://` 协议工作。可以使用 [[Live Server]] 插件在本地启动 HTTP 服务器。
 
 在上面的代码中，**组件模板是以内联 JavaScript 字符串形式存在的**。如果使用 VS Code，可以安装 [es6-string-html](https://marketplace.visualstudio.com/items?itemName=Tobermory.es6-string-html) 扩展，让模板字符串支持高亮显示。在字符串前添加 `/*html*/` 注释即可。
+
+## Why not SFC + `<script setup>`
+
+SFC 和 `<script setup>` 需要结合 vite/webpack 等构建工具使用，对于初学者来说学习曲线较为陡峭，所以先从 **HTML + Vue3** 开始学起，等熟悉了 Vue3 的基本语法之后，再慢慢过渡到**构建工具 + SFC + `<script setup>`** 的用法，这也契合了 Vue **渐进式**框架的学习特点。
 
 ## 总结
 

@@ -17,6 +17,10 @@
     {
       "folder": "02.Inbox",
       "template": "Templates/Basic.md"
+    },
+    {
+      "folder": "01.Articles/Tutorial",
+      "template": "Templates/Tutorial.md"
     }
   ],
   "enable_file_templates": false,
