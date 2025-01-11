@@ -1,5 +1,5 @@
 {
-  "defaultVolume": 80,
+  "defaultVolume": 15,
   "devices": [],
   "defaultMxLinkClick": {
     "click": "split",

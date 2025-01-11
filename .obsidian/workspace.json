@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "11592ab82bf108c5",
+        "id": "f8af5046bd5f5553",
         "type": "tabs",
         "children": [
           {
-            "id": "fc9b9a7ac337ea20",
+            "id": "e102350729ec8e55",
             "type": "leaf",
             "pinned": true,
             "state": {
@@ -29,33 +29,20 @@
             }
           },
           {
-            "id": "75a942f642faa0f6",
+            "id": "c449e06dfb3db7ba",
             "type": "leaf",
+            "pinned": true,
             "state": {
               "type": "markdown",
               "state": {
-                "file": "01.Articles/Vue/02 - 创建一个 Vue 应用.md",
+                "file": "00.Overview/02 - 参考资料.md",
                 "mode": "source",
                 "backlinks": false,
                 "source": false
               },
+              "pinned": true,
               "icon": "lucide-file",
-              "title": "02 - 创建一个 Vue 应用"
-            }
-          },
-          {
-            "id": "232b6ba41d4fe22d",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "01.Articles/Vue/01 - 通过 CDN 使用 Vue.md",
-                "mode": "source",
-                "backlinks": false,
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "01 - 通过 CDN 使用 Vue"
+              "title": "02 - 参考资料"
             }
           }
         ],
@@ -108,7 +95,7 @@
             "state": {
               "type": "tag",
               "state": {
-                "sortOrder": "frequency",
+                "sortOrder": "alphabetical",
                 "useHierarchy": true
               },
               "icon": "lucide-tags",
@@ -163,10 +150,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "01.Articles/Vue/02 - 创建一个 Vue 应用.md"
+                "file": "00.Overview/02 - 参考资料.md"
               },
               "icon": "lucide-list",
-              "title": "02 - 创建一个 Vue 应用 的大纲"
+              "title": "02 - 参考资料 的大纲"
             }
           },
           {
@@ -175,7 +162,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "01.Articles/Vue/02 - 创建一个 Vue 应用.md",
+                "file": "00.Overview/01 - 任务清单.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -185,7 +172,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "02 - 创建一个 Vue 应用 的反向链接列表"
+              "title": "01 - 任务清单 的反向链接列表"
             }
           },
           {
@@ -194,12 +181,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "01.Articles/Vue/02 - 创建一个 Vue 应用.md",
+                "file": "00.Overview/01 - 任务清单.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               },
               "icon": "links-going-out",
-              "title": "02 - 创建一个 Vue 应用 的出链列表"
+              "title": "01 - 任务清单 的出链列表"
             }
           }
         ]
@@ -210,6 +197,7 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "remotely-save:Remotely Save": false,
       "switcher:打开快速切换": true,
       "graph:查看关系图谱": false,
       "obsidian-excalidraw-plugin:新建绘图文件": false,
@@ -225,49 +213,52 @@
       "improved-random-note:Open improved random note": false
     }
   },
-  "active": "9bbed510414b75b1",
+  "active": "c449e06dfb3db7ba",
   "lastOpenFiles": [
-    "01.Articles/Vue/01 - 通过 CDN 使用 Vue.md",
-    "01.Articles/Vue/02 - 创建一个 Vue 应用.md",
-    "00.Overview/01 - 任务清单.md",
-    "01.Articles/Vue/未命名",
+    "01.Articles/Tools/开发工具/VSCode.md",
+    "02.Inbox/HTML - 开发环境&标签之文字排版、图片、链接、音视频.md",
     "Templates/Tutorial.md",
+    "00.Overview/02 - 参考资料.md",
+    "02.Inbox/Zetero & Obsidian 云同步方案（使用 Koofr 实现）.md",
+    "04.Canvas/未命名.canvas",
+    "01.Articles/Tools/其他工具/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md",
+    "01.Articles/SourceCodeAnalysis/Java/03 - LinkedList 源码剖析.md",
+    "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
+    "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
+    "04.Canvas/代码生成器.canvas",
+    "01.Articles/Misc/Misc & Ideas & Inbox & Articles.md",
+    "00.Overview/01 - 任务清单.md",
+    "02.Inbox/Day01 - HTML 初体验.md",
+    "01.Articles/SourceCodeAnalysis/Java/02 - HashMap 源码剖析.md",
+    "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList 源码剖析.md",
+    "01.Articles/Tools/开发工具/Live Server.md",
+    "01.Articles/Vue/02 - 创建一个 Vue 应用.md",
+    "01.Articles/Vue/01 - 通过 CDN 使用 Vue.md",
+    "02.Inbox/模板语法.md",
+    "02.Inbox/响应式状态.md",
+    "02.Inbox/Suspense.md",
+    "02.Inbox/反射.md",
+    "02.Inbox/Teleport.md",
+    "01.Articles/Tutorial/HTML5+CSS3+移动Web/HTML5",
+    "01.Articles/Tutorial/HTML5+CSS3+移动Web",
+    "01.Articles/Vue/未命名",
     "01.Articles/Tutorial/未命名.md",
     "Templates/Basic.md",
-    "02.Inbox/模板语法.md",
     "02.Inbox/模板.md",
-    "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
     "01.Articles/Snippets/transient.md",
-    "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
     "01.Articles/Tutorial",
     "未命名",
-    "01.Articles/SourceCodeAnalysis/Java/02 - HashMap 源码剖析.md",
-    "01.Articles/SourceCodeAnalysis/Java/03 - LinkedList 源码剖析.md",
     "03.Excalidraw/单向链表-删除元素.excalidraw.md",
     "03.Excalidraw/双向链表-删除指定位置节点.excalidraw.md",
-    "03.Excalidraw/双向链表-在头部添加节点.excalidraw.md",
-    "03.Excalidraw/双向链表-在尾部添加节点.excalidraw.md",
-    "03.Excalidraw/双向链表-删除头节点.excalidraw.md",
-    "03.Excalidraw/双向链表-删除尾节点.excalidraw.md",
-    "03.Excalidraw/双向链表-在指定位置插入节点.excalidraw.md",
-    "03.Excalidraw/双向链表数据结构.excalidraw.md",
     "03.Excalidraw/LinkedList",
-    "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList 源码剖析.md",
-    "03.Excalidraw/LinkedList 底层结构与源码分析.excalidraw.md",
-    "01.Articles/DataStructure & Algorithm/DataStructure/01 - 线性表.md",
     "01.Articles/DataStructure & Algorithm",
-    "02.Inbox/快速失败机制（fail-fast）.md",
-    "01.Articles/Java/基础/03  - Java8 新特性.md",
     "01.Articles/DataStructure & Algorithm/Algorithm",
-    "01.Articles/数据结构与算法/数据结构/02 - 链表.md",
     "01.Articles/DataStructure & Algorithm/DataStructure",
     "01.Articles/DataStructure&Algorithm",
     "08.Zttachments/尚硅谷微信小程序开发教程，2024最新版微信小程序项目实战！PT42.309S.webp",
     "08.Zttachments/【Vue简明教程】新的开始！_ 课程介绍-01PT1M40.095S.webp",
     "08.Zttachments/【Vue简明教程】新的开始！_ 课程介绍-01PT5M28S.webp",
     "未命名.canvas",
-    "03.Excalidraw/fonts/杨任东竹石体.ttf",
-    "03.Excalidraw/fonts",
     "Zttachments/chinaMobile.svg",
     "06.Reading/Hello 算法/未命名.canvas",
     "Zttachments/Company.svg",
@@ -278,9 +269,7 @@
     "Attachments/Pasted image 20241230234721.png",
     "Canvas/未命名.canvas",
     "Articles/Vue/未命名.canvas",
-    "04.Canvas/代码生成器.canvas",
     "Canvas/ArrayList源码剖析.canvas",
-    "Articles/源码剖析/Java/未命名.canvas",
-    "_Overview/未命名.canvas"
+    "Articles/源码剖析/Java/未命名.canvas"
   ]
 }

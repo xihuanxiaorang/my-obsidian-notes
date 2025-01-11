@@ -174,7 +174,7 @@ export default {
 ```
 
 > [!note]
-> ES 模块无法通过 `file://` 协议加载，因为浏览器出于安全原因要求通过 `http://` 协议工作。可以使用 [[Live Server]] 插件在本地启动 HTTP 服务器。
+> ES 模块无法通过 `file://` 协议加载，因为浏览器出于安全原因要求通过 `http://` 协议工作。可以使用 [[VSCode]] 插件在本地启动 HTTP 服务器。
 
 在上面的代码中，**组件模板是以内联 JavaScript 字符串形式存在的**。如果使用 VS Code，可以安装 [es6-string-html](https://marketplace.visualstudio.com/items?itemName=Tobermory.es6-string-html) 扩展，让模板字符串支持高亮显示。在字符串前添加 `/*html*/` 注释即可。
 

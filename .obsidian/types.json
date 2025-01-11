@@ -26,6 +26,7 @@
     "update_time": "datetime",
     "create_time": "datetime",
     "version": "number",
-    "author": "text"
+    "author": "text",
+    "Creator": "text"
   }
 }
