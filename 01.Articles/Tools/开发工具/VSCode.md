@@ -3,14 +3,14 @@ tags:
   - Tool
   - DevTool
 create_time: 2024-12-31 19:00
-update_time: 2025/01/12 18:34
+update_time: 2025/01/12 23:03
 ---
 
 ## Download & Install
 
 [Visual Studio Code](https://code.visualstudio.com/)
 
-## Recommended Plugins
+## Recommend Plugins
 
 ### Live Server
 

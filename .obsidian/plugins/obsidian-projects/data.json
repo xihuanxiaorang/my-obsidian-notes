@@ -1,6 +1,102 @@
 {
   "version": 2,
-  "projects": [],
+  "projects": [
+    {
+      "fieldConfig": {},
+      "defaultName": "",
+      "templates": [
+        "Templates/Recommend Book.md"
+      ],
+      "excludedNotes": [],
+      "isDefault": false,
+      "dataSource": {
+        "kind": "folder",
+        "config": {
+          "path": "01.Articles/Recommend/Books",
+          "recursive": false
+        }
+      },
+      "newNotesFolder": "",
+      "views": [
+        {
+          "config": {
+            "orderFields": [
+              "name",
+              "author",
+              "tags",
+              "summary",
+              "link",
+              "cover",
+              "path"
+            ],
+            "fieldConfig": {
+              "path": {
+                "hide": true
+              },
+              "cover": {
+                "hide": true
+              },
+              "link": {
+                "hide": true
+              },
+              "summary": {
+                "width": 814
+              },
+              "tags": {
+                "width": 235
+              }
+            }
+          },
+          "filter": {
+            "conjunction": "and",
+            "conditions": []
+          },
+          "colors": {
+            "conditions": []
+          },
+          "sort": {
+            "criteria": [
+              {
+                "field": "status",
+                "order": "asc",
+                "enabled": true
+              }
+            ]
+          },
+          "id": "0bf142f4-89ea-42d3-9732-4bd7ea0b9983",
+          "name": "表格",
+          "type": "table"
+        },
+        {
+          "config": {
+            "coverField": "cover",
+            "fitStyle": "cover",
+            "includeFields": [
+              "author",
+              "status",
+              "tags",
+              "summary"
+            ]
+          },
+          "filter": {
+            "conjunction": "and",
+            "conditions": []
+          },
+          "colors": {
+            "conditions": []
+          },
+          "sort": {
+            "criteria": []
+          },
+          "id": "fee61ef9-d49f-4873-82af-e03c608e1b11",
+          "name": "画册",
+          "type": "gallery"
+        }
+      ],
+      "id": "45a884df-8228-417c-9aba-d56e3b22f36a",
+      "name": "Books"
+    }
+  ],
   "archives": [],
   "preferences": {
     "projectSizeLimit": 1000,

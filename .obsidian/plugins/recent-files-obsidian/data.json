@@ -5,6 +5,62 @@
       "path": "00.Overview/02 - 参考资料.md"
     },
     {
+      "basename": "HTML5",
+      "path": "02.Inbox/HTML5.md"
+    },
+    {
+      "basename": "研磨设计模式",
+      "path": "01.Articles/Recommend/Books/研磨设计模式.md"
+    },
+    {
+      "basename": "Spring 5核心原理与30个类手写实战",
+      "path": "01.Articles/Recommend/Books/Spring 5核心原理与30个类手写实战.md"
+    },
+    {
+      "basename": "大话设计模式",
+      "path": "01.Articles/Recommend/Books/大话设计模式.md"
+    },
+    {
+      "basename": "学透Spring",
+      "path": "01.Articles/Recommend/Books/学透Spring.md"
+    },
+    {
+      "basename": "ON JAVA 中文版 进阶卷",
+      "path": "01.Articles/Recommend/Books/ON JAVA 中文版 进阶卷.md"
+    },
+    {
+      "basename": "ON JAVA 中文版 基础卷",
+      "path": "01.Articles/Recommend/Books/ON JAVA 中文版 基础卷.md"
+    },
+    {
+      "basename": "MySQL是怎样运行的",
+      "path": "01.Articles/Recommend/Books/MySQL是怎样运行的.md"
+    },
+    {
+      "basename": "MySQL是怎样使用的 快速入门MySQL",
+      "path": "01.Articles/Recommend/Books/MySQL是怎样使用的 快速入门MySQL.md"
+    },
+    {
+      "basename": "ECMAScript 6 入门教程",
+      "path": "01.Articles/Recommend/Books/ECMAScript 6 入门教程.md"
+    },
+    {
+      "basename": "图解Java多线程设计模式",
+      "path": "01.Articles/Recommend/Books/图解Java多线程设计模式.md"
+    },
+    {
+      "basename": "Recommend Book",
+      "path": "Templates/Recommend Book.md"
+    },
+    {
+      "basename": "VSCode",
+      "path": "01.Articles/Tools/开发工具/VSCode.md"
+    },
+    {
+      "basename": "Basic",
+      "path": "Templates/Basic.md"
+    },
+    {
       "basename": "C语言知识点03-函数的参数传递.excalidraw",
       "path": "03.Excalidraw/C语言知识点03-函数的参数传递.excalidraw.md"
     },

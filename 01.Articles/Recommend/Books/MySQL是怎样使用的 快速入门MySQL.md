@@ -1,0 +1,8 @@
+---
+tags:
+  - MySQL
+author: 小孩子4919
+summary: 《MySQL是怎样使用的：快速入门MySQL》采用通俗易懂的表达方式，对如何使用MySQL进行了详细的介绍。《MySQL是怎样使用的：快速入门MySQL》完全从零基础用户的角度出发，依照用户认知习惯，从MySQL的安装开始，介绍了MySQL的服务器程序和客户端程序的使用、MySQL的数据类型、数据库和表的基本操作、列的属性、MySQL中的表达式和函数、简单和复杂的增删改查语句等入门知识，还介绍了视图、存储程序、备份与恢复、用户与权限管理等高级概念以及使用Java语言连接MySQL服务器等知识。《MySQL是怎样使用的：快速入门MySQL》较好地契合了MySQL初学人员的学习曲线，内容深入浅出，通俗易懂，可帮助初学人员迅速入门MySQL。
+link: https://book.douban.com/subject/35670862/
+cover: https://img.xiaorang.fun/202501122330425.jpg
+---

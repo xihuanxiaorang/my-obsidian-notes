@@ -6,16 +6,16 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiMovie2Line",
+      "RiBookReadLine",
+      "RiHeartLine",
       "RiPlayCircleLine",
       "RiFunctions",
       "RiOrganizationChart",
       "RiFlowChart",
       "RiDashboardLine",
       "RiBrainLine",
-      "🧠",
-      "RiAttachment2",
-      "RiJavascriptFill",
-      "RiJavascriptLine"
+      "🧠"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -63,5 +63,8 @@
   "01.Articles/Reading": "RiBookOpenLine",
   "Templates": "RiShapeLine",
   "Zttachments": "RiAttachment2",
-  "01.Articles/Tutorial": "RiPlayCircleLine"
+  "01.Articles/Tutorial": "RiPlayCircleLine",
+  "01.Articles/Recommend": "RiHeartLine",
+  "01.Articles/Recommend/Books": "RiBookReadLine",
+  "01.Articles/Recommend/Videos": "RiMovie2Line"
 }
