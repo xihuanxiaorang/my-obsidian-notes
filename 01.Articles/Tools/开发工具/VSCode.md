@@ -3,7 +3,7 @@ tags:
   - Tool
   - DevTool
 create_time: 2024-12-31 19:00
-update_time: 2025/01/11 23:28
+update_time: 2025/01/12 18:34
 ---
 
 ## Download & Install
@@ -42,12 +42,28 @@ update_time: 2025/01/11 23:28
 - **打开项目文件夹：**
     在 VSCode 中打开包含 HTML 文件的项目文件夹。
 - **启动 Live Server：**
-    - **右键启动：** 在资源管理器中右键点击 `index.html`，选择 **Open with Live Server**。
+    - **右键启动：** 右键 `index.html` 文件，选择 "**Open with Live Server**"。
     - **点击按钮：** 在编辑器右下角点击 **"Go Live"** 按钮。
 - **浏览器预览：**
     - 浏览器会自动打开默认地址（如 `http://localhost:5500`），实时加载项目文件。
     - 修改代码并保存时，页面会自动刷新以显示最新内容。
 
+#### 注意事项
+
+1. 确保在 VSCode 中打开的是项目文件夹，而不是单个文件，否则 Live Server 无法正常工作。
+2. 确保文件使用标准的 HTML 结构（如 `<!DOCTYPE html>` 开头），否则可能无法实现自动刷新。
+
 ---
 
 **Live Server** 是前端开发中的高效工具，特别适合静态网页和动态内容的开发。它通过自动刷新和实时预览功能简化了调试流程，提高了开发效率。如果您从事前端开发工作，强烈推荐安装使用。
+
+## Tips
+
+### 让光标移动更加丝滑流畅 | 视觉体验优化
+
+1. 打开设置界面。
+2. 在搜索框中输入 **"cursor animation"**。
+3. 设置 **Editor: Cursor Smooth Caret Animation** 为 **on**。
+4. 设置 **Editor: Cursor Blinking** 为 **smooth**。
+
+![](https://img.xiaorang.fun/202501121155802.png)

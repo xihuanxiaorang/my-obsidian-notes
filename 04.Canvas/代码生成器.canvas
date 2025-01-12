@@ -1,7 +1,7 @@
 {
 	"nodes":[
 		{"id":"5b7314983cacef29","type":"text","text":"Velocity","x":1225,"y":-30,"width":250,"height":60},
-		{"id":"424fea01ebc6de5e","type":"text","text":"FreeMarker","x":1225,"y":-110,"width":250,"height":60,"color":"4"},
+		{"id":"424fea01ebc6de5e","type":"text","text":"FreeMarker ","x":1225,"y":-110,"width":250,"height":60,"color":"4"},
 		{"id":"ee782b997b693397","type":"text","text":"Thymeleaf","x":1225,"y":-190,"width":250,"height":60},
 		{"id":"0a86c519f0eaabfb","type":"text","text":"数据库元数据","x":775,"y":-30,"width":250,"height":60},
 		{"id":"c0db5563473e105e","type":"text","text":"模板引擎","x":775,"y":-110,"width":250,"height":60},
@@ -14,7 +14,7 @@
 		{"id":"7532e6de152123fe","type":"text","text":"[​使用freemaker实现代码生成器（排序完成版）](https://www.bilibili.com/video/BV1G741117Ds?vd_source=84272a2d7f72158b38778819be5bc6ad)","x":775,"y":60,"width":250,"height":60},
 		{"id":"07ebd530d8d8e5fb","type":"text","text":"[​突破CRUD|简单优雅的代码生成工具诞生记](https://www.bilibili.com/video/BV1iJ41157M5/?vd_source=84272a2d7f72158b38778819be5bc6ad)","x":775,"y":140,"width":250,"height":60},
 		{"id":"df41c83a4facc98d","type":"text","text":"[​告别CRUD，手把手教你实现代码自动生成，酷！](https://www.bilibili.com/video/BV1Vo4y1Z7af/?vd_source=84272a2d7f72158b38778819be5bc6ad)","x":775,"y":220,"width":250,"height":60},
-		{"id":"41eb36819a2daecb","type":"text","text":"代码生成器","x":-120,"y":140,"width":250,"height":60,"color":"6"},
+		{"id":"41eb36819a2daecb","type":"text","text":"代码生成器 #Project","x":-120,"y":140,"width":250,"height":60,"color":"6"},
 		{"id":"53d0a6674b90000a","type":"text","text":"[​前端进阶！从0-1搭建前端快速开发框架！代码生成器！](https://www.bilibili.com/video/BV18f4y1N7HB/?p=21&vd_source=84272a2d7f72158b38778819be5bc6ad)","x":775,"y":660,"width":250,"height":100}
 	],
 	"edges":[

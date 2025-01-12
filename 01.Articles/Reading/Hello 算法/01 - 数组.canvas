@@ -7,11 +7,11 @@
 		{"id":"51cbf77b469c0582","type":"text","text":"“若想删除索引 i 处的元素,则需要把索引 i 之后的元素都向前移动一位” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=76&annotation=CSF2X4RJ))","x":-915,"y":-755,"width":250,"height":130},
 		{"id":"170c2dc99dba9966","type":"text","text":"“索引本质上是内存地址的偏移量” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=75&annotation=7FIMKWLT))","x":-385,"y":-500,"width":250,"height":60},
 		{"id":"586b62b95a7487c8","type":"text","text":"“扩容数组,则需重新建立一个更大的数组,然后把原数组元素依次复制到新数组” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=78&annotation=EAHY2PLN))","x":-385,"y":-171,"width":250,"height":143},
-		{"id":"081c120d03a8a7d5","type":"text","text":"“如果想在数组中间插 入一个元素,则需要将该元素之后的所有元素都向后移动一位,之后再把元素赋值给该索引” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=75&annotation=IZISZD8X))","x":20,"y":-398,"width":250,"height":190},
-		{"id":"943b6f824d31861f","type":"text","text":"“数组(array)是一种线性数据结构,其将相同类型的元素存储在连续的内存空间中” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=74&annotation=D66VGZSD)\n#DataStructure  ","x":-420,"y":-369,"width":320,"height":129,"color":"6"},
+		{"id":"943b6f824d31861f","type":"text","text":"“[[数组]](array)是一种线性数据结构,其将相同类型的元素存储在连续的内存空间中” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=74&annotation=D66VGZSD)\n#DataStructure  ","x":-420,"y":-369,"width":320,"height":129,"color":"6"},
 		{"id":"7815ffdd58811273","type":"text","text":"“随机访问:如果我们想随机抽取一些样本,那么可以用数组存储,并生成一个随机序列,根据索引实现 随机抽样” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=79&annotation=HF5V5KPA))","x":-1085,"y":-100,"width":420,"height":120},
 		{"id":"79a91ec29cd7b0e0","type":"text","text":"“排序和搜索:数组是排序和搜索算法最常用的数据结构。快速排序、归并排序、二分查找等都主要在数 组上进行” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=79&annotation=MEHVCHNV))","x":-1085,"y":60,"width":420,"height":100},
 		{"id":"623812d7737f0454","type":"text","text":"“数据结构实现:数组可以用于实现栈、队列、哈希表、堆、图等数据结构” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=79&annotation=RHIV8NH4))","x":-1085,"y":200,"width":420,"height":80},
+		{"id":"081c120d03a8a7d5","type":"text","text":"“如果想在数组中间插 入一个元素,则需要将该元素之后的所有元素都向后移动一位,之后再把元素赋值给该索引” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=75&annotation=IZISZD8X))","x":20,"y":-398,"width":250,"height":190},
 		{"id":"155d2d1418b15bb2","type":"text","text":"![[01 - ArrayList 源码剖析#在指定位置添加元素✨]]","x":380,"y":-1000,"width":1120,"height":1395}
 	],
 	"edges":[

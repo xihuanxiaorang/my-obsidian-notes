@@ -58,7 +58,6 @@
       {
         "id": "594555d6553cc8e5",
         "type": "tabs",
-        "dimension": 71.3265306122449,
         "children": [
           {
             "id": "cd440ffabd7c79fa",
@@ -78,7 +77,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:#include",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -114,23 +113,6 @@
           }
         ],
         "currentTab": 3
-      },
-      {
-        "id": "2e550143e01bb0d3",
-        "type": "tabs",
-        "dimension": 28.673469387755105,
-        "children": [
-          {
-            "id": "76335a251dadd2c3",
-            "type": "leaf",
-            "state": {
-              "type": "bookmarks",
-              "state": {},
-              "icon": "lucide-bookmark",
-              "title": "书签"
-            }
-          }
-        ]
       }
     ],
     "direction": "horizontal",
@@ -143,6 +125,7 @@
       {
         "id": "1edfcf0d75c90421",
         "type": "tabs",
+        "dimension": 68.5077519379845,
         "children": [
           {
             "id": "8f69a94747b12c4d",
@@ -162,7 +145,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "00.Overview/01 - 任务清单.md",
+                "file": "00.Overview/02 - 参考资料.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -172,7 +155,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "01 - 任务清单 的反向链接列表"
+              "title": "02 - 参考资料 的反向链接列表"
             }
           },
           {
@@ -181,12 +164,39 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "00.Overview/01 - 任务清单.md",
+                "file": "00.Overview/02 - 参考资料.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               },
               "icon": "links-going-out",
-              "title": "01 - 任务清单 的出链列表"
+              "title": "02 - 参考资料 的出链列表"
+            }
+          }
+        ]
+      },
+      {
+        "id": "9e8d3ec42632cf13",
+        "type": "tabs",
+        "dimension": 31.492248062015506,
+        "children": [
+          {
+            "id": "e84a13878af7edc5",
+            "type": "leaf",
+            "state": {
+              "type": "recent-files",
+              "state": {},
+              "icon": "clock",
+              "title": "Recent Files"
+            }
+          },
+          {
+            "id": "76335a251dadd2c3",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
             }
           }
         ]
@@ -197,8 +207,8 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "remotely-save:Remotely Save": false,
       "switcher:打开快速切换": true,
+      "remotely-save:Remotely Save": false,
       "graph:查看关系图谱": false,
       "obsidian-excalidraw-plugin:新建绘图文件": false,
       "obsidian-kanban:创建新看板": true,
@@ -210,24 +220,34 @@
       "canvas:新建白板": false,
       "media-extended:Open media": true,
       "hide-folders:Show hidden folders": true,
-      "improved-random-note:Open improved random note": false
+      "improved-random-note:Open improved random note": false,
+      "obsidian-projects:打开项目": false
     }
   },
-  "active": "c449e06dfb3db7ba",
+  "active": "9bbed510414b75b1",
   "lastOpenFiles": [
+    "03.Excalidraw/C语言知识点03-函数的参数传递.excalidraw.md",
+    "03.Excalidraw/C语言知识点02-指针.excalidraw.md",
     "00.Overview/02 - 参考资料.md",
+    "03.Excalidraw/C语言知识点01-结构体.excalidraw.md",
+    "00.Overview/01 - 任务清单.md",
     "01.Articles/Tools/开发工具/VSCode.md",
-    "02.Inbox/HTML - 开发环境&标签之文字排版、图片、链接、音视频.md",
+    "03.Excalidraw/HTML 单标签.excalidraw.md",
+    "04.Canvas/代码生成器.canvas",
+    "02.Inbox/HTML5.md",
+    "03.Excalidraw/HTML 双标签.excalidraw.md",
+    "01.Articles/Misc/生成 Github Token.md",
+    "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
+    "01.Articles/SourceCodeAnalysis/Java/03 - LinkedList 源码剖析.md",
+    "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
+    "01.Articles/Announcements/宣布：GitHub Copilot 在 VS Code 中推出免费版，GitHub 开发者已达 1.5 亿！.md",
+    "01.Articles/Announcements/WebStorm 和 Rider 现在对非商业用途免费了.md",
+    "01.Articles/Tools/开发工具/thefuck.md",
     "Templates/Tutorial.md",
     "02.Inbox/Zetero & Obsidian 云同步方案（使用 Koofr 实现）.md",
     "04.Canvas/未命名.canvas",
     "01.Articles/Tools/其他工具/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md",
-    "01.Articles/SourceCodeAnalysis/Java/03 - LinkedList 源码剖析.md",
-    "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
-    "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
-    "04.Canvas/代码生成器.canvas",
     "01.Articles/Misc/Misc & Ideas & Inbox & Articles.md",
-    "00.Overview/01 - 任务清单.md",
     "02.Inbox/Day01 - HTML 初体验.md",
     "01.Articles/SourceCodeAnalysis/Java/02 - HashMap 源码剖析.md",
     "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList 源码剖析.md",
@@ -235,21 +255,11 @@
     "01.Articles/Vue/02 - 创建一个 Vue 应用.md",
     "01.Articles/Vue/01 - 通过 CDN 使用 Vue.md",
     "02.Inbox/模板语法.md",
-    "02.Inbox/响应式状态.md",
-    "02.Inbox/Suspense.md",
-    "02.Inbox/反射.md",
-    "02.Inbox/Teleport.md",
     "01.Articles/Tutorial/HTML5+CSS3+移动Web/HTML5",
     "01.Articles/Tutorial/HTML5+CSS3+移动Web",
     "01.Articles/Vue/未命名",
-    "01.Articles/Tutorial/未命名.md",
-    "Templates/Basic.md",
-    "02.Inbox/模板.md",
-    "01.Articles/Snippets/transient.md",
     "01.Articles/Tutorial",
     "未命名",
-    "03.Excalidraw/单向链表-删除元素.excalidraw.md",
-    "03.Excalidraw/双向链表-删除指定位置节点.excalidraw.md",
     "03.Excalidraw/LinkedList",
     "01.Articles/DataStructure & Algorithm",
     "01.Articles/DataStructure & Algorithm/Algorithm",
