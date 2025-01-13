@@ -5,24 +5,40 @@
       "path": "02.Inbox/HTML5.md"
     },
     {
+      "basename": "大话设计模式",
+      "path": "Recommend/Books/大话设计模式.md"
+    },
+    {
+      "basename": "HTML 标签属性.excalidraw",
+      "path": "03.Excalidraw/HTML 标签属性.excalidraw.md"
+    },
+    {
+      "basename": "HTML 双标签.excalidraw",
+      "path": "03.Excalidraw/HTML 双标签.excalidraw.md"
+    },
+    {
+      "basename": "HTML 单标签.excalidraw",
+      "path": "03.Excalidraw/HTML 单标签.excalidraw.md"
+    },
+    {
       "basename": "活着 (1994)",
-      "path": "01.Articles/Recommend/Movies/活着 (1994).md"
+      "path": "Recommend/Movies/活着 (1994).md"
     },
     {
       "basename": "怦然心动",
-      "path": "01.Articles/Recommend/Movies/怦然心动.md"
+      "path": "Recommend/Movies/怦然心动.md"
     },
     {
       "basename": "寻梦环游记",
-      "path": "01.Articles/Recommend/Movies/寻梦环游记.md"
+      "path": "Recommend/Movies/寻梦环游记.md"
     },
     {
       "basename": "机器人总动员",
-      "path": "01.Articles/Recommend/Movies/机器人总动员.md"
+      "path": "Recommend/Movies/机器人总动员.md"
     },
     {
       "basename": "这个杀手不太冷",
-      "path": "01.Articles/Recommend/Movies/这个杀手不太冷.md"
+      "path": "Recommend/Movies/这个杀手不太冷.md"
     },
     {
       "basename": "03  - Java8 新特性",
@@ -38,35 +54,35 @@
     },
     {
       "basename": "绿皮书",
-      "path": "01.Articles/Recommend/Movies/绿皮书.md"
+      "path": "Recommend/Movies/绿皮书.md"
     },
     {
       "basename": "MySQL是怎样使用的",
-      "path": "01.Articles/Recommend/Books/MySQL是怎样使用的.md"
+      "path": "Recommend/Books/MySQL是怎样使用的.md"
     },
     {
       "basename": "当幸福来敲门",
-      "path": "01.Articles/Recommend/Movies/当幸福来敲门.md"
+      "path": "Recommend/Movies/当幸福来敲门.md"
     },
     {
       "basename": "楚门的世界",
-      "path": "01.Articles/Recommend/Movies/楚门的世界.md"
+      "path": "Recommend/Movies/楚门的世界.md"
     },
     {
       "basename": "阿甘正传",
-      "path": "01.Articles/Recommend/Movies/阿甘正传.md"
+      "path": "Recommend/Movies/阿甘正传.md"
     },
     {
       "basename": "触不可及",
-      "path": "01.Articles/Recommend/Movies/触不可及.md"
+      "path": "Recommend/Movies/触不可及.md"
     },
     {
       "basename": "海上钢琴师",
-      "path": "01.Articles/Recommend/Movies/海上钢琴师.md"
+      "path": "Recommend/Movies/海上钢琴师.md"
     },
     {
       "basename": "盗梦空间",
-      "path": "01.Articles/Recommend/Movies/盗梦空间.md"
+      "path": "Recommend/Movies/盗梦空间.md"
     },
     {
       "basename": "Recommend Book",
@@ -74,39 +90,35 @@
     },
     {
       "basename": "Spring 5核心原理与30个类手写实战",
-      "path": "01.Articles/Recommend/Books/Spring 5核心原理与30个类手写实战.md"
+      "path": "Recommend/Books/Spring 5核心原理与30个类手写实战.md"
     },
     {
       "basename": "图解Java多线程设计模式",
-      "path": "01.Articles/Recommend/Books/图解Java多线程设计模式.md"
+      "path": "Recommend/Books/图解Java多线程设计模式.md"
     },
     {
       "basename": "学透Spring",
-      "path": "01.Articles/Recommend/Books/学透Spring.md"
+      "path": "Recommend/Books/学透Spring.md"
     },
     {
       "basename": "研磨设计模式",
-      "path": "01.Articles/Recommend/Books/研磨设计模式.md"
+      "path": "Recommend/Books/研磨设计模式.md"
     },
     {
       "basename": "ON JAVA 中文版 进阶卷",
-      "path": "01.Articles/Recommend/Books/ON JAVA 中文版 进阶卷.md"
+      "path": "Recommend/Books/ON JAVA 中文版 进阶卷.md"
     },
     {
       "basename": "ON JAVA 中文版 基础卷",
-      "path": "01.Articles/Recommend/Books/ON JAVA 中文版 基础卷.md"
+      "path": "Recommend/Books/ON JAVA 中文版 基础卷.md"
     },
     {
       "basename": "MySQL是怎样运行的",
-      "path": "01.Articles/Recommend/Books/MySQL是怎样运行的.md"
+      "path": "Recommend/Books/MySQL是怎样运行的.md"
     },
     {
       "basename": "ECMAScript 6 入门教程",
-      "path": "01.Articles/Recommend/Books/ECMAScript 6 入门教程.md"
-    },
-    {
-      "basename": "大话设计模式",
-      "path": "01.Articles/Recommend/Books/大话设计模式.md"
+      "path": "Recommend/Books/ECMAScript 6 入门教程.md"
     },
     {
       "basename": "VSCode",

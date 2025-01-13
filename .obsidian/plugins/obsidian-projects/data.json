@@ -12,7 +12,7 @@
       "dataSource": {
         "kind": "folder",
         "config": {
-          "path": "01.Articles/Recommend/Books",
+          "path": "Recommend/Books",
           "recursive": true
         }
       },
@@ -40,7 +40,7 @@
                 "hide": true
               },
               "tags": {
-                "width": 468
+                "width": 430
               },
               "name": {
                 "width": 330
@@ -109,7 +109,7 @@
       "dataSource": {
         "kind": "folder",
         "config": {
-          "path": "01.Articles/Recommend/Movies",
+          "path": "Recommend/Movies",
           "recursive": true
         }
       },

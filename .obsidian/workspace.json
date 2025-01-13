@@ -59,9 +59,19 @@
               "icon": "lucide-file",
               "title": "HTML5"
             }
+          },
+          {
+            "id": "858560c8b0dbc771",
+            "type": "leaf",
+            "state": {
+              "type": "obsidian-projects",
+              "state": {},
+              "icon": "projects-icon",
+              "title": "Projects"
+            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -157,11 +167,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "02.Inbox/HTML5.md"
-              },
+              "state": {},
               "icon": "lucide-list",
-              "title": "HTML5 的大纲"
+              "title": "大纲"
             }
           },
           {
@@ -239,26 +247,30 @@
       "obsidian-projects:打开项目": false
     }
   },
-  "active": "bad81c2bbf182c02",
+  "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "01.Articles/Recommend/Movies/活着 (1994).md",
+    "02.Inbox/HTML5.md",
+    "Recommend/Books/大话设计模式.md",
+    "03.Excalidraw/HTML 标签属性.excalidraw.md",
+    "03.Excalidraw/HTML 双标签.excalidraw.md",
+    "03.Excalidraw/HTML 单标签.excalidraw.md",
+    "Recommend/Movies/活着 (1994).md",
     "Zttachments/活着 (1994).webp",
     "Zttachments/活着 (1994).webp.crdownload",
-    "01.Articles/Recommend/Movies/怦然心动.md",
+    "Recommend/Movies/怦然心动.md",
     "Zttachments/怦然心动.webp",
     "Zttachments/怦然心动.webp.crdownload",
-    "01.Articles/Recommend/Movies/寻梦环游记.md",
+    "Recommend/Movies/寻梦环游记.md",
     "Zttachments/寻梦环游记.webp",
     "Zttachments/寻梦环游记.webp.crdownload",
-    "01.Articles/Recommend/Movies/机器人总动员.md",
+    "Recommend/Movies/机器人总动员.md",
     "Zttachments/机器人总动员.webp",
     "Zttachments/机器人总动员.webp.crdownload",
-    "01.Articles/Recommend/Movies/这个杀手不太冷.md",
-    "02.Inbox/HTML5.md",
+    "Recommend/Movies/这个杀手不太冷.md",
     "Zttachments/这个杀手不太冷.webp",
     "Zttachments/这个杀手不太冷.webp.crdownload",
-    "01.Articles/Recommend/Movies/心灵捕手.md",
-    "01.Articles/Recommend/Movies/肖申克的救赎.md",
+    "Recommend/Movies/心灵捕手.md",
+    "Recommend/Movies/肖申克的救赎.md",
     "Templates/Recommend Movie.md",
     "00.Overview/02 - 参考资料.md",
     "00.Overview/01 - 任务清单.md",
@@ -266,24 +278,21 @@
     "01.Articles/Java/基础/03  - Java8 新特性.md",
     "01.Articles/Java/基础/02  - 嵌套类.md",
     "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList 源码剖析.md",
-    "01.Articles/Recommend/Movies/绿皮书.md",
-    "01.Articles/Recommend/Books/MySQL是怎样使用的.md",
-    "01.Articles/Recommend/Movies/当幸福来敲门.md",
-    "01.Articles/Recommend/Movies/楚门的世界.md",
-    "01.Articles/Recommend/Movies/阿甘正传.md",
+    "Recommend/Movies/绿皮书.md",
+    "Recommend/Books/MySQL是怎样使用的.md",
+    "Recommend/Movies/当幸福来敲门.md",
+    "Recommend/Movies/楚门的世界.md",
+    "Recommend/Movies/阿甘正传.md",
     "Zttachments/心灵捕手.png",
     "Zttachments/当幸福来敲门.png",
-    "01.Articles/Recommend/Movies/触不可及.md",
+    "Recommend/Movies/触不可及.md",
     "Zttachments/触不可及.png",
     "Zttachments/绿皮书.png",
     "Zttachments/楚门的世界.png",
-    "01.Articles/Recommend/Movies/海上钢琴师.md",
-    "01.Articles/Recommend/Movies/盗梦空间.md",
-    "Templates/Recommend Book.md",
-    "01.Articles/Recommend/Books/Spring 5核心原理与30个类手写实战.md",
-    "01.Articles/Recommend/Movies",
-    "01.Articles/Recommend/Books",
-    "01.Articles/Recommend",
+    "Recommend/Movies/海上钢琴师.md",
+    "Recommend/Movies",
+    "Recommend/Books",
+    "Recommend",
     "Books",
     "04.Canvas/代码生成器.canvas",
     "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
