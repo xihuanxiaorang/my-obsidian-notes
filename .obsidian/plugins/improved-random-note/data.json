@@ -2,7 +2,7 @@
   "openInNewLeaf": true,
   "enableRibbonIcon": true,
   "selectedTag": "",
-  "excludedFolders": "01.Articles/Tools, 01.Articles/Misc, 01.Articles/Announcements,",
+  "excludedFolders": "01.Articles/Tools, 01.Articles/Misc, 01.Articles/Announcements, 01.Articles/Recommend/Books, 01.Articles/Recommend/Movies,",
   "includedFolders": "01.Articles,",
   "excludedTags": []
 }

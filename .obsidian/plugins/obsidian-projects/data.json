@@ -157,10 +157,35 @@
             "conditions": []
           },
           "colors": {
-            "conditions": []
+            "conditions": [
+              {
+                "color": "#ef6b6b",
+                "condition": {
+                  "field": "rating",
+                  "operator": "gte",
+                  "enabled": true,
+                  "value": "9"
+                }
+              },
+              {
+                "color": "#83da72",
+                "condition": {
+                  "field": "rating",
+                  "operator": "gte",
+                  "enabled": true,
+                  "value": "8"
+                }
+              }
+            ]
           },
           "sort": {
-            "criteria": []
+            "criteria": [
+              {
+                "field": "rating",
+                "order": "desc",
+                "enabled": true
+              }
+            ]
           },
           "id": "5eaf0463-fba4-4660-814b-0112ce59250c",
           "name": "表格",

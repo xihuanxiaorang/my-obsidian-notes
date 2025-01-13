@@ -1,24 +1,44 @@
 {
   "recentFiles": [
     {
-      "basename": "02 - 参考资料",
-      "path": "00.Overview/02 - 参考资料.md"
+      "basename": "HTML5",
+      "path": "02.Inbox/HTML5.md"
     },
     {
-      "basename": "Recommend Movie",
-      "path": "Templates/Recommend Movie.md"
+      "basename": "活着 (1994)",
+      "path": "01.Articles/Recommend/Movies/活着 (1994).md"
+    },
+    {
+      "basename": "怦然心动",
+      "path": "01.Articles/Recommend/Movies/怦然心动.md"
+    },
+    {
+      "basename": "寻梦环游记",
+      "path": "01.Articles/Recommend/Movies/寻梦环游记.md"
+    },
+    {
+      "basename": "机器人总动员",
+      "path": "01.Articles/Recommend/Movies/机器人总动员.md"
+    },
+    {
+      "basename": "这个杀手不太冷",
+      "path": "01.Articles/Recommend/Movies/这个杀手不太冷.md"
+    },
+    {
+      "basename": "03  - Java8 新特性",
+      "path": "01.Articles/Java/基础/03  - Java8 新特性.md"
+    },
+    {
+      "basename": "02  - 嵌套类",
+      "path": "01.Articles/Java/基础/02  - 嵌套类.md"
+    },
+    {
+      "basename": "01 - ArrayList 源码剖析",
+      "path": "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList 源码剖析.md"
     },
     {
       "basename": "绿皮书",
       "path": "01.Articles/Recommend/Movies/绿皮书.md"
-    },
-    {
-      "basename": "肖申克的救赎",
-      "path": "01.Articles/Recommend/Movies/肖申克的救赎.md"
-    },
-    {
-      "basename": "心灵捕手",
-      "path": "01.Articles/Recommend/Movies/心灵捕手.md"
     },
     {
       "basename": "MySQL是怎样使用的",
@@ -31,10 +51,6 @@
     {
       "basename": "楚门的世界",
       "path": "01.Articles/Recommend/Movies/楚门的世界.md"
-    },
-    {
-      "basename": "01 - 任务清单",
-      "path": "00.Overview/01 - 任务清单.md"
     },
     {
       "basename": "阿甘正传",
@@ -93,10 +109,6 @@
       "path": "01.Articles/Recommend/Books/大话设计模式.md"
     },
     {
-      "basename": "HTML5",
-      "path": "02.Inbox/HTML5.md"
-    },
-    {
       "basename": "VSCode",
       "path": "01.Articles/Tools/开发工具/VSCode.md"
     },
@@ -111,10 +123,6 @@
     {
       "basename": "C语言知识点02-指针.excalidraw",
       "path": "03.Excalidraw/C语言知识点02-指针.excalidraw.md"
-    },
-    {
-      "basename": "C语言知识点01-结构体.excalidraw",
-      "path": "03.Excalidraw/C语言知识点01-结构体.excalidraw.md"
     },
     {
       "basename": "生成 Github Token",
