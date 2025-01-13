@@ -59,18 +59,6 @@
               "icon": "lucide-file",
               "title": "HTML5"
             }
-          },
-          {
-            "id": "316eb4a5a466ac2f",
-            "type": "leaf",
-            "state": {
-              "type": "excalidraw",
-              "state": {
-                "file": "03.Excalidraw/HTML 基本骨架.excalidraw.md"
-              },
-              "icon": "excalidraw-icon",
-              "title": "HTML 基本骨架.excalidraw"
-            }
           }
         ],
         "currentTab": 2
@@ -251,10 +239,11 @@
       "obsidian-projects:打开项目": false
     }
   },
-  "active": "bad81c2bbf182c02",
+  "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "03.Excalidraw/HTML 基本骨架.excalidraw.md",
+    "01.Articles/Java/基础/04  - SPI 机制.md",
     "02.Inbox/HTML5.md",
+    "03.Excalidraw/HTML 基本骨架.excalidraw.md",
     "00.Overview/02 - 参考资料.md",
     "Recommend/Books/大话设计模式.md",
     "03.Excalidraw/HTML 标签属性.excalidraw.md",
@@ -290,7 +279,6 @@
     "Recommend/Movies/阿甘正传.md",
     "Zttachments/心灵捕手.png",
     "Zttachments/当幸福来敲门.png",
-    "Recommend/Movies/触不可及.md",
     "Zttachments/触不可及.png",
     "Zttachments/绿皮书.png",
     "Zttachments/楚门的世界.png",
