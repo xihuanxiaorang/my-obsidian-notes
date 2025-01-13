@@ -61,17 +61,19 @@
             }
           },
           {
-            "id": "858560c8b0dbc771",
+            "id": "316eb4a5a466ac2f",
             "type": "leaf",
             "state": {
-              "type": "obsidian-projects",
-              "state": {},
-              "icon": "projects-icon",
-              "title": "Projects"
+              "type": "excalidraw",
+              "state": {
+                "file": "03.Excalidraw/HTML 基本骨架.excalidraw.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "HTML 基本骨架.excalidraw"
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -167,9 +169,11 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {},
+              "state": {
+                "file": "02.Inbox/HTML5.md"
+              },
               "icon": "lucide-list",
-              "title": "大纲"
+              "title": "HTML5 的大纲"
             }
           },
           {
@@ -249,7 +253,9 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
+    "03.Excalidraw/HTML 基本骨架.excalidraw.md",
     "02.Inbox/HTML5.md",
+    "00.Overview/02 - 参考资料.md",
     "Recommend/Books/大话设计模式.md",
     "03.Excalidraw/HTML 标签属性.excalidraw.md",
     "03.Excalidraw/HTML 双标签.excalidraw.md",
@@ -272,7 +278,6 @@
     "Recommend/Movies/心灵捕手.md",
     "Recommend/Movies/肖申克的救赎.md",
     "Templates/Recommend Movie.md",
-    "00.Overview/02 - 参考资料.md",
     "00.Overview/01 - 任务清单.md",
     "03.Excalidraw/C语言知识点01-结构体.excalidraw.md",
     "01.Articles/Java/基础/03  - Java8 新特性.md",
@@ -289,7 +294,6 @@
     "Zttachments/触不可及.png",
     "Zttachments/绿皮书.png",
     "Zttachments/楚门的世界.png",
-    "Recommend/Movies/海上钢琴师.md",
     "Recommend/Movies",
     "Recommend/Books",
     "Recommend",

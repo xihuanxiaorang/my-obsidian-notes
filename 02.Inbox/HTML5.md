@@ -5,7 +5,7 @@ tags:
   - Tutorial
   - HTML
 create_time: 2025-01-10 18:31
-update_time: 2025/01/13 17:57
+update_time: 2025/01/13 21:39
 ---
 
 ## 什么是 HTML?
@@ -25,8 +25,8 @@ update_time: 2025/01/13 17:57
 ### HTML 初体验
 
 1. 创建项目：新建一个文件夹，命名为 `html-study`，并使用 VSCode 打开。
-2. 创建文件：在文件夹中创建一个新文件，命名为 `index.html`。
-3. 编写代码：在文件中输入以下代码并保存
+2. 创建文件：在该文件夹内创建一个后缀名为 **`.html`** 的文件，命名为 `index.html`。
+3. 编写代码：在 `index.html` 文件中输入以下代码并保存
 
 	```html
 	<!DOCTYPE html>
@@ -99,7 +99,7 @@ HTML 标签属性为标签提供额外信息，通常写在起始标签或单标
 <input type="password" placeholder="请输入您的密码">
 ```
 
-有些特殊属性没有属性值，直接写属性名即可，例如：
+🌠有些特殊属性没有属性值，直接写属性名即可，例如：
 
 ```html
 <input disabled>
@@ -119,4 +119,6 @@ HTML 标签属性为标签提供额外信息，通常写在起始标签或单标
 >      <!-- 最终只有 type="text" 生效，type="password" 被忽略 -->
 >      ```
 
-### HTML 基本结构
+### HTML 基本骨架
+
+![[HTML 基本骨架.excalidraw|500]]
