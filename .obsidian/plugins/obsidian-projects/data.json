@@ -13,7 +13,7 @@
         "kind": "folder",
         "config": {
           "path": "01.Articles/Recommend/Books",
-          "recursive": false
+          "recursive": true
         }
       },
       "newNotesFolder": "",
@@ -25,7 +25,6 @@
               "author",
               "tags",
               "summary",
-              "link",
               "cover",
               "path"
             ],
@@ -36,14 +35,15 @@
               "cover": {
                 "hide": true
               },
-              "link": {
+              "summary": {
+                "width": 814,
                 "hide": true
               },
-              "summary": {
-                "width": 814
-              },
               "tags": {
-                "width": 235
+                "width": 468
+              },
+              "name": {
+                "width": 330
               }
             }
           },
@@ -94,7 +94,110 @@
         }
       ],
       "id": "45a884df-8228-417c-9aba-d56e3b22f36a",
-      "name": "Books"
+      "name": "推荐书籍"
+    },
+    {
+      "fieldConfig": {
+        "Synopsis": {}
+      },
+      "defaultName": "",
+      "templates": [
+        "Templates/Recommend Movie.md"
+      ],
+      "excludedNotes": [],
+      "isDefault": false,
+      "dataSource": {
+        "kind": "folder",
+        "config": {
+          "path": "01.Articles/Recommend/Movies",
+          "recursive": true
+        }
+      },
+      "newNotesFolder": "",
+      "views": [
+        {
+          "config": {
+            "fieldConfig": {
+              "path": {
+                "hide": true
+              },
+              "cover": {
+                "hide": true
+              },
+              "Stars": {
+                "width": 459
+              },
+              "tags": {
+                "width": 264
+              },
+              "Director": {
+                "width": 272
+              },
+              "rating": {
+                "width": 117
+              },
+              "Synopsis": {
+                "hide": true,
+                "width": 567
+              }
+            },
+            "orderFields": [
+              "name",
+              "Director",
+              "Stars",
+              "Synopsis",
+              "tags",
+              "rating",
+              "path",
+              "cover"
+            ]
+          },
+          "filter": {
+            "conjunction": "and",
+            "conditions": []
+          },
+          "colors": {
+            "conditions": []
+          },
+          "sort": {
+            "criteria": []
+          },
+          "id": "5eaf0463-fba4-4660-814b-0112ce59250c",
+          "name": "表格",
+          "type": "table"
+        },
+        {
+          "config": {
+            "coverField": "cover",
+            "includeFields": [
+              "rating",
+              "tags",
+              "Storyline"
+            ]
+          },
+          "filter": {
+            "conjunction": "and",
+            "conditions": []
+          },
+          "colors": {
+            "conditions": []
+          },
+          "sort": {
+            "criteria": [
+              {
+                "field": "rating",
+                "order": "desc",
+                "enabled": true
+              }
+            ]
+          },
+          "id": "3c267e7f-6e61-4e19-bb4c-ffaf41ef0609",
+          "name": "画册",
+          "type": "gallery"
+        }
+      ],
+      "id": "6e3cc651-6bc3-43da-a1cc-65930b386ecb",
+      "name": "推荐电影"
     }
   ],
   "archives": [],

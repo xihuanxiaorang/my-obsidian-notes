@@ -28,6 +28,9 @@
     "version": "number",
     "author": "text",
     "Creator": "text",
-    "status": "multitext"
+    "status": "multitext",
+    "rating": "number",
+    "Director": "multitext",
+    "Stars": "multitext"
   }
 }
