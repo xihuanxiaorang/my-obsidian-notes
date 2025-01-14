@@ -1,11 +1,11 @@
 ---
 media: https://www.bilibili.com/video/BV1p84y1P7Z5?p=7&vd_source=84272a2d7f72158b38778819be5bc6ad
-Creator: 尚硅谷
 tags:
   - Tutorial
   - HTML
+  - 尚硅谷
 create_time: 2025-01-10 18:31
-update_time: 2025/01/14 17:59
+update_time: 2025/01/14 21:32
 ---
 
 ## 什么是 HTML?
@@ -121,35 +121,12 @@ HTML 标签属性为标签提供额外信息，通常写在起始标签或单标
 
 ### HTML 基本骨架
 
-HTML 的基本骨架结构如下所示：
 ![[HTML 基本骨架.excalidraw|700]]
 
 - **`<html>`**：定义整个 HTML 文档的结构，作为所有内容的根标签。
 - **`<head>`**：网页的头部区域，用于存放网页的元信息（如标题、字符编码、样式表、脚本等），这些信息不会直接显示在网页中。
 	- **`<title>`**：定义网页的标题，显示在浏览器标签页上。
 - **`<body>`**：定义网页的主体区域，存放所有可见的内容（如文本、图片、链接、表格等），呈现给用户浏览。
-
-快速生成 HTML 骨架（VSCode 操作）
-
-- 打开一个 HTML 文件。
-- 输入 `!`（感叹号）。
-- 按下 **Enter** 或 **Tab** 键，即可快速生成 HTML 的基础结构。
-
-生成的 HTML 骨架如下：
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-
-</body>
-</html>
-```
 
 🤔 如何查看网页的 HTML 结构？
 
@@ -177,13 +154,10 @@ HTML 的基本骨架结构如下所示：
 
 举个栗子：
 
-```html hl:9,12
-<!DOCTYPE html>
-<html lang="en">
+```html hl:6,9
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>HTML 注释</title>
   </head>
   <body>
     <!-- 下面的文字只能滚动一次 -->
@@ -201,3 +175,72 @@ HTML 的基本骨架结构如下所示：
 >    ```html
 >    <!-- 这是注释 <!-- 嵌套注释 --> -->
 >    <!-- 这种嵌套会导致语法错误 -->
+
+### HTML 文档声明
+
+HTML 文档声明用于告诉浏览器当前文档使用的 HTML 标准。
+
+格式如下：
+
+```html
+<!DOCTYPE html>
+```
+
+特点：
+
+1. **版本标识**：HTML5 使用简洁的 `<!DOCTYPE html>` 来声明文档版本。
+2. **位置要求**：必须出现在 HTML 文档的**第一行**。
+3. **作用**：确保浏览器以**标准模式**渲染网页，而不是兼容模式。
+
+举个栗子：
+
+```html hl:1
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>HTML 文档声明</title>
+  </head>
+  <body>
+    <h1>欢迎来到 HTML 世界！</h1>
+  </body>
+</html>
+```
+
+- **HTML5 声明的优点**：比旧版 HTML 冗长的文档声明更简洁明了，例如 HTML4 的声明如下：
+
+	```html
+	<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+	```
+
+- **统一兼容**：所有现代浏览器都会识别 `<!DOCTYPE html>` 并以标准模式解析 HTML5 文档。
+
+常见问题：
+
+- 🤔 **如果没有写声明怎么办？**
+  🤓 浏览器可能会进入兼容模式，无法完全按照标准渲染页面，可能会出现样式或功能异常。
+
+### HTML 字符编码
+
+### HTML 标准骨架✨
+
+🤔 如何在 [[VSCode]] 中快速生成 HTML 标准骨架？
+
+- 打开一个 HTML 文件。
+- 输入 `!`（感叹号）。
+- 按下 **Enter** 或 **Tab** 键，即可快速生成 HTML 的基础结构。
+
+生成的 HTML 标准骨架如下：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+</body>
+</html>
+```

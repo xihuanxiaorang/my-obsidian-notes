@@ -5,8 +5,32 @@
       "path": "02.Inbox/HTML5.md"
     },
     {
-      "basename": "VSCode",
-      "path": "01.Articles/Tools/开发工具/VSCode.md"
+      "basename": "Tutorial",
+      "path": "Templates/Tutorial.md"
+    },
+    {
+      "basename": "02 - 参考资料",
+      "path": "00.Overview/02 - 参考资料.md"
+    },
+    {
+      "basename": "WSL2",
+      "path": "01.Articles/Tools/开发工具/WSL2.md"
+    },
+    {
+      "basename": "代码生成器",
+      "path": "04.Canvas/代码生成器.canvas"
+    },
+    {
+      "basename": "01 - ArrayList 源码剖析",
+      "path": "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList 源码剖析.md"
+    },
+    {
+      "basename": "01 - 线性表",
+      "path": "01.Articles/DataStructure & Algorithm/DataStructure/01 - 线性表.md"
+    },
+    {
+      "basename": "04  - SPI 机制",
+      "path": "01.Articles/Java/基础/04  - SPI 机制.md"
     },
     {
       "basename": "01 - 任务清单",
@@ -33,20 +57,8 @@
       "path": "Recommend/Movies/飞屋环游记.md"
     },
     {
-      "basename": "01 - ArrayList 源码剖析",
-      "path": "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList 源码剖析.md"
-    },
-    {
-      "basename": "04  - SPI 机制",
-      "path": "01.Articles/Java/基础/04  - SPI 机制.md"
-    },
-    {
       "basename": "HTML 基本骨架.excalidraw",
       "path": "03.Excalidraw/HTML 基本骨架.excalidraw.md"
-    },
-    {
-      "basename": "02 - 参考资料",
-      "path": "00.Overview/02 - 参考资料.md"
     },
     {
       "basename": "大话设计模式",

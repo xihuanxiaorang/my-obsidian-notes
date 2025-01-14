@@ -1,6 +1,5 @@
 ---
 media: 
-Creator: 
 tags:
   - Tutorial
 create_time: <% tp.file.creation_date() %>
