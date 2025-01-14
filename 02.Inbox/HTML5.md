@@ -5,7 +5,7 @@ tags:
   - Tutorial
   - HTML
 create_time: 2025-01-10 18:31
-update_time: 2025/01/13 23:11
+update_time: 2025/01/14 17:59
 ---
 
 ## 什么是 HTML?
@@ -165,3 +165,39 @@ HTML 的基本骨架结构如下所示：
 - **检查元素**：显示的是浏览器渲染后的结构，可实时调试和修改。
 
 ### HTML 注释
+
+- **特点**：注释内容不会被浏览器解析或呈现到网页中，但会保留在源代码中，方便开发者查看。
+- **作用**：对代码进行说明或备注，便于团队协作和代码维护。
+
+语法格式：
+
+```html
+<!-- 这是一个注释 -->
+```
+
+举个栗子：
+
+```html hl:9,12
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- 下面的文字只能滚动一次 -->
+    <marquee loop="1" bgcolor="orange">学习技术，从零到一，步步为赢！</marquee>
+
+    <!-- 下面的文字可以无限滚动 -->
+    <marquee>学习技术，从零到一，步步为赢！</marquee>
+  </body>
+</html>
+```
+
+> [!note]
+> 1. 不要将 HTML 标签放在注释内，可能会导致浏览器解析错误。
+> 2. **注释不能嵌套**，例如：
+>    ```html
+>    <!-- 这是注释 <!-- 嵌套注释 --> -->
+>    <!-- 这种嵌套会导致语法错误 -->

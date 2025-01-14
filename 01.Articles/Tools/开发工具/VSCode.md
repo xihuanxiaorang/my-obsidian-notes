@@ -3,14 +3,14 @@ tags:
   - Tool
   - DevTool
 create_time: 2024-12-31 19:00
-update_time: 2025/01/12 23:03
+update_time: 2025/01/14 17:17
 ---
 
-## Download & Install
+## 下载 & 安装
 
 [Visual Studio Code](https://code.visualstudio.com/)
 
-## Recommend Plugins
+## 推荐插件
 
 ### Live Server
 
@@ -57,7 +57,7 @@ update_time: 2025/01/12 23:03
 
 **Live Server** 是前端开发中的高效工具，特别适合静态网页和动态内容的开发。它通过自动刷新和实时预览功能简化了调试流程，提高了开发效率。如果您从事前端开发工作，强烈推荐安装使用。
 
-## Tips
+## 小技巧
 
 ### 让光标移动更加丝滑流畅 | 视觉体验优化
 

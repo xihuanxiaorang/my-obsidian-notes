@@ -8,44 +8,6 @@
         "type": "tabs",
         "children": [
           {
-            "id": "e102350729ec8e55",
-            "type": "leaf",
-            "pinned": true,
-            "state": {
-              "type": "kanban",
-              "state": {
-                "file": "00.Overview/01 - 任务清单.md",
-                "kanbanViewState": {
-                  "kanban-plugin": "board",
-                  "list-collapse": [
-                    false,
-                    null
-                  ]
-                }
-              },
-              "pinned": true,
-              "icon": "lucide-trello",
-              "title": "01 - 任务清单"
-            }
-          },
-          {
-            "id": "c449e06dfb3db7ba",
-            "type": "leaf",
-            "pinned": true,
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "00.Overview/02 - 参考资料.md",
-                "mode": "source",
-                "backlinks": false,
-                "source": false
-              },
-              "pinned": true,
-              "icon": "lucide-file",
-              "title": "02 - 参考资料"
-            }
-          },
-          {
             "id": "bad81c2bbf182c02",
             "type": "leaf",
             "state": {
@@ -60,8 +22,7 @@
               "title": "HTML5"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -241,8 +202,24 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "01.Articles/Java/基础/04  - SPI 机制.md",
+    "01.Articles/Tools/开发工具/VSCode.md",
     "02.Inbox/HTML5.md",
+    "00.Overview/01 - 任务清单.md",
+    "Recommend/Movies/小鞋子.md",
+    "Zttachments/小鞋子.webp",
+    "Zttachments/小鞋子.webp.crdownload",
+    "Recommend/Movies/天空之城.md",
+    "Zttachments/天空之城.webp",
+    "Zttachments/天空之城.webp.crdownload",
+    "Recommend/Movies/何以为家.md",
+    "Recommend/Movies/楚门的世界.md",
+    "Recommend/Movies/飞屋环游记.md",
+    "Zttachments/何以为家.webp",
+    "Zttachments/何以为家.webp.crdownload",
+    "Zttachments/飞屋环游记.webp",
+    "Zttachments/飞屋环游记.webp.crdownload",
+    "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList 源码剖析.md",
+    "01.Articles/Java/基础/04  - SPI 机制.md",
     "03.Excalidraw/HTML 基本骨架.excalidraw.md",
     "00.Overview/02 - 参考资料.md",
     "Recommend/Books/大话设计模式.md",
@@ -267,30 +244,14 @@
     "Recommend/Movies/心灵捕手.md",
     "Recommend/Movies/肖申克的救赎.md",
     "Templates/Recommend Movie.md",
-    "00.Overview/01 - 任务清单.md",
     "03.Excalidraw/C语言知识点01-结构体.excalidraw.md",
     "01.Articles/Java/基础/03  - Java8 新特性.md",
-    "01.Articles/Java/基础/02  - 嵌套类.md",
-    "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList 源码剖析.md",
-    "Recommend/Movies/绿皮书.md",
-    "Recommend/Books/MySQL是怎样使用的.md",
-    "Recommend/Movies/当幸福来敲门.md",
-    "Recommend/Movies/楚门的世界.md",
-    "Recommend/Movies/阿甘正传.md",
     "Zttachments/心灵捕手.png",
-    "Zttachments/当幸福来敲门.png",
-    "Zttachments/触不可及.png",
-    "Zttachments/绿皮书.png",
-    "Zttachments/楚门的世界.png",
     "Recommend/Movies",
-    "Recommend/Books",
-    "Recommend",
-    "Books",
     "04.Canvas/代码生成器.canvas",
     "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
     "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
     "04.Canvas/未命名.canvas",
-    "01.Articles/Tutorial/HTML5+CSS3+移动Web/HTML5",
     "未命名.canvas",
     "06.Reading/Hello 算法/未命名.canvas",
     "Canvas/未命名.canvas",

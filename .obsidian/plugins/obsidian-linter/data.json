@@ -280,7 +280,7 @@
   "foldersToIgnore": [
     "Templates",
     "01.Articles/Announcements",
-    "01.Articles/Recommend"
+    "Recommend"
   ],
   "filesToIgnore": [],
   "linterLocale": "system-default",
