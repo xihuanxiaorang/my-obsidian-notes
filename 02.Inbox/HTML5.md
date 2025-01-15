@@ -5,7 +5,7 @@ tags:
   - HTML
   - 尚硅谷
 create_time: 2025-01-10 18:31
-update_time: 2025/01/14 23:00
+update_time: 2025/01/15 18:16
 ---
 
 ## 什么是 HTML?
@@ -352,3 +352,13 @@ HTML 文档声明用于告诉浏览器当前文档使用的 HTML 标准。
     - **`<meta name="viewport" content="width=device-width, initial-scale=1.0">`**：使网页在不同设备上自适应显示。
     - **`<title>`**：设置网页标题，显示在浏览器标签上。
 - **`<body>`**：文档主体区域，放置页面可见内容。
+
+## HTML 基础
+
+### 开发者文档
+
+- https://www.w3.org/
+- https://www.w3school.com.cn/
+- https://developer.mozilla.org/zh-CN/ 推荐👍
+
+### HTML 排版标签

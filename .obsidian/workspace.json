@@ -4,11 +4,79 @@
     "type": "split",
     "children": [
       {
-        "id": "ca757aec2c46ba36",
+        "id": "b4993f81abd08c60",
         "type": "tabs",
         "children": [
           {
-            "id": "b40861a228a94fb8",
+            "id": "9d8fbe19c1748f03",
+            "type": "leaf",
+            "pinned": true,
+            "state": {
+              "type": "kanban",
+              "state": {
+                "file": "00.Overview/01 - 任务清单.md",
+                "kanbanViewState": {
+                  "kanban-plugin": "board",
+                  "list-collapse": [
+                    false,
+                    null
+                  ]
+                }
+              },
+              "pinned": true,
+              "icon": "lucide-trello",
+              "title": "01 - 任务清单"
+            }
+          },
+          {
+            "id": "39754998331365d3",
+            "type": "leaf",
+            "pinned": true,
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "00.Overview/02 - 参考资料.md",
+                "mode": "source",
+                "backlinks": false,
+                "source": false
+              },
+              "pinned": true,
+              "icon": "lucide-file",
+              "title": "02 - 参考资料"
+            }
+          },
+          {
+            "id": "a8f9cd9e835b7907",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "01.Articles/Java/基础/02  - 嵌套类.md",
+                "mode": "preview",
+                "backlinks": false,
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "02  - 嵌套类"
+            }
+          },
+          {
+            "id": "29accd63b6c1967a",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "01.Articles/Java/基础/03  - Java8 新特性.md",
+                "mode": "source",
+                "backlinks": false,
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "03  - Java8 新特性"
+            }
+          },
+          {
+            "id": "5a2a33bf14126da8",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -22,7 +90,8 @@
               "title": "HTML5"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -53,7 +122,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "WSL",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -118,10 +187,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "02.Inbox/HTML5.md"
+                "file": "01.Articles/Java/基础/02  - 嵌套类.md"
               },
               "icon": "lucide-list",
-              "title": "HTML5 的大纲"
+              "title": "02  - 嵌套类 的大纲"
             }
           },
           {
@@ -179,22 +248,27 @@
       "media-extended:Open media": true,
       "hide-folders:Show hidden folders": true,
       "improved-random-note:Open improved random note": false,
-      "obsidian-projects:打开项目": false,
-      "breadcrumbs:Breadcrumbs Visualisation": false
+      "obsidian-projects:打开项目": false
     }
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "02.Inbox/HTML5.md",
-    "Templates/Tutorial.md",
+    "01.Articles/Java/基础/03  - Java8 新特性.md",
+    "01.Articles/Java/基础/02  - 嵌套类.md",
     "00.Overview/02 - 参考资料.md",
-    "01.Articles/Tools/开发工具/WSL2.md",
-    "04.Canvas/代码生成器.canvas",
-    "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList 源码剖析.md",
+    "02.Inbox/HTML5.md",
     "01.Articles/DataStructure & Algorithm/DataStructure/01 - 线性表.md",
+    "04.Canvas/代码生成器.canvas",
+    "00.Overview/01 - 任务清单.md",
+    "01.Articles/DataStructure & Algorithm/DataStructure/未命名.canvas",
+    "01.Articles/Tools/开发工具/WSL2.md",
+    "01.Articles/Tools/其他工具/ABDownloadManager.md",
+    "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList 源码剖析.md",
+    "01.Articles/SourceCodeAnalysis/Java/03 - LinkedList 源码剖析.md",
+    "01.Articles/SourceCodeAnalysis/Java/02 - HashMap 源码剖析.md",
+    "Templates/Tutorial.md",
     "01.Articles/Tools/开发工具/VSCode.md",
     "01.Articles/Java/基础/04  - SPI 机制.md",
-    "00.Overview/01 - 任务清单.md",
     "Recommend/Movies/小鞋子.md",
     "Zttachments/小鞋子.webp",
     "Zttachments/小鞋子.webp.crdownload",
@@ -219,17 +293,12 @@
     "Recommend/Movies/怦然心动.md",
     "Zttachments/怦然心动.webp",
     "Zttachments/怦然心动.webp.crdownload",
-    "Recommend/Movies/寻梦环游记.md",
     "Zttachments/寻梦环游记.webp",
     "Zttachments/寻梦环游记.webp.crdownload",
-    "Recommend/Movies/机器人总动员.md",
     "Zttachments/机器人总动员.webp",
     "Zttachments/机器人总动员.webp.crdownload",
-    "Recommend/Movies/这个杀手不太冷.md",
     "Zttachments/这个杀手不太冷.webp",
     "Zttachments/这个杀手不太冷.webp.crdownload",
-    "Recommend/Movies/心灵捕手.md",
-    "Recommend/Movies/肖申克的救赎.md",
     "Zttachments/心灵捕手.png",
     "Recommend/Movies",
     "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
@@ -239,7 +308,6 @@
     "06.Reading/Hello 算法/未命名.canvas",
     "Canvas/未命名.canvas",
     "Articles/Vue/未命名.canvas",
-    "Canvas/ArrayList源码剖析.canvas",
-    "Articles/源码剖析/Java/未命名.canvas"
+    "Canvas/ArrayList源码剖析.canvas"
   ]
 }
