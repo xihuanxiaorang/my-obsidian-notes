@@ -1,8 +1,9 @@
 ---
 tags:
   - Java
+repository: https://github.com/xihuanxiaorang/java-study/tree/core-study/core-study/spi-study
 create_time: 2024-12-28T17:52:00
-update_time: 2024/12/28 22:08
+update_time: 2025/01/16 21:47
 ---
 
 ## 简介

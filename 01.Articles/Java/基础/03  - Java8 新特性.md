@@ -1,12 +1,10 @@
 ---
 tags:
   - Java
+repository: https://github.com/xihuanxiaorang/java-study/tree/core-study/core-study/lambda-study
 create_time: 2024-12-28T17:51:00
-update_time: 2025/01/15 18:35
+update_time: 2025/01/16 21:47
 ---
-
-> 代码仓库地址：
-
 
 Lambda 表达式、强大的 Stream API、全新时间日期 API；新特性使得 Java 的运行速度更快、代码更少（Lambda 表达式）、便于并行、最大化减少空指针异常！
 
@@ -30,19 +28,19 @@ final Comparator<Integer> comparator = new Comparator<Integer>() {
 接下来，我们就可以将上述匿名内部类的实例对象作为方法参数进行使用，如下所示：
 
 ```java hl:7
-public class ApiTest {  
-  @Test  
-  public void test() {  
-    final Comparator<Integer> comparator = new Comparator<Integer>() {  
-      @Override  
-      public int compare(final Integer o1, final Integer o2) {  
-        return Integer.compare(o1, o2);  
-      }  
-    };  
-    final TreeSet<Integer> treeSet = new TreeSet<>(comparator);  
-    treeSet.addAll(Arrays.asList(1, 3, 2, 4, 6, 5));  
-    treeSet.forEach(System.out::println);  
-  }  
+public class ApiTest {
+  @Test
+  public void test() {
+    final Comparator<Integer> comparator = new Comparator<Integer>() {
+      @Override
+      public int compare(final Integer o1, final Integer o2) {
+        return Integer.compare(o1, o2);
+      }
+    };
+    final TreeSet<Integer> treeSet = new TreeSet<>(comparator);
+    treeSet.addAll(Arrays.asList(1, 3, 2, 4, 6, 5));
+    treeSet.forEach(System.out::println);
+  }
 }
 ```
 
@@ -85,23 +83,23 @@ final TreeSet<Integer> treeSet = new TreeSet<>(((o1, o2) -> Integer.compare (o1,
 
 	```java
 	@Data
-	 @Builder
-	 @NoArgsConstructor
-	 @AllArgsConstructor
-	 public class Employee {
-   /**
-    * 姓名
-    */
-   private String name;
-   /**
-    * 年龄
-    */
-   private Integer age;
-   /**
-    * 工资
-    */
-   private Double salary;
-	 }	
+	@Builder
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public class Employee {
+     /**
+      * 姓名
+      */
+     private String name;
+     /**
+      * 年龄
+      */
+     private Integer age;
+     /**
+      * 工资
+      */
+     private Double salary;
+	}
 	```
 
 2. 创建一个用于存储员工信息的集合。
@@ -126,7 +124,7 @@ final TreeSet<Integer> treeSet = new TreeSet<>(((o1, o2) -> Integer.compare (o1,
 首先使用遍历集合 & if 判断的方式来过滤出年龄大于等于 30 岁的员工信息。
 
 ```java
-public static List<Employee> filterEmoloyeesByAge(List<Employee> employees) {  
+public static List<Employee> filterEmployeesByAge(List<Employee> employees) {  
   List<Employee> employeeList = new ArrayList<>();  
   for (final Employee employee : employees) {  
     if (employee.getAge() >= 30) {  
@@ -214,6 +212,7 @@ public static List<Employee> filterEmployees(List<Employee> employees, MyPredica
 接着，我们编写一个测试方法来测试下优化后的代码。
 
 ```java
+@Test  
 public void test2() {  
   final List<Employee> employeeList = filterEmployees(employees, new FilterEmployeeByAge());  
   employeeList.forEach(System.out::println);  
@@ -423,11 +422,13 @@ public void test04() {
 interface PersonFactory<P extends Person> {  
   P create(String firstName, String lastName);  
 }  
+```
 
+```java
 @Data  
 @NoArgsConstructor  
 @AllArgsConstructor  
-class Person {  
+public class Person {  
   private String firstName;  
   private String lastName;  
 }
@@ -616,7 +617,7 @@ public void test2() {
 
 public String reserve(String str) {  
   int length = str.length();  
-  if (str.isBlank() || length == 1) {  
+  if (str.isEmpty() || length == 1) {  
     return str;  
   }  
   final String left = str.substring(0, length / 2);  
