@@ -5,7 +5,7 @@ tags:
   - SourceCodeAnalysis
   - DataStructure
 create_time: 2024-12-24 17:50
-update_time: 2025/01/14 23:22
+update_time: 2025/01/17 10:57
 version: 8
 ---
 
@@ -361,7 +361,8 @@ static final int hash(Object key) {
 ^4ae9ff
 
 ```java
-// 参数 onlyIfAbsent 表示是否覆盖已有值，true 不覆盖，false 覆盖，默认为 falseV putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) {  
+// 参数 onlyIfAbsent 表示是否覆盖已有值，true 不覆盖，false 覆盖，默认为 false
+V putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) {  
   // tab: 存放节点的数组，n: 数组长度，i: 目标插入位置索引，p: 目标位置的节点  
   Node<K, V>[] tab;  
   Node<K, V> p;  
@@ -692,7 +693,7 @@ final Node<K,V> removeNode(int hash, Object key, Object value,
     - `table` 中包含大量未使用的空槽位，直接序列化整个数组会浪费存储空间。
     - 自定义序列化逻辑可以仅保存实际存在的键值对，避免存储无效数据，从而减少存储和传输的开销。
 2. **保证跨 JVM 一致性**
-    - `HashMap` 的数据存储位置依赖于键的 `hashCode`，而 `Object.hashCode()` 是基于 native 实现的，在不同 JVM 上可能有不同的结果。
+    - `HashMap` 的数据存储位置依赖于键的 `hashCode`，而 `Object.hashCode ()` 是基于 native 实现的，在不同 JVM 上可能有不同的结果。
     - 通过序列化键值对而非直接保存数组，反序列化时重新计算哈希值并重新存储数据，可以确保在不同 JVM 环境下的数据一致性。
 
 #### writeObject 方法
