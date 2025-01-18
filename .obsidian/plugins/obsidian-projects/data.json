@@ -293,6 +293,11 @@
           "sort": {
             "criteria": [
               {
+                "field": "tags",
+                "order": "asc",
+                "enabled": true
+              },
+              {
                 "field": "name",
                 "order": "asc",
                 "enabled": true
