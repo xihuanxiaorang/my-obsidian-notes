@@ -223,6 +223,147 @@
       ],
       "id": "6e3cc651-6bc3-43da-a1cc-65930b386ecb",
       "name": "推荐电影"
+    },
+    {
+      "fieldConfig": {},
+      "defaultName": "",
+      "templates": [
+        "Templates/Basic.md"
+      ],
+      "excludedNotes": [],
+      "isDefault": false,
+      "dataSource": {
+        "kind": "folder",
+        "config": {
+          "path": "01.Articles/DataStructure & Algorithm",
+          "recursive": true
+        }
+      },
+      "newNotesFolder": "",
+      "views": [
+        {
+          "config": {
+            "fieldConfig": {
+              "update_time": {
+                "hide": false
+              },
+              "tags": {
+                "hide": false
+              },
+              "name": {
+                "width": 173
+              },
+              "path": {
+                "hide": true
+              }
+            },
+            "orderFields": [
+              "name",
+              "tags",
+              "create_time",
+              "update_time"
+            ]
+          },
+          "filter": {
+            "conjunction": "and",
+            "conditions": []
+          },
+          "colors": {
+            "conditions": [
+              {
+                "color": "#ec6969",
+                "condition": {
+                  "field": "tags",
+                  "operator": "has-any-of",
+                  "enabled": true,
+                  "value": "[\"Algorithm\"]"
+                }
+              },
+              {
+                "color": "#58d5bc",
+                "condition": {
+                  "field": "tags",
+                  "operator": "has-any-of",
+                  "enabled": true,
+                  "value": "[\"DataStructure\"]"
+                }
+              }
+            ]
+          },
+          "sort": {
+            "criteria": [
+              {
+                "field": "name",
+                "order": "asc",
+                "enabled": true
+              }
+            ]
+          },
+          "id": "d33d0126-bd0b-4312-bb71-648db542684f",
+          "name": "表格",
+          "type": "table"
+        }
+      ],
+      "id": "f16e1a66-e67b-4333-8ef1-23ffe12e90dd",
+      "name": "数据结构 & 算法"
+    },
+    {
+      "fieldConfig": {},
+      "defaultName": "",
+      "templates": [
+        "Templates/Basic.md"
+      ],
+      "excludedNotes": [],
+      "isDefault": true,
+      "dataSource": {
+        "kind": "folder",
+        "config": {
+          "path": "01.Articles/SourceCodeAnalysis",
+          "recursive": true
+        }
+      },
+      "newNotesFolder": "",
+      "views": [
+        {
+          "config": {
+            "fieldConfig": {
+              "path": {
+                "hide": true
+              },
+              "create_time": {
+                "hide": true
+              },
+              "update_time": {
+                "hide": true
+              },
+              "tags": {
+                "width": 433
+              },
+              "name": {
+                "width": 197
+              },
+              "version": {
+                "width": 160
+              }
+            }
+          },
+          "filter": {
+            "conjunction": "and",
+            "conditions": []
+          },
+          "colors": {
+            "conditions": []
+          },
+          "sort": {
+            "criteria": []
+          },
+          "id": "c60b1199-7cd6-4f75-b987-7fcf5f341bfd",
+          "name": "表格",
+          "type": "table"
+        }
+      ],
+      "id": "d42ece58-0f52-461e-8776-7b77d4650b19",
+      "name": "源码剖析"
     }
   ],
   "archives": [],

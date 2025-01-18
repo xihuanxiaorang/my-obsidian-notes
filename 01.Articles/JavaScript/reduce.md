@@ -1,10 +1,9 @@
 ---
 tags:
   - Frontend
-  - CodeSnippet
   - JavaScript
 create_time: 2024-12-28T17:59:00
-update_time: 2024/12/28 17:59
+update_time: 2025/01/18 11:14
 ---
 
 `reduce()` 方法对数组中的每个元素按序执行一个提供的 **reducer** 函数，每一次运行 **reducer** 会将先前元素的计算结果作为参数传入，最后将其结果汇总为单个返回值。
@@ -25,6 +24,8 @@ arr.reduce(callbackFn(accumulator, currentValue[, currentIndex[, array]])[, init
 - `initialValue` （可选）：第一次调用 `callbackFn` 回调函数时初始化 `accumulator` 的值。如果指定了 `initialValue` 参数的话，则 `callbackFn` 函数从数组中的第一个元素 `array[0]` 的值作为 `currentValue` 开始执行。如果没有指定 `initialValue` 参数的话，则 `accumulator` 初始化为数组中的第一个元素 `array[0]` 的值，并且 `callbackFn` 函数从数组中第二个元素 `array[1]` 的值作为 `currentValue` 开始执行。在这种情况下，如果数组为空（没有第一个元素 `array[0]` 的值可以作为 `accumulator` 返回），则会抛出错误；
 
 几种常见的用法如下所示：可以直接拷贝到浏览器的控制台中运行以便快速查看执行结果！
+
+#CodeSnippet
 
 1. 数组求和
 

@@ -3,7 +3,7 @@ tags:
   - Java
 repository: https://github.com/xihuanxiaorang/java-study/tree/core-study/core-study/spi-study
 create_time: 2024-12-28T17:52:00
-update_time: 2025/01/16 21:47
+update_time: 2025/01/18 11:12
 ---
 
 ## 简介
@@ -43,7 +43,36 @@ JDBC，全称是 Java DataBase Connectivity。是 Java 提供的一套用于访�
 
 在 Java SPI 出现之前，一个典型的示例代码如下所示：
 
-![[01.Articles/Snippets/JDBC 调用流程]]
+#CodeSnippet
+
+```java
+public class ApiTest {
+  private static final String URL = "jdbc:mysql://localhost:3306/test";
+  private static final String USERNAME = "root";
+  private static final String PASSWORD = "123456";
+
+  @Test
+  public void test() throws ClassNotFoundException {
+    // 加载驱动（使用 Class.forName 方法）
+    Class.forName("com.mysql.cj.jdbc.Driver");
+    // 使用 try-catch-resources 语句块来确保资源被正确关闭
+    try (
+      // 打开数据库连接
+      final Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+      // 创建 Statement 对象
+      final Statement statement = connection.createStatement();
+      // 执行查询
+      final ResultSet resultSet = statement.executeQuery("SELECT * FROM tb_user")) {
+      // 处理查询结果
+      while (resultSet.next()) {
+        System.out.println(resultSet.getString("name"));
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+}
+```
 
 下面我们重点了解一下数据库驱动的加载方式。在 Java SPI 机制出现之前，程序员通常通过调用 Class. forName 手动加载数据库驱动，例如：
 
