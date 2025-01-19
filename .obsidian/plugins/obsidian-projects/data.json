@@ -225,7 +225,15 @@
       "name": "推荐电影"
     },
     {
-      "fieldConfig": {},
+      "fieldConfig": {
+        "repository": {
+          "richText": true,
+          "options": []
+        },
+        "refrence": {
+          "richText": true
+        }
+      },
       "defaultName": "",
       "templates": [
         "Templates/Basic.md"
@@ -255,13 +263,22 @@
               },
               "path": {
                 "hide": true
+              },
+              "refrence": {
+                "hide": true
+              },
+              "repository": {
+                "hide": false,
+                "width": 345
               }
             },
             "orderFields": [
               "name",
               "tags",
               "create_time",
-              "update_time"
+              "update_time",
+              "repository",
+              "refrence"
             ]
           },
           "filter": {

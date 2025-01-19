@@ -58,15 +58,18 @@
             }
           },
           {
-            "id": "d555207bcac951ee",
+            "id": "881e99d6ddc7c20e",
             "type": "leaf",
             "state": {
-              "type": "excalidraw",
+              "type": "markdown",
               "state": {
-                "file": "03.Excalidraw/排序算法-鸡尾酒排序.md"
+                "file": "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/02 - 鸡尾酒排序.md",
+                "mode": "source",
+                "backlinks": false,
+                "source": false
               },
-              "icon": "excalidraw-icon",
-              "title": "排序算法-鸡尾酒排序"
+              "icon": "lucide-file",
+              "title": "02 - 鸡尾酒排序"
             }
           }
         ],
@@ -101,7 +104,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#CodeSnippet",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -166,10 +169,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "03.Excalidraw/排序算法-鸡尾酒排序.md"
+                "file": "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/02 - 鸡尾酒排序.md"
               },
               "icon": "lucide-list",
-              "title": "排序算法-鸡尾酒排序 的大纲"
+              "title": "02 - 鸡尾酒排序 的大纲"
             }
           },
           {
@@ -231,23 +234,27 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "03.Excalidraw/排序算法-冒泡排序.md",
-    "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/02 - 鸡尾酒排序.md",
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/01 - 冒泡排序.md",
+    "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/02 - 鸡尾酒排序.md",
+    "00.Overview/02 - 参考资料.md",
+    "04.Canvas/冒泡排序.canvas",
+    "Zttachments/冒泡排序流程.png",
+    "Zttachments/利用元素交换操作模拟冒泡.gif",
+    "Zttachments/Pasted image 20250119172554.png",
+    "00.Overview/01 - 任务清单.md",
+    "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
+    "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
+    "03.Excalidraw/排序算法-鸡尾酒排序.md",
+    "03.Excalidraw/排序算法-冒泡排序.md",
     "01.Articles/DataStructure & Algorithm/DataStructure/01 - 线性表.md",
     "01.Articles/Java/基础/02  - 嵌套类.md",
     "03.Excalidraw/Drawing 2025-01-19 12.07.19.excalidraw.md",
-    "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
     "01.Articles/Reading/Hello 算法/排序/冒泡排序.canvas",
     "01.Articles/Reading/Hello 算法/排序",
-    "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
     "01.Articles/Java/基础/04  - SPI 机制.md",
     "01.Articles/Java/基础/03  - Java8 新特性.md",
     "01.Articles/SourceCodeAnalysis/Java/01 - ArrayList 源码剖析.md",
     "01.Articles/SourceCodeAnalysis/Java/03 - LinkedList 源码剖析.md",
-    "00.Overview/01 - 任务清单.md",
-    "00.Overview/02 - 参考资料.md",
-    "03.Excalidraw/排序算法-鸡尾酒排序.md",
     "03.Excalidraw/双向链表-删除头节点.md",
     "01.Articles/JavaScript/reduce.md",
     "01.Articles/Snippets/Arrays.md",
@@ -262,7 +269,6 @@
     "03.Excalidraw/双向链表-删除尾节点.md",
     "03.Excalidraw/双向链表-删除指定位置节点.md",
     "03.Excalidraw/双向链表-在头部添加节点.md",
-    "03.Excalidraw/双向链表-在尾部添加节点.md",
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/冒泡排序.canvas",
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法",
     "04.Canvas/代码生成器.canvas",
@@ -279,11 +285,7 @@
     "Zttachments/活着 (1994).webp.crdownload",
     "Zttachments/怦然心动.webp",
     "Zttachments/怦然心动.webp.crdownload",
-    "Zttachments/寻梦环游记.webp",
     "Zttachments/寻梦环游记.webp.crdownload",
-    "Zttachments/机器人总动员.webp",
-    "Zttachments/这个杀手不太冷.webp",
-    "04.Canvas/未命名.canvas",
     "未命名.canvas",
     "06.Reading/Hello 算法/未命名.canvas",
     "Canvas/未命名.canvas"
