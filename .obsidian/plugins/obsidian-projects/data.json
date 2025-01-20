@@ -265,7 +265,7 @@
                 "hide": true
               },
               "refrence": {
-                "hide": true
+                "hide": false
               },
               "repository": {
                 "hide": false,
