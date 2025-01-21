@@ -56,36 +56,9 @@
               "icon": "projects-icon",
               "title": "Projects"
             }
-          },
-          {
-            "id": "2fb2c31c02b06581",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "02.Inbox/快速排序.md",
-                "mode": "source",
-                "backlinks": false,
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "快速排序"
-            }
-          },
-          {
-            "id": "cd5596dd6aec1019",
-            "type": "leaf",
-            "state": {
-              "type": "excalidraw",
-              "state": {
-                "file": "03.Excalidraw/排序算法-快速排序.md"
-              },
-              "icon": "excalidraw-icon",
-              "title": "排序算法-快速排序"
-            }
           }
         ],
-        "currentTab": 4
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -116,7 +89,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "快速排序",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -246,8 +219,13 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
+    "03.Excalidraw/排序算法-快速排序-视频笔记.md",
     "02.Inbox/快速排序.md",
-    "03.Excalidraw/排序算法-快速排序.md",
+    "02.Inbox/Media Note - 数据结构合集 - 快速排序(算法过程, 效率分析, 稳定性分析).md",
+    "02.Inbox/Media Note - 数据结构合集 - 快速排序(算法过程, 效率分析, 稳定性分析) 1.md",
+    "Zttachments/数据结构合集 - 快速排序(算法过程, 效率分析, 稳定性分析)PT0.233S.webp",
+    "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/02 - 鸡尾酒排序.md",
+    "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/01 - 冒泡排序.md",
     "Excalidraw/Scripts/Downloaded/Slideshow.svg",
     "Excalidraw/Scripts/Downloaded/Slideshow.md",
     "Excalidraw/Scripts/Downloaded",
@@ -256,8 +234,6 @@
     "03.Excalidraw/Drawing 2025-01-20 17.55.24.excalidraw.md",
     "03.Excalidraw/排序算法-冒泡排序.md",
     "03.Excalidraw/排序算法-鸡尾酒排序.md",
-    "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/02 - 鸡尾酒排序.md",
-    "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/01 - 冒泡排序.md",
     "03.Excalidraw/Drawing 2025-01-20 18.43.11.excalidraw.md",
     "03.Excalidraw/Drawing 2025-01-20 18.39.30.excalidraw.md",
     "03.Excalidraw/快速排序.md",
@@ -285,7 +261,6 @@
     "01.Articles/SourceCodeAnalysis/Java/03 - LinkedList 源码剖析.md",
     "03.Excalidraw/双向链表-删除头节点.md",
     "01.Articles/JavaScript/reduce.md",
-    "01.Articles/Snippets/Arrays.md",
     "Zttachments/BubbleSort.gif",
     "Zttachments/BubbleSort.gif.crdownload",
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/冒泡排序.canvas",
@@ -295,7 +270,6 @@
     "Zttachments/小鞋子.webp.crdownload",
     "Zttachments/天空之城.webp",
     "Zttachments/天空之城.webp.crdownload",
-    "Zttachments/何以为家.webp",
     "Zttachments/何以为家.webp.crdownload",
     "Zttachments/飞屋环游记.webp.crdownload",
     "未命名.canvas",

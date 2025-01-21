@@ -25,7 +25,7 @@
   "screenshotEmbedTemplate": "{{TITLE}}{{DURATION}}|50",
   "insertBefore": false,
   "timestampOffset": 0,
-  "biliDefaultQuality": 80,
+  "biliDefaultQuality": 112,
   "screenshotFormat": "image/webp",
   "enableSubtitle": false,
   "urlMappingData": []
