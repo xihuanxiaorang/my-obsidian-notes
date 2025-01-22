@@ -6,6 +6,7 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiVideoOnLine",
       "RiSortNumberAsc",
       "RiMovie2Line",
       "RiBookReadLine",
@@ -14,8 +15,7 @@
       "RiFunctions",
       "RiOrganizationChart",
       "RiFlowChart",
-      "RiDashboardLine",
-      "RiBrainLine"
+      "RiDashboardLine"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -67,5 +67,6 @@
   "Recommend": "RiHeartLine",
   "Recommend/Books": "RiBookReadLine",
   "Recommend/Movies": "RiMovie2Line",
-  "01.Articles/DataStructure & Algorithm/Algorithm/排序算法": "RiSortNumberAsc"
+  "01.Articles/DataStructure & Algorithm/Algorithm/排序算法": "RiSortNumberAsc",
+  "01.Articles/Media": "RiVideoOnLine"
 }
