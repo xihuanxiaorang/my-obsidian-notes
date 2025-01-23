@@ -74,7 +74,12 @@
     "C": 62,
     "双指针": 63,
     "分治": 64,
-    "递归": 65
+    "递归": 65,
+    "Recursion": 66,
+    "TwoPointer": 67,
+    "Divide-to-Conquer": 68,
+    "DivideToConquer": 69,
+    "TwoPointers": 70
   },
   "_version": 3
 }

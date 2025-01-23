@@ -18,5 +18,7 @@
   },
   "showRibbon": true,
   "alwaysUpdateLinks": true,
-  "propertiesInDocument": "visible"
+  "propertiesInDocument": "visible",
+  "useMarkdownLinks": false,
+  "newLinkFormat": "shortest"
 }

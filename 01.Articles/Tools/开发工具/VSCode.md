@@ -3,7 +3,7 @@ tags:
   - Tool
   - DevTool
 create_time: 2024-12-31 19:00
-update_time: 2025/01/14 17:17
+update_time: 2025/01/23 22:07
 ---
 
 ## 下载 & 安装
@@ -67,3 +67,7 @@ update_time: 2025/01/14 17:17
 4. 设置 **Editor: Cursor Blinking** 为 **smooth**。
 
 ![](https://img.xiaorang.fun/202501121155802.png)
+
+### 告别默认字体！3分钟搞定 JetBrains Mono 安装 - 让你的代码更清晰
+
+![](https://img.xiaorang.fun/202501232207718.png)
