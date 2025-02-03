@@ -10,5 +10,6 @@
     "extended-colorschemes",
     "ChatBubble"
   ],
-  "accentColor": ""
+  "accentColor": "",
+  "showRibbon": true
 }

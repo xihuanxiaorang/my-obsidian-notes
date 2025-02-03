@@ -78,13 +78,25 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "02.Inbox/递归-汉诺塔.md",
+                "file": "02.Inbox/汉诺塔.md",
                 "mode": "source",
-                "backlinks": false,
-                "source": false
+                "source": false,
+                "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "递归-汉诺塔"
+              "title": "汉诺塔"
+            }
+          },
+          {
+            "id": "cc153700fef5348e",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "03.Excalidraw/汉诺塔.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "汉诺塔"
             }
           }
         ],
@@ -107,7 +119,8 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "alphabetical"
+                "sortOrder": "alphabetical",
+                "autoReveal": false
               },
               "icon": "lucide-folder-closed",
               "title": "文件列表"
@@ -119,7 +132,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#DivideToConquer",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -184,10 +197,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "02.Inbox/递归-汉诺塔.md"
+                "file": "02.Inbox/汉诺塔.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "递归-汉诺塔 的大纲"
+              "title": "汉诺塔 的大纲"
             }
           },
           {
@@ -248,9 +264,10 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
+    "03.Excalidraw/汉诺塔.md",
+    "02.Inbox/汉诺塔.md",
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/03 - 快速排序.md",
     "00.Overview/02 - 参考资料.md",
-    "02.Inbox/递归-汉诺塔.md",
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/02 - 鸡尾酒排序.md",
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/01 - 冒泡排序.md",
     "00.Overview/01 - 任务清单.md",
