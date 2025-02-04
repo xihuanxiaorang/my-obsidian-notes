@@ -46,12 +46,12 @@
             }
           },
           {
-            "id": "be7fd8a7e52ac9bb",
+            "id": "0a3e3ba62d305150",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "02.Inbox/汉诺塔.md",
+                "file": "01.Articles/DataStructure & Algorithm/Algorithm/汉诺塔.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
@@ -60,7 +60,8 @@
               "title": "汉诺塔"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -157,13 +158,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "00.Overview/01 - 任务清单.md",
+                "file": "01.Articles/DataStructure & Algorithm/Algorithm/汉诺塔.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "01 - 任务清单 的大纲"
+              "title": "汉诺塔 的大纲"
             }
           },
           {
@@ -222,14 +223,15 @@
       "obsidian-projects:打开项目": false
     }
   },
-  "active": "162d885f6d805bce",
+  "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "02.Inbox/汉诺塔.md",
+    "00.Overview/01 - 任务清单.md",
+    "01.Articles/DataStructure & Algorithm/Algorithm/分治",
+    "01.Articles/DataStructure & Algorithm/Algorithm/汉诺塔.md",
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/02 - 鸡尾酒排序.md",
     "01.Articles/Tools/开发工具/IntelliJ IDEA.md",
     "00.Overview/02 - 参考资料.md",
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/01 - 冒泡排序.md",
-    "00.Overview/01 - 任务清单.md",
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/03 - 快速排序.md",
     "03.Excalidraw/汉诺塔.md",
     "01.Articles/Media/排序算法-快速排序.md",
@@ -266,7 +268,6 @@
     "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
     "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
     "01.Articles/DataStructure & Algorithm/DataStructure/01 - 线性表.md",
-    "01.Articles/Java/基础/02  - 嵌套类.md",
     "01.Articles/Reading/Hello 算法/排序/冒泡排序.canvas",
     "01.Articles/Reading/Hello 算法/排序",
     "Zttachments/BubbleSort.gif.crdownload",
@@ -276,7 +277,6 @@
     "01.Articles/DataStructure & Algorithm/DataStructure/未命名.canvas",
     "Zttachments/小鞋子.webp.crdownload",
     "Zttachments/天空之城.webp.crdownload",
-    "Zttachments/何以为家.webp.crdownload",
     "未命名.canvas",
     "06.Reading/Hello 算法/未命名.canvas",
     "Canvas/未命名.canvas"
