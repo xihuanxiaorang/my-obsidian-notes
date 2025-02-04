@@ -2,5 +2,7 @@
   "openExternalURLs": true,
   "enableAdblocking": true,
   "customSearchEngine": "https://duckduckgo.com/?q=%s",
-  "searchEngine": "google"
+  "searchEngine": "google",
+  "homepage": "https://www.google.com",
+  "markdownPath": "02.Inbox"
 }
