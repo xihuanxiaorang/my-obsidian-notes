@@ -6,16 +6,16 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiCalendarLine",
+      "RiBookLine",
+      "RiCalendarCheckLine",
       "RiVideoOnLine",
       "RiSortNumberAsc",
       "RiMovie2Line",
       "RiBookReadLine",
       "RiHeartLine",
       "RiPlayCircleLine",
-      "RiFunctions",
-      "RiOrganizationChart",
-      "RiFlowChart",
-      "RiDashboardLine"
+      "RiFunctions"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -55,7 +55,6 @@
   "01.Articles/SourceCodeAnalysis": "RiTerminalLine",
   "01.Articles/SourceCodeAnalysis/Java": "RiJavaLine",
   "00.Overview": "RiDashboardLine",
-  "00.Overview/02 - 参考资料.md": "RiBookmark3Line",
   "00.Overview/01 - 任务清单.md": "RiTaskLine",
   "01.Articles/DataStructure & Algorithm": "RiFlowChart",
   "01.Articles/DataStructure & Algorithm/DataStructure": "RiOrganizationChart",
@@ -68,5 +67,9 @@
   "Recommend/Books": "RiBookReadLine",
   "Recommend/Movies": "RiMovie2Line",
   "01.Articles/DataStructure & Algorithm/Algorithm/排序算法": "RiSortNumberAsc",
-  "01.Articles/Media": "RiVideoOnLine"
+  "01.Articles/Media": "RiVideoOnLine",
+  "Journal": "RiCalendarLine",
+  "Journal/Diary": "RiBookLine",
+  "Journal/Weekly": "RiCalendarCheckLine",
+  "00.Overview/02 - 参考资料.md": "RiBookmark3Line"
 }

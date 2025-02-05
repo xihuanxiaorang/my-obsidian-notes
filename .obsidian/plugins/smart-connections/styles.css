@@ -204,6 +204,7 @@
 
     .sc-chat-name-input {
       flex-grow: 1;
+      min-width: 20px;
     }
   }
 
@@ -616,6 +617,7 @@
   justify-content: space-between;
   align-items: baseline;
   font-size: var(--font-smallest);
+  flex-wrap: wrap;
 
   &:hover {
     background-color: var(--background-secondary-hover);
@@ -794,6 +796,10 @@
       display: flex;
       justify-content: flex-end;
     }
+    .setting-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 }
 
@@ -964,5 +970,24 @@ div.workspace-leaf-content[data-type^="smart-"] {
       min-height: 4rem;
       flex-grow: 1;
     }
+  }
+}
+
+.sc-inline-confirm-row {
+  margin-top: 10px;
+  padding: 6px;
+  border: 1px solid var(--interactive-normal);
+}
+.sc-inline-confirm-row-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+
+  & .sc-inline-confirm-yes {
+    font-weight: bold;
+  }
+  & .sc-inline-confirm-cancel {
+    font-weight: normal;
   }
 }

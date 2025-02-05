@@ -79,7 +79,9 @@
     "TwoPointer": 67,
     "Divide-to-Conquer": 68,
     "DivideToConquer": 69,
-    "TwoPointers": 70
+    "TwoPointers": 70,
+    "AI": 71,
+    "Journal": 72
   },
   "_version": 3
 }

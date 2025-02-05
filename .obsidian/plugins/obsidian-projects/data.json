@@ -253,10 +253,11 @@
           "config": {
             "fieldConfig": {
               "update_time": {
-                "hide": false
+                "hide": true
               },
               "tags": {
-                "hide": false
+                "hide": false,
+                "width": 232
               },
               "name": {
                 "width": 173
@@ -265,11 +266,18 @@
                 "hide": true
               },
               "refrence": {
-                "hide": false
+                "hide": true
               },
               "repository": {
                 "hide": false,
-                "width": 345
+                "width": 1246
+              },
+              "refrence_url": {
+                "width": 418,
+                "hide": true
+              },
+              "create_time": {
+                "hide": true
               }
             },
             "orderFields": [
