@@ -4,5 +4,6 @@ cover:
 rating: 
 Director: 
 Stars: 
-Synopsis:
+Synopsis: 
+Watched: false
 ---

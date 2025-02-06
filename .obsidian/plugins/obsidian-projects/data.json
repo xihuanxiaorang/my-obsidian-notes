@@ -161,8 +161,8 @@
               {
                 "color": "#ef6b6b",
                 "condition": {
-                  "field": "rating",
-                  "operator": "gte",
+                  "field": "Watched",
+                  "operator": "is-not-checked",
                   "enabled": true,
                   "value": "9"
                 }
@@ -170,8 +170,8 @@
               {
                 "color": "#83da72",
                 "condition": {
-                  "field": "rating",
-                  "operator": "gte",
+                  "field": "Watched",
+                  "operator": "is-checked",
                   "enabled": true,
                   "value": "8"
                 }
@@ -180,6 +180,11 @@
           },
           "sort": {
             "criteria": [
+              {
+                "field": "Watched",
+                "order": "asc",
+                "enabled": true
+              },
               {
                 "field": "rating",
                 "order": "desc",
@@ -198,7 +203,9 @@
               "rating",
               "tags",
               "Storyline"
-            ]
+            ],
+            "fitStyle": "contain",
+            "cardWidth": 220
           },
           "filter": {
             "conjunction": "and",
