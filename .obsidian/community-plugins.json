@@ -34,5 +34,7 @@
   "colored-tags",
   "media-extended",
   "pkmer",
-  "calendar"
+  "calendar",
+  "obsidian-tasks-plugin",
+  "obsidian-reminder-plugin"
 ]

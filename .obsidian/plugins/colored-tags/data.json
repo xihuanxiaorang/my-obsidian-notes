@@ -81,7 +81,9 @@
     "DivideToConquer": 69,
     "TwoPointers": 70,
     "AI": 71,
-    "Journal": 72
+    "Journal": 72,
+    "tasks": 73,
+    "clippings": 74
   },
   "_version": 3
 }

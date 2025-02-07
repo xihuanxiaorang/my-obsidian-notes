@@ -86,9 +86,39 @@
               "icon": "lucide-file",
               "title": "HTML5"
             }
+          },
+          {
+            "id": "9c217f4301974b76",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Templates/Diary.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": false
+              },
+              "icon": "lucide-file",
+              "title": "Diary"
+            }
+          },
+          {
+            "id": "95f9658df1217537",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Clippings/Obs＃54 Obsidian的任務管理技巧彙總 – 簡睿隨筆.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": false
+              },
+              "icon": "lucide-file",
+              "title": "Obs＃54 Obsidian的任務管理技巧彙總 – 簡睿隨筆"
+            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 5
       }
     ],
     "direction": "vertical"
@@ -120,7 +150,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "JDBC",
+                "query": "tag:#tasks",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -191,6 +221,16 @@
               "icon": "calendar-with-checkmark",
               "title": "Calendar"
             }
+          },
+          {
+            "id": "c8430b93d4911487",
+            "type": "leaf",
+            "state": {
+              "type": "reminder-list",
+              "state": {},
+              "icon": "clock",
+              "title": "Reminders"
+            }
           }
         ]
       },
@@ -205,13 +245,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "00.Overview/02 - 参考资料.md",
+                "file": "Templates/Diary.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "02 - 参考资料 的大纲"
+              "title": "Diary 的大纲"
             }
           },
           {
@@ -277,12 +317,22 @@
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
     "02.Inbox/本地快速部署 DeepSeek-R1 模型.md",
+    "Templates/Diary.md",
+    "02.Inbox/Obsidian.md",
+    "02.Inbox/HTML5.md",
+    "Clippings/Obs＃54 Obsidian的任務管理技巧彙總 – 簡睿隨筆.md",
+    "00.Overview/01 - 任务清单.md",
+    "00.Overview/02 - 参考资料.md",
+    "Templates/Auto Callout.md",
+    "01.Articles/Tools/其他工具/未命名.md",
+    "Clippings",
+    "02.Inbox/Gradle.md",
+    "01.Articles/DataStructure & Algorithm/Algorithm/汉诺塔.md",
+    "02.Inbox/Ollama.md",
+    "01.Articles/AI",
     "Zttachments/Pasted image 20250206232046.png",
     "Zttachments/Pasted image 20250206231659.png",
-    "00.Overview/02 - 参考资料.md",
     "01.Articles/Java/基础/03  - Java8 新特性.md",
-    "00.Overview/01 - 任务清单.md",
-    "02.Inbox/HTML5.md",
     "03.Excalidraw/本地快速部署 DeepSeek-R1 模型.md",
     "04.Canvas/未命名.canvas",
     "Zttachments/Pasted Image 20250206185246_429.png",
@@ -300,13 +350,6 @@
     "Recommend/Movies/天空之城.md",
     "Recommend/Movies/怦然心动.md",
     "Recommend/Movies/绿皮书.md",
-    "Recommend/Movies/机器人总动员.md",
-    "Recommend/Movies/活着 (1994).md",
-    "Recommend/Movies/何以为家.md",
-    "Recommend/Movies/海上钢琴师.md",
-    "Recommend/Movies/飞屋环游记.md",
-    "Recommend/Movies/盗梦空间.md",
-    "Recommend/Movies/当幸福来敲门.md",
     "Journal/Weekly",
     "Journal/Diary",
     "Journal",
@@ -318,14 +361,12 @@
     "Excalidraw/Scripts/Downloaded/Slideshow.svg",
     "03.Excalidraw/Scripts/Downloaded",
     "03.Excalidraw/Scripts",
-    "Excalidraw",
     "Zttachments/小鞋子.webp",
     "Zttachments/图解Java多线程设计模式.jpg",
     "04.Canvas/冒泡排序.canvas",
     "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
     "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
     "01.Articles/Reading/Hello 算法/排序/冒泡排序.canvas",
-    "01.Articles/Reading/Hello 算法/排序",
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/冒泡排序.canvas",
     "04.Canvas/代码生成器.canvas",
     "01.Articles/DataStructure & Algorithm/DataStructure/未命名.canvas",

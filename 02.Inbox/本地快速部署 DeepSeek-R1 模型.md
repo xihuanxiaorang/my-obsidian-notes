@@ -3,7 +3,7 @@ tags:
   - AI
 refrence_url: 
 create_time: 2025-02-06 19:06
-update_time: 2025/02/06 23:23
+update_time: 2025/02/07 17:18
 ---
 
 这是一篇在 Windows 平台下使用 Ollama + OpenWebUI 实现大语言模型本地部署的教程。
@@ -30,6 +30,7 @@ Ollama 是一个强大的 AI 大模型部署平台，旨在帮助用户轻松的
 
 ## DeepSeek-R1 模型
 
+Ollama 下载的模型默认存储在 **C:\Users\%username%\.ollama\models**，但模型文件动辄几个 G 甚至几十个 G，存储在 C 盘会导致 C 盘空间严重不足，我们可以修改模型文件默认的存储位置，
 下载的模型默认保存在 C 盘，非常的不友好，可以新增 `OLLAMA_MODELS` 环境变量指定模型存储位置。
 
 可以使用 `ollama rm deepseek-r1:7b` 命令删除 DeepSeek 模型。

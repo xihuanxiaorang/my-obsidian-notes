@@ -6,6 +6,7 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiBrainLine",
       "RiCalendarLine",
       "RiBookLine",
       "RiCalendarCheckLine",
@@ -14,8 +15,7 @@
       "RiMovie2Line",
       "RiBookReadLine",
       "RiHeartLine",
-      "RiPlayCircleLine",
-      "RiFunctions"
+      "RiPlayCircleLine"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -71,5 +71,6 @@
   "Journal": "RiCalendarLine",
   "Journal/Diary": "RiBookLine",
   "Journal/Weekly": "RiCalendarCheckLine",
-  "00.Overview/02 - 参考资料.md": "RiBookmark3Line"
+  "00.Overview/02 - 参考资料.md": "RiBookmark3Line",
+  "01.Articles/AI": "RiBrainLine"
 }
