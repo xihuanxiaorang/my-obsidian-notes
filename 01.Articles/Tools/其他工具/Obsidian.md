@@ -2,7 +2,7 @@
 tags:
   - Tool
 create_time: 2025-02-07 18:42
-update_time: 2025/02/07 23:34
+update_time: 2025/02/08 17:20
 ---
 
 ## 插件
@@ -68,7 +68,7 @@ Tasks 插件为 Obsidian 提供了更强大的任务管理功能，主要特点�
 
 ```markdown
 - [ ] Something non-important, with no date
-- [ ] Remember to do that important thing - with a due date 📅 2022-12-17
+- [x] Remember to do that important thing - with a due date 📅 2022-12-17 ✅ 2025-02-08
 - [ ] Send Kate a birthday card - with a scheduled date 🔁 every January on the 4th ⏳ 2023-01-04
 ```
 
@@ -113,6 +113,7 @@ Tasks 插件为 Obsidian 提供了更强大的任务管理功能，主要特点�
 >
 > ```tasks
 > not done
+> has start date
 > hide edit button
 > hide backlink
 > group by function \
@@ -133,7 +134,9 @@ Tasks 插件为 Obsidian 提供了更强大的任务管理功能，主要特点�
 > [!check] 查询所有与今天相关的任务（无论是截止、计划或者开始）
 >
 > ```tasks
-> (due today OR scheduled today OR starts today)
+> not done
+> (due after today) OR (scheduled today) OR ((starts on today) AND (has start date)) 
+> hide backlink
 > # Optionally, ask Tasks to explain how it interpreted this query:
 > explain
 > ```

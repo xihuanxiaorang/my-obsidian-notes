@@ -29,21 +29,6 @@
             }
           },
           {
-            "id": "8f905e1297de3bc6",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "02.Inbox/本地快速部署 DeepSeek-R1 模型.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "本地快速部署 DeepSeek-R1 模型"
-            }
-          },
-          {
             "id": "a7849d2c9a71e8e8",
             "type": "leaf",
             "pinned": true,
@@ -73,6 +58,21 @@
             }
           },
           {
+            "id": "8f905e1297de3bc6",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "02.Inbox/本地快速部署 DeepSeek-R1 模型.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": false
+              },
+              "icon": "lucide-file",
+              "title": "本地快速部署 DeepSeek-R1 模型"
+            }
+          },
+          {
             "id": "c84759d9129616f2",
             "type": "leaf",
             "state": {
@@ -88,33 +88,18 @@
             }
           },
           {
-            "id": "9c217f4301974b76",
+            "id": "f18a055cdd385284",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Templates/Diary.md",
+                "file": "01.Articles/Tools/开发工具/python.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "Diary"
-            }
-          },
-          {
-            "id": "95f9658df1217537",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Clippings/Obs＃54 Obsidian的任務管理技巧彙總 – 簡睿隨筆.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "Obs＃54 Obsidian的任務管理技巧彙總 – 簡睿隨筆"
+              "title": "python"
             }
           }
         ],
@@ -150,7 +135,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#tasks",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -232,7 +217,8 @@
               "title": "Reminders"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       },
       {
         "id": "af22ce4f79718a18",
@@ -245,13 +231,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Templates/Diary.md",
+                "file": "01.Articles/Tools/开发工具/python.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Diary 的大纲"
+              "title": "python 的大纲"
             }
           },
           {
@@ -316,18 +302,21 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "02.Inbox/本地快速部署 DeepSeek-R1 模型.md",
-    "Templates/Diary.md",
-    "02.Inbox/Obsidian.md",
     "02.Inbox/HTML5.md",
-    "Clippings/Obs＃54 Obsidian的任務管理技巧彙總 – 簡睿隨筆.md",
+    "01.Articles/Tools/开发工具/python.md",
     "00.Overview/01 - 任务清单.md",
+    "02.Inbox/本地快速部署 DeepSeek-R1 模型.md",
+    "01.Articles/Tools/其他工具/Obsidian.md",
     "00.Overview/02 - 参考资料.md",
+    "Templates/Diary.md",
+    "01.Articles/Java/基础/04  - SPI 机制.md",
+    "Clippings/Obs＃54 Obsidian的任務管理技巧彙總 – 簡睿隨筆.md",
+    "01.Articles/DataStructure & Algorithm/Algorithm/汉诺塔.md",
+    "02.Inbox/模板语法.md",
     "Templates/Auto Callout.md",
     "01.Articles/Tools/其他工具/未命名.md",
     "Clippings",
     "02.Inbox/Gradle.md",
-    "01.Articles/DataStructure & Algorithm/Algorithm/汉诺塔.md",
     "02.Inbox/Ollama.md",
     "01.Articles/AI",
     "Zttachments/Pasted image 20250206232046.png",
@@ -347,9 +336,6 @@
     "Recommend/Movies/心灵捕手.md",
     "Recommend/Movies/肖申克的救赎.md",
     "Recommend/Movies/小鞋子.md",
-    "Recommend/Movies/天空之城.md",
-    "Recommend/Movies/怦然心动.md",
-    "Recommend/Movies/绿皮书.md",
     "Journal/Weekly",
     "Journal/Diary",
     "Journal",

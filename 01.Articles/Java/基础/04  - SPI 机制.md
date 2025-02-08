@@ -3,7 +3,7 @@ tags:
   - Java
 repository: https://github.com/xihuanxiaorang/java-study/tree/core-study/core-study/spi-study
 create_time: 2024-12-28T17:52:00
-update_time: 2025/01/18 11:12
+update_time: 2025/02/08 11:34
 ---
 
 ## 简介
@@ -182,9 +182,9 @@ public class Driver extends NonRegisteringDriver implements java. sql. Driver { 
 
 以下三种方式可以确保配置文件和 Service Provider 类被正确加载：
 
-- [x] 将 ServiceProvider 的 jar 包放到 classpath 下
-- [ ] 将 jar 包安装到 JRE 的扩展目录当中
-- [ ] 使用自定义 ClassLoader 手动加载
+- ☑️将 ServiceProvider 的 jar 包放到 classpath 下
+- 将 jar 包安装到 JRE 的扩展目录当中
+- 使用自定义 ClassLoader 手动加载
 
 以 MySQL 为例，只需通过 Maven 引入 MySQL 驱动的依赖，JDBC 就会自动加载数据库驱动，而无需手动干预：
 
