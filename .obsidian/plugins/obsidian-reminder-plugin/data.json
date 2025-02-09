@@ -3,25 +3,20 @@
   "reminders": {
     "00.Overview/01 - 任务清单.md": [
       {
-        "title": "[[HTML5]] 🔺 ➕ 2025-02-08",
-        "time": "2025-02-09",
-        "rowNumber": 28
-      },
-      {
-        "title": "[[Ollama]] ⏫ 🆔 brsavd ➕ 2025-02-07",
+        "title": "[[本地快速部署 DeepSeek-R1 模型]] ⏫ 🆔 jim8kf ⛔ brsavd ➕ 2025-02-08",
         "time": "2025-02-10",
         "rowNumber": 20
       },
       {
-        "title": "[[本地快速部署 DeepSeek-R1 模型]] ⏫ 🆔 jim8kf ⛔ brsavd ➕ 2025-02-08",
-        "time": "2025-02-10",
+        "title": "[[HTML5]] 🔺 ➕ 2025-02-08",
+        "time": "2025-02-11",
         "rowNumber": 27
       }
     ]
   },
   "debug": false,
   "settings": {
-    "reminderTime": "09:00",
+    "reminderTime": "10:00",
     "laters": "In 30 minutes\nIn 1 hour\nIn 3 hours\nTomorrow\nNext week",
     "useSystemNotification": true,
     "autoCompleteTrigger": "(@",

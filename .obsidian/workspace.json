@@ -56,54 +56,8 @@
               "icon": "projects-icon",
               "title": "Projects"
             }
-          },
-          {
-            "id": "8f905e1297de3bc6",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "02.Inbox/本地快速部署 DeepSeek-R1 模型.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "本地快速部署 DeepSeek-R1 模型"
-            }
-          },
-          {
-            "id": "c84759d9129616f2",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "02.Inbox/HTML5.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "HTML5"
-            }
-          },
-          {
-            "id": "f18a055cdd385284",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "01.Articles/Tools/开发工具/python.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "python"
-            }
           }
-        ],
-        "currentTab": 5
+        ]
       }
     ],
     "direction": "vertical"
@@ -231,13 +185,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "01.Articles/Tools/开发工具/python.md",
+                "file": "00.Overview/01 - 任务清单.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "python 的大纲"
+              "title": "01 - 任务清单 的大纲"
             }
           },
           {
@@ -302,40 +256,41 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "02.Inbox/HTML5.md",
-    "01.Articles/Tools/开发工具/python.md",
     "00.Overview/01 - 任务清单.md",
-    "02.Inbox/本地快速部署 DeepSeek-R1 模型.md",
-    "01.Articles/Tools/其他工具/Obsidian.md",
+    "01.Articles/AI/Ollama.md",
+    "01.Articles/AI",
+    "01.Articles/Tools/开发工具/Github.md",
+    "01.Articles/Misc/美化 Github 个人主页.md",
+    "01.Articles/Misc/如何选择开源协议.md",
+    "01.Articles/Tools/开发工具/Git.md",
+    "01.Articles/Misc/生成 Github Token.md",
+    "01.Articles/Media/排序算法-快速排序.md",
     "00.Overview/02 - 参考资料.md",
+    "Zttachments/Pasted image 20250209175414.png",
+    "01.Articles/Tools/开发工具/Node.js.md",
+    "01.Articles/Tools/开发工具/python.md",
+    "01.Articles/Tools/开发工具/MySQL.md",
+    "01.Articles/Tools/开发工具/JDK.md",
+    "02.Inbox/本地快速部署 DeepSeek-R1 模型.md",
+    "02.Inbox/HTML5.md",
+    "01.Articles/Tools/其他工具/Obsidian.md",
+    "01.Articles/Tools/开发工具/IntelliJ IDEA.md",
+    "01.Articles/Tools/开发工具/thefuck.md",
+    "02.Inbox/软件卸载工具^6ce691.md",
+    "01.Articles/Tools/其他工具/软件卸载工具.md",
     "Templates/Diary.md",
     "01.Articles/Java/基础/04  - SPI 机制.md",
     "Clippings/Obs＃54 Obsidian的任務管理技巧彙總 – 簡睿隨筆.md",
     "01.Articles/DataStructure & Algorithm/Algorithm/汉诺塔.md",
     "02.Inbox/模板语法.md",
-    "Templates/Auto Callout.md",
-    "01.Articles/Tools/其他工具/未命名.md",
     "Clippings",
-    "02.Inbox/Gradle.md",
-    "02.Inbox/Ollama.md",
     "01.Articles/AI",
     "Zttachments/Pasted image 20250206232046.png",
     "Zttachments/Pasted image 20250206231659.png",
-    "01.Articles/Java/基础/03  - Java8 新特性.md",
-    "03.Excalidraw/本地快速部署 DeepSeek-R1 模型.md",
     "04.Canvas/未命名.canvas",
     "Zttachments/Pasted Image 20250206185246_429.png",
-    "03.Excalidraw/单向链表-删除元素.md",
-    "03.Excalidraw/汉诺塔.md",
-    "Templates/Tutorial.md",
-    "Recommend/Movies/哪吒之魔童闹海.md",
     "Zttachments/哪吒之魔童闹海.webp",
     "Zttachments/哪吒之魔童闹海.webp.crdownload",
-    "Recommend/Movies/这个杀手不太冷.md",
-    "Recommend/Movies/寻梦环游记.md",
-    "Recommend/Movies/心灵捕手.md",
-    "Recommend/Movies/肖申克的救赎.md",
-    "Recommend/Movies/小鞋子.md",
     "Journal/Weekly",
     "Journal/Diary",
     "Journal",
@@ -346,9 +301,7 @@
     "Zttachments/数据结构合集 - 快速排序(算法过程, 效率分析, 稳定性分析)PT0.233S.webp",
     "Excalidraw/Scripts/Downloaded/Slideshow.svg",
     "03.Excalidraw/Scripts/Downloaded",
-    "03.Excalidraw/Scripts",
     "Zttachments/小鞋子.webp",
-    "Zttachments/图解Java多线程设计模式.jpg",
     "04.Canvas/冒泡排序.canvas",
     "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
     "01.Articles/Reading/Hello 算法/02 - 链表.canvas",

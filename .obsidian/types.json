@@ -32,6 +32,7 @@
     "rating": "number",
     "Director": "multitext",
     "Stars": "multitext",
-    "Watched": "checkbox"
+    "Watched": "checkbox",
+    "media": "multitext"
   }
 }

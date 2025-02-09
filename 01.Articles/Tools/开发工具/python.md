@@ -5,8 +5,11 @@ tags:
   - Python
   - DevTool
 create_time: 2024-12-28T17:30:00
-update_time: 2024/12/28 17:30
+update_time: 2025/02/09 17:13
 ---
+
+> [!tip]
+> 正式安装前，可用 [[软件卸载工具#^6ce691|HiBit Uninstaller]] 或 Windows 自带的卸载工具清理旧版本（如已安装的话）。
 
 1. 访问 [Python](https://www.python.org/) 首页，点击 **Downloads**，并选择 **Windows**。
    ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412192316884.png)
@@ -43,3 +46,4 @@ update_time: 2024/12/28 17:30
 
 	如果正确显示 Python 和 pip 的版本号，则安装成功。
 	![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412201731395.png)
+9. pip 加速（清华镜像源）：`pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple`

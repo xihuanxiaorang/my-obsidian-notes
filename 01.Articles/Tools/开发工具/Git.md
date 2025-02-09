@@ -1,11 +1,15 @@
 ---
 tags:
   - Git
+  - DevTool
+  - Tool
 create_time: 2024-12-29 17:30
-update_time: 2024/12/29 17:57
+update_time: 2025/02/09 18:45
 ---
 
-## 设置远程仓库地址
+## 添加远程仓库
+
+### 设置远程仓库地址
 
 使用以下命令将本地仓库与远程仓库连接起来：
 
@@ -18,7 +22,7 @@ git remote add origin <远程仓库地址>
     - HTTPS 地址：`https://github.com/username/repo.git`
     - SSH 地址：`git@github.com:username/repo.git`
 
-## 验证远程仓库连接
+### 验证远程仓库连接
 
 可以使用以下命令查看远程仓库的配置信息：
 
@@ -33,7 +37,7 @@ origin  https://github.com/username/repo.git (fetch)
 origin  https://github.com/username/repo.git (push)
 ```
 
-## 拉取远程仓库内容
+### 拉取远程仓库内容
 
 使用以下命令拉取远程仓库的内容：
 
@@ -62,7 +66,7 @@ git pull origin main --allow-unrelated-histories
 >
 > <font color="#d83931">强制覆盖会丢失被覆盖的一方的所有历史记录，谨慎使用！</font>
 
-## 推送本地代码到远程仓库
+### 推送本地代码到远程仓库
 
 将本地代码推送到远程仓库：
 

@@ -5,7 +5,7 @@ tags:
   - Frontend
   - DevTool
 create_time: 2024-12-28T17:21:00
-update_time: 2024/12/28 17:22
+update_time: 2025/02/09 17:12
 ---
 
 > [!quote]
@@ -61,7 +61,7 @@ npm -v
     1. 新建 <u>NODE_HOME</u> 系统变量，变量值为 Node.js 的安装路径，如 `E:\devsoft\nodejs` 。
 5. 配置 Path 系统变量。
     1. 在 "系统变量" 中找到 Path 变量，点击 "编辑"。
-    2. 点击 "新建"，添加 `<u>%NODE_HOME%</u>` 和 `<u>%NODE_HOME%\node_global</u>` ，然后尽量将其 "上移"。
+    2. 点击 "新建"，添加 `%NODE_HOME%` 和 `%NODE_HOME%\node_global` ，然后尽量将其 "上移"。
     3. 最后一路点击 "确定" 进行保存配置。
 
 ## 镜像源配置

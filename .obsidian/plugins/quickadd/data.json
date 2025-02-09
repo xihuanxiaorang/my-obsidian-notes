@@ -15,7 +15,7 @@
       },
       "format": {
         "enabled": true,
-        "format": "[[{{value:task}}]]  🔼 ➕  {{date}}"
+        "format": "[[{{value:task}}]]  🔼 ➕ {{date}}"
       },
       "insertAfter": {
         "enabled": true,

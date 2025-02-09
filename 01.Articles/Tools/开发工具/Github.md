@@ -1,11 +1,136 @@
 ---
 tags:
   - Github
+  - Git
+  - DevTool
+  - Tool
 create_time: 2024-12-28T18:02:00
-update_time: 2024/12/28 18:02
+update_time: 2025/02/09 18:52
 ---
 
-## 创建同名仓库
+## 如何提交一个 PR？
+
+在 GitHub 参与开源项目时，除了拉取和调试代码，**提交修改（PR，Pull Request）** 也是关键步骤。
+
+那么如何提交一个 PR 呢？具体流程如下：
+1. **Fork 仓库**
+	打开目标仓库，点击右上角 **Fork**，将其复制到你的 GitHub 账户。
+2. **克隆仓库**
+	在终端运行以下命令，将 Fork 后的仓库克隆到本地：
+
+	```bash
+	git clone https://github.com/你的用户名/目标仓库.git
+	cd 目标仓库
+	```
+
+3. 同步最新代码
+	**每次修改文件前，请先同步上游仓库的最新代码**，以避免冲突：
+
+	```bash
+	git checkout main
+	git pull upstream main
+	git push origin main
+	```
+
+	如果在 GitHub 网页端修改，请先点击 "**Sync fork**" 按钮，确保你的 Fork 仓库是最新的。
+
+4. 创建新分支
+
+	```bash
+	git checkout -b feature-branch
+	```
+
+	`feature-branch` 可替换为你的功能分支名称。
+
+5. 修改代码并提交
+	- 进行代码或文档修改。
+	- 提交更改：
+
+		```bash
+		git add .
+		git commit -m "你的修改描述"
+		```
+
+6. 推送到 GitHub
+
+	```bash
+	git push origin feature-branch
+	```
+
+7. 创建 Pull Request
+	- 进入 GitHub 你的仓库页面。
+	- 点击 **Compare & pull request** 按钮。
+	- 填写 PR 说明，点击 **Create pull request** 提交。
+8. 等待合并
+	维护者审核后，会合并或请求修改。
+
+## 生成 Github Token
+
+Github 的 Token 是一种用于身份验证的密钥，允许你在脚本、命令行工具或应用中安全地访问你的账户。以下是生成 Personal Access Token 的详细步骤：
+
+1. 登录 Github
+	前往 [Github 官网](https://github.com/) 并登录你的账户。
+2. 进入 Token 管理页面
+	访问 [Personal Access Tokens (Classic)](https://github.com/settings/tokens) 页面，或按照以下步骤手动进入：
+	- 点击右上角头像，选择 **Settings**。
+	- 在左侧导航栏，找到 **Developer settings** > **Personal access tokens** > **Tokens (classic)**。
+3. 创建新 Token
+	1. 点击 **Generate new token (Classic)** 按钮。
+	   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161737003.png)
+	2. 在 **Note** 中填写 Token 的用途（例如：`PicList 图床`），方便区分。
+	3. 在 **Expiration（过期时间）** 中选择有效期（推荐 90 天或 1 年）。
+	   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161737958.png)
+4. 设置权限
+	根据你的需求勾选相应的权限。对于图床配置，需要勾选 `repo`，确保拥有对仓库的完全读写权限。
+5. 生成 Token
+	1. 滑到页面底部，点击 **Generate token** 按钮。
+	2. 生成的 Token 会显示在页面上。
+6. 保存 Token
+	‼️ ⚠️ 生成的 Token 只会显示一次，请立即复制并保存到安全的地方。如果忘记保存或 Token 遗失，无法再次查看，需重新生成新的 Token。
+
+## 如何选择开源协议
+
+> [!quote]
+> 本节内容全部来源于 [如何选择开源许可证？ - 阮一峰的网络日志 (ruanyifeng.com)](https://www.ruanyifeng.com/blog/2011/05/how_to_choose_free_software_licenses.html)
+
+如何为代码选择开源许可证，这是一个问题。
+
+世界上的开源许可证，大概有 [上百种](https://www.gnu.org/licenses/license-list.html)。很少有人搞得清楚它们的区别。即使在最流行的六种：[GPL](https://www.gnu.org/licenses/gpl-3.0.html)、[BSD](https://en.wikipedia.org/wiki/BSD_licenses)、[MIT](https://en.wikipedia.org/wiki/MIT_License)、[Mozilla](https://www.mozilla.org/en-US/MPL/)、[Apache](https://www.apache.org/licenses/LICENSE-2.0) 和 L[GPL](https://www.gnu.org/licenses/lgpl-3.0.html) 之中做选择，也很复杂。
+
+乌克兰程序员 [Paul Bagwell](https://web.archive.org/web/20110503183702/http://pbagwl.com/post/5078147450/description-of-popular-software-licenses) 画了一张分析图，说明应该怎么选择。这是我见过的最简单的讲解，只用两分钟，你就能搞清楚这六种许可证之间的最大区别。
+
+```plantuml
+@startuml
+!theme cyborg
+
+if (他人修改源码后，是否可以闭源？) then (no)
+  if (新增代码是否采用同样许可证？) then (no)
+    if (是否需要对源码的修改之处，提供说明文档？) then (no)
+      :LGPL许可证;
+    else (yes)
+      :Mozilla许可证;
+    endif
+  else (yes)
+    :GPL许可证;
+  endif
+else (yes)
+  if (每一个修改过的文件，是否都必须放置版权说明？) then (no)
+    if (衍生软件的广告，是否可以用你的名字促销？) then (no)
+      :BSD许可证;
+    else (yes)
+      :MIT许可证;
+    endif
+  else (yes)
+    :Apache许可证;
+  endif
+endif
+
+@enduml
+```
+
+## 美化个人主页
+
+### 创建同名仓库
 
 > [!info]
 > 同名指的是与自己 Gihub 用户名相同！
@@ -19,13 +144,13 @@ update_time: 2024/12/28 18:02
 
 ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161713137.png)
 
-## 美化之旅
+### 美化之旅
 
 仓库创建完成之后，咱们就可以开始参考各路大佬的个人主页来美化自己的个人主页。
 
 在仓库的 README.md 文件中有一段默认内容，咱们可以将其删除掉，以便改写成咱们自己想要的效果。如果不想阅读以下繁琐的教程，直接给出本人的 Github 个人主页所对应的仓库地址：[xihuanxiaorang/xihuanxiaorang: 个人主页 (github.com)](https://github.com/xihuanxiaorang/xihuanxiaorang)，小伙伴们可以对照着完善自己的个人主页效果。
 
-### 小徽章
+#### 小徽章
 
 ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161714497.png)
 
@@ -34,7 +159,7 @@ update_time: 2024/12/28 18:02
 + 普通的小徽章：[badges/shields: Concise, consistent, and legible badges in SVG and raster format (github.com)](https://github.com/badges/shields)
 + Github Profile Page 访问统计小徽章：[antonkomarev/github-profile-views-counter: It counts how many times your GitHub profile has been viewed. Free cloud micro-service.](https://github.com/antonkomarev/github-profile-views-counter)
 
-### 打字机效果
+#### 打字机效果
 
 ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161714793.gif)
 
@@ -43,7 +168,7 @@ update_time: 2024/12/28 18:02
 该项目还提供一个可以实时预览轻松定制键入SVG的在线工具：[Readme Typing SVG - Demo Site (demolab.com)](https://readme-typing-svg.demolab.com/demo/)。
 ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161714432.png)
 
-### 技术栈图标
+#### 技术栈图标
 
 ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161714530.png)
 
@@ -57,7 +182,7 @@ update_time: 2024/12/28 18:02
 ![My Skills](https://skillicons.dev/icons?i=java,spring,mysql,html,css,js,ts,vue)](https://skillicons.dev)
 ```
 
-### Github 数据概览
+#### Github 数据概览
 
 ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161714405.png)
 
@@ -71,7 +196,7 @@ update_time: 2024/12/28 18:02
 
 将上述代码块中的 `{YOUR_USERNAME}` 替换成你自己的用户名！
 
-### 连续贡献数据记录
+#### 连续贡献数据记录
 
 ![](https://streak-stats.demolab.com?user=xihuanxiaorang&theme=transparent&hide_border=true&date_format=[Y.]n.j&card_width=400)
 
@@ -80,7 +205,7 @@ update_time: 2024/12/28 18:02
 该项目还提供一个可以通过实时预览定制你的连胜统计卡的在线工具：[GitHub Readme Streak Stats Demo (demolab.com)](https://streak-stats.demolab.com/demo/)。
 ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161715176.png)
 
-### 贡献图
+#### 贡献图
 
 ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161715712.png)
 
@@ -94,7 +219,7 @@ update_time: 2024/12/28 18:02
 
 将上述代码块中的 `{YOUR_USERNAME}` 替换成你自己的用户名！
 
-### 贪吃蛇效果
+#### 贪吃蛇效果
 
 ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161715736.svg)
 
@@ -169,7 +294,7 @@ update_time: 2024/12/28 18:02
 
 将上述代码块中的 `{YOUR_USERNAME}` 替换成你自己的用户名，`{YOUR_REPOSITORY_NAME}` 替换成你自己的仓库名称，两者的值其实应该是一样的！
 
-### 代码编写总时长
+#### 代码编写总时长
 
 ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161717311)
 
@@ -222,7 +347,7 @@ update_time: 2024/12/28 18:02
 	<!--END_SECTION:waka-->
 	```
 
-## 完整代码示例
+### 完整代码示例
 
 ```markdown
 <h2>Hey 👋, I'm XiaoRang!</h2>
@@ -351,7 +476,7 @@ jobs:
           SHOW_TOTAL: true
 ```
 
-## 参考资料🎁
+### 参考资料🎁
 
 + 📃文档
     - [kyechan99/capsule-render: 🌈 Dynamic Coloful Image Render (github.com)](https://github.com/kyechan99/capsule-render)

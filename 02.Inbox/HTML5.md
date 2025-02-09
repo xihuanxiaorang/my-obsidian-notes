@@ -1,11 +1,14 @@
 ---
-media: https://www.bilibili.com/video/BV1p84y1P7Z5?p=7&vd_source=84272a2d7f72158b38778819be5bc6ad
+refrence_url:
+  - https://www.bilibili.com/video/BV1p84y1P7Z5?p=7&vd_source=84272a2d7f72158b38778819be5bc6ad
+  - https://www.bilibili.com/video/BV1kM4y127Li?vd_source=84272a2d7f72158b38778819be5bc6ad
 tags:
   - Tutorial
   - HTML
   - 尚硅谷
+  - 黑马
 create_time: 2025-01-10 18:31
-update_time: 2025/01/17 23:18
+update_time: 2025/02/08 22:30
 ---
 
 ## 什么是 HTML?
@@ -355,10 +358,10 @@ HTML 文档声明用于告诉浏览器当前文档使用的 HTML 标准。
 
 ## HTML 基础
 
-### 开发者文档
+> [!quote]
+> **开发者文档**：
+> - https://www.w3.org/
+> - https://www.w3school.com.cn/
+> - https://developer.mozilla.org/zh-CN/ 平时用的最多，推荐👍
 
-- https://www.w3.org/
-- https://www.w3school.com.cn/
-- https://developer.mozilla.org/zh-CN/ 推荐👍
-
-### HTML 排版标签
+### 标题标签
