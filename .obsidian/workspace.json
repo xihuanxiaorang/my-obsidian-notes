@@ -29,6 +29,21 @@
             }
           },
           {
+            "id": "a4beebf5659f544c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "01.Articles/AI/Ollama.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": false
+              },
+              "icon": "lucide-file",
+              "title": "Ollama"
+            }
+          },
+          {
             "id": "a7849d2c9a71e8e8",
             "type": "leaf",
             "pinned": true,
@@ -56,8 +71,24 @@
               "icon": "projects-icon",
               "title": "Projects"
             }
+          },
+          {
+            "id": "663766fa73af6600",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "02.Inbox/Conda.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": false
+              },
+              "icon": "lucide-file",
+              "title": "Conda"
+            }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -185,13 +216,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "00.Overview/01 - 任务清单.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "01 - 任务清单 的大纲"
+              "title": "大纲"
             }
           },
           {
@@ -256,8 +286,12 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "00.Overview/01 - 任务清单.md",
     "01.Articles/AI/Ollama.md",
+    "00.Overview/01 - 任务清单.md",
+    "02.Inbox/Conda.md",
+    "01.Articles/Tools/开发工具/python.md",
+    "02.Inbox/本地快速部署 DeepSeek-R1 模型.md",
+    "00.Overview/02 - 参考资料.md",
     "01.Articles/AI",
     "01.Articles/Tools/开发工具/Github.md",
     "01.Articles/Misc/美化 Github 个人主页.md",
@@ -265,13 +299,10 @@
     "01.Articles/Tools/开发工具/Git.md",
     "01.Articles/Misc/生成 Github Token.md",
     "01.Articles/Media/排序算法-快速排序.md",
-    "00.Overview/02 - 参考资料.md",
     "Zttachments/Pasted image 20250209175414.png",
     "01.Articles/Tools/开发工具/Node.js.md",
-    "01.Articles/Tools/开发工具/python.md",
     "01.Articles/Tools/开发工具/MySQL.md",
     "01.Articles/Tools/开发工具/JDK.md",
-    "02.Inbox/本地快速部署 DeepSeek-R1 模型.md",
     "02.Inbox/HTML5.md",
     "01.Articles/Tools/其他工具/Obsidian.md",
     "01.Articles/Tools/开发工具/IntelliJ IDEA.md",
