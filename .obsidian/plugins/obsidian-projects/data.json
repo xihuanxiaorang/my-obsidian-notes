@@ -401,6 +401,59 @@
       ],
       "id": "d42ece58-0f52-461e-8776-7b77d4650b19",
       "name": "源码剖析"
+    },
+    {
+      "fieldConfig": {},
+      "defaultName": "",
+      "templates": [],
+      "excludedNotes": [],
+      "isDefault": false,
+      "dataSource": {
+        "kind": "folder",
+        "config": {
+          "path": "01.Articles/AI",
+          "recursive": true
+        }
+      },
+      "newNotesFolder": "",
+      "views": [
+        {
+          "config": {
+            "fieldConfig": {
+              "path": {
+                "hide": true
+              },
+              "create_time": {
+                "hide": true
+              },
+              "refrence_url": {
+                "hide": true
+              },
+              "tags": {
+                "hide": true
+              },
+              "update_time": {
+                "hide": true
+              }
+            }
+          },
+          "filter": {
+            "conjunction": "and",
+            "conditions": []
+          },
+          "colors": {
+            "conditions": []
+          },
+          "sort": {
+            "criteria": []
+          },
+          "id": "1669abd4-537b-4f0b-a0fb-0aa1653c9ec0",
+          "name": "表格",
+          "type": "table"
+        }
+      ],
+      "id": "b2e33d18-415c-4406-ad57-4db297e880fd",
+      "name": "AI学习之旅"
     }
   ],
   "archives": [],
