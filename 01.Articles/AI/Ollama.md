@@ -5,7 +5,7 @@ refrence_url:
   - https://www.bilibili.com/video/BV15zNGeYE8M?vd_source=84272a2d7f72158b38778819be5bc6ad
   - https://www.bilibili.com/video/BV1QtNmeoEe3/?share_source=copy_web&vd_source=84272a2d7f72158b38778819be5bc6ad
 create_time: 2025-02-07 17:20
-update_time: 2025/02/09 23:16
+update_time: 2025/02/10 19:06
 ---
 
 Ollama 是一款强大的 AI 大模型部署平台，旨在简化 AI 模型的部署与管理。即使没有任何编程经验，用户也能快速上手，非常适合初学者。
@@ -132,8 +132,8 @@ ollama run deepseek-r1:1.5b
 
 | 参数                       | 标识与配置                                                                                                                                  |
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
-| **OLLAMA_MODELS**        | 表示模型文件的存放目录，默认目录为**当前用户目录**即  `C:\Users%username%.ollama\models`  <br>Windows 系统 **建议不要放在 C 盘**，可放在其他盘（如 `G:\AI\Ollama\models`）        |
-| **OLLAMA_HOST**          | 表示 Ollama 服务监听的网络地址，默认为 **127.0.0.1**   <br>如果想要允许其他电脑访问 Ollama（如局域网中的其他电脑），建议设置成 **0.0.0.0**                                          |
+| **OLLAMA_MODELS** 👍     | 表示模型文件的存放目录，默认目录为**当前用户目录**即  `C:\Users%username%.ollama\models`  <br>Windows 系统 **建议不要放在 C 盘**，可放在其他盘（如 `G:\AI\Ollama\models`）        |
+| **OLLAMA_HOST** 👍       | 表示 Ollama 服务监听的网络地址，默认为 **127.0.0.1**   <br>如果想要允许其他电脑访问 Ollama（如局域网中的其他电脑），建议设置成 **0.0.0.0**                                          |
 | OLLAMA_PORT              | 表示 Ollama 服务监听的默认端口，默认为 **11434**   <br>如果端口有冲突，可以修改设置成其他端口（如 **8080** 等）                                                              |
 | OLLAMA_ORIGINS           | 表示 HTTP 客户端的请求来源，使用半角逗号分隔列表  <br>如果本地使用不受限制，可以设置成星号 `*`                                                                                |
 | OLLAMA_KEEP_ALIVE        | 表示大模型加载到内存中后的存活时间，默认为 **5m**（即 5 分钟）  <br>（如纯数字 300 代表 300 秒，0 代表处理请求响应后立即卸载模型，任何负数则表示一直存活）  <br>建议设置成 **24h** ，即模型在内存中保持 24 小时，提高访问速度 |

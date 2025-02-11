@@ -36,5 +36,6 @@
   "pkmer",
   "calendar",
   "obsidian-tasks-plugin",
-  "obsidian-reminder-plugin"
+  "obsidian-reminder-plugin",
+  "obsidian-image-auto-upload-plugin"
 ]

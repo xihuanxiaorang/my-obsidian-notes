@@ -46,4 +46,4 @@ update_time: 2025/02/09 17:13
 
 	如果正确显示 Python 和 pip 的版本号，则安装成功。
 	![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412201731395.png)
-9. pip 加速（清华镜像源）：`pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple`
+9. pip 加速（清华镜像源）：`pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple` ^b672a0

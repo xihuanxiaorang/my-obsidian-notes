@@ -29,21 +29,6 @@
             }
           },
           {
-            "id": "a4beebf5659f544c",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "01.Articles/AI/Ollama.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "Ollama"
-            }
-          },
-          {
             "id": "a7849d2c9a71e8e8",
             "type": "leaf",
             "pinned": true,
@@ -71,24 +56,8 @@
               "icon": "projects-icon",
               "title": "Projects"
             }
-          },
-          {
-            "id": "663766fa73af6600",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "02.Inbox/Conda.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "Conda"
-            }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "vertical"
@@ -216,12 +185,13 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "00.Overview/01 - 任务清单.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "大纲"
+              "title": "01 - 任务清单 的大纲"
             }
           },
           {
@@ -286,12 +256,22 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "01.Articles/AI/Ollama.md",
-    "00.Overview/01 - 任务清单.md",
-    "02.Inbox/Conda.md",
+    "01.Articles/Tools/开发工具/Conda.md",
+    "01.Articles/Tools/其他工具/yt-dlp.md",
     "01.Articles/Tools/开发工具/python.md",
-    "02.Inbox/本地快速部署 DeepSeek-R1 模型.md",
+    "01.Articles/Tools/开发工具/Node.js.md",
+    "01.Articles/Tools/开发工具/thefuck.md",
+    "01.Articles/AI/Ollama.md",
+    "Zttachments/Pasted image 20250210183610.png",
+    "Zttachments/Pasted image 20250210174340.png",
+    "Zttachments/Pasted image 20250210115005.png",
+    "Zttachments/Pasted image 20250210114108.png",
+    "Zttachments/Pasted image 20250210112047.png",
+    "Zttachments/Pasted image 20250210111938.png",
+    "Zttachments/Pasted image 20250210111820.png",
     "00.Overview/02 - 参考资料.md",
+    "00.Overview/01 - 任务清单.md",
+    "02.Inbox/本地快速部署 DeepSeek-R1 模型.md",
     "01.Articles/AI",
     "01.Articles/Tools/开发工具/Github.md",
     "01.Articles/Misc/美化 Github 个人主页.md",
@@ -300,39 +280,29 @@
     "01.Articles/Misc/生成 Github Token.md",
     "01.Articles/Media/排序算法-快速排序.md",
     "Zttachments/Pasted image 20250209175414.png",
-    "01.Articles/Tools/开发工具/Node.js.md",
     "01.Articles/Tools/开发工具/MySQL.md",
     "01.Articles/Tools/开发工具/JDK.md",
     "02.Inbox/HTML5.md",
     "01.Articles/Tools/其他工具/Obsidian.md",
     "01.Articles/Tools/开发工具/IntelliJ IDEA.md",
-    "01.Articles/Tools/开发工具/thefuck.md",
     "02.Inbox/软件卸载工具^6ce691.md",
     "01.Articles/Tools/其他工具/软件卸载工具.md",
     "Templates/Diary.md",
     "01.Articles/Java/基础/04  - SPI 机制.md",
     "Clippings/Obs＃54 Obsidian的任務管理技巧彙總 – 簡睿隨筆.md",
     "01.Articles/DataStructure & Algorithm/Algorithm/汉诺塔.md",
-    "02.Inbox/模板语法.md",
     "Clippings",
     "01.Articles/AI",
     "Zttachments/Pasted image 20250206232046.png",
     "Zttachments/Pasted image 20250206231659.png",
     "04.Canvas/未命名.canvas",
-    "Zttachments/Pasted Image 20250206185246_429.png",
-    "Zttachments/哪吒之魔童闹海.webp",
     "Zttachments/哪吒之魔童闹海.webp.crdownload",
     "Journal/Weekly",
     "Journal/Diary",
     "Journal",
     "01.Articles/DataStructure & Algorithm/Algorithm/分治",
-    "Zttachments/寻梦环游记.webp",
-    "Zttachments/哨兵划分步骤.gif",
     "01.Articles/Media",
-    "Zttachments/数据结构合集 - 快速排序(算法过程, 效率分析, 稳定性分析)PT0.233S.webp",
-    "Excalidraw/Scripts/Downloaded/Slideshow.svg",
     "03.Excalidraw/Scripts/Downloaded",
-    "Zttachments/小鞋子.webp",
     "04.Canvas/冒泡排序.canvas",
     "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
     "01.Articles/Reading/Hello 算法/02 - 链表.canvas",

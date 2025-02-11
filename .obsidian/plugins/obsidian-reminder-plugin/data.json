@@ -3,14 +3,9 @@
   "reminders": {
     "00.Overview/01 - 任务清单.md": [
       {
-        "title": "[[Conda]]  🔼 ➕  2025-02-08",
-        "time": "2025-02-10",
-        "rowNumber": 25
-      },
-      {
         "title": "[[HTML5]] 🔺 ➕ 2025-02-08",
         "time": "2025-02-11",
-        "rowNumber": 26
+        "rowNumber": 25
       }
     ]
   },

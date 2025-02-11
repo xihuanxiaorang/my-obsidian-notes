@@ -2,8 +2,9 @@
 tags:
   - Tool
   - DevTool
+  - Python
 create_time: 2024-12-28T17:30:00
-update_time: 2024/12/28 17:30
+update_time: 2025/02/11 17:47
 ---
 
 > [!quote]
@@ -114,10 +115,12 @@ The Fuck 的使用非常简单。当你在终端中输入错误命令时，只�
 
 ## Q & A
 
+^7aeede
+
 ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412201900200.png)
 该错误是由于 `imp` 模块在 Python 3.12 中被移除了。The Fuck 依赖该模块，但它已经被弃用并在最新的 Python 版本中被删除。因此，你需要做一些调整以使 The Fuck 在 Python 3.12 中工作。
 有两种解决方法：
-1. 降级 Python 版本
+1. 降级 Python 版本 👍
    将 Python 版本降级到 3.11 或更低版本，因为这些版本仍然包含 `imp` 模块。
 	1. **卸载当前 Python 版本**
 	    在 Windows 的应用程序管理器中卸载 Python 3.12。
