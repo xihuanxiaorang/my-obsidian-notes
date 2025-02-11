@@ -4,10 +4,8 @@ tags:
   - DevTool
   - Tool
   - EnvironmentSetup
-refrence_url:
-  - https://www.bilibili.com/video/BV1BFSJYEEj2?vd_source=84272a2d7f72158b38778819be5bc6ad
 create_time: 2025-02-09 21:52
-update_time: 2025/02/11 17:51
+update_time: 2025/02/11 18:54
 ---
 
 ## 简介
@@ -16,7 +14,7 @@ update_time: 2025/02/11 17:51
 - 可快速安装、运行和更新软件包及其依赖。
 - 便捷创建、保存、加载和切换独立环境，灵活管理依赖，互不影响。
 
-## 下载 & 安装
+## 下载 & 安装✨
 
 Conda 存在如下两个版本：
 
@@ -57,7 +55,7 @@ Conda 存在如下两个版本：
     2. 点击 "新建"，添加 `%MINICONDA_HOME%`、`%MINICONDA_HOME%\Scripts` 和 `%MINICONDA_HOME%\Library\bin`，然后尽量将其 "上移"。
     3. 最后一路点击 "确定" 进行保存配置。
 
-## 更新镜像源
+## 更新镜像源✨
 
 > [!quote]
 > https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/

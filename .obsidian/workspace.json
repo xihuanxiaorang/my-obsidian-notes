@@ -57,7 +57,8 @@
               "title": "Projects"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -185,13 +186,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "00.Overview/01 - 任务清单.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "01 - 任务清单 的大纲"
+              "title": "大纲"
             }
           },
           {
@@ -200,7 +200,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "00.Overview/02 - 参考资料.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -210,7 +209,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "02 - 参考资料 的反向链接列表"
+              "title": "反向链接"
             }
           },
           {
@@ -219,12 +218,11 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "00.Overview/02 - 参考资料.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               },
               "icon": "links-going-out",
-              "title": "02 - 参考资料 的出链列表"
+              "title": "出链"
             }
           }
         ]
@@ -254,14 +252,68 @@
       "daily-notes:打开/创建今天的日记": false
     }
   },
-  "active": "9bbed510414b75b1",
+  "floating": {
+    "id": "332461ae26b42937",
+    "type": "floating",
+    "children": [
+      {
+        "id": "e36d8b730844eb59",
+        "type": "window",
+        "children": [
+          {
+            "id": "e074c63d5971d652",
+            "type": "tabs",
+            "children": [
+              {
+                "id": "2374e44da2e445a0",
+                "type": "leaf",
+                "state": {
+                  "type": "webviewer",
+                  "state": {
+                    "url": "https://github.com/renmu123/obsidian-image-auto-upload-plugin",
+                    "title": "GitHub - renmu123/obsidian-image-auto-upload-plugin: auto upload image with picgo",
+                    "mode": "webview"
+                  },
+                  "icon": "globe-2",
+                  "title": "GitHub - renmu123/obsidian-image-auto-upload-plugin: auto upload image with picgo"
+                }
+              }
+            ]
+          }
+        ],
+        "direction": "vertical",
+        "x": 448,
+        "y": 116,
+        "width": 1024,
+        "height": 800,
+        "maximize": false,
+        "zoom": 0
+      }
+    ]
+  },
+  "active": "02c91713ef9a2a08",
   "lastOpenFiles": [
+    "00.Overview/01 - 任务清单.md",
+    "01.Articles/AI/02 - Open-WebUI.md",
     "01.Articles/Tools/开发工具/Conda.md",
-    "01.Articles/Tools/其他工具/yt-dlp.md",
-    "01.Articles/Tools/开发工具/python.md",
+    "01.Articles/Tools/其他工具/Obsidian.md",
+    "01.Articles/AI/01 - Ollama.md",
+    "Zttachments/Pasted image 20250211214922.png",
+    "Zttachments/Pasted image 20250211214901.png",
     "01.Articles/Tools/开发工具/Node.js.md",
+    "01.Articles/Tools/开发工具/python.md",
+    "01.Articles/Tools/其他工具/手摸手教你搭建部署 Vitepress 博客.md",
+    "01.Articles/Tools/其他工具/手绘风格的开源白板 Excalidraw 搭建教程.md",
+    "01.Articles/Tools/开发工具/WSL2.md",
+    "01.Articles/Tools/开发工具/VSCode.md",
+    "01.Articles/Tools/开发工具/UNPKG.md",
+    "01.Articles/Tools/开发工具/Typora.md",
     "01.Articles/Tools/开发工具/thefuck.md",
-    "01.Articles/AI/Ollama.md",
+    "Zttachments/Pasted image 20250211183352.png",
+    "01.Articles/Tools/开发工具/JDK.md",
+    "01.Articles/Tools/开发工具/IntelliJ IDEA.md",
+    "01.Articles/Tools/开发工具/Git.md",
+    "01.Articles/Tools/其他工具/yt-dlp.md",
     "Zttachments/Pasted image 20250210183610.png",
     "Zttachments/Pasted image 20250210174340.png",
     "Zttachments/Pasted image 20250210115005.png",
@@ -270,31 +322,16 @@
     "Zttachments/Pasted image 20250210111938.png",
     "Zttachments/Pasted image 20250210111820.png",
     "00.Overview/02 - 参考资料.md",
-    "00.Overview/01 - 任务清单.md",
     "02.Inbox/本地快速部署 DeepSeek-R1 模型.md",
     "01.Articles/AI",
     "01.Articles/Tools/开发工具/Github.md",
     "01.Articles/Misc/美化 Github 个人主页.md",
     "01.Articles/Misc/如何选择开源协议.md",
-    "01.Articles/Tools/开发工具/Git.md",
     "01.Articles/Misc/生成 Github Token.md",
     "01.Articles/Media/排序算法-快速排序.md",
-    "Zttachments/Pasted image 20250209175414.png",
     "01.Articles/Tools/开发工具/MySQL.md",
-    "01.Articles/Tools/开发工具/JDK.md",
-    "02.Inbox/HTML5.md",
-    "01.Articles/Tools/其他工具/Obsidian.md",
-    "01.Articles/Tools/开发工具/IntelliJ IDEA.md",
-    "02.Inbox/软件卸载工具^6ce691.md",
-    "01.Articles/Tools/其他工具/软件卸载工具.md",
-    "Templates/Diary.md",
-    "01.Articles/Java/基础/04  - SPI 机制.md",
-    "Clippings/Obs＃54 Obsidian的任務管理技巧彙總 – 簡睿隨筆.md",
-    "01.Articles/DataStructure & Algorithm/Algorithm/汉诺塔.md",
     "Clippings",
     "01.Articles/AI",
-    "Zttachments/Pasted image 20250206232046.png",
-    "Zttachments/Pasted image 20250206231659.png",
     "04.Canvas/未命名.canvas",
     "Zttachments/哪吒之魔童闹海.webp.crdownload",
     "Journal/Weekly",
