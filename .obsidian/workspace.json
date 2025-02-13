@@ -56,8 +56,24 @@
               "icon": "projects-icon",
               "title": "Projects"
             }
+          },
+          {
+            "id": "3c2f88493318e6a9",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "01.Articles/Tools/开发工具/Cursor/Cursor - 初体验.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": false
+              },
+              "icon": "lucide-file",
+              "title": "Cursor - 初体验"
+            }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -185,13 +201,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "00.Overview/01 - 任务清单.md",
+                "file": "01.Articles/Tools/开发工具/Cursor/Cursor - 初体验.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "01 - 任务清单 的大纲"
+              "title": "Cursor - 初体验 的大纲"
             }
           },
           {
@@ -242,7 +258,7 @@
       "obsidian-kanban:创建新看板": true,
       "templates:插入模板": true,
       "command-palette:打开命令面板": true,
-      "table-editor-obsidian:Advanced Tables Toolbar": true,
+      "table-editor-obsidian:Advanced Tables Toolbar": false,
       "obsidian-git:Open Git source control": true,
       "templater-obsidian:Templater": true,
       "canvas:新建白板": false,
@@ -256,43 +272,47 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "01.Articles/AI/Ollama.md",
-    "01.Articles/AI/Open-WebUI.md",
+    "Zttachments/Pasted image 20250213181657.png",
+    "01.Articles/Tools/开发工具/Cursor/Cursor - 初体验.md",
+    "Zttachments/Pasted image 20250213190203.png",
+    "Zttachments/Pasted image 20250213185538.png",
+    "Zttachments/Pasted image 20250213184716.png",
+    "Zttachments/Pasted image 20250213184501.png",
+    "Zttachments/Pasted image 20250213184022.png",
+    "Zttachments/Pasted image 20250213183512.png",
+    "Zttachments/Pasted image 20250213183159.png",
+    "Zttachments/Pasted image 20250213182938.png",
+    "Zttachments/Pasted image 20250213182400.png",
+    "Zttachments/Pasted image 20250213182017.png",
+    "01.Articles/Tools/开发工具/Cursor/Cursor.md",
+    "02.Inbox/HTML5.md",
     "00.Overview/02 - 参考资料.md",
     "00.Overview/01 - 任务清单.md",
+    "LICENSE",
+    "03.Excalidraw/fonts/杨任东竹石体.ttf",
+    "02.Inbox/DeepSeek-R1.md",
+    "01.Articles/Tools/开发工具/Cursor",
+    "01.Articles/AI/Ollama.md",
+    "01.Articles/Tools/开发工具/VSCode.md",
+    "01.Articles/AI/Open-WebUI.md",
+    "01.Articles/AI/本地部署AI大模型.canvas",
     "01.Articles/Tools/开发工具/Conda.md",
     "01.Articles/Tools/其他工具/Obsidian.md",
-    "Zttachments/Pasted image 20250211214922.png",
-    "Zttachments/Pasted image 20250211214901.png",
     "01.Articles/Tools/开发工具/Node.js.md",
     "01.Articles/Tools/开发工具/python.md",
     "01.Articles/Tools/其他工具/手摸手教你搭建部署 Vitepress 博客.md",
     "01.Articles/Tools/其他工具/手绘风格的开源白板 Excalidraw 搭建教程.md",
     "01.Articles/Tools/开发工具/WSL2.md",
-    "01.Articles/Tools/开发工具/VSCode.md",
     "01.Articles/Tools/开发工具/UNPKG.md",
     "01.Articles/Tools/开发工具/Typora.md",
     "01.Articles/Tools/开发工具/thefuck.md",
-    "Zttachments/Pasted image 20250211183352.png",
     "01.Articles/Tools/开发工具/JDK.md",
     "01.Articles/Tools/开发工具/IntelliJ IDEA.md",
     "01.Articles/Tools/开发工具/Git.md",
     "01.Articles/Tools/其他工具/yt-dlp.md",
-    "Zttachments/Pasted image 20250210183610.png",
-    "Zttachments/Pasted image 20250210174340.png",
-    "Zttachments/Pasted image 20250210115005.png",
-    "Zttachments/Pasted image 20250210114108.png",
-    "Zttachments/Pasted image 20250210112047.png",
-    "Zttachments/Pasted image 20250210111938.png",
-    "Zttachments/Pasted image 20250210111820.png",
     "02.Inbox/本地快速部署 DeepSeek-R1 模型.md",
     "01.Articles/AI",
     "01.Articles/Tools/开发工具/Github.md",
-    "01.Articles/Misc/美化 Github 个人主页.md",
-    "01.Articles/Misc/如何选择开源协议.md",
-    "01.Articles/Misc/生成 Github Token.md",
-    "01.Articles/Media/排序算法-快速排序.md",
-    "01.Articles/Tools/开发工具/MySQL.md",
     "Clippings",
     "01.Articles/AI",
     "04.Canvas/未命名.canvas",
@@ -300,9 +320,6 @@
     "Journal/Weekly",
     "Journal/Diary",
     "Journal",
-    "01.Articles/DataStructure & Algorithm/Algorithm/分治",
-    "01.Articles/Media",
-    "03.Excalidraw/Scripts/Downloaded",
     "04.Canvas/冒泡排序.canvas",
     "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
     "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
@@ -310,7 +327,6 @@
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/冒泡排序.canvas",
     "04.Canvas/代码生成器.canvas",
     "01.Articles/DataStructure & Algorithm/DataStructure/未命名.canvas",
-    "未命名.canvas",
-    "06.Reading/Hello 算法/未命名.canvas"
+    "未命名.canvas"
   ]
 }

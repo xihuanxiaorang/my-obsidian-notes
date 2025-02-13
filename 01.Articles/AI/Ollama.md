@@ -1,11 +1,8 @@
 ---
 tags:
   - AI
-refrence_url:
-  - https://www.bilibili.com/video/BV15zNGeYE8M?vd_source=84272a2d7f72158b38778819be5bc6ad
-  - https://www.bilibili.com/video/BV1QtNmeoEe3/?share_source=copy_web&vd_source=84272a2d7f72158b38778819be5bc6ad
 create_time: 2025-02-07 17:20
-update_time: 2025/02/10 19:06
+update_time: 2025/02/13 11:09
 ---
 
 Ollama 是一款强大的 AI 大模型部署平台，旨在简化 AI 模型的部署与管理。即使没有任何编程经验，用户也能快速上手，非常适合初学者。
