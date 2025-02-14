@@ -1,9 +1,8 @@
 ---
 tags:
   - Tool
-  - DevTool
 create_time: 2024-12-28T17:30:00
-update_time: 2024/12/28 17:30
+update_time: 2025/02/14 18:39
 ---
 
 ## 安装与激活🚀

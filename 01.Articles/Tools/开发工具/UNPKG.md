@@ -1,10 +1,9 @@
 ---
 tags:
-  - Tool
   - DevTool
   - CDN
 create_time: 2024-12-29 11:14
-update_time: 2024/12/29 12:32
+update_time: 2025/02/14 18:37
 ---
 
 UNPKG 是一个快速、全球性的 CDN（内容分发网络），为 [npm](https://www.npmjs.com/) 上的所有包提供服务。它可以通过 URL 加载任意 npm 包中的文件，简单方便，URL 格式如下：

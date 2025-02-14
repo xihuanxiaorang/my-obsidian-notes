@@ -1,9 +1,8 @@
 ---
 tags:
-  - Tool
   - DevTool
 create_time: 2024-12-28T17:30:00
-update_time: 2024/12/28 17:30
+update_time: 2025/02/14 18:38
 ---
 
 对于没有安装 Windows Terminal 终端的小伙伴，可以在 Microsoft Store 中进行下载安装。

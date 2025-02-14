@@ -1,10 +1,9 @@
 ---
 tags:
   - AI
-  - Tool
   - DevTool
 create_time: 2025-02-13 11:31
-update_time: 2025/02/13 21:55
+update_time: 2025/02/14 18:38
 ---
 
 ## 下载 & 安装
@@ -57,9 +56,3 @@ update_time: 2025/02/13 21:55
 
 - [Chinese (Simplified) (简体中文) Language Pack for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=MS-CEINTL.vscode-language-pack-zh-hans)
 - [Python](https://marketplace.cursorapi.com/items?itemName=ms-python.python)
-
-## 参考资料
-
-- [Cursor - The AI Code Editor](https://www.cursor.com/cn)
-- 🛠️工具
-	- [go-cursor-help](https://github.com/yuaotian/go-cursor-help)

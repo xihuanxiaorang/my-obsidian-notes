@@ -1,9 +1,8 @@
 ---
 tags:
-  - Tool
   - DevTool
 create_time: 2024-12-28T17:29:00
-update_time: 2024/12/28 17:29
+update_time: 2025/02/14 18:38
 ---
 
 ## Navicat 16

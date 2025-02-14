@@ -1,12 +1,11 @@
 ---
 tags:
   - AI
-  - Tool
   - DevTool
 refrence_url:
   - https://www.bilibili.com/video/BV1XxrhYDE39?vd_source=84272a2d7f72158b38778819be5bc6ad
 create_time: 2025-02-13T19:03:00
-update_time: 2025/02/13 22:02
+update_time: 2025/02/14 18:36
 ---
 
 首先，新建一个名为 "需求" 的 markdown 文档，我们可以将我们的需求全部集中写在该文档中，以便能更好的对其进行管理，由于是初体验，我们先牛刀小试，让 Cursor 帮我们自动开发一款记账的桌面应用小工具。

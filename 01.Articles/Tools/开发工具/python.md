@@ -1,11 +1,10 @@
 ---
 tags:
-  - Tool
   - EnvironmentSetup
   - Python
   - DevTool
 create_time: 2024-12-28T17:30:00
-update_time: 2025/02/09 17:13
+update_time: 2025/02/14 18:37
 ---
 
 > [!tip]

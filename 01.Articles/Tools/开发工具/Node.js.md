@@ -1,11 +1,10 @@
 ---
 tags:
-  - Tool
   - EnvironmentSetup
   - Frontend
   - DevTool
 create_time: 2024-12-28T17:21:00
-update_time: 2025/02/09 17:12
+update_time: 2025/02/14 18:37
 ---
 
 > [!quote]
