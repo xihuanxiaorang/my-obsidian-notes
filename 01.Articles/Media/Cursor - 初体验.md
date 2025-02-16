@@ -5,7 +5,7 @@ tags:
 refrence_url:
   - https://www.bilibili.com/video/BV1XxrhYDE39?vd_source=84272a2d7f72158b38778819be5bc6ad
 create_time: 2025-02-13T19:03:00
-update_time: 2025/02/14 18:36
+update_time: 2025/02/16 16:57
 ---
 
 首先，新建一个名为 "需求" 的 markdown 文档，我们可以将我们的需求全部集中写在该文档中，以便能更好的对其进行管理，由于是初体验，我们先牛刀小试，让 Cursor 帮我们自动开发一款记账的桌面应用小工具。
@@ -15,6 +15,8 @@ update_time: 2025/02/14 18:36
 ```markdown
 开发一款 Python GUI 程序，实现家庭收支管理功能，首次打开要在屏幕中居中显示。
 ```
+
+---
 
 右键该需求文档，选择 "Add Files to New Cursor Composer" 选项。
 ![](https://img.xiaorang.fun/202502132156182.png)
@@ -34,11 +36,17 @@ update_time: 2025/02/14 18:36
 >
 > 简单来说，**Cursor Composer** 是一个帮助你高效管理和组织文件、内容或代码片段的工具，使得复杂的任务可以通过模块化方式进行处理。如果你在做较大规模的项目，Composer 是一个非常实用的功能。
 
+---
+
 我们告诉 Cursor，按照需求文档，帮我们编写这个小工具。
 ![](https://img.xiaorang.fun/202502132156183.png)
 
+---
+
 可以看到，AI 已经开始思考并给出回答，在代码生成后，点击 "Apply" 会自动创建代码文件。
 ![](https://img.xiaorang.fun/202502132156184.png)
+
+---
 
 我们不需要编写或修改任何一行代码，只需点击这个 "Accpet all" 按钮即可。
 ![](https://img.xiaorang.fun/202502132156185.png)

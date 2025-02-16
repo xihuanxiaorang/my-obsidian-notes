@@ -4,7 +4,7 @@ tags:
   - Java
   - DevTool
 create_time: 2024-12-28T17:27:00
-update_time: 2025/02/14 18:37
+update_time: 2025/02/15 23:24
 ---
 
 因为在工作中可能会遇到不同的项目需要使用不同版本的 JDK，所以需要在一台电脑上安装多个版本的 JDK，如 JDK8，JDK17 等。按照下面这种方式我们可以实现安装两个或者更多版本的 JDK，并且多个版本之间的 JDK 可以自由切换。
@@ -13,7 +13,7 @@ update_time: 2025/02/14 18:37
     ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161044869.png)![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161044288.png)
 2. 将下载的 `jdk-8u431-windows-x64.zip` 和 `jdk-17.0.13_windows-x64_bin.zip` 压缩包分别解压到指定目录，如 `E:\devsoft\jdks`。
    ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161044409.png)
-3. 设置 JAVA_HOME 环境变量。
+3. 设置 JAVA_HOME 环境变量。 ^a4ee2f
    1. 右键点击 "计算机" 或 "此电脑"，选择 "属性"。
    2. 点击 "高级系统设置"。
    3. 在弹出的 "系统属性" 窗口中，点击 "环境变量"。
@@ -22,7 +22,7 @@ update_time: 2025/02/14 18:37
           ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161045882.png)
        2. 新建 <u>JAVA17_HOME</u> 系统变量，变量值为 JDK17 的安装路径，如上图中的 `E:\devsoft\jdks\jdk-17.0.13`。
           ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161045739.png)
-       3. 新建 JAVA_HOME 系统变量，变量值为 `%JAVA8_HOME%`，表示引用 JAVA8_HOME 系统变量所对应的 JDK8 安装路径，将当前系统的 JDK 版本设置为 1.8。
+       3. 新建 <u>JAVA_HOME</u> 系统变量，变量值为 `%JAVA8_HOME%`，表示引用 JAVA8_HOME 系统变量所对应的 JDK8 安装路径，将当前系统的 JDK 版本设置为 1.8。
           ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161046874.png)
        4. 配置 Path 系统变量。
           1. 在 "系统变量" 中找到 Path 变量，点击 "编辑"。
