@@ -2,7 +2,7 @@
 tags:
   - DevTool
 create_time: 2024-12-28T17:27:00
-update_time: 2025/02/14 18:36
+update_time: 2025/02/17 17:45
 ---
 
 ## 快捷键
@@ -35,7 +35,7 @@ update_time: 2025/02/14 18:36
 
 ### 如何隐藏不想看到的文件夹或者文件？
 
-File ➡ settings ➡ Editor ➡ File Types ➡ Ignore Files and Folders，配置不想看到的文件夹或者文件。
+File ➡ Settings ➡ Editor ➡ File Types ➡ Ignore Files and Folders，配置不想看到的文件夹或者文件。
 ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161055880.png)
 
 如果配置无误还能看到文件夹或者文件的话，请确保没有勾选显示排除的文件选项，如果勾选了的话取消勾选即可！
@@ -78,7 +78,7 @@ File ➡ settings ➡ Editor ➡ File Types ➡ Ignore Files and Folders，配�
 
 ## 插件
 
-+ 使用 IDE 内置插件系统安装（推荐），如果碰到
++ 使用 IDE 内置插件系统安装（推荐）
     - **Preferences(Settings)** ➡️ **Plugins** ➡️ **Marketplace** ➡️ 搜索插件名称 ➡️ 点击 **Install** 按钮进行安装；
 + 手动安装
     - 到 [JetBrains Marketplace](https://plugins.jetbrains.com/) 上下载与你的 IDE 兼容的最新版本的插件包；
