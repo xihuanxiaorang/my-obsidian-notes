@@ -1160,7 +1160,7 @@ __export(src_exports, {
   default: () => SmartConnectionsPlugin
 });
 module.exports = __toCommonJS(src_exports);
-var import_obsidian16 = __toESM(require("obsidian"), 1);
+var import_obsidian21 = __toESM(require("obsidian"), 1);
 
 // node_modules/smart-environment/components/settings.js
 async function build_html(scope, opts = {}) {
@@ -1446,8 +1446,38 @@ function deep_clone_config(input) {
   return input;
 }
 
+// node_modules/smart-environment/utils/merge_options.js
+function merge_options(target, incoming) {
+  for (const [key, value] of Object.entries(incoming)) {
+    if (key === "global_ref") continue;
+    if (typeof value === "object" && value !== null) {
+      if (Array.isArray(value)) {
+        target[key] = [...target[key] || [], ...value];
+      } else {
+        if (!target[key]) target[key] = {};
+        deep_merge_no_overwrite(target[key], value);
+      }
+    } else {
+      if (target[key] !== void 0) {
+        console.warn(
+          `SmartEnv: Overwriting existing property ${key} in smart_env_config`,
+          { old: target[key], new: value }
+        );
+      }
+      target[key] = value;
+    }
+  }
+  return target;
+}
+
 // node_modules/smart-environment/smart_env.js
 var SmartEnv = class {
+  /**
+   * @type {number} version - Bump this number when shipping a new version of SmartEnv.
+   * If a newer version is loaded into a runtime that already has an older environment,
+   * an automatic reload of all existing mains will occur.
+   */
+  static version = 1;
   scope_name = "smart_env";
   constructor(opts = {}) {
     this.opts = deep_clone_config(opts);
@@ -1461,18 +1491,36 @@ var SmartEnv = class {
     this.mains = [];
     this._components = {};
   }
+  /**
+   * Waits for either a specific main to be registered in the environment,
+   * or (if `opts.main` is not specified) waits for environment collections to load.
+   * @param {object} opts
+   * @param {object} [opts.main] - if set, the function waits until that main is found.
+   * @returns {Promise<SmartEnv>} Resolves with the environment instance
+   */
   static wait_for(opts = {}) {
     return new Promise((resolve) => {
-      const interval = setInterval(() => {
-        if (window.smart_env && window.smart_env.collections_loaded) {
-          clearInterval(interval);
-          resolve(window.smart_env);
-        }
-      }, 100);
+      if (opts.main) {
+        const interval = setInterval(() => {
+          if (window.smart_env && window.smart_env.mains.includes(opts.main)) {
+            clearInterval(interval);
+            resolve(window.smart_env);
+          }
+        }, 1e3);
+      } else {
+        const interval = setInterval(() => {
+          if (window.smart_env && window.smart_env.collections_loaded) {
+            clearInterval(interval);
+            resolve(window.smart_env);
+          }
+        }, 100);
+      }
     });
   }
   /**
    * Creates or updates a SmartEnv instance.
+   * - If a global environment exists and is an older version, it is unloaded and replaced.
+   * - If the environment is the same version or newer, it reuses the existing environment.
    * @param {Object} main - The main object to be added to the SmartEnv instance.
    * @param {Object} [main_env_opts={}] - Options for configuring the SmartEnv instance.
    * @returns {SmartEnv} The SmartEnv instance.
@@ -1503,6 +1551,45 @@ var SmartEnv = class {
     }
     return main.env;
   }
+  // BREAKS REFERENCES TO INITIAL ENV
+  // /**
+  //  * Reloads the entire environment if a newer SmartEnv version is loaded,
+  //  * re-initializing each main in the old environment within the new environment.
+  //  * @private
+  //  * @param {SmartEnv} old_env - The existing environment instance to be replaced.
+  //  * @param {Object} main - The main object that triggered the reload.
+  //  * @param {Object} main_env_opts - The environment options to apply to that main.
+  //  */
+  // static async reload_all_mains(old_env, main, main_env_opts) {
+  //   console.log('Reloading all mains');
+  //   // Grab references to all mains so we can re-create them
+  //   const old_mains_data = old_env.mains.map((mkey) => [
+  //     mkey,
+  //     old_env[mkey],
+  //     old_env[mkey]?.smart_env_config
+  //   ]);
+  //   // Unload old environment's mains
+  //   for (const [mkey, mobj] of old_mains_data) {
+  //     if (mobj) mobj.env = null;
+  //     old_env.unload_main(mkey);
+  //   }
+  //   old_env.global_env = null; // Remove old env from the global scope
+  //   // Create the new environment for the main that triggered reload
+  //   const new_env = new this(main_env_opts);
+  //   new_env.global_env = new_env;
+  //   await new_env.init(main, main_env_opts);
+  //   // Re-init all old mains except the new one
+  //   for (const [mkey, mobj, mconfig] of old_mains_data) {
+  //     if (!mobj || mobj === main) continue;
+  //     await this.create(mobj, mconfig);
+  //   }
+  // }
+  /**
+   * Initializes SmartEnv internals, then loads the provided main's collections.
+   * @param {Object} main - The main object to initialize.
+   * @param {Object} [main_env_opts={}]
+   * @returns {String} The main key used to store the main object on `this`.
+   */
   async init(main, main_env_opts = {}) {
     this.is_init = true;
     const main_key = this.init_main(main, main_env_opts);
@@ -1512,6 +1599,10 @@ var SmartEnv = class {
     this.is_init = false;
     return main_key;
   }
+  /**
+   * Returns a combined environment config for all known mains.
+   * @returns {Object}
+   */
   get main_env_config() {
     return this.mains.reduce((acc, key) => {
       acc[key] = this[key].smart_env_config;
@@ -1519,9 +1610,10 @@ var SmartEnv = class {
     }, {});
   }
   /**
-   * Adds a new main object to the SmartEnv instance.
+   * Adds a new main object to the SmartEnv instance (or reuses existing).
    * @param {Object} main - The main object to be added.
-   * @param {Object} [main_env_opts={}] - Options to be merged into the SmartEnv instance.
+   * @param {Object} [main_env_opts={}]
+   * @returns {String} The main key (snake_case of the main's constructor name)
    */
   init_main(main, main_env_opts = {}) {
     const main_key = camel_case_to_snake_case(main.constructor.name);
@@ -1529,9 +1621,14 @@ var SmartEnv = class {
       this.mains.push(main_key);
     }
     this[main_key] = main;
-    this.merge_options(main_env_opts);
+    this.opts = this.merge_options(this.opts, main_env_opts);
     return main_key;
   }
+  /**
+   * Loads the collections for the given main.
+   * @param {String} main_key
+   * @param {Object} main_env_opts
+   */
   async load_main(main_key, main_env_opts) {
     const main = this[main_key];
     if (!main_env_opts) main_env_opts = main.smart_env_config;
@@ -1547,6 +1644,10 @@ var SmartEnv = class {
     );
     await this.load_collections(main_collections);
   }
+  /**
+   * Initializes collection classes if they have an 'init' function.
+   * @param {Object} [config=this.opts]
+   */
   async init_collections(config = this.opts) {
     for (const key of Object.keys(config.collections || {})) {
       const _class = config.collections[key]?.class;
@@ -1554,10 +1655,16 @@ var SmartEnv = class {
       await _class.init(this, { ...config.collections[key] });
     }
   }
+  /**
+   * Loads any available collections, processing their load queues.
+   * @param {Object} [collections=this.collections] - Key-value map of collection instances.
+   */
   async load_collections(collections = this.collections) {
     this.loading_collections = true;
     for (const key of Object.keys(collections || {})) {
-      if (this.is_init && (this.opts.prevent_load_on_init || collections[key].opts.prevent_load_on_init)) continue;
+      if (this.is_init && (this.opts.prevent_load_on_init || collections[key].opts.prevent_load_on_init)) {
+        continue;
+      }
       if (typeof collections[key]?.process_load_queue === "function") {
         await collections[key].process_load_queue();
       }
@@ -1566,41 +1673,49 @@ var SmartEnv = class {
     this.collections_loaded = true;
   }
   /**
-   * Merges provided options into the SmartEnv instance, performing a deep merge for objects.
-   * @param {Object} opts - Options to be merged.
+   * Merges provided options into the target object, performing a deep merge for objects.
+   * @param {Object} target - The target object to merge into
+   * @param {Object} incoming - The incoming object to merge from
+   * @returns {Object} The mutated target object
    */
-  merge_options(opts) {
-    for (const [key, value] of Object.entries(opts)) {
-      if (key === "global_ref") continue;
-      if (typeof value === "object" && value !== null) {
-        if (Array.isArray(value)) {
-          this.opts[key] = [...this.opts[key] || [], ...value];
-        } else {
-          if (!this.opts[key]) this.opts[key] = {};
-          deep_merge_no_overwrite(this.opts[key], value);
-        }
-      } else {
-        if (this.opts[key] !== void 0) {
-        }
-        this.opts[key] = value;
-      }
-    }
+  merge_options(target, incoming) {
+    return merge_options(target, incoming);
   }
-  // use main.ready_to_load_collections() if it exists
+  /**
+   * Hook for main classes that optionally implement `ready_to_load_collections()`.
+   * @param {Object} main
+   */
   async ready_to_load_collections(main) {
-    if (typeof main?.ready_to_load_collections === "function") await main.ready_to_load_collections();
+    if (typeof main?.ready_to_load_collections === "function") {
+      await main.ready_to_load_collections();
+    }
     return true;
   }
+  /**
+   * Unloads a specific main and its collections from the environment.
+   * @param {string} main_key
+   * @param {Object|null} [unload_config=null]
+   */
   unload_main(main_key, unload_config = null) {
     console.log("unload_main", main_key);
     this._components = {};
     this.unload_collections(main_key, unload_config);
-    if (this.mains.length > 1) this.unload_opts(main_key, unload_config);
-    else this.opts = {};
+    if (this.mains.length > 1) {
+      this.unload_opts(main_key, unload_config);
+    } else {
+      this.opts = {};
+    }
     this[main_key] = null;
     this.mains = this.mains.filter((key) => key !== main_key);
-    if (this.mains.length === 0) this.global_env = null;
+    if (this.mains.length === 0) {
+      this.global_env = null;
+    }
   }
+  /**
+   * Unloads the collections referenced by the main being removed.
+   * @param {string} main_key
+   * @param {Object|null} [unload_config=null]
+   */
   unload_collections(main_key, unload_config = null) {
     console.log("unload_collections", main_key);
     if (!unload_config) unload_config = this[main_key]?.smart_env_config;
@@ -1615,6 +1730,7 @@ var SmartEnv = class {
    * Removes from `this.opts` any object properties that are exclusive to the main being removed.
    * Skips classes/functions, arrays, etc. Only plain objects are deeply iterated.
    * @param {string} main_key - The main key being unloaded.
+   * @param {Object|null} [unload_config=null]
    */
   unload_opts(main_key, unload_config = null) {
     if (!unload_config) unload_config = this[main_key]?.smart_env_config;
@@ -1622,35 +1738,56 @@ var SmartEnv = class {
     const keep_configs = this.mains.filter((m) => m !== main_key).map((m) => this[m]?.smart_env_config).filter(Boolean);
     deep_remove_exclusive_props(this.opts, unload_config, keep_configs);
   }
+  /**
+   * Triggers a save event in all known collections.
+   */
   save() {
     for (const key of Object.keys(this.collections)) {
       this[key].process_save_queue?.();
     }
   }
+  /**
+   * Initialize a module from the configured `this.opts.modules`.
+   * @param {string} module_key
+   * @param {object} opts
+   * @returns {object|null} instance of the requested module or null if not found
+   */
   init_module(module_key, opts = {}) {
     const module_config = this.opts.modules[module_key];
-    if (!module_config)
+    if (!module_config) {
       return console.warn(`SmartEnv: module ${module_key} not found`);
+    }
     opts = {
       ...{ ...module_config, class: null },
       ...opts
     };
     return new module_config.class(opts);
   }
+  /**
+   * Exposes a settings template function from environment opts or defaults.
+   * @returns {Function}
+   */
   get settings_template() {
     return this.opts.components?.smart_env?.settings || render;
   }
+  /**
+   * Renders settings UI into a container, using the environment's `settings_template`.
+   * @param {HTMLElement} [container=this.settings_container]
+   */
   async render_settings(container = this.settings_container) {
-    if (!this.settings_container || container !== this.settings_container)
+    if (!this.settings_container || container !== this.settings_container) {
       this.settings_container = container;
-    if (!container) throw new Error("Container is required");
+    }
+    if (!container) {
+      throw new Error("Container is required");
+    }
     const frag = await this.render_component("settings", this, {});
     container.innerHTML = "";
     container.appendChild(frag);
     return frag;
   }
   /**
-   * Render settings.
+   * Renders a named component using an optional scope and options.
    * @param {string} component_key
    * @param {Object} scope
    * @param {Object} [opts]
@@ -1661,13 +1798,21 @@ var SmartEnv = class {
     const frag = await component_renderer(scope, opts);
     return frag;
   }
+  /**
+   * Retrieves or creates a memoized component renderer function.
+   * @param {string} component_key
+   * @param {Object} scope
+   * @returns {Function|undefined}
+   */
   get_component(component_key, scope) {
     const scope_name = scope.collection_key ?? scope.scope_name;
     const _cache_key = scope_name ? `${scope_name}-${component_key}` : component_key;
     if (!this._components[_cache_key]) {
       try {
         if (this.opts.components[scope_name]?.[component_key]) {
-          this._components[_cache_key] = this.opts.components[scope_name][component_key].bind(this.init_module("smart_view"));
+          this._components[_cache_key] = this.opts.components[scope_name][component_key].bind(
+            this.init_module("smart_view")
+          );
         } else if (this.opts.components[component_key]) {
           this._components[_cache_key] = this.opts.components[component_key].bind(
             this.init_module("smart_view")
@@ -1690,10 +1835,20 @@ var SmartEnv = class {
     }
     return this._components[_cache_key];
   }
+  /**
+   * Lazily instantiate the module 'smart_view'.
+   * @returns {object}
+   */
   get smart_view() {
-    if (!this._smart_view) this._smart_view = this.init_module("smart_view");
+    if (!this._smart_view) {
+      this._smart_view = this.init_module("smart_view");
+    }
     return this._smart_view;
   }
+  /**
+   * A built-in settings schema for this environment.
+   * @returns {Object}
+   */
   get settings_config() {
     return {
       is_obsidian_vault: {
@@ -1778,11 +1933,11 @@ var SmartEnv = class {
           const dir = path.split("/").slice(-2, -1)[0];
           return {
             dir,
-            count: this.fs.file_paths.filter((path2) => path2.includes(dir)).length
+            count: this.fs.file_paths.filter((p) => p.includes(dir)).length
           };
         });
         env_data_dir = env_data_dir_counts.reduce(
-          (max, dir) => dir.count > max.count ? dir : max,
+          (max, dirObj) => dirObj.count > max.count ? dirObj : max,
           env_data_dir_counts[0]
         ).dir;
       } else {
@@ -1809,20 +1964,19 @@ var SmartEnv = class {
   /**
    * Saves the current settings to the file system.
    * @param {Object|null} [settings=null] - Optional settings to override the current settings before saving.
-   * @returns {Promise<void>} A promise that resolves when the settings have been saved.
+   * @returns {Promise<void>}
    */
   async save_settings(settings) {
     this._saved = false;
-    if (!await this.data_fs.exists("")) await this.data_fs.mkdir("");
-    await this.data_fs.write(
-      "smart_env.json",
-      JSON.stringify(settings, null, 2)
-    );
+    if (!await this.data_fs.exists("")) {
+      await this.data_fs.mkdir("");
+    }
+    await this.data_fs.write("smart_env.json", JSON.stringify(settings, null, 2));
     this._saved = true;
   }
   /**
-   * Loads the settings from the file system.
-   * @returns {Promise<void>} A promise that resolves when the settings have been loaded.
+   * Loads settings from the file system, merging with any `default_settings` or `smart_env_settings`.
+   * @returns {Promise<Object>} the loaded settings
    */
   async load_settings() {
     if (!await this.data_fs.exists("smart_env.json")) await this.save_settings({});
@@ -1832,6 +1986,10 @@ var SmartEnv = class {
     this._saved = true;
     return settings;
   }
+  /**
+   * Refreshes file-system state if exclusions changed,
+   * then re-renders relevant settings UI
+   */
   async update_exclusions() {
     this.smart_sources._fs = null;
     await this.smart_sources.fs.init();
@@ -1857,6 +2015,1398 @@ var SmartEnv = class {
    */
   get plugin() {
     return this.main;
+  }
+};
+
+// node_modules/smart-environment/node_modules/smart-file-system/utils/match_glob.js
+var glob_to_regex_pattern = (pattern, extended_glob) => {
+  let in_class = false;
+  let in_brace = 0;
+  let result = "";
+  for (let i = 0; i < pattern.length; i++) {
+    const char = pattern[i];
+    switch (char) {
+      case "\\":
+        result += "\\" + (i + 1 < pattern.length ? pattern[++i] : "\\");
+        break;
+      case "/":
+        result += "\\/";
+        break;
+      case "[":
+        if (!in_class) {
+          in_class = true;
+          if (pattern[i + 1] === "!") {
+            result += "[^";
+            i++;
+          } else {
+            result += "[";
+          }
+        } else {
+          result += "\\[";
+        }
+        break;
+      case "]":
+        if (in_class) {
+          in_class = false;
+          result += "]";
+        } else {
+          result += "\\]";
+        }
+        break;
+      case "{":
+        if (!in_class) {
+          in_brace++;
+          result += "(";
+        } else {
+          result += "{";
+        }
+        break;
+      case "}":
+        if (!in_class && in_brace > 0) {
+          in_brace--;
+          result += ")";
+        } else {
+          result += "}";
+        }
+        break;
+      case ",":
+        if (!in_class && in_brace > 0) {
+          result += "|";
+        } else {
+          result += ",";
+        }
+        break;
+      case "*":
+        if (!in_class) {
+          if (pattern[i + 1] === "*") {
+            result += ".*";
+            i++;
+          } else {
+            result += "[^/]*";
+          }
+        } else {
+          result += "\\*";
+        }
+        break;
+      case "?":
+        result += in_class ? "\\?" : "[^/]";
+        break;
+      case ".":
+      case "(":
+      case ")":
+      case "+":
+      case "|":
+      case "^":
+      case "$":
+        result += "\\" + char;
+        break;
+      default:
+        result += char;
+    }
+  }
+  if (extended_glob) {
+    result = result.replace(/\\\+\\\((.*?)\\\)/g, "($1)+").replace(/\\\@\\\((.*?)\\\)/g, "($1)").replace(/\\\!\\\((.*?)\\\)/g, "(?!$1).*").replace(/\\\?\\\((.*?)\\\)/g, "($1)?").replace(/\\\*\\\((.*?)\\\)/g, "($1)*");
+  }
+  return result;
+};
+var adjust_for_windows_paths = (pattern, windows_paths) => windows_paths ? pattern.replace(/\\\//g, "[\\\\/]") : pattern;
+var create_regex = (pattern, { case_sensitive, extended_glob, windows_paths }) => {
+  const regex_pattern = glob_to_regex_pattern(pattern, extended_glob);
+  const adjusted_pattern = adjust_for_windows_paths(regex_pattern, windows_paths);
+  const flags = case_sensitive ? "" : "i";
+  return new RegExp(`^${adjusted_pattern}$`, flags);
+};
+function glob_to_regex(pattern, options = {}) {
+  const default_options = { case_sensitive: true, extended_glob: false, windows_paths: false };
+  const merged_options = { ...default_options, ...options };
+  if (pattern === "") {
+    return /^$/;
+  }
+  if (pattern === "*" && !merged_options.windows_paths) {
+    return /^[^/]+$/;
+  }
+  if (pattern === "**" && !merged_options.windows_paths) {
+    return /^.+$/;
+  }
+  return create_regex(pattern, merged_options);
+}
+
+// node_modules/smart-environment/node_modules/smart-file-system/utils/fuzzy_search.js
+function fuzzy_search(arr, search_term) {
+  let matches = [];
+  for (let i = 0; i < arr.length; i++) {
+    const search_chars = search_term.toLowerCase().split("");
+    let match = true;
+    let distance = 0;
+    const name = arr[i];
+    const label_name = name.toLowerCase();
+    for (let j = 0; j < search_chars.length; j++) {
+      const search_index = label_name.substring(distance).indexOf(search_chars[j]);
+      if (search_index >= 0) {
+        distance += search_index + 1;
+      } else {
+        match = false;
+        break;
+      }
+    }
+    if (match) matches.push({ name, distance });
+  }
+  matches.sort((a, b) => a.distance - b.distance);
+  return matches.map((match) => match.name);
+}
+
+// node_modules/smart-environment/node_modules/smart-file-system/smart_fs.js
+var SmartFs = class {
+  /**
+   * Create a new SmartFs instance
+   * 
+   * @param {Object} env - The Smart Environment instance
+   * @param {Object} [opts={}] - Optional configuration
+   * @param {string} [opts.fs_path] - Custom environment path
+   */
+  constructor(env, opts = {}) {
+    this.env = env;
+    this.opts = opts;
+    this.fs_path = opts.fs_path || opts.env_path || "";
+    if (!opts.adapter) throw new Error("SmartFs requires an adapter");
+    this.adapter = new opts.adapter(this);
+    this.excluded_patterns = [];
+    if (Array.isArray(opts.exclude_patterns)) {
+      opts.exclude_patterns.forEach((pattern) => this.add_ignore_pattern(pattern));
+    }
+    this.folders = {};
+    this.files = {};
+    this.file_paths = [];
+    this.folder_paths = [];
+  }
+  async refresh() {
+    this.files = {};
+    this.file_paths = [];
+    this.folders = {};
+    this.folder_paths = [];
+    await this.init();
+  }
+  async init() {
+    await this.load_gitignore();
+    await this.load_files();
+  }
+  async load_files() {
+    const all = await this.list_recursive();
+    this.file_paths = [];
+    this.folder_paths = [];
+    all.forEach((file) => {
+      if (file.type === "file") {
+        this.files[file.path] = file;
+        this.file_paths.push(file.path);
+      } else if (file.type === "folder") {
+        this.folders[file.path] = file;
+        this.folder_paths.push(file.path);
+      }
+    });
+  }
+  include_file(file_path) {
+    const file = this.adapter.get_file(file_path);
+    this.files[file.path] = file;
+    this.file_paths.push(file.path);
+    return file;
+  }
+  /**
+   * Load .gitignore patterns
+   * 
+   * @returns {Promise<RegExp[]>} Array of RegExp patterns
+   */
+  async load_gitignore() {
+    const gitignore_path = ".gitignore";
+    const gitignore_exists = await this.adapter.exists(gitignore_path);
+    if (gitignore_exists) {
+      const gitignore_content = await this.adapter.read(gitignore_path, "utf-8");
+      gitignore_content.split("\n").filter((line) => !line.startsWith("#")).filter(Boolean).forEach((pattern) => this.add_ignore_pattern(pattern));
+    }
+    this.add_ignore_pattern(".**");
+    this.add_ignore_pattern("**/.**");
+    this.add_ignore_pattern("**/.*/**");
+    this.add_ignore_pattern("**/*.ajson");
+    this.add_ignore_pattern("**/*.excalidraw.md");
+  }
+  /**
+   * Add a new ignore pattern
+   * 
+   * @param {string} pattern - The pattern to add
+   */
+  add_ignore_pattern(pattern, opts = {}) {
+    this.excluded_patterns.push(glob_to_regex(pattern.trim(), opts));
+  }
+  /**
+   * Check if a path is ignored based on gitignore patterns
+   * 
+   * @param {string} _path - The path to check
+   * @returns {boolean} True if the path is ignored, false otherwise
+   */
+  is_excluded(_path) {
+    try {
+      if (_path.includes("#")) return true;
+      if (!this.excluded_patterns.length) return false;
+      return this.excluded_patterns.some((pattern) => pattern.test(_path));
+    } catch (e) {
+      console.error(`Error checking if path is excluded: ${e.message}`);
+      console.error(`Path: `, _path);
+      throw e;
+    }
+  }
+  /**
+   * Check if any path in an array of paths is excluded
+   * 
+   * @param {string[]} paths - Array of paths to check
+   * @returns {boolean} True if any path is excluded, false otherwise
+   */
+  has_excluded_patterns(paths) {
+    return paths.some((p) => this.is_excluded(p));
+  }
+  /**
+   * Pre-process an array of paths, throwing an error if any path is excluded
+   * 
+   * @param {string[]} paths - Array of paths to pre-process
+   * @throws {Error} If any path in the array is excluded
+   * @returns {string[]} The array of paths
+   */
+  pre_process(paths) {
+    if (this.has_excluded_patterns(paths)) {
+      throw new Error(`Path is excluded: ${paths.find((p) => this.is_excluded(p))}`);
+    }
+    return paths;
+  }
+  /**
+   * Post-process the result of an operation
+   * 
+   * @param {any} returned_value - The value returned by the operation
+   * @returns {any} The post-processed value
+   */
+  post_process(returned_value) {
+    if (this.adapter.post_process) return this.adapter.post_process(returned_value);
+    if (Array.isArray(returned_value)) {
+      returned_value = returned_value.filter((r) => {
+        if (typeof r === "string") return !this.is_excluded(r);
+        if (typeof r === "object" && r.path) return !this.is_excluded(r.path);
+        return true;
+      });
+    }
+    return returned_value;
+  }
+  // v2
+  /**
+   * Use the adapter for a method
+   * runs pre_process and post_process (checks exclusions)
+   * @param {string} method - The method to use
+   * @param {string[]} paths - The paths to use
+   * @param {...any} args - Additional arguments for the method
+   * @returns {Promise<any>} The result of the method
+   */
+  async use_adapter(method, paths, ...args) {
+    if (!this.adapter[method]) throw new Error(`Method ${method} not found in adapter`);
+    paths = this.pre_process(paths);
+    let resp = await this.adapter[method](...paths, ...args);
+    return this.post_process(resp);
+  }
+  /**
+   * Append content to a file
+   * 
+   * @param {string} rel_path - The relative path of the file to append to
+   * @param {string|Buffer} content - The content to append
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async append(rel_path, content) {
+    return await this.use_adapter("append", [rel_path], content);
+  }
+  /**
+   * Create a new directory
+   * 
+   * @param {string} rel_path - The relative path of the directory to create
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async mkdir(rel_path, opts = { recursive: true }) {
+    return await this.use_adapter("mkdir", [rel_path], opts);
+  }
+  /**
+   * Check if a file or directory exists
+   * 
+   * @param {string} rel_path - The relative path to check
+   * @returns {Promise<boolean>} True if the path exists, false otherwise
+   */
+  async exists(rel_path) {
+    return await this.use_adapter("exists", [rel_path]);
+  }
+  /**
+   * List files in a directory
+   * 
+   * @param {string} rel_path - The relative path to list
+   * @returns {Promise<string[]>} Array of file paths
+   */
+  async list(rel_path = "/") {
+    return await this.use_adapter("list", [rel_path]);
+  }
+  async list_recursive(rel_path = "/") {
+    return await this.use_adapter("list_recursive", [rel_path]);
+  }
+  async list_files(rel_path = "/") {
+    return await this.use_adapter("list_files", [rel_path]);
+  }
+  async list_files_recursive(rel_path = "/") {
+    return await this.use_adapter("list_files_recursive", [rel_path]);
+  }
+  async list_folders(rel_path = "/") {
+    return await this.use_adapter("list_folders", [rel_path]);
+  }
+  async list_folders_recursive(rel_path = "/") {
+    return await this.use_adapter("list_folders_recursive", [rel_path]);
+  }
+  /**
+   * Read the contents of a file
+   * 
+   * @param {string} rel_path - The relative path of the file to read
+   * @returns {Promise<string|Buffer>} The contents of the file
+   */
+  async read(rel_path, encoding = "utf-8") {
+    try {
+      const content = await this.adapter.read(rel_path, encoding);
+      return content;
+    } catch (error) {
+      console.warn("Error during read: " + error.message);
+      if (error.code === "ENOENT") return null;
+      return { error: error.message };
+    }
+  }
+  /**
+   * Remove a file
+   * 
+   * @param {string} rel_path - The relative path of the file to remove
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async remove(rel_path) {
+    return await this.use_adapter("remove", [rel_path]);
+  }
+  /**
+   * Remove a directory
+   * 
+   * @param {string} rel_path - The relative path of the directory to remove
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async remove_dir(rel_path, recursive = false) {
+    return await this.use_adapter("remove_dir", [rel_path], recursive);
+  }
+  /**
+   * Rename a file or directory
+   * 
+   * @param {string} rel_path - The current relative path
+   * @param {string} new_rel_path - The new relative path
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async rename(rel_path, new_rel_path) {
+    await this.use_adapter("rename", [rel_path, new_rel_path]);
+    await this.refresh();
+  }
+  /**
+   * Get file or directory statistics
+   * 
+   * @param {string} rel_path - The relative path to get statistics for
+   * @returns {Promise<Object>} An object containing file or directory statistics
+   */
+  async stat(rel_path) {
+    return await this.use_adapter("stat", [rel_path]);
+  }
+  /**
+   * Write content to a file
+   * Should handle when target path is within a folder that doesn't exist
+   * 
+   * @param {string} rel_path - The relative path of the file to write to
+   * @param {string|Buffer} content - The content to write
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async write(rel_path, content) {
+    try {
+      await this.adapter.write(rel_path, content);
+    } catch (error) {
+      console.error("Error during write:", error);
+      throw error;
+    }
+  }
+  // // aliases
+  // async create(rel_path, content) { return await this.use_adapter('write', [rel_path], content); }
+  // async update(rel_path, content) { return await this.use_adapter('write', [rel_path], content); }
+  get_link_target_path(link_target, source_path) {
+    if (this.adapter.get_link_target_path) return this.adapter.get_link_target_path(link_target, source_path);
+    if (!this.file_paths) return console.warn("get_link_target_path: file_paths not found");
+    const matching_file_paths = this.file_paths.filter((path) => path.includes(link_target));
+    return fuzzy_search(matching_file_paths, link_target)[0];
+  }
+  get sep() {
+    return this.adapter.sep || "/";
+  }
+  get_full_path(rel_path = "") {
+    return this.fs_path + this.sep + rel_path.replace("/", this.sep);
+  }
+};
+
+// node_modules/smart-environment/node_modules/smart-file-system/adapters/obsidian.js
+var obsidian = __toESM(require("obsidian"), 1);
+var SmartFsObsidianAdapter = class {
+  /**
+   * Create an SmartFsObsidianAdapter instance
+   * 
+   * @param {Object} smart_fs - The SmartFs instance
+   */
+  constructor(smart_fs) {
+    this.smart_fs = smart_fs;
+    this.obsidian = smart_fs.env.main.obsidian || obsidian;
+    this.obsidian_app = smart_fs.env.main.app;
+    this.obsidian_adapter = smart_fs.env.main.app.vault.adapter;
+  }
+  get fs_path() {
+    return this.smart_fs.fs_path;
+  }
+  get_file(file_path) {
+    const file = {};
+    file.path = file_path.replace(/\\/g, "/").replace(this.smart_fs.fs_path, "").replace(/^\//, "");
+    file.type = "file";
+    file.extension = file.path.split(".").pop().toLowerCase();
+    file.name = file.path.split("/").pop();
+    file.basename = file.name.split(".").shift();
+    Object.defineProperty(file, "stat", {
+      get: () => {
+        const tfile = this.obsidian_app.vault.getAbstractFileByPath(file_path);
+        if (tfile) {
+          return {
+            ctime: tfile.stat.ctime,
+            mtime: tfile.stat.mtime,
+            size: tfile.stat.size
+          };
+        }
+        return null;
+      }
+    });
+    return file;
+  }
+  /**
+   * Append content to a file
+   * 
+   * @param {string} rel_path - The relative path of the file to append to
+   * @param {string} data - The content to append
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async append(rel_path, data) {
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    return await this.obsidian_adapter.append(rel_path, data);
+  }
+  /**
+   * Create a new directory
+   * 
+   * @param {string} rel_path - The relative path of the directory to create
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async mkdir(rel_path) {
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    return await this.obsidian_adapter.mkdir(rel_path);
+  }
+  /**
+   * Check if a file or directory exists
+   * 
+   * @param {string} rel_path - The relative path to check
+   * @returns {Promise<boolean>} True if the path exists, false otherwise
+   */
+  async exists(rel_path) {
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    return await this.obsidian_adapter.exists(rel_path);
+  }
+  /**
+   * List files in a directory (NOT up-to-date with list_recursive)
+   * 
+   * @param {string} rel_path - The relative path to list
+   * @returns {Promise<string[]>} Array of file paths
+   */
+  async list(rel_path, opts = {}) {
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    if (rel_path.startsWith("/")) rel_path = rel_path.slice(1);
+    if (rel_path.endsWith("/")) rel_path = rel_path.slice(0, -1);
+    if (rel_path.includes(".")) {
+      const { files: file_paths } = await this.obsidian_adapter.list(rel_path);
+      const files2 = file_paths.map((file_path) => {
+        if (this.smart_fs.fs_path) file_path = file_path.replace(this.smart_fs.fs_path, "").slice(1);
+        const file_name = file_path.split("/").pop();
+        const file = {
+          basename: file_name.split(".")[0],
+          extension: file_name.split(".").pop().toLowerCase(),
+          name: file_name,
+          path: file_path
+        };
+        return file;
+      });
+      return files2;
+    }
+    const files = this.obsidian_app.vault.getAllLoadedFiles().filter((file) => {
+      const last_slash = file.path.lastIndexOf("/");
+      if (last_slash === -1 && rel_path !== "") return false;
+      const folder_path = file.path.slice(0, last_slash);
+      if (folder_path !== rel_path) return false;
+      return true;
+    });
+    return files;
+  }
+  // NOTE: currently does not handle hidden files and folders
+  async list_recursive(rel_path, opts = {}) {
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    if (rel_path.startsWith("/")) rel_path = rel_path.slice(1);
+    if (rel_path.endsWith("/")) rel_path = rel_path.slice(0, -1);
+    const files = this.obsidian_app.vault.getAllLoadedFiles().filter((file) => {
+      if (rel_path !== "" && !file.path.startsWith(rel_path)) return false;
+      if (file instanceof this.obsidian.TFile) {
+        if (opts.type === "folder") return false;
+        file.type = "file";
+      } else if (file instanceof this.obsidian.TFolder) {
+        if (opts.type === "file") return false;
+        delete file.basename;
+        delete file.extension;
+        file.type = "folder";
+      }
+      if (this.smart_fs.fs_path) file.path = file.path.replace(this.smart_fs.fs_path, "").slice(1);
+      return true;
+    });
+    return files;
+  }
+  async list_files(rel_path) {
+    return await this.list(rel_path, { type: "file" });
+  }
+  async list_files_recursive(rel_path) {
+    return await this.list_recursive(rel_path, { type: "file" });
+  }
+  async list_folders(rel_path) {
+    return await this.list(rel_path, { type: "folder" });
+  }
+  async list_folders_recursive(rel_path) {
+    return await this.list_recursive(rel_path, { type: "folder" });
+  }
+  /**
+   * Read the contents of a file
+   * 
+   * @param {string} rel_path - The relative path of the file to read
+   * @returns {Promise<string>} The contents of the file
+   */
+  async read(rel_path, encoding, opts = {}) {
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    if (encoding === "utf-8") {
+      if (!opts.no_cache) {
+        const tfile = this.obsidian_app.vault.getFileByPath(rel_path);
+        if (tfile) return await this.obsidian_app.vault.cachedRead(tfile);
+      }
+      return await this.obsidian_adapter.read(rel_path);
+    }
+    if (encoding === "base64") {
+      const array_buffer2 = await this.obsidian_adapter.readBinary(rel_path, "base64");
+      const base642 = this.obsidian.arrayBufferToBase64(array_buffer2);
+      return base642;
+    }
+    const array_buffer = await this.obsidian_adapter.readBinary(rel_path);
+    return array_buffer;
+  }
+  /**
+   * Rename a file or directory
+   * 
+   * @param {string} old_path - The current path of the file or directory
+   * @param {string} new_path - The new path for the file or directory
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async rename(old_path, new_path) {
+    if (!old_path.startsWith(this.fs_path)) old_path = this.fs_path + "/" + old_path;
+    if (!new_path.startsWith(this.fs_path)) new_path = this.fs_path + "/" + new_path;
+    return await this.obsidian_adapter.rename(old_path, new_path);
+  }
+  /**
+   * Remove a file
+   * 
+   * @param {string} rel_path - The relative path of the file to remove
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async remove(rel_path) {
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    try {
+      return await this.obsidian_adapter.remove(rel_path);
+    } catch (error) {
+      console.warn(`Error removing file: ${rel_path}`, error);
+    }
+  }
+  /**
+   * Remove a directory
+   * 
+   * @param {string} rel_path - The relative path of the directory to remove
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async remove_dir(rel_path, recursive = false) {
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    return await this.obsidian_adapter.rmdir(rel_path, recursive);
+  }
+  /**
+   * Get file or directory information
+   * 
+   * @param {string} rel_path - The relative path of the file or directory
+   * @returns {Promise<Object>} An object containing file or directory information
+   */
+  async stat(rel_path) {
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    return await this.obsidian_adapter.stat(rel_path);
+  }
+  /**
+   * Write content to a file
+   * 
+   * @param {string} rel_path - The relative path of the file to write to
+   * @param {string} data - The content to write
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async write(rel_path, data) {
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    return await this.obsidian_adapter.write(rel_path, data);
+  }
+  get_link_target_path(link_path, file_path) {
+    return this.obsidian_app.metadataCache.getFirstLinkpathDest(link_path, file_path)?.path;
+  }
+};
+
+// node_modules/smart-environment/node_modules/smart-view/smart_view.js
+var SmartView = class {
+  /**
+   * @constructor
+   * @param {object} opts - Additional options or overrides for rendering.
+   */
+  constructor(opts = {}) {
+    this.opts = opts;
+    this._adapter = null;
+  }
+  /**
+   * Renders all setting components within a container.
+   * @async
+   * @param {HTMLElement} container - The container element.
+   * @param {Object} opts - Additional options for rendering.
+   * @returns {Promise<void>}
+   */
+  async render_setting_components(container, opts = {}) {
+    const components = container.querySelectorAll(".setting-component");
+    for (const component of components) {
+      await this.render_setting_component(component, opts);
+    }
+    return container;
+  }
+  /**
+   * Creates a document fragment from HTML string.
+   * @param {string} html - The HTML string.
+   * @returns {DocumentFragment}
+   */
+  create_doc_fragment(html) {
+    return document.createRange().createContextualFragment(html);
+  }
+  /**
+   * Gets the adapter instance used for rendering (e.g., Obsidian or Node, etc.).
+   * @returns {Object} The adapter instance.
+   */
+  get adapter() {
+    if (!this._adapter) {
+      if (!this.opts.adapter) {
+        throw new Error("No adapter provided to SmartView. Provide a 'smart_view.adapter' in env config.");
+      }
+      const AdapterClass = this.opts.adapter;
+      this._adapter = new AdapterClass(this);
+    }
+    return this._adapter;
+  }
+  /**
+   * Gets an icon (implemented in the adapter).
+   * @param {string} icon_name - Name of the icon to get.
+   * @returns {string} The icon HTML string.
+   */
+  get_icon_html(icon_name) {
+    return this.adapter.get_icon_html(icon_name);
+  }
+  /**
+   * Renders a single setting component (implemented in adapter).
+   * @async
+   * @param {HTMLElement} setting_elm - The DOM element for the setting.
+   * @param {Object} opts - Additional options for rendering.
+   * @returns {Promise<*>}
+   */
+  async render_setting_component(setting_elm, opts = {}) {
+    return await this.adapter.render_setting_component(setting_elm, opts);
+  }
+  /**
+   * Renders markdown content (implemented in adapter).
+   * @param {string} markdown - The markdown content.
+   * @param {object|null} scope - The scope to pass for rendering.
+   * @returns {Promise<DocumentFragment>}
+   */
+  async render_markdown(markdown, scope = null) {
+    return await this.adapter.render_markdown(markdown, scope);
+  }
+  /**
+   * Gets a value from an object by path.
+   * @param {Object} obj - The object to search in.
+   * @param {string} path - The path to the value.
+   * @returns {*}
+   */
+  get_by_path(obj, path) {
+    return get_by_path(obj, path);
+  }
+  /**
+   * Sets a value in an object by path.
+   * @param {Object} obj - The object to modify.
+   * @param {string} path - The path to set the value.
+   * @param {*} value - The value to set.
+   */
+  set_by_path(obj, path, value) {
+    set_by_path(obj, path, value);
+  }
+  /**
+   * Deletes a value from an object by path.
+   * @param {Object} obj - The object to modify.
+   * @param {string} path - The path to delete.
+   */
+  delete_by_path(obj, path) {
+    delete_by_path(obj, path);
+  }
+  /**
+   * Escapes HTML special characters in a string.
+   * @param {string} str - The string to escape.
+   * @returns {string} The escaped string.
+   */
+  escape_html(str) {
+    if (typeof str !== "string") return str;
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
+  /**
+   * A convenience method to build a setting HTML snippet from a config object.
+   * @param {Object} setting_config
+   * @returns {string}
+   */
+  render_setting_html(setting_config) {
+    if (setting_config.type === "html") {
+      return setting_config.value;
+    }
+    const attributes = Object.entries(setting_config).map(([attr, value]) => {
+      if (attr.includes("class")) return "";
+      if (typeof value === "number") return `data-${attr.replace(/_/g, "-")}=${value}`;
+      return `data-${attr.replace(/_/g, "-")}="${value}"`;
+    }).join("\n");
+    return `<div class="setting-component${setting_config.scope_class ? " " + setting_config.scope_class : ""}"
+data-setting="${setting_config.setting}"
+${attributes}
+></div>`;
+  }
+  /**
+   * Handles the smooth transition effect when opening overlays.
+   * @param {HTMLElement} overlay_container - The overlay container element.
+   */
+  on_open_overlay(overlay_container) {
+    overlay_container.style.transition = "background-color 0.5s ease-in-out";
+    overlay_container.style.backgroundColor = "var(--bold-color)";
+    setTimeout(() => {
+      overlay_container.style.backgroundColor = "";
+    }, 500);
+  }
+  /**
+   * Renders settings from a config, returning a fragment.
+   * @async
+   * @param {Object} settings_config
+   * @param {Object} opts
+   * @returns {Promise<DocumentFragment>}
+   */
+  async render_settings(settings_config4, opts = {}) {
+    const html = Object.entries(settings_config4).map(([setting_key, setting_config]) => {
+      if (!setting_config.setting) {
+        setting_config.setting = setting_key;
+      }
+      return this.render_setting_html(setting_config);
+    }).join("\n");
+    const frag = this.create_doc_fragment(`<div>${html}</div>`);
+    return await this.render_setting_components(frag, opts);
+  }
+  /**
+   * @function add_settings_listeners
+   * @description
+   * Scans the given container for elements that have `data-smart-setting` and attaches
+   * a 'change' event listener. On change, it updates the corresponding path in `scope.settings`.
+   * 
+   * @param {Object} scope - An object containing a `settings` property, where new values will be stored.
+   * @param {HTMLElement} [container=document] - The DOM element to scan. Defaults to the entire document.
+   */
+  add_settings_listeners(scope, container = document) {
+    const elements = container.querySelectorAll("[data-smart-setting]");
+    elements.forEach((elm) => {
+      const path = elm.dataset.smartSetting;
+      if (!path) return;
+      if (!elm.dataset.listenerAttached) {
+        elm.dataset.listenerAttached = "true";
+        elm.addEventListener("change", () => {
+          let newValue;
+          if (elm instanceof HTMLInputElement) {
+            if (elm.type === "checkbox") {
+              newValue = elm.checked;
+            } else if (elm.type === "radio") {
+              if (elm.checked) {
+                newValue = elm.value;
+              } else {
+                return;
+              }
+            } else {
+              newValue = elm.value;
+            }
+          } else if (elm instanceof HTMLSelectElement || elm instanceof HTMLTextAreaElement) {
+            newValue = elm.value;
+          } else {
+            newValue = elm.value ?? elm.textContent;
+          }
+          this.set_by_path(scope.settings, path, newValue);
+        });
+      }
+    });
+  }
+  apply_style_sheet(sheet) {
+    if ("adoptedStyleSheets" in Document.prototype) {
+      document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+    } else {
+      const styleEl = document.createElement("style");
+      if (sheet.cssRules) {
+        styleEl.textContent = Array.from(sheet.cssRules).map((rule) => rule.cssText).join("\n");
+      }
+      document.head.appendChild(styleEl);
+    }
+  }
+};
+function get_by_path(obj, path) {
+  if (!path) return "";
+  const keys = path.split(".");
+  const finalKey = keys.pop();
+  const instance = keys.reduce((acc, key) => acc && acc[key], obj);
+  if (instance && typeof instance[finalKey] === "function") {
+    return instance[finalKey].bind(instance);
+  }
+  return instance ? instance[finalKey] : void 0;
+}
+function set_by_path(obj, path, value) {
+  const keys = path.split(".");
+  const final_key = keys.pop();
+  const target = keys.reduce((acc, key) => {
+    if (!acc[key] || typeof acc[key] !== "object") {
+      acc[key] = {};
+    }
+    return acc[key];
+  }, obj);
+  target[final_key] = value;
+}
+function delete_by_path(obj, path) {
+  const keys = path.split(".");
+  const finalKey = keys.pop();
+  const instance = keys.reduce((acc, key) => acc && acc[key], obj);
+  if (instance) {
+    delete instance[finalKey];
+  }
+}
+
+// node_modules/smart-environment/node_modules/smart-view/adapters/_adapter.js
+var SmartViewAdapter = class {
+  constructor(main) {
+    this.main = main;
+  }
+  // NECESSARY OVERRIDES
+  /**
+   * Retrieves the class used for settings.
+   * Must be overridden by subclasses to return the appropriate setting class.
+   * @abstract
+   * @returns {Function} The setting class constructor.
+   * @throws Will throw an error if not implemented in the subclass.
+   */
+  get setting_class() {
+    throw new Error("setting_class() not implemented");
+  }
+  /**
+   * Generates the HTML for a specified icon.
+   * Must be overridden by subclasses to provide the correct icon HTML.
+   * @abstract
+   * @param {string} icon_name - The name of the icon to generate HTML for.
+   * @returns {string} The HTML string representing the icon.
+   * @throws Will throw an error if not implemented in the subclass.
+   */
+  get_icon_html(icon_name) {
+    throw new Error("get_icon_html() not implemented");
+  }
+  /**
+   * Renders Markdown content within a specific scope.
+   * Must be overridden by subclasses to handle Markdown rendering appropriately.
+   * @abstract
+   * @param {string} markdown - The Markdown content to render.
+   * @param {object|null} [scope=null] - The scope within which to render the Markdown.
+   * @returns {Promise<void>} A promise that resolves when rendering is complete.
+   * @throws Will throw an error if not implemented in the subclass.
+   */
+  async render_markdown(markdown, scope = null) {
+    throw new Error("render_markdown() not implemented");
+  }
+  /**
+   * Opens a specified URL.
+   * Should be overridden by subclasses to define how URLs are opened.
+   * @abstract
+   * @param {string} url - The URL to open.
+   */
+  open_url(url2) {
+    throw new Error("open_url() not implemented");
+  }
+  /**
+   * Handles the selection of a folder by invoking the folder selection dialog and updating the setting.
+   * @abstract
+   * @param {string} setting - The path of the setting being modified.
+   * @param {string} value - The current value of the setting.
+   * @param {HTMLElement} elm - The HTML element associated with the setting.
+   * @param {object} scope - The current scope containing settings and actions.
+   */
+  handle_folder_select(path, value, elm, scope) {
+    throw new Error("handle_folder_select not implemented");
+  }
+  /**
+   * Handles the selection of a file by invoking the file selection dialog and updating the setting.
+   * @abstract
+   * @param {string} setting - The path of the setting being modified.
+   * @param {string} value - The current value of the setting.
+   * @param {HTMLElement} elm - The HTML element associated with the setting.
+   * @param {object} scope - The current scope containing settings and actions.
+   */
+  handle_file_select(path, value, elm, scope) {
+    throw new Error("handle_file_select not implemented");
+  }
+  /**
+   * Performs actions before a setting is changed, such as clearing notices and updating the UI.
+   * @abstract
+   * @param {string} setting - The path of the setting being changed.
+   * @param {*} value - The new value for the setting.
+   * @param {HTMLElement} elm - The HTML element associated with the setting.
+   * @param {object} scope - The current scope containing settings and actions.
+   */
+  pre_change(path, value, elm) {
+  }
+  /**
+   * Performs actions after a setting is changed, such as updating UI elements.
+   * @abstract
+   * @param {string} setting - The path of the setting that was changed.
+   * @param {*} value - The new value for the setting.
+   * @param {HTMLElement} elm - The HTML element associated with the setting.
+   * @param {object} changed - Additional information about the change.
+   */
+  post_change(path, value, elm) {
+  }
+  /**
+   * Reverts a setting to its previous value in case of validation failure or error.
+   * @abstract
+   * @param {string} setting - The path of the setting to revert.
+   * @param {HTMLElement} elm - The HTML element associated with the setting.
+   * @param {object} scope - The current scope containing settings.
+   */
+  revert_setting(path, elm, scope) {
+    console.warn("revert_setting() not implemented");
+  }
+  // DEFAULT IMPLEMENTATIONS (may be overridden)
+  get setting_renderers() {
+    return {
+      text: this.render_text_component,
+      string: this.render_text_component,
+      password: this.render_password_component,
+      number: this.render_number_component,
+      dropdown: this.render_dropdown_component,
+      toggle: this.render_toggle_component,
+      textarea: this.render_textarea_component,
+      textarea_array: this.render_textarea_array_component,
+      button: this.render_button_component,
+      remove: this.render_remove_component,
+      folder: this.render_folder_select_component,
+      "text-file": this.render_file_select_component,
+      file: this.render_file_select_component,
+      slider: this.render_slider_component,
+      html: this.render_html_component,
+      button_with_confirm: this.render_button_with_confirm_component
+    };
+  }
+  async render_setting_component(elm, opts = {}) {
+    elm.innerHTML = "";
+    const path = elm.dataset.setting;
+    const scope = opts.scope || this.main.main;
+    try {
+      let value = elm.dataset.value ?? this.main.get_by_path(scope.settings, path);
+      if (typeof value === "undefined" && typeof elm.dataset.default !== "undefined") {
+        value = elm.dataset.default;
+        if (typeof value === "string") value = value.toLowerCase() === "true" ? true : value === "false" ? false : value;
+        this.main.set_by_path(scope.settings, path, value);
+      }
+      const renderer = this.setting_renderers[elm.dataset.type];
+      if (!renderer) {
+        console.warn(`Unsupported setting type: ${elm.dataset.type}`);
+        return elm;
+      }
+      const setting = renderer.call(this, elm, path, value, scope);
+      if (elm.dataset.name) setting.setName(elm.dataset.name);
+      if (elm.dataset.description) {
+        const frag = this.main.create_doc_fragment(`<span>${elm.dataset.description}</span>`);
+        setting.setDesc(frag);
+      }
+      if (elm.dataset.tooltip) setting.setTooltip(elm.dataset.tooltip);
+      this.add_button_if_needed(setting, elm, path, scope);
+      this.handle_disabled_and_hidden(elm);
+      return elm;
+    } catch (e) {
+      console.error({ path, elm });
+      console.error(e);
+    }
+  }
+  render_dropdown_component(elm, path, value, scope) {
+    const smart_setting = new this.setting_class(elm);
+    let options;
+    if (elm.dataset.optionsCallback) {
+      console.log(`getting options callback: ${elm.dataset.optionsCallback}`);
+      const opts_callback = this.main.get_by_path(scope, elm.dataset.optionsCallback);
+      if (typeof opts_callback === "function") options = opts_callback();
+      else console.warn(`optionsCallback is not a function: ${elm.dataset.optionsCallback}`, scope);
+    }
+    if (!options || !options.length) {
+      options = this.get_dropdown_options(elm);
+    }
+    smart_setting.addDropdown((dropdown) => {
+      if (elm.dataset.required) dropdown.inputEl.setAttribute("required", true);
+      options.forEach((option) => {
+        const opt = dropdown.addOption(option.value, option.name ?? option.value);
+        opt.selected = option.value === value;
+      });
+      dropdown.onChange((value2) => {
+        this.handle_on_change(path, value2, elm, scope);
+      });
+      dropdown.setValue(value);
+    });
+    return smart_setting;
+  }
+  render_text_component(elm, path, value, scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addText((text) => {
+      text.setPlaceholder(elm.dataset.placeholder || "");
+      if (value) text.setValue(value);
+      let debounceTimer;
+      if (elm.dataset.button) {
+        smart_setting.addButton((button) => {
+          button.setButtonText(elm.dataset.button);
+          button.onClick(async () => this.handle_on_change(path, text.getValue(), elm, scope));
+        });
+      } else {
+        text.onChange(async (value2) => {
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(() => this.handle_on_change(path, value2.trim(), elm, scope), 2e3);
+        });
+      }
+    });
+    return smart_setting;
+  }
+  render_password_component(elm, path, value, scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addText((text) => {
+      text.inputEl.type = "password";
+      text.setPlaceholder(elm.dataset.placeholder || "");
+      if (value) text.setValue(value);
+      let debounceTimer;
+      text.onChange(async (value2) => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => this.handle_on_change(path, value2, elm, scope), 2e3);
+      });
+    });
+    return smart_setting;
+  }
+  render_number_component(elm, path, value, scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addText((number) => {
+      number.inputEl.type = "number";
+      number.setPlaceholder(elm.dataset.placeholder || "");
+      if (typeof value !== "undefined") number.inputEl.value = parseInt(value);
+      number.inputEl.min = elm.dataset.min || 0;
+      if (elm.dataset.max) number.inputEl.max = elm.dataset.max;
+      let debounceTimer;
+      number.onChange(async (value2) => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => this.handle_on_change(path, parseInt(value2), elm, scope), 2e3);
+      });
+    });
+    return smart_setting;
+  }
+  render_toggle_component(elm, path, value, scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addToggle((toggle) => {
+      let checkbox_val = value ?? false;
+      if (typeof checkbox_val === "string") {
+        checkbox_val = checkbox_val.toLowerCase() === "true";
+      }
+      toggle.setValue(checkbox_val);
+      toggle.onChange(async (value2) => this.handle_on_change(path, value2, elm, scope));
+    });
+    return smart_setting;
+  }
+  render_textarea_component(elm, path, value, scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addTextArea((textarea) => {
+      textarea.setPlaceholder(elm.dataset.placeholder || "");
+      textarea.setValue(value || "");
+      let debounceTimer;
+      textarea.onChange(async (value2) => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => this.handle_on_change(path, value2, elm, scope), 2e3);
+      });
+    });
+    return smart_setting;
+  }
+  render_textarea_array_component(elm, path, value, scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addTextArea((textarea) => {
+      textarea.setPlaceholder(elm.dataset.placeholder || "");
+      textarea.setValue(Array.isArray(value) ? value.join("\n") : value || "");
+      let debounceTimer;
+      textarea.onChange(async (value2) => {
+        value2 = value2.split("\n").map((v) => v.trim()).filter((v) => v);
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => this.handle_on_change(path, value2, elm, scope), 2e3);
+      });
+    });
+    return smart_setting;
+  }
+  render_button_component(elm, path, value, scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addButton((button) => {
+      button.setButtonText(elm.dataset.btnText || elm.dataset.name);
+      button.onClick(async () => {
+        if (elm.dataset.confirm && !confirm(elm.dataset.confirm)) return;
+        if (elm.dataset.href) this.open_url(elm.dataset.href);
+        if (elm.dataset.callback) {
+          const callback = this.main.get_by_path(scope, elm.dataset.callback);
+          if (callback) callback(path, value, elm, scope);
+        }
+      });
+    });
+    return smart_setting;
+  }
+  render_remove_component(elm, path, value, scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addButton((button) => {
+      button.setButtonText(elm.dataset.btnText || elm.dataset.name || "Remove");
+      button.onClick(async () => {
+        this.main.delete_by_path(scope.settings, path);
+        if (elm.dataset.callback) {
+          const callback = this.main.get_by_path(scope, elm.dataset.callback);
+          if (callback) callback(path, value, elm, scope);
+        }
+      });
+    });
+    return smart_setting;
+  }
+  render_folder_select_component(elm, path, value, scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addFolderSelect((folder_select) => {
+      folder_select.setPlaceholder(elm.dataset.placeholder || "");
+      if (value) folder_select.setValue(value);
+      folder_select.inputEl.closest("div").addEventListener("click", () => {
+        this.handle_folder_select(path, value, elm, scope);
+      });
+      folder_select.inputEl.querySelector("input").addEventListener("change", (e) => {
+        const folder = e.target.value;
+        this.handle_on_change(path, folder, elm, scope);
+        console.log("folder changed", folder);
+      });
+    });
+    return smart_setting;
+  }
+  render_file_select_component(elm, path, value, scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addFileSelect((file_select) => {
+      file_select.setPlaceholder(elm.dataset.placeholder || "");
+      if (value) file_select.setValue(value);
+      file_select.inputEl.closest("div").addEventListener("click", () => {
+        this.handle_file_select(path, value, elm, scope);
+      });
+    });
+    return smart_setting;
+  }
+  render_slider_component(elm, path, value, scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addSlider((slider) => {
+      const min = parseFloat(elm.dataset.min) || 0;
+      const max = parseFloat(elm.dataset.max) || 100;
+      const step = parseFloat(elm.dataset.step) || 1;
+      const currentValue = typeof value !== "undefined" ? parseFloat(value) : min;
+      slider.setLimits(min, max, step);
+      slider.setValue(currentValue);
+      slider.onChange((newVal) => {
+        const numericVal = parseFloat(newVal);
+        this.handle_on_change(path, numericVal, elm, scope);
+      });
+    });
+    return smart_setting;
+  }
+  render_html_component(elm, path, value, scope) {
+    elm.innerHTML = value;
+    return elm;
+  }
+  add_button_if_needed(smart_setting, elm, path, scope) {
+    if (elm.dataset.btn) {
+      smart_setting.addButton((button) => {
+        button.setButtonText(elm.dataset.btn);
+        button.inputEl.addEventListener("click", (e) => {
+          if (elm.dataset.btnCallback && typeof scope[elm.dataset.btnCallback] === "function") {
+            if (elm.dataset.btnCallbackArg) scope[elm.dataset.btnCallback](elm.dataset.btnCallbackArg);
+            else scope[elm.dataset.btnCallback](path, null, smart_setting, scope);
+          } else if (elm.dataset.btnHref) {
+            this.open_url(elm.dataset.btnHref);
+          } else if (elm.dataset.callback && typeof this.main.get_by_path(scope, elm.dataset.callback) === "function") {
+            this.main.get_by_path(scope, elm.dataset.callback)(path, null, smart_setting, scope);
+          } else if (elm.dataset.href) {
+            this.open_url(elm.dataset.href);
+          } else {
+            console.error("No callback or href found for button.");
+          }
+        });
+        if (elm.dataset.btnDisabled || elm.dataset.disabled && elm.dataset.btnDisabled !== "false") {
+          button.inputEl.disabled = true;
+        }
+      });
+    }
+  }
+  handle_disabled_and_hidden(elm) {
+    if (elm.dataset.disabled && elm.dataset.disabled !== "false") {
+      elm.classList.add("disabled");
+      elm.querySelector("input, select, textarea, button").disabled = true;
+    }
+    if (elm.dataset.hidden && elm.dataset.hidden !== "false") {
+      elm.style.display = "none";
+    }
+  }
+  get_dropdown_options(elm) {
+    return Object.entries(elm.dataset).reduce((acc, [k, v]) => {
+      if (!k.startsWith("option")) return acc;
+      const [value, name] = v.split("|");
+      acc.push({ value, name: name || value });
+      return acc;
+    }, []);
+  }
+  handle_on_change(path, value, elm, scope) {
+    this.pre_change(path, value, elm, scope);
+    if (elm.dataset.validate) {
+      const valid = this[elm.dataset.validate](path, value, elm, scope);
+      if (!valid) {
+        elm.querySelector(".setting-item").style.border = "2px solid red";
+        this.revert_setting(path, elm, scope);
+        return;
+      }
+    }
+    this.main.set_by_path(scope.settings, path, value);
+    if (elm.dataset.callback) {
+      const callback = this.main.get_by_path(scope, elm.dataset.callback);
+      if (callback) callback(path, value, elm, scope);
+    }
+    this.post_change(path, value, elm, scope);
+  }
+  render_button_with_confirm_component(elm, path, value, scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addButton((button) => {
+      button.setButtonText(elm.dataset.btnText || elm.dataset.name);
+      elm.appendChild(this.main.create_doc_fragment(`
+        <div class="sc-inline-confirm-row" style="
+          display: none;
+        ">
+          <span style="margin-right: 10px;">
+            ${elm.dataset.confirm || "Are you sure?"}
+          </span>
+          <span class="sc-inline-confirm-row-buttons">
+            <button class="sc-inline-confirm-yes">Yes</button>
+            <button class="sc-inline-confirm-cancel">Cancel</button>
+          </span>
+        </div>
+      `));
+      const confirm_row = elm.querySelector(".sc-inline-confirm-row");
+      const confirm_yes = confirm_row.querySelector(".sc-inline-confirm-yes");
+      const confirm_cancel = confirm_row.querySelector(".sc-inline-confirm-cancel");
+      button.onClick(async () => {
+        confirm_row.style.display = "block";
+        elm.querySelector(".setting-item").style.display = "none";
+      });
+      confirm_yes.addEventListener("click", async () => {
+        if (elm.dataset.href) this.open_url(elm.dataset.href);
+        if (elm.dataset.callback) {
+          const callback = this.main.get_by_path(scope, elm.dataset.callback);
+          if (callback) callback(path, value, elm, scope);
+        }
+        elm.querySelector(".setting-item").style.display = "block";
+        confirm_row.style.display = "none";
+      });
+      confirm_cancel.addEventListener("click", () => {
+        confirm_row.style.display = "none";
+        elm.querySelector(".setting-item").style.display = "block";
+      });
+    });
+    return smart_setting;
+  }
+};
+
+// node_modules/smart-environment/node_modules/smart-view/adapters/obsidian.js
+var import_obsidian = require("obsidian");
+var SmartViewObsidianAdapter = class extends SmartViewAdapter {
+  get setting_class() {
+    return import_obsidian.Setting;
+  }
+  open_url(url2) {
+    window.open(url2);
+  }
+  async render_file_select_component(elm, path, value) {
+    return super.render_text_component(elm, path, value);
+  }
+  async render_folder_select_component(elm, path, value) {
+    return super.render_text_component(elm, path, value);
+  }
+  async render_markdown(markdown, scope) {
+    const component = scope.env.smart_connections_plugin.connections_view;
+    if (!scope) return console.warn("Scope required for rendering markdown in Obsidian adapter");
+    const frag = this.main.create_doc_fragment("<div><div class='inner'></div></div>");
+    const container = frag.querySelector(".inner");
+    try {
+      await import_obsidian.MarkdownRenderer.render(
+        scope.env.plugin.app,
+        markdown,
+        container,
+        scope?.file_path || "",
+        component || new import_obsidian.Component()
+      );
+    } catch (e) {
+      console.warn("Error rendering markdown in Obsidian adapter", e);
+    }
+    return frag;
+  }
+  get_icon_html(name) {
+    return (0, import_obsidian.getIcon)(name).outerHTML;
+  }
+  // Obsidian Specific
+  is_mod_event(event) {
+    return import_obsidian.Keymap.isModEvent(event);
+  }
+};
+
+// node_modules/smart-environment/obsidian.js
+var OBSIDIAN_DEFAULTS = {
+  env_path: "",
+  modules: {
+    smart_fs: {
+      class: SmartFs,
+      adapter: SmartFsObsidianAdapter
+    },
+    smart_view: {
+      class: SmartView,
+      adapter: SmartViewObsidianAdapter
+    }
+  }
+};
+var SmartEnv2 = class extends SmartEnv {
+  constructor(opts = {}) {
+    opts = merge_options(opts, OBSIDIAN_DEFAULTS);
+    super(opts);
   }
 };
 
@@ -1912,12 +3462,6 @@ function deep_equal(obj1, obj2, visited = /* @__PURE__ */ new WeakMap()) {
     return keys1.every((key) => deep_equal(obj1[key], obj2[key], visited));
   }
   return obj1 === obj2;
-}
-
-// node_modules/smart-sources/node_modules/smart-environment/utils/camel_case_to_snake_case.js
-function camel_case_to_snake_case2(str) {
-  const result = str.replace(/([A-Z])/g, (match) => `_${match.toLowerCase()}`).replace(/^_/, "").replace(/2$/, "");
-  return result;
 }
 
 // node_modules/smart-sources/node_modules/smart-collections/item.js
@@ -2233,6 +3777,10 @@ var CollectionItem = class _CollectionItem {
     return item_component;
   }
 };
+function camel_case_to_snake_case2(str) {
+  const result = str.replace(/([A-Z])/g, (match) => `_${match.toLowerCase()}`).replace(/^_/, "").replace(/2$/, "");
+  return result;
+}
 
 // node_modules/smart-sources/node_modules/smart-collections/collection.js
 var AsyncFunction = Object.getPrototypeOf(async function() {
@@ -4326,6 +5874,7 @@ ${content}`.substring(0, max_tokens * 4);
     if (this._source_adapter) return this._source_adapter;
     if (this.source_adapters[this.file_type]) this._source_adapter = new this.source_adapters[this.file_type](this);
     else {
+      console.log("No source adapter found for", this.file_type, this);
       this._source_adapter = new this.source_adapters["default"](this);
     }
     return this._source_adapter;
@@ -4930,7 +6479,7 @@ ${remove_smart_blocks.map((item) => `${item.reason} - ${item.key}`).join("\n")}`
    * @returns {number} The total number of files.
    */
   get total_files() {
-    return this.env.fs.file_paths.filter((file) => file.endsWith(".md") || file.endsWith(".canvas")).length;
+    return this.fs.file_paths.filter((file) => file.endsWith(".md") || file.endsWith(".canvas")).length;
   }
 };
 var settings_config2 = {
@@ -5246,7 +6795,7 @@ var CollectionItem2 = class _CollectionItem {
     return this.data?.key || this.get_key();
   }
   get item_type_key() {
-    return camel_case_to_snake_case(this.constructor.name);
+    return camel_case_to_snake_case3(this.constructor.name);
   }
   /**
    * A simple reference object for this item.
@@ -5309,6 +6858,10 @@ var CollectionItem2 = class _CollectionItem {
     return item_component;
   }
 };
+function camel_case_to_snake_case3(str) {
+  const result = str.replace(/([A-Z])/g, (match) => `_${match.toLowerCase()}`).replace(/^_/, "").replace(/2$/, "");
+  return result;
+}
 
 // node_modules/smart-blocks/node_modules/smart-collections/collection.js
 var AsyncFunction2 = Object.getPrototypeOf(async function() {
@@ -10691,7 +12244,7 @@ var SmartEmbedTransformersIframeAdapter = class extends SmartEmbedIframeAdapter 
     if (this.adapter_settings.legacy_transformers || !this.use_gpu) {
       this.connector = this.connector.replace("@huggingface/transformers", "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2");
       this.use_gpu = false;
-    } else this.connector = this.connector.replace("@huggingface/transformers", "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.3.2");
+    } else this.connector = this.connector.replace("@huggingface/transformers", "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.3.3");
   }
   /** @returns {Object} Settings configuration for transformers adapter */
   get settings_config() {
@@ -10713,7 +12266,7 @@ var SmartEmbedTransformersIframeAdapter = class extends SmartEmbedIframeAdapter 
 };
 
 // node_modules/smart-file-system/utils/match_glob.js
-var glob_to_regex_pattern = (pattern, extended_glob) => {
+var glob_to_regex_pattern2 = (pattern, extended_glob) => {
   let in_class = false;
   let in_brace = 0;
   let result = "";
@@ -10803,14 +12356,14 @@ var glob_to_regex_pattern = (pattern, extended_glob) => {
   }
   return result;
 };
-var adjust_for_windows_paths = (pattern, windows_paths) => windows_paths ? pattern.replace(/\\\//g, "[\\\\/]") : pattern;
-var create_regex = (pattern, { case_sensitive, extended_glob, windows_paths }) => {
-  const regex_pattern = glob_to_regex_pattern(pattern, extended_glob);
-  const adjusted_pattern = adjust_for_windows_paths(regex_pattern, windows_paths);
+var adjust_for_windows_paths2 = (pattern, windows_paths) => windows_paths ? pattern.replace(/\\\//g, "[\\\\/]") : pattern;
+var create_regex2 = (pattern, { case_sensitive, extended_glob, windows_paths }) => {
+  const regex_pattern = glob_to_regex_pattern2(pattern, extended_glob);
+  const adjusted_pattern = adjust_for_windows_paths2(regex_pattern, windows_paths);
   const flags = case_sensitive ? "" : "i";
   return new RegExp(`^${adjusted_pattern}$`, flags);
 };
-function glob_to_regex(pattern, options = {}) {
+function glob_to_regex2(pattern, options = {}) {
   const default_options = { case_sensitive: true, extended_glob: false, windows_paths: false };
   const merged_options = { ...default_options, ...options };
   if (pattern === "") {
@@ -10822,11 +12375,11 @@ function glob_to_regex(pattern, options = {}) {
   if (pattern === "**" && !merged_options.windows_paths) {
     return /^.+$/;
   }
-  return create_regex(pattern, merged_options);
+  return create_regex2(pattern, merged_options);
 }
 
 // node_modules/smart-file-system/utils/fuzzy_search.js
-function fuzzy_search(arr, search_term) {
+function fuzzy_search2(arr, search_term) {
   let matches = [];
   for (let i = 0; i < arr.length; i++) {
     const search_chars = search_term.toLowerCase().split("");
@@ -10850,7 +12403,7 @@ function fuzzy_search(arr, search_term) {
 }
 
 // node_modules/smart-file-system/smart_fs.js
-var SmartFs = class {
+var SmartFs2 = class {
   /**
    * Create a new SmartFs instance
    * 
@@ -10928,7 +12481,7 @@ var SmartFs = class {
    * @param {string} pattern - The pattern to add
    */
   add_ignore_pattern(pattern, opts = {}) {
-    this.excluded_patterns.push(glob_to_regex(pattern.trim(), opts));
+    this.excluded_patterns.push(glob_to_regex2(pattern.trim(), opts));
   }
   /**
    * Check if a path is ignored based on gitignore patterns
@@ -11130,7 +12683,7 @@ var SmartFs = class {
     if (this.adapter.get_link_target_path) return this.adapter.get_link_target_path(link_target, source_path);
     if (!this.file_paths) return console.warn("get_link_target_path: file_paths not found");
     const matching_file_paths = this.file_paths.filter((path) => path.includes(link_target));
-    return fuzzy_search(matching_file_paths, link_target)[0];
+    return fuzzy_search2(matching_file_paths, link_target)[0];
   }
   get sep() {
     return this.adapter.sep || "/";
@@ -11141,8 +12694,8 @@ var SmartFs = class {
 };
 
 // node_modules/smart-file-system/adapters/obsidian.js
-var obsidian = __toESM(require("obsidian"), 1);
-var SmartFsObsidianAdapter = class {
+var obsidian2 = __toESM(require("obsidian"), 1);
+var SmartFsObsidianAdapter2 = class {
   /**
    * Create an SmartFsObsidianAdapter instance
    * 
@@ -11150,7 +12703,7 @@ var SmartFsObsidianAdapter = class {
    */
   constructor(smart_fs) {
     this.smart_fs = smart_fs;
-    this.obsidian = smart_fs.env.main.obsidian || obsidian;
+    this.obsidian = smart_fs.env.main.obsidian || obsidian2;
     this.obsidian_app = smart_fs.env.main.app;
     this.obsidian_adapter = smart_fs.env.main.app.vault.adapter;
   }
@@ -11363,7 +12916,7 @@ var SmartFsObsidianAdapter = class {
 };
 
 // node_modules/smart-view/smart_view.js
-var SmartView = class {
+var SmartView2 = class {
   /**
    * @constructor
    * @param {object} opts - Additional options or overrides for rendering.
@@ -11442,7 +12995,7 @@ var SmartView = class {
    * @returns {*}
    */
   get_by_path(obj, path) {
-    return get_by_path(obj, path);
+    return get_by_path2(obj, path);
   }
   /**
    * Sets a value in an object by path.
@@ -11451,7 +13004,7 @@ var SmartView = class {
    * @param {*} value - The value to set.
    */
   set_by_path(obj, path, value) {
-    set_by_path(obj, path, value);
+    set_by_path2(obj, path, value);
   }
   /**
    * Deletes a value from an object by path.
@@ -11459,7 +13012,7 @@ var SmartView = class {
    * @param {string} path - The path to delete.
    */
   delete_by_path(obj, path) {
-    delete_by_path(obj, path);
+    delete_by_path2(obj, path);
   }
   /**
    * Escapes HTML special characters in a string.
@@ -11557,8 +13110,19 @@ ${attributes}
       }
     });
   }
+  apply_style_sheet(sheet) {
+    if ("adoptedStyleSheets" in Document.prototype) {
+      document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+    } else {
+      const styleEl = document.createElement("style");
+      if (sheet.cssRules) {
+        styleEl.textContent = Array.from(sheet.cssRules).map((rule) => rule.cssText).join("\n");
+      }
+      document.head.appendChild(styleEl);
+    }
+  }
 };
-function get_by_path(obj, path) {
+function get_by_path2(obj, path) {
   if (!path) return "";
   const keys = path.split(".");
   const finalKey = keys.pop();
@@ -11568,7 +13132,7 @@ function get_by_path(obj, path) {
   }
   return instance ? instance[finalKey] : void 0;
 }
-function set_by_path(obj, path, value) {
+function set_by_path2(obj, path, value) {
   const keys = path.split(".");
   const final_key = keys.pop();
   const target = keys.reduce((acc, key) => {
@@ -11579,7 +13143,7 @@ function set_by_path(obj, path, value) {
   }, obj);
   target[final_key] = value;
 }
-function delete_by_path(obj, path) {
+function delete_by_path2(obj, path) {
   const keys = path.split(".");
   const finalKey = keys.pop();
   const instance = keys.reduce((acc, key) => acc && acc[key], obj);
@@ -11589,7 +13153,7 @@ function delete_by_path(obj, path) {
 }
 
 // node_modules/smart-view/adapters/_adapter.js
-var SmartViewAdapter = class {
+var SmartViewAdapter2 = class {
   constructor(main) {
     this.main = main;
   }
@@ -11891,6 +13455,11 @@ var SmartViewAdapter = class {
       folder_select.inputEl.closest("div").addEventListener("click", () => {
         this.handle_folder_select(path, value, elm, scope);
       });
+      folder_select.inputEl.querySelector("input").addEventListener("change", (e) => {
+        const folder = e.target.value;
+        this.handle_on_change(path, folder, elm, scope);
+        console.log("folder changed", folder);
+      });
     });
     return smart_setting;
   }
@@ -12026,10 +13595,10 @@ var SmartViewAdapter = class {
 };
 
 // node_modules/smart-view/adapters/obsidian.js
-var import_obsidian2 = require("obsidian");
-var SmartViewObsidianAdapter = class extends SmartViewAdapter {
+var import_obsidian5 = require("obsidian");
+var SmartViewObsidianAdapter2 = class extends SmartViewAdapter2 {
   get setting_class() {
-    return import_obsidian2.Setting;
+    return import_obsidian5.Setting;
   }
   open_url(url2) {
     window.open(url2);
@@ -12046,12 +13615,12 @@ var SmartViewObsidianAdapter = class extends SmartViewAdapter {
     const frag = this.main.create_doc_fragment("<div><div class='inner'></div></div>");
     const container = frag.querySelector(".inner");
     try {
-      await import_obsidian2.MarkdownRenderer.render(
+      await import_obsidian5.MarkdownRenderer.render(
         scope.env.plugin.app,
         markdown,
         container,
         scope?.file_path || "",
-        component || new import_obsidian2.Component()
+        component || new import_obsidian5.Component()
       );
     } catch (e) {
       console.warn("Error rendering markdown in Obsidian adapter", e);
@@ -12059,16 +13628,16 @@ var SmartViewObsidianAdapter = class extends SmartViewAdapter {
     return frag;
   }
   get_icon_html(name) {
-    return (0, import_obsidian2.getIcon)(name).outerHTML;
+    return (0, import_obsidian5.getIcon)(name).outerHTML;
   }
   // Obsidian Specific
   is_mod_event(event) {
-    return import_obsidian2.Keymap.isModEvent(event);
+    return import_obsidian5.Keymap.isModEvent(event);
   }
 };
 
 // src/smart_notices.js
-var import_obsidian3 = require("obsidian");
+var import_obsidian6 = require("obsidian");
 
 // src/notices.js
 var NOTICES = {
@@ -12164,7 +13733,8 @@ var NOTICES = {
     button: {
       en: "Pause",
       callback: (scope) => {
-        scope._embed_model.adapter.halt_embed_queue_processing();
+        console.log("pausing");
+        scope.env.smart_sources.entities_vector_adapter.halt_embed_queue_processing();
       }
     },
     timeout: 0
@@ -12178,7 +13748,7 @@ var NOTICES = {
     button: {
       en: "Resume",
       callback: (scope) => {
-        scope._embed_model.adapter.resume_embed_queue_processing(100);
+        scope.env.smart_sources.entities_vector_adapter.resume_embed_queue_processing(100);
       }
     },
     timeout: 0
@@ -12217,7 +13787,7 @@ var NOTICES = {
 };
 
 // src/smart_notices.js
-function define_default_create_methods(notices) {
+function define_default_create_methods(notices, scope = null) {
   for (const key of Object.keys(notices)) {
     const notice_obj = notices[key];
     if (typeof notice_obj.create !== "function") {
@@ -12231,7 +13801,7 @@ function define_default_create_methods(notices) {
           const btn_label = typeof this.button.en === "string" ? this.button.en : "OK";
           button = {
             text: btn_label,
-            callback: typeof this.button.callback === "function" ? () => this.button.callback(opts.scope || null) : () => {
+            callback: typeof this.button.callback === "function" ? this.button.callback : () => {
             }
             // no-op
           };
@@ -12261,7 +13831,7 @@ var SmartNotices = class {
     this.scope = scope;
     this.main = scope;
     this.active = {};
-    define_default_create_methods(NOTICES);
+    define_default_create_methods(NOTICES, scope);
   }
   /** plugin settings for notices (muted, etc.) */
   get settings() {
@@ -12305,7 +13875,7 @@ var SmartNotices = class {
       confirm: opts.confirm
     };
     if (notice_entry?.create) {
-      const result = notice_entry.create({ ...opts });
+      const result = notice_entry.create({ ...opts, scope: this.main });
       derived.text = message || result.text;
       derived.timeout = result.timeout;
       derived.button = result.button;
@@ -12364,7 +13934,7 @@ var SmartNotices = class {
         e.preventDefault();
         e.stopPropagation();
       }
-      btnConfig.callback?.();
+      btnConfig.callback?.(this.main);
     });
     container.appendChild(btn);
   }
@@ -12373,7 +13943,7 @@ var SmartNotices = class {
    */
   _add_mute_button(id, container) {
     const btn = document.createElement("button");
-    (0, import_obsidian3.setIcon)(btn, "bell-off");
+    (0, import_obsidian6.setIcon)(btn, "bell-off");
     btn.addEventListener("click", () => {
       if (!this.settings.muted) this.settings.muted = {};
       this.settings.muted[id] = true;
@@ -12402,7 +13972,7 @@ var SmartNotices = class {
 };
 
 // src/smart_env.config.js
-var import_obsidian9 = require("obsidian");
+var import_obsidian12 = require("obsidian");
 
 // node_modules/smart-sources/components/settings.js
 async function build_html2(sources_collection, opts = {}) {
@@ -12711,7 +14281,7 @@ async function post_process8(collection, frag, opts = {}) {
 }
 
 // src/components/connections_result.js
-var import_obsidian4 = require("obsidian");
+var import_obsidian7 = require("obsidian");
 async function build_html6(result, opts = {}) {
   const item = result.item;
   const score = result.score;
@@ -12769,7 +14339,7 @@ async function post_process9(result, frag, opts = {}) {
     }
     const link = result2.dataset.link || result2.dataset.path;
     if (result2.classList.contains("sc-collapsed")) {
-      if (import_obsidian4.Keymap.isModEvent(event)) {
+      if (import_obsidian7.Keymap.isModEvent(event)) {
         console.log("open_note", link, this);
         plugin.open_note(link, event);
       } else {
@@ -12869,6 +14439,9 @@ async function post_process10(obsidian_view, frag, opts) {
   const settings_button = frag.querySelector('button[title="Chat Settings"]');
   const overlay_container = frag.querySelector(".smart-chat-overlay");
   const settings_container = overlay_container.querySelector(".sc-settings");
+  while (!obsidian_view.env.smart_threads) {
+    await new Promise((resolve) => setTimeout(resolve, 300));
+  }
   const threads_collection = obsidian_view.env.smart_threads;
   threads_collection.container = frag.querySelector(".sc-chat-container");
   let thread;
@@ -16660,7 +18233,7 @@ var SmartChatModelCustomAdapter = class extends SmartChatModelApiAdapter {
   get settings_config() {
     return {
       /**
-       * Select which specialized request/response adapter 
+       * Select which specialized request/response adapter
        * you'd like to use for your custom endpoint.
        */
       "[CHAT_ADAPTER].api_adapter": {
@@ -16721,6 +18294,16 @@ var SmartChatModelCustomAdapter = class extends SmartChatModelApiAdapter {
    */
   validate_get_models_params() {
     return true;
+  }
+  /**
+   * Unlike most API-based adapters, we do NOT force the user to have model_key set.
+   * So we override validate_config() to skip the "No model selected" error.
+   * Since this is a custom adapter, the onus is on the user to configure it correctly.
+   * @override
+   * @returns {Object} { valid: boolean, message: string }
+   */
+  validate_config() {
+    return { valid: true, message: "Configuration is valid." };
   }
 };
 
@@ -16938,7 +18521,7 @@ var SmartHttpObsidianResponseAdapter = class extends SmartHttpResponseAdapter3 {
 };
 
 // src/smart_env.config.js
-var import_obsidian10 = require("obsidian");
+var import_obsidian13 = require("obsidian");
 
 // node_modules/smart-chats/utils/ScTranslations.json
 var ScTranslations_default = {
@@ -19724,7 +21307,7 @@ var smart_env_config = {
       },
       http_adapter: new SmartHttpRequest3({
         adapter: SmartHttpObsidianRequestAdapter3,
-        obsidian_request_url: import_obsidian10.requestUrl
+        obsidian_request_url: import_obsidian13.requestUrl
       })
     },
     smart_embed_model: {
@@ -19732,19 +21315,20 @@ var smart_env_config = {
       adapters: {
         transformers: SmartEmbedTransformersIframeAdapter,
         openai: SmartEmbedOpenAIAdapter
+        // ollama: SmartEmbedModelOllamaAdapter,
       }
     },
     smart_fs: {
-      class: SmartFs,
-      adapter: SmartFsObsidianAdapter
+      class: SmartFs2,
+      adapter: SmartFsObsidianAdapter2
     },
     smart_view: {
-      class: SmartView,
-      adapter: SmartViewObsidianAdapter
+      class: SmartView2,
+      adapter: SmartViewObsidianAdapter2
     },
     smart_notices: {
       class: SmartNotices,
-      adapter: import_obsidian9.Notice
+      adapter: import_obsidian12.Notice
     }
   },
   components: {
@@ -19861,8 +21445,8 @@ var views_default = {
 };
 
 // src/views/smart_view.obsidian.js
-var import_obsidian11 = require("obsidian");
-var SmartObsidianView = class extends import_obsidian11.ItemView {
+var import_obsidian14 = require("obsidian");
+var SmartObsidianView = class extends import_obsidian14.ItemView {
   /**
    * Creates an instance of SmartObsidianView.
    * @param {any} leaf
@@ -20016,7 +21600,7 @@ var SmartObsidianView = class extends import_obsidian11.ItemView {
 };
 
 // src/views/sc_connections.obsidian.js
-var import_obsidian12 = require("obsidian");
+var import_obsidian15 = require("obsidian");
 var ScConnectionsView = class extends SmartObsidianView {
   static get view_type() {
     return "smart-connections-view";
@@ -20153,7 +21737,7 @@ function post_process_note_inspect_opener(view, frag, opts = {}) {
   });
   return frag;
 }
-var SmartNoteInspectModal = class extends import_obsidian12.Modal {
+var SmartNoteInspectModal = class extends import_obsidian15.Modal {
   constructor(env, entity) {
     super(env.smart_connections_plugin.app);
     this.entity = entity;
@@ -20197,7 +21781,7 @@ var ScLookupView = class extends SmartObsidianView {
 };
 
 // src/views/smart_chat.obsidian.js
-var import_obsidian13 = require("obsidian");
+var import_obsidian16 = require("obsidian");
 var SmartChatsView = class extends SmartObsidianView {
   static get view_type() {
     return "smart-chat-view";
@@ -20356,7 +21940,7 @@ var SmartChatsView = class extends SmartObsidianView {
     if (this.textarea.value.endsWith("[[")) this.textarea.value = this.textarea.value.slice(0, -2);
   }
 };
-var ScChatHistoryModal = class extends import_obsidian13.FuzzySuggestModal {
+var ScChatHistoryModal = class extends import_obsidian16.FuzzySuggestModal {
   constructor(app, view) {
     super(app);
     this.app = app;
@@ -20376,7 +21960,7 @@ var ScChatHistoryModal = class extends import_obsidian13.FuzzySuggestModal {
     this.view.open_thread(thread_name);
   }
 };
-var ScOmniModal = class extends import_obsidian13.FuzzySuggestModal {
+var ScOmniModal = class extends import_obsidian16.FuzzySuggestModal {
   constructor(app, view) {
     super(app);
     this.app = app;
@@ -20408,7 +21992,7 @@ var ScOmniModal = class extends import_obsidian13.FuzzySuggestModal {
     this.view.open_modal(item);
   }
 };
-var ContextSelectModal = class extends import_obsidian13.FuzzySuggestModal {
+var ContextSelectModal = class extends import_obsidian16.FuzzySuggestModal {
   constructor(app, view) {
     super(app);
     this.app = app;
@@ -20426,7 +22010,7 @@ var ContextSelectModal = class extends import_obsidian13.FuzzySuggestModal {
 var ScFileSelectModal = class extends ContextSelectModal {
   constructor(app, view) {
     super(app, view);
-    const mod_key = import_obsidian13.Platform.isMacOS ? `\u2318` : `ctrl`;
+    const mod_key = import_obsidian16.Platform.isMacOS ? `\u2318` : `ctrl`;
     this.setInstructions([
       {
         command: `\u2190`,
@@ -20454,7 +22038,7 @@ var ScFileSelectModal = class extends ContextSelectModal {
     return item.basename;
   }
   selectSuggestion(item, evt) {
-    if (import_obsidian13.Keymap.isModEvent(evt)) this.view.insert_system_prompt(item.item);
+    if (import_obsidian16.Keymap.isModEvent(evt)) this.view.insert_system_prompt(item.item);
     else {
       const link = `[[${item.item.path}]] `;
       if (evt.shiftKey) this.view.insert_selection("!" + link);
@@ -20576,6 +22160,7 @@ var SmartChatGPTView = class extends SmartObsidianView {
   }
   create() {
     this.frame = document.createElement("webview");
+    this.frame.setAttribute("partition", "persist:smart-chatgpt");
     this.frame.setAttribute("nodeintegration", "");
     this.frame.setAttribute("contextisolation", "");
     this.frame.setAttribute("allowpopups", "");
@@ -20587,8 +22172,8 @@ var SmartChatGPTView = class extends SmartObsidianView {
 };
 
 // src/views/sc_private_chat.obsidian.js
-var import_obsidian14 = require("obsidian");
-var SmartPrivateChatView = class extends import_obsidian14.ItemView {
+var import_obsidian17 = require("obsidian");
+var SmartPrivateChatView = class extends import_obsidian17.ItemView {
   static get view_type() {
     return "smart-private-chat";
   }
@@ -20673,7 +22258,7 @@ var SmartSearch = class {
 };
 
 // src/sc_settings_tab.js
-var import_obsidian15 = require("obsidian");
+var import_obsidian18 = require("obsidian");
 
 // src/components/main_settings.js
 async function render23(scope) {
@@ -20716,9 +22301,16 @@ async function post_process17(scope, frag) {
     const sub_scope = container.dataset.smartSettings.split(".").reduce((acc, key) => acc[key], scope);
     await sub_scope.render_settings(container);
   }
-  frag.querySelector(".sc-supporters")?.addEventListener("click", (e) => {
-    e.currentTarget.style.maxHeight = "100%";
-  });
+  const supporter_container = frag.querySelector(".sc-supporters");
+  if (supporter_container) {
+    const expand_container = (e) => {
+      e.currentTarget.style.maxHeight = "100%";
+      e.currentTarget.removeEventListener("click", expand_container);
+      e.currentTarget.removeEventListener("scroll", expand_container);
+    };
+    supporter_container.addEventListener("click", expand_container);
+    supporter_container.addEventListener("scroll", expand_container);
+  }
   return frag;
 }
 function render_mobile_warning(scope) {
@@ -20761,13 +22353,8 @@ function render_info_callout() {
 }
 function render_supporters_section(scope) {
   const stable_release_html = scope.EARLY_ACCESS ? "" : `<p>The success of Smart Connections is a direct result of our community of supporters who generously fund and evaluate new features. Their unwavering commitment to our privacy-focused, open-source software benefits all. Together, we can continue to innovate and make a positive impact on the world.</p>` + render_supporter_benefits_html();
-  const become_supporter_html = scope.EARLY_ACCESS ? "" : `<div class="setting-component"
-      data-name="Upgrade to Early Access Version (v2.4)"
-      data-description="Upgrade to v2.4 (Early Access) to access new features and improvements."
-      data-type="button"
-      data-btn-text="Upgrade to early-access"
-      data-callback="update_early_access"
-    ></div>
+  const become_supporter_html = `
+    ${render_sign_in_or_open_smart_plugins(scope)}
     <div class="setting-component"
       data-name="Become a Supporter"
       data-description="Become a Supporter"
@@ -20903,17 +22490,30 @@ function render_version_revert_button(scope) {
   }
   return "";
 }
+function render_sign_in_or_open_smart_plugins(scope) {
+  const isLoggedIn = !!localStorage.getItem("smart_plugins_oauth_token");
+  const buttonLabel = isLoggedIn ? "Open Smart Plugins" : "Sign in";
+  const buttonCallback = isLoggedIn ? "open_smart_plugins_settings" : "initiate_smart_plugins_oauth";
+  return `
+    <div class="setting-component"
+      data-name="Smart Plugins - Early Access"
+      data-type="button"
+      data-btn-text="${buttonLabel}"
+      data-description="Sign in to access early-release Smart Plugins"
+      data-callback="${buttonCallback}"
+    ></div>
+  `;
+}
 
 // src/sc_settings_tab.js
-var ScSettingsTab = class extends import_obsidian15.PluginSettingTab {
+var ScSettingsTab = class extends import_obsidian18.PluginSettingTab {
   constructor(app, plugin) {
     super(app, plugin);
     this.plugin = plugin;
     this.main_settings_container = null;
   }
   /**
-   * @method display
-   * @description Called by Obsidian to display the settings tab
+   * Called by Obsidian to display the settings tab
    */
   display() {
     console.log("displaying settings tab");
@@ -20921,14 +22521,17 @@ var ScSettingsTab = class extends import_obsidian15.PluginSettingTab {
   }
   get smart_view() {
     if (!this._smart_view) {
-      this._smart_view = new this.plugin.smart_env_config.modules.smart_view.class({ adapter: this.plugin.smart_env_config.modules.smart_view.adapter });
+      this._smart_view = new this.plugin.smart_env_config.modules.smart_view.class({
+        adapter: this.plugin.smart_env_config.modules.smart_view.adapter
+      });
     }
     return this._smart_view;
   }
   async render_settings(container = this.main_settings_container, opts = {}) {
-    if (!this.main_settings_container || container !== this.main_settings_container) this.main_settings_container = container;
+    if (!this.main_settings_container || container !== this.main_settings_container) {
+      this.main_settings_container = container;
+    }
     if (!container) throw new Error("Container is required");
-    container.innerHTML = "";
     container.innerHTML = '<div class="sc-loading">Loading main settings...</div>';
     const frag = await render23.call(this.smart_view, this.plugin, opts);
     container.innerHTML = "";
@@ -21097,8 +22700,8 @@ var ScAppConnector = class _ScAppConnector {
   }
   async full_render(markdown, rel_path) {
     const html_elm = document.createElement("div");
-    const { MarkdownRenderer: MarkdownRenderer2, htmlToMarkdown, Component: Component2 } = this.sc_plugin.obsidian;
-    await MarkdownRenderer2.render(this.sc_plugin.app, markdown, html_elm, rel_path, new Component2());
+    const { MarkdownRenderer: MarkdownRenderer3, htmlToMarkdown, Component: Component3 } = this.sc_plugin.obsidian;
+    await MarkdownRenderer3.render(this.sc_plugin.app, markdown, html_elm, rel_path, new Component3());
     let html = html_elm.innerHTML;
     await new Promise((resolve) => setTimeout(resolve, 200));
     while (html !== html_elm.innerHTML) {
@@ -21242,12 +22845,232 @@ function observe_object2(obj, on_change) {
   return create_proxy(obj);
 }
 
+// src/sc_oauth.js
+var import_obsidian20 = require("obsidian");
+
+// ../smart-plugins-obsidian/utils.js
+var import_obsidian19 = require("obsidian");
+function get_smart_server_url() {
+  if (typeof window !== "undefined" && window.SMART_SERVER_URL_OVERRIDE) {
+    return window.SMART_SERVER_URL_OVERRIDE;
+  }
+  return "https://connect.smartconnections.app";
+}
+function try_get_zlib() {
+  if (typeof window?.require === "function") {
+    try {
+      return window.require("zlib");
+    } catch {
+    }
+  }
+  return null;
+}
+function inflate_deflate_data(compressed) {
+  const zlib = try_get_zlib();
+  if (!zlib) {
+    throw new Error("zlib not available (maybe Obsidian mobile?).");
+  }
+  const buf = Buffer.from(compressed);
+  const out = zlib.inflateRawSync(buf);
+  return new Uint8Array(out.buffer, out.byteOffset, out.length);
+}
+async function parse_zip_into_files(zipBuffer) {
+  const dv = new DataView(zipBuffer);
+  let offset = 0;
+  const length = dv.byteLength;
+  const files = [];
+  let pluginManifest = null;
+  while (offset + 4 <= length) {
+    const localSig = dv.getUint32(offset, true);
+    if (localSig === 33639248 || localSig === 134695760) {
+      break;
+    }
+    if (localSig !== 67324752) {
+      break;
+    }
+    offset += 4;
+    const versionNeeded = dv.getUint16(offset, true);
+    const generalPurposeBitFlag = dv.getUint16(offset + 2, true);
+    const compressionMethod = dv.getUint16(offset + 4, true);
+    offset += 6;
+    const lastModTimeDate = dv.getUint32(offset, true);
+    offset += 4;
+    let crc32 = dv.getUint32(offset, true);
+    let compressedSize = dv.getUint32(offset + 4, true);
+    let uncompressedSize = dv.getUint32(offset + 8, true);
+    offset += 12;
+    const fileNameLen = dv.getUint16(offset, true);
+    const extraLen = dv.getUint16(offset + 2, true);
+    offset += 4;
+    const fileNameBytes = new Uint8Array(zipBuffer.slice(offset, offset + fileNameLen));
+    const fileName = new TextDecoder("utf-8").decode(fileNameBytes);
+    offset += fileNameLen;
+    offset += extraLen;
+    const hasDataDescriptor = (generalPurposeBitFlag & 8) !== 0;
+    let compDataStart = offset;
+    let compDataEnd;
+    if (!hasDataDescriptor) {
+      compDataEnd = compDataStart + compressedSize;
+    } else {
+      let scanPos = compDataStart;
+      let foundSig = false;
+      while (scanPos + 4 <= length) {
+        const sig = dv.getUint32(scanPos, true);
+        if (sig === 134695760 || sig === 67324752 || sig === 33639248) {
+          foundSig = true;
+          break;
+        }
+        scanPos++;
+      }
+      compDataEnd = foundSig ? scanPos : length;
+    }
+    if (compDataEnd > length) {
+      break;
+    }
+    const fileDataCompressed = new Uint8Array(zipBuffer.slice(compDataStart, compDataEnd));
+    offset = compDataEnd;
+    if (hasDataDescriptor) {
+      if (offset + 4 <= length) {
+        const ddSig = dv.getUint32(offset, true);
+        if (ddSig === 134695760) {
+          offset += 4;
+        }
+        if (offset + 12 <= length) {
+          crc32 = dv.getUint32(offset, true);
+          compressedSize = dv.getUint32(offset + 4, true);
+          uncompressedSize = dv.getUint32(offset + 8, true);
+          offset += 12;
+        } else {
+          break;
+        }
+      }
+    }
+    let rawData;
+    if (compressionMethod === 0) {
+      rawData = fileDataCompressed;
+    } else if (compressionMethod === 8) {
+      rawData = inflate_deflate_data(fileDataCompressed);
+    } else {
+      continue;
+    }
+    files.push({ fileName, data: rawData });
+    if (fileName.toLowerCase().endsWith("manifest.json") && !fileName.includes("/")) {
+      try {
+        pluginManifest = JSON.parse(new TextDecoder("utf-8").decode(rawData));
+      } catch {
+      }
+    }
+  }
+  return { files, pluginManifest };
+}
+async function write_files_with_adapter(adapter, baseFolder, files) {
+  console.log("Writing files to:", adapter, baseFolder, files);
+  const hasWriteBinary = typeof adapter.writeBinary === "function";
+  if (!await adapter.exists(baseFolder)) {
+    await adapter.mkdir(baseFolder);
+  }
+  for (const { fileName, data } of files) {
+    const fullPath = baseFolder + "/" + fileName;
+    if (hasWriteBinary) {
+      console.log("Writing file binary:", fullPath);
+      await adapter.writeBinary(fullPath, data);
+    } else {
+      console.log("Writing file non-binary:", fullPath);
+      const base642 = btoa(String.fromCharCode(...data));
+      await adapter.write(fullPath, base642);
+    }
+  }
+}
+async function fetch_plugin_zip(repoName, token) {
+  const resp = await (0, import_obsidian19.requestUrl)({
+    url: `${get_smart_server_url()}/plugin_download`,
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify({ repo: repoName })
+  });
+  if (resp.status !== 200) {
+    throw new Error(`plugin_download error ${resp.status}: ${resp.text}`);
+  }
+  const ab = resp.arrayBuffer;
+  if (ab.byteLength < 4) {
+    throw new Error("Server returned too few bytes, not a valid ZIP.");
+  }
+  const dv = new DataView(ab);
+  if (dv.getUint32(0, true) !== 67324752) {
+    const txt = new TextDecoder().decode(new Uint8Array(ab));
+    throw new Error(`Server did not return a valid ZIP. Text:
+${txt}`);
+  }
+  return ab;
+}
+async function enable_plugin(app, plugin_id) {
+  await app.plugins.enablePlugin(plugin_id);
+  app.plugins.enabledPlugins.add(plugin_id);
+  app.plugins.requestSaveConfig();
+  app.plugins.loadManifests();
+}
+
+// src/sc_oauth.js
+var CLIENT_ID = "smart-plugins-op";
+var CLIENT_SECRET = "smart-plugins-op-secret";
+function getLocalStorageTokens() {
+  return {
+    token: localStorage.getItem("smart_plugins_oauth_token") || "",
+    refresh: localStorage.getItem("smart_plugins_oauth_refresh") || ""
+  };
+}
+function setLocalStorageTokens({ access_token, refresh_token }) {
+  localStorage.setItem("smart_plugins_oauth_token", access_token);
+  if (refresh_token) {
+    localStorage.setItem("smart_plugins_oauth_refresh", refresh_token);
+  }
+}
+async function exchange_code_for_tokens(code) {
+  const url2 = `${get_smart_server_url()}/auth/oauth_exchange2`;
+  const resp = await (0, import_obsidian20.requestUrl)({
+    url: url2,
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+      code
+    })
+  });
+  if (resp.status !== 200) {
+    throw new Error(`OAuth exchange error ${resp.status} ${resp.text}`);
+  }
+  const { access_token, refresh_token } = resp.json;
+  if (!access_token) {
+    throw new Error("No access_token in response");
+  }
+  setLocalStorageTokens({ access_token, refresh_token });
+}
+async function installSmartPlugins(plugin) {
+  const { token } = getLocalStorageTokens();
+  if (!token) throw new Error('No token found to install "smart-plugins"');
+  const repo = "brianpetro/smart-plugins-obsidian";
+  const zipData = await fetch_plugin_zip(repo, token);
+  const { files, pluginManifest } = await parse_zip_into_files(zipData);
+  let folder_name = (pluginManifest?.id || "smart-plugins").trim();
+  folder_name = folder_name.replace(/[^\w-]/g, "_");
+  const base_folder = ".obsidian/plugins/" + folder_name;
+  await write_files_with_adapter(plugin.app.vault.adapter, base_folder, files);
+  await plugin.app.plugins.loadManifests();
+  if (plugin.app.plugins.manifests[folder_name]) {
+    await enable_plugin(plugin.app, folder_name);
+  }
+}
+
 // src/index.js
 var {
   Notice: Notice2,
   Plugin,
-  requestUrl: requestUrl2
-} = import_obsidian16.default;
+  requestUrl: requestUrl4
+} = import_obsidian21.default;
 var SmartConnectionsPlugin = class extends Plugin {
   static get defaults() {
     return default_settings();
@@ -21261,9 +23084,9 @@ var SmartConnectionsPlugin = class extends Plugin {
       SmartPrivateChatView
     };
   }
-  // GETTERS for overrides in subclasses without overriding the constructor or init method
+  // GETTERS
   get smart_env_class() {
-    return SmartEnv;
+    return SmartEnv2;
   }
   get smart_env_config() {
     if (!this._smart_env_config) {
@@ -21301,7 +23124,7 @@ var SmartConnectionsPlugin = class extends Plugin {
     this.notices?.unload();
   }
   async initialize() {
-    this.obsidian = import_obsidian16.default;
+    this.obsidian = import_obsidian21.default;
     await SmartSettings2.create(this);
     this.notices = new this.smart_env_config.modules.smart_notices.class(this);
     this.smart_connections_view = null;
@@ -21322,7 +23145,12 @@ var SmartConnectionsPlugin = class extends Plugin {
     console.log("loading env");
     if (this.obsidian.Platform.isMobile) {
       this.notices.show("load_env");
-    } else await this.load_env();
+    } else {
+      await this.load_env();
+    }
+    this.registerObsidianProtocolHandler("sc-op/callback", async (params) => {
+      await this.handle_sc_op_oauth_callback(params);
+    });
     console.log("Smart Connections v2 loaded");
   }
   register_code_blocks() {
@@ -21387,10 +23215,9 @@ var SmartConnectionsPlugin = class extends Plugin {
     setTimeout(this.check_for_update.bind(this), 3e3);
     setInterval(this.check_for_update.bind(this), 108e5);
   }
-  // check for update
   async check_for_update() {
     try {
-      const { json: response } = await requestUrl2({
+      const { json: response } = await requestUrl4({
         url: "https://api.github.com/repos/brianpetro/obsidian-smart-connections/releases/latest",
         method: "GET",
         headers: {
@@ -21421,8 +23248,6 @@ var SmartConnectionsPlugin = class extends Plugin {
     this.addCommand({
       id: "sc-find-notes",
       name: "Find: Make Smart Connections",
-      icon: "pencil_icon",
-      hotkeys: [],
       editorCallback: (editor) => {
         if (editor.somethingSelected()) {
           if (!this.lookup_view) this.open_lookup_view();
@@ -21442,8 +23267,6 @@ var SmartConnectionsPlugin = class extends Plugin {
     this.addCommand({
       id: "sc-refresh-connections",
       name: "Refresh & Make Connections",
-      icon: "pencil_icon",
-      hotkeys: [],
       editorCallback: async (editor) => {
         const curr_file = this.app.workspace.getActiveFile();
         if (!curr_file?.path) return console.warn("No active file", curr_file);
@@ -21478,7 +23301,7 @@ var SmartConnectionsPlugin = class extends Plugin {
       }
     });
   }
-  // utils
+  // We keep the old code
   async add_to_gitignore(ignore, message = null) {
     if (!await this.app.vault.adapter.exists(".gitignore")) return;
     let gitignore_file = await this.app.vault.adapter.read(".gitignore");
@@ -21538,25 +23361,6 @@ ${message ? "# " + message + "\n" : ""}${ignore}`);
       return results;
     }
   }
-  async update_early_access() {
-    if (!this.settings.license_key) return this.notices.show("supporter_key_required");
-    const v2 = await this.obsidian.requestUrl({
-      url: "https://sync.smartconnections.app/download_v2",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        license_key: this.settings.license_key
-      })
-    });
-    if (v2.status !== 200) return console.error("Error downloading early access update", v2);
-    await this.app.vault.adapter.write(".obsidian/plugins/smart-connections/main.js", v2.json.main);
-    await this.app.vault.adapter.write(".obsidian/plugins/smart-connections/manifest.json", v2.json.manifest);
-    await this.app.vault.adapter.write(".obsidian/plugins/smart-connections/styles.css", v2.json.styles);
-    await window.app.plugins.loadManifests();
-    await this.restart_plugin();
-  }
   get plugin_is_enabled() {
     return this.app?.plugins?.enabledPlugins?.has("smart-connections");
   }
@@ -21575,7 +23379,6 @@ ${message ? "# " + message + "\n" : ""}${ignore}`);
     if (obsidian_sync_instance?.syncStatus.startsWith("Fully synced")) return false;
     return obsidian_sync_instance?.syncing;
   }
-  // main settings
   async load_settings() {
     const settings = default_settings().settings;
     const saved_settings = await this.loadData();
@@ -21615,6 +23418,47 @@ ${message ? "# " + message + "\n" : ""}${ignore}`);
   }
   remove_setting_elm(path, value, elm) {
     elm.remove();
+  }
+  /**
+   * This is the function that is called by the new "Sign in with Smart Plugins" button.
+   * It replicates the old 'initiate_oauth()' logic from sc_settings_tab.js
+   */
+  initiate_smart_plugins_oauth() {
+    const state = Math.random().toString(36).slice(2);
+    const redirect_uri = encodeURIComponent("obsidian://sc-op/callback");
+    const url2 = `${get_smart_server_url()}/oauth?client_id=smart-plugins-op&redirect_uri=${redirect_uri}&state=${state}`;
+    window.open(url2, "_blank");
+  }
+  /**
+   * Handles the OAuth callback from the Smart Plugins server.
+   * @param {Object} params - The URL parameters from the OAuth callback.
+   */
+  async handle_sc_op_oauth_callback(params) {
+    const code = params.code;
+    if (!code) {
+      new Notice2("No OAuth code provided in URL. Login failed.");
+      return;
+    }
+    try {
+      await exchange_code_for_tokens(code);
+      await installSmartPlugins(this);
+      new Notice2("Smart Plugins installed / updated successfully!");
+      this.open_smart_plugins_settings();
+    } catch (err) {
+      console.error("OAuth callback error", err);
+      new Notice2(`OAuth callback error: ${err.message}`);
+    }
+  }
+  /**
+   * Opens the Obsidian settings window with the 'Smart Plugins' tab active.
+   * @public
+   */
+  open_smart_plugins_settings() {
+    this.app.commands.executeCommandById("app:open-settings");
+    const spTab = this.app.setting.pluginTabs.find((t) => t.name === "Smart Plugins");
+    if (spTab) {
+      this.app.setting.openTab(spTab);
+    }
   }
 };
 

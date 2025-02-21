@@ -3,8 +3,9 @@ tags:
   - DevTool
   - EnvironmentSetup
   - Java
+repository: 
 create_time: 2025-02-15 12:21
-update_time: 2025/02/21 12:19
+update_time: 2025/02/21 23:05
 ---
 
 ## 前期准备
@@ -242,3 +243,56 @@ my-project/
 
 项目基本信息如下所示：
 ![](https://img.xiaorang.fun/202502201153600.png)
+
+设置 `web.xml` 配置文件路径和 web 资源路径。
+![](https://img.xiaorang.fun/202502212317012.png)
+
+#### IDEA 配置 Tomcat & 启动应用
+
+1. **添加 Tomcat 服务器**：
+   - 选择 **Run** ➡ **Edit Configurations**。
+   - 在弹出的对话框中点击左上角的 `+` 按钮，选择 `Tomcat Server` ➡ `Local`。
+
+	![](https://img.xiaorang.fun/202502212317014.png)
+2. **选择 Tomcat 安装目录**：
+   - 点击 `Configure...` 按钮，选择你解压的 Tomcat 目录，IDEA 会自动识别。
+
+	![](https://img.xiaorang.fun/202502212317015.png)
+3. **配置 Web 应用**：
+   - 在配置项中，点击 `Deployment` 标签。
+   - 点击左上角的 `+` 按钮，选择 `Artifact`，然后选择你的 `web` 项目（通常是 `war exploded` 或 `war` 文件）。[[#^0797ac]]
+
+	![](https://img.xiaorang.fun/202502212317016.png)
+4. **启动 Tomcat**：
+   - 点击右上角的绿色运行按钮（`Run`）或 `Debug` 按钮来启动 Tomcat。
+   - IDEA 会自动将 Web 项目部署到 Tomcat，并在浏览器中打开 http://localhost:8080
+
+> [!info]- war 和 war exploded 的区别
+>
+> `WAR` 文件和 `WAR Exploded` 是两种常见的 Java Web 应用部署方式，主要区别如下：
+>
+> 1. **打包方式**：
+>    - **WAR 文件**：将整个 Web 应用程序中的所有文件打包成一个 `.war` 文件（Web Application Archive）。这个文件是一个压缩包，包含了应用的所有资源，如 HTML、CSS、JavaScript、Java 类文件、库依赖等。
+>    - **WAR exploded**：不将应用程序打包成 `.war` 文件，而是直接将应用的目录结构复制到服务器的 `webapps` 目录下。这种方式下，应用的文件是解开的，可以直接看到和修改应用的各个部分。
+> 2. **部署速度**：
+>    - **WAR 文件**：每次部署都需要重新打包 `.war` 文件，这可能需要一些时间，特别是对于大型应用。
+>    - **WAR exploded**：部署时不需要打包，只需复制文件，部署速度通常更快。
+> 3. **开发便利性**：
+>    - **WAR 文件**：在开发过程中，每次修改后都需要重新打包，这可能会降低开发效率。
+>    - **WAR exploded**：修改后可以直接看到效果，无需重新打包，这对于开发和调试阶段非常有用。
+> 4. **生产环境**：
+>    - **WAR 文件**：通常推荐在生产环境中使用 `.war` 文件部署，因为它更稳定，可以避免文件被意外修改。
+>    - **WAR exploded**：在生产环境中不推荐使用，因为解开的文件可能被意外修改，导致应用不稳定。
+> 5. **版本控制**：
+>    - **WAR 文件**：`.war` 文件方便版本控制系统管理，方便管理不同版本的应用。
+>    - **WAR exploded**：由于文件未打包，版本控制可能无法完全跟踪文件变化，影响版本管理。
+>
+> **总结**：`WAR Exploded` 部署方式适合开发和测试阶段，能够快速部署和修改；而 `WAR` 文件更适合生产环境，因其提供更好的稳定性和版本控制管理。
+
+^0797ac
+
+### 使用命令行的方式创建 Java 工程
+
+### 使用命令行的方式创建 Web 工程
+
+## 项目构建
