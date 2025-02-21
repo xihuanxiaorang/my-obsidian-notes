@@ -2,12 +2,11 @@
 tags:
   - DevTool
 create_time: 2024-12-31 19:00
-update_time: 2025/02/14 18:37
+update_time: 2025/02/20 11:56
 ---
 
-## 下载 & 安装
-
-[Visual Studio Code](https://code.visualstudio.com/)
+> [!quote]
+> [Visual Studio Code](https://code.visualstudio.com/)
 
 ## 推荐插件
 
