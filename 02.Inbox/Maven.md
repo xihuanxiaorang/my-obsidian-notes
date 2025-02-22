@@ -5,7 +5,7 @@ tags:
   - Java
 repository: 
 create_time: 2025-02-15 12:21
-update_time: 2025/02/21 23:05
+update_time: 2025/02/22 23:34
 ---
 
 ## 前期准备
@@ -292,6 +292,27 @@ my-project/
 ^0797ac
 
 ### 使用命令行的方式创建 Java 工程
+
+通过终端运行 `mvn archetype:generate` 命令，可以以交互式方式基于指定的原型（aka 骨架/模板，archetype）快速生成新的 Maven 项目。
+![](https://img.xiaorang.fun/202502222120448.png)
+
+> [!note]
+> 基于指定原型创建的项目结构可能缺少 `resources` 资源文件夹。
+> ![](https://img.xiaorang.fun/202502222120450.png)
+
+> [!tip] 手动添加 `resources` 资源文件夹
+> ![](https://img.xiaorang.fun/202502222120451.png)
+
+通过交互式命令行创建项目的操作，等价于直接使用以下命令：
+
+```bash
+mvn archetype:generate -DgroupId='fun.xiaorang' -DartifactId=maven-command-study -Dpackage='fun.xiaorang.study.maven' -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+```
+
+![](https://img.xiaorang.fun/202502222332255.png)
+
+可以通过 IDEA 的项目结构设置来添加新的模块。
+![](https://img.xiaorang.fun/202502222332256.png)
 
 ### 使用命令行的方式创建 Web 工程
 
