@@ -67,6 +67,5 @@
   "01.Articles/Media": "RiVideoOnLine",
   "00.Overview/02 - 参考资料.md": "RiBookmark3Line",
   "01.Articles/AI": "RiBrainLine",
-  "01.Articles/SpringFrameworkEcosystem": "RiFireFill",
-  "01.Articles/SpringFrameworkEcosystem/SpringCloud": "RiAlibabaCloudLine"
+  "01.Articles/SpringCloud": "RiAlibabaCloudLine"
 }

@@ -3,7 +3,7 @@ tags:
   - SpringCloudAlibaba
   - SpringCloud
 create_time: 2025-02-17T23:17:00
-update_time: 2025/02/17 23:27
+update_time: 2025/02/23 18:22
 ---
 
 Nacos 是 Dynamic Naming and Configuration Service 的首字母简称，是 Alibaba 开源的、易于构建云原生应用的动态**服务发现**、**配置管理**和**服务管理**平台。
@@ -1214,9 +1214,3 @@ ${prefix}-${spring.profiles.active}.${file-extension}
     <artifactId>spring-cloud-starter-loadbalancer</artifactId>
 </dependency>
 ```
-
-## 参考资料🎁
-
-- [Spring Cloud Alibaba 参考文档 (spring-cloud-alibaba-group.github.io)](https://spring-cloud-alibaba-group.github.io/github-pages/hoxton/zh-cn/index.html)
-- [Nacos](https://nacos.io/zh-cn/)
-- [Nacos discovery](https://github.com/alibaba/spring-cloud-alibaba/wiki/Nacos-discovery) & [Nacos config](https://github.com/alibaba/spring-cloud-alibaba/wiki/Nacos-config)
