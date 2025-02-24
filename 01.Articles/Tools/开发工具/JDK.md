@@ -2,7 +2,7 @@
 tags:
   - EnvironmentSetup
   - Java
-  - DevTool
+  - DevKit
 create_time: 2024-12-28T17:27:00
 update_time: 2025/02/15 23:24
 ---

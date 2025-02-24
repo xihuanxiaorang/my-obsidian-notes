@@ -1,7 +1,7 @@
 ---
 tags:
   - AI
-  - DevTool
+  - DevKit
 refrence_url:
   - https://www.bilibili.com/video/BV1XxrhYDE39?vd_source=84272a2d7f72158b38778819be5bc6ad
 create_time: 2025-02-13T19:03:00

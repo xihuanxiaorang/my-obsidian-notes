@@ -2,8 +2,9 @@
 tags:
   - Java
 repository: https://github.com/xihuanxiaorang/java-study/tree/core-study/core-study/lambda-study
+version: 8
 create_time: 2024-12-28T17:51:00
-update_time: 2025/01/16 21:47
+update_time: 2025/02/24 18:06
 ---
 
 Lambda 表达式、强大的 Stream API、全新时间日期 API；新特性使得 Java 的运行速度更快、代码更少（Lambda 表达式）、便于并行、最大化减少空指针异常！
@@ -44,7 +45,7 @@ public class ApiTest {
 }
 ```
 
-简单分析下上述代码，可以发现在整个匿名内部类中，实际上真正有用的就是高亮显示的代码（第 7 行），其他的代码实际上都是 "冗余" 的。当我们将鼠标放到匿名内部类上去时，IDEA 会提示 "匿名 `new Comparator<Integer>()` 可被替换为 Lambda" 和 "匿名 `new Comparator<Integer>()` 可被替换为 [[#方法引用]]"。
+简单分析下上述代码，可以发现在整个匿名内部类中，实际上真正有用的就是高亮显示的代码（第 7 行），其他的代码实际上都是 "冗余" 的。当我们将鼠标放到匿名内部类上去时，IDEA 会提示 "匿名 `new Comparator<Integer>()` 可被替换为 Lambda" 和 "匿名 `new Comparator<Integer>()` 可被替换为[[#方法引用]]"。
 ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412132155072.png)
 
 如果使用 Lambda 表达式完成两个 Integer 类型数据的比较，我们该如何实现呢？

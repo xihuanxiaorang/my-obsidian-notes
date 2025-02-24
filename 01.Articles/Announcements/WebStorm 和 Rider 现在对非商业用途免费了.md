@@ -5,7 +5,7 @@ published: 2024-10-24
 description: WebStorm 和 Rider，JetBrains 的 IDE 现在对非商业用途免费了！
 tags:
   - Announcement
-  - DevTool
+  - DevKit
 ---
 JetBrains 宣布了一项对开发者社区非常有利的许可模型变更：WebStorm 和 Rider 现在对非商业用途免费了！
 

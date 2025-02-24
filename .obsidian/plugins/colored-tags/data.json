@@ -89,7 +89,8 @@
     "Editor": 77,
     "SpringCloudAlibaba": 78,
     "Nacos": 79,
-    "SpringCloud": 80
+    "SpringCloud": 80,
+    "DevKit": 81
   },
   "_version": 3
 }
