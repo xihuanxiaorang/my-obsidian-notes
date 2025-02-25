@@ -12,7 +12,7 @@ update_time: 2025/02/14 18:39
 3. 安装：双击运行 typora 安装文件 `typora-setup-x64-1.8.10.exe` ，指定安装目录，如： `E:\Typora` ，安装完成之后关闭 Typora 软件。
 4. 激活：
     1. 在安装目录下以管理员身份运行 Windows Terminal，在终端中依次执行 `.\node_inject.exe` 和 `.\license-gen.exe` 命令。如下所示：
-       ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161556079.png)
+       ![](https://img.xiaorang.fun/202502251729495.png)
     2. 重新打开 Typora，复制粘贴生成的序列号，然后点击激活，等待激活成功🌸🌸🌸。
 
 ## 偏好设置⚙️

@@ -2,7 +2,7 @@
 tags:
   - Tool
 create_time: 2024-12-29 21:48
-update_time: 2025/02/14 18:35
+update_time: 2025/02/25 16:56
 ---
 
 在互联网内容创作的时代，拥有一个稳定、可靠、免费且支持全球访问的图床服务变得越来越重要。结合 **Cloudflare R2** 和 [[Github + PicList 搭建个人图床#PicList|PicList]]，您可以轻松搭建一个个人图床，享受 Cloudflare 提供的全球加速和 CDN 服务，同时使用 PicList 高效管理和上传图片。无论您在国内还是国外，都能获得快速且稳定的图片加载体验。
@@ -26,7 +26,7 @@ update_time: 2025/02/14 18:35
 2. 填写账单邮寄地址。
 3. 点击 **"将 R2 订阅添加到我的账户"** 按钮，完成付费计划激活。
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412292141647.png)
+![](https://img.xiaorang.fun/202502251655014.png)
 
 > [!tip]
 > R2 服务采用按需付费的模式，您只有在超出免费额度时才会产生费用。对于一般的个人用户来说，免费额度已足够日常使用。
@@ -46,8 +46,8 @@ update_time: 2025/02/14 18:35
 2. 点击 **"允许访问"**，根据提示输入 "allow" 完成配置。
 3. 等待配置生效后，您的存储桶就可以通过公共 URL 访问。
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412301759474.png)
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412301802438.png)
+![](https://img.xiaorang.fun/202502251655015.png)
+![](https://img.xiaorang.fun/202502251655016.png)
 
 #### 配置自定义域名（可选）
 
@@ -58,14 +58,14 @@ update_time: 2025/02/14 18:35
    - 确保您的域名已经成功添加到 **Cloudflare 控制台** 中，并显示为 **Active**。
 2. 配置自定义域名指向 R2 存储桶
    - 进入 R2 存储桶的设置页面，点击 **"连接域"**，输入您的自定义域名，如 `img.xiaorang.fun`。
-     ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412302241051.png)
-     ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412311143718.png)
+     ![](https://img.xiaorang.fun/202502251655017.png)
+     ![](https://img.xiaorang.fun/202502251655018.png)
    - Cloudflare 将自动为您添加一条 **CNAME** 记录，指向您的 **R2 存储桶地址**。
-     ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412302242543.png)
+     ![](https://img.xiaorang.fun/202502251655019.png)
    - 等待 DNS 配置生效，确保记录状态显示为 **Active（活动）**。
-     ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412311146044.png)
+     ![](https://img.xiaorang.fun/202502251655020.png)
    - 验证自定义域名绑定是否成功。您可以访问存储桶中的任意图片 URL，例如 `https://img.xiaorang.fun/avatar.png`，查看是否可以正常加载。
-     ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412311147802.png)
+     ![](https://img.xiaorang.fun/202502251655021.png)
 
 #### 创建 API 令牌
 
@@ -74,16 +74,16 @@ update_time: 2025/02/14 18:35
 1. 登录到 **Cloudflare 控制面板**，并进入 **"R2"** 页面。
 2. 点击 **"管理 R2 API 令牌"** ➡️ **"创建 API 令牌"**。
 3. 在创建 API 令牌时，选择 **"管理员读写"** 权限。
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412311150479.png)
+   ![](https://img.xiaorang.fun/202502251655022.png)
 4. 拷贝 **"访问密钥 ID"** 和 **"机密访问密钥"**，并妥善保存。它们分别对应 **PicList** 配置 **AWS S3 图床** 时的 **AccessKeyId** 和 **SecretAccessKey**。
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412311057662.png)
+   ![](https://img.xiaorang.fun/202502251655023.png)
 5. 拷贝 **"S3 客户端使用管辖权地的终结点"**，该值对应 **PicList** 配置 **AWS S3 图床** 时的 **"自定义节点"**。
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412311116838.png)
+   ![](https://img.xiaorang.fun/202502251655024.png)
 
 ## PicList 图床配置
 
 **PicList** 支持通过兼容 **S3** 协议的对象存储服务上传和管理图片，除了 **Cloudflare R2** 外，还支持 **Amazon S3**、**Backblaze B2** 等其他服务。
 
 以下是 **Cloudflare R2 图床** 的配置示例，您可以参考下图设置您的 **PicList** 图床：
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412311154226.png)
+![](https://img.xiaorang.fun/202502251655025.png)
 更多详细的配置项解释可以参考 [PicList 配置 AWS S3 图床的官方文档](https://piclist.cn/configure.html#%E5%86%85%E7%BD%AEaws-s3)。

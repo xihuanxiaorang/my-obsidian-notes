@@ -2,7 +2,7 @@
 tags:
   - Tool
 create_time: 2024-12-28T17:33:00
-update_time: 2024/12/28 17:33
+update_time: 2025/02/25 17:23
 ---
 
 > [!quote]
@@ -22,9 +22,9 @@ update_time: 2024/12/28 17:33
 
 1. 访问 FFmpeg [下载](https://ffmpeg.org/download.html) 页面。
 2. 选择 Windows 版本：在页面中，选择 **"Windows builds from gyan. dev"** 作为下载源。点击进入该链接，访问由 `gyan.dev` 提供的 FFmpeg Windows 构建包页面。
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412181619293.png)
+   ![](https://img.xiaorang.fun/202502251723778.png)
 3. 选择正式发行版本：在 `gyan.dev` 页面中，选择 **"release builds"** 下的正式发行版本 **`ffmpeg-release-full.7z`**。该版本包含 FFmpeg 的所有功能，适合大部分用户。
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412181721557.png)
+   ![](https://img.xiaorang.fun/202502251723779.png)
 4. 点击下载 **`ffmpeg-release-full.7z`** 压缩包，该压缩包包含 FFmpeg 的所有可执行文件和库文件。
 5. 使用解压工具（如 7-Zip）将 **`ffmpeg-release-full.7z`** 解压到指定文件夹，例如 `E:\ffmpeg`。
 
@@ -40,7 +40,7 @@ update_time: 2024/12/28 17:33
 - 在 **系统变量** 中找到 **Path**，点击 **编辑**，然后 **新增** 你解压后的 `bin` 文件夹路径。
 - 点击 **确定** 保存设置。
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412181820307.png)
+![](https://img.xiaorang.fun/202502251723780.png)
 
 打开终端，输入以下命令验证 FFmpeg 是否成功安装：
 
@@ -49,4 +49,4 @@ ffmpeg -version
 ```
 
 如果一切正常，你应该能够看到 FFmpeg 的版本信息。
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412181831063.png)
+![](https://img.xiaorang.fun/202502251723781.png)

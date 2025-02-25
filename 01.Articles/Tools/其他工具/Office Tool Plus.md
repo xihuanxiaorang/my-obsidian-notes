@@ -2,7 +2,7 @@
 tags:
   - Tool
 create_time: 2024-12-28T17:33:00
-update_time: 2024/12/28 17:33
+update_time: 2025/02/25 17:27
 ---
 
 > [!quote]
@@ -12,8 +12,8 @@ update_time: 2024/12/28 17:33
 安装与激活，具体步骤如下所示：
 
 1. 卸载（如果以前安装过 office 工具）
-   ![image.png](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412152315218.png)
+   ![](https://img.xiaorang.fun/202502251726763.png)
 2. 部署
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412152314782.png)
+   ![](https://img.xiaorang.fun/202502251726764.png)
 3. 激活
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412152313087.png)
+   ![](https://img.xiaorang.fun/202502251726765.png)

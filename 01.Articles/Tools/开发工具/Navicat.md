@@ -2,7 +2,7 @@
 tags:
   - DevKit
 create_time: 2024-12-28T17:29:00
-update_time: 2025/02/14 18:38
+update_time: 2025/02/25 17:58
 ---
 
 ## Navicat 16
@@ -15,11 +15,11 @@ update_time: 2025/02/14 18:38
     2. 断开网络连接。
     3. 以管理员身份运行 `NavicatCracker.exe`。
     4. 选择 Navicat 安装目录 ➡️ 点击 `Patch!`，然后点击 `Generate!` 生成序列号。
-       ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161142934.png)
+       ![](https://img.xiaorang.fun/202502251758283.png)
     5. 将序列号拷贝到 Navicat 中进行激活，弹出激活失败窗口的话则选择手动激活。
-       ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161142273.png)
+       ![](https://img.xiaorang.fun/202502251758284.png)
     6. 将 Navicat 生成的请求码拷贝到注册机的 Request Code 中，然后点击 `Generate Activation Code!`。
-       ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161142575.png)
+       ![](https://img.xiaorang.fun/202502251758285.png)
     7. 将生成的激活码拷贝到 Navicat 中进行激活，然后点击激活，等待激活成功🎉🎉🎉
 
 ## Navicat 17

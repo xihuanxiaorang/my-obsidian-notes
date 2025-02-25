@@ -2,7 +2,7 @@
 tags:
   - Tool
 create_time: 2024-12-28T17:32:00
-update_time: 2025/02/14 18:36
+update_time: 2025/02/25 17:23
 ---
 
 [AB Download Manager](https://abdownloadmanager.com/) 是一款开源免费的下载管理工具，具备以下特点和功能：
@@ -14,6 +14,6 @@ update_time: 2025/02/14 18:36
 + 🌙 现代化的简洁界面：简洁的界面，且支持深色模式。
 + ❤️开源 & 免费：这是一个完全开源免费的软件。
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412152310180.png)
+![](https://img.xiaorang.fun/202502251722048.png)
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412152310471.png)
+![](https://img.xiaorang.fun/202502251722049.png)

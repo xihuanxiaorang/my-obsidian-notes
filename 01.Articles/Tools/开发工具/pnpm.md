@@ -4,7 +4,7 @@ tags:
   - Frontend
   - DevKit
 create_time: 2024-12-28T17:29:00
-update_time: 2025/02/14 18:37
+update_time: 2025/02/25 18:02
 ---
 
 前期准备： [[Node.js]] & [[nvm]]
@@ -24,7 +24,7 @@ update_time: 2025/02/14 18:37
 ## 安装
 
 使用 `npm install pnpm -g` 命令全局安装 pnpm，安装完成之后，可以使用 `pnpm -v` 命令测试 pnpm 是否安装成功。若输出版本号，则说明 pnpm 已成功安装。
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161120058.png)
+![](https://img.xiaorang.fun/202502251802043.png)
 
 ## 配置
 
@@ -46,7 +46,7 @@ pnpm config set store-dir "E:\devsoft\pnpm-store\pnpm-store"
 ```
 
 配置完成后，pnpm 会生成一个全局配置文件，通常位于 `~/AppData/Local/pnpm/config/rc` （Windows）。你可以通过 `pnpm config list` 命令查看所有配置项。
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161120738.png)
+![](https://img.xiaorang.fun/202502251802044.png)
 
 通过上述配置，可以实现对 pnpm 全局依赖、缓存和状态文件的统一管理，提升维护效率，并便于快速定位和解决问题。
 

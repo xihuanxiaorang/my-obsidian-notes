@@ -4,7 +4,7 @@ tags:
   - Frontend
   - DevKit
 create_time: 2024-12-28T17:21:00
-update_time: 2025/02/14 18:37
+update_time: 2025/02/25 17:59
 ---
 
 > [!quote]
@@ -15,17 +15,17 @@ Node.js® 是一个免费、开源、跨平台的 JavaScript 运行时环境, �
 ## 下载 & 安装
 
 访问 [Node.js — 下载 Node.js®](https://nodejs.org/zh-cn/download/prebuilt-installer) 页面，选择预构建安装程序，点击下载 Node.js，如下所示：
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161108155.png)
+![](https://img.xiaorang.fun/202502251758104.png)
 
 以管理员身份打开终端，输入 msiexec /package "Node.js 安装程序的下载路径" 命令，如： `msiexec /package ~\Downloads\node-v22.12.0-x64.msi` 。
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161108242.png)
+![](https://img.xiaorang.fun/202502251758105.png)
 
 回车之后会弹出 Node. js 的安装程序弹框，开始进行安装，安装过程非常简单，只需要一直点击 ➡️ 下一步即可。在安装过程中，可以选择默认设置或自定义安装路径，如 E:\devsoft\nodejs。
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161108625.png)
+![](https://img.xiaorang.fun/202502251758106.png)
 
 > [!bug]- 😥安装失败的情况!
 > 如果通过双击运行下载的 Node. js 安装程序进行安装，在最后一步可能会出现安装失败的情况，并弹出如下所示的错误弹框：
-> ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161111762.png)
+> ![](https://img.xiaorang.fun/202502251758107.png)
 
 安装完成之后，在终端中输入以下命令来验证 Node.js 是否安装成功：
 
@@ -49,7 +49,7 @@ npm -v
 + 全局缓存路径： `npm config set cache "E:\devsoft\nodejs\node_cache"` ；
 
 最后，可以通过 `npm config ls` 命令查看修改后的 npm 配置，如下所示：
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161109127.png)
+![](https://img.xiaorang.fun/202502251758108.png)
 
 ## 环境变量配置
 
@@ -77,6 +77,6 @@ npm config set registry https://registry.npmmirror.com/
 npm config set registry https://mirrors.huaweicloud.com/repository/npm/
 ```
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161109219.png)
+![](https://img.xiaorang.fun/202502251758109.png)
 
 ![[nrm]]

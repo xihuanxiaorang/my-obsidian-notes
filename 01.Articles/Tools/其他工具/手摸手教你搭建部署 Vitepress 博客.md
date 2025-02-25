@@ -2,7 +2,7 @@
 tags:
   - Tool
 create_time: 2024-12-28T17:32:00
-update_time: 2025/02/14 18:38
+update_time: 2025/02/25 17:22
 ---
 
 ## 介绍📢
@@ -24,10 +24,10 @@ VitePress 是一个[静态站点生成器](https://en.wikipedia.org/wiki/Static_
 1. 选择一个合适的位置创建一个空目录，如 `blog`，使用 vscode 打开该目录；
 2. 打开终端，执行 `pnpm add -D vitepress ` 命令进行安装；
 3. 执行 `pnpm vitepress init` 命令启动向导，可以帮助你构建一个基本项目；将需要回答几个简单的问题，如下所示：
-   ![image-20240128161545630](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161756801.png)
-   提示咱们需要使用 `pnpm add -D vue`安装 vue 作为开发依赖。
+   ![](https://img.xiaorang.fun/202502251712824.png)
+   提示咱们需要使用 `pnpm add -D vue` 安装 vue 作为开发依赖。
 4. 此时就可以运行 `pnpm run docs:dev` 脚本，该脚本将启动具有即时热更新的本地开发服务器。开发服务应该会运行在 http://localhost:5173 上。在浏览器中访问 URL 以查看新站点的运行情况吧！效果如下所示：
-   ![image-20240128161944350](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161756505.png)
+   ![](https://img.xiaorang.fun/202502251712825.png)
 
 ## 前置知识🏷️
 
@@ -94,7 +94,7 @@ src/getting-started.md  -->  /getting-started.html
 
 ## 站点配置✨
 
-以下内容只针对本人使用到的配置解释其含义以及用法，对于其他没有介绍到的配置请参考官方文档 [站点配置 | VitePress](https://vitepress.dev/zh/reference/site-config)。
+以下内容只针对本人使用到的配置解释其含义以及用法，对于其他没有介绍到的配置请参考官方文档[站点配置 | VitePress](https://vitepress.dev/zh/reference/site-config)。
 
 ### title
 
@@ -132,7 +132,7 @@ export default {
 }
 ```
 
-此时，如果咱们访问首页的话则会报404，这是为什么呢？如果你已经理解源目录的概念的话，则非常容易想明白问题出在哪，咱们需要将自动生成的三个 markdown 文件移动到刚刚创建的 `md` 当中，此时再去访问则显示正常。
+此时，如果咱们访问首页的话则会报 404，这是为什么呢？如果你已经理解源目录的概念的话，则非常容易想明白问题出在哪，咱们需要将自动生成的三个 markdown 文件移动到刚刚创建的 `md` 当中，此时再去访问则显示正常。
 
 ### head
 
@@ -148,7 +148,7 @@ export default {
 */
 ```
 
-在这一步咱们需要在源目录 `md` 中创建一个 [public 目录](#public 目录)作为静态资源存放的目录，并将 `favicon.ico` 网站图标放入其中。
+在这一步咱们需要在源目录 `md` 中创建一个 [public 目录]( #public 目录) 作为静态资源存放的目录，并将 `favicon.ico` 网站图标放入其中。
 
 ### lang
 
@@ -209,7 +209,7 @@ export default {
 
 ## 主题配置🎉
 
-以下内容只针对本人使用到的配置解释其含义以及用法，对于其他没有介绍到的配置请参考官方文档 [默认主题配置 | VitePress](https://vitepress.dev/zh/reference/default-theme-config)。
+以下内容只针对本人使用到的配置解释其含义以及用法，对于其他没有介绍到的配置请参考官方文档[默认主题配置 | VitePress](https://vitepress.dev/zh/reference/default-theme-config)。
 
 ### 主页
 
@@ -256,7 +256,7 @@ hero:
 3. 删除项目一开始自动创建的 `api-examples` 和 `markdown-examples` 两篇文章。
 
 此时访问主页，效果如下所示：
-![image-20240129164045605](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161757102.png)
+![](https://img.xiaorang.fun/202502251712826.png)
 
 > [!info]- Hero 类型
 >
@@ -320,7 +320,7 @@ features:
 ```
 
 此时再次访问主页，效果如下所示：
-![image-20240129165019717](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161759793.png)
+![](https://img.xiaorang.fun/202502251712827.png)
 
 > [!info]- Feature 类型
 >
@@ -435,7 +435,7 @@ export default {
 Vitepress 默认只支持 `'discord'  | 'facebook'  | 'github'  | 'instagram'  | 'linkedin'  | 'mastodon'  | 'npm'  | 'slack'  | 'twitter'  | 'x'  | 'youtube'`，其他图标需要按照上面配置中的第二种进行配置，在 iconfont 网站中选择一个自己想要的社交图标，如 [bilibli](https://www.iconfont.cn/search/index?searchType=icon&q=bilibil&page=1&fromCollection=-1) 复制其 svg 代码作为字符串粘贴到 `icon.svg` 选项中。
 
 主页最终效果图与各项配置对应关系图，如下所示：
-![image-20240129182755378](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161800863.png)
+![](https://img.xiaorang.fun/202502251712828.png)
 
 ### 侧边栏
 
@@ -608,7 +608,7 @@ export default {
 }
 ```
 
-后面部署到 Github 上之后，按照 [添加许可到仓库 - GitHub 文档](https://docs.github.com/zh/communities/setting-up-your-project-for-healthy-contributions/adding-a-license-to-a-repository#including-an-open-source-license-in-your-repository) 流程添加开源协议即可，并将配置中的用户名 `xihuanxiaorang` 和仓库名称 `docs` 修改成小伙伴们自己的即可。
+后面部署到 Github 上之后，按照[添加许可到仓库 - GitHub 文档](https://docs.github.com/zh/communities/setting-up-your-project-for-healthy-contributions/adding-a-license-to-a-repository#including-an-open-source-license-in-your-repository) 流程添加开源协议即可，并将配置中的用户名 `xihuanxiaorang` 和仓库名称 `docs` 修改成小伙伴们自己的即可。
 
 ### 编辑链接
 
@@ -669,7 +669,7 @@ export default defineConfig({
 ```
 
 示例结果：
-![搜索弹窗截图](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161801366.png)
+![](https://img.xiaorang.fun/202502251712829.png)
 
 #### Algolia Search
 
@@ -697,7 +697,7 @@ export default defineConfig({
 VitePress 支持使用 [Algolia DocSearch](https://docsearch.algolia.com/docs/what-is-docsearch) 搜索文档站点。
 
 申请使用 [Algolia DocSearch](https://docsearch.algolia.com/apply/)，如下所示：
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161801998.png)
+![](https://img.xiaorang.fun/202502251712830.png)
 
 申请时需要注意以下几点要求：
 
@@ -707,7 +707,7 @@ VitePress 支持使用 [Algolia DocSearch](https://docsearch.algolia.com/docs/wh
 - 您的网站必须位于生产环境
 
 填写完后，等待一段时间（我等了 x 天），如果申请通过，会收到如下类似的邮件回复：
-![image-20241026184329418](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410261843601.png)
+![](https://img.xiaorang.fun/202502251712831.png)
 
 将邮件中的 `appId`、`appKey` 以及 `indexName` 填写到 `.vitepress/config.ts` 配置文件中。
 
@@ -720,20 +720,20 @@ VitePress 支持使用 [Algolia DocSearch](https://docsearch.algolia.com/docs/wh
 ###### 创建应用
 
 进入控制台页面 ➡️ 点击侧边栏最下面的小齿轮进入 Settings 页面 ➡️ Applications。
-![image-20241026190331631](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410261903755.png)
+![](https://img.xiaorang.fun/202502251712832.png)
 
 点击创建应用按钮，创建一个名称为 `blog` 的应用。
-![image-20241026190600495](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410261906627.png)
+![](https://img.xiaorang.fun/202502251712833.png)
 
 ###### 创建索引
 
 点击侧边栏倒数第二个数据库图案的按钮 ➡️ 选择 Indices 进入索引页面 ➡️ 点击创建索引按钮，创建一个名称为 `vitepress` 的索引。
-![image-20241026191947063](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410261919184.png)
+![](https://img.xiaorang.fun/202502251712834.png)
 
 ###### 获取 API Key
 
 点击侧边栏最下面的小齿轮进入 Settings 页面 ➡️ API Keys。
-![image-20241026212414778](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410262124899.png)![image-20241026212639877](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410262126160.png)
+![](https://img.xiaorang.fun/202502251712835.png)
 
 其中的 Application ID、<u>Search API Key</u> 以及前一个步骤中的 index 名称填写到 `.vitepress/config.ts` 配置文件中。
 
@@ -756,7 +756,7 @@ export default defineConfig({
 
 至于 <u>Admin API Key</u> 会在后面的 CI 步骤中被用到。
 
-###### 创建 crawlerConfig.json
+###### 创建 crawlerConfig. json
 
 在项目的根目录下创建 `crawlerConfig.json` 文件，该文件用于告诉 algolia 需要爬取哪些内容。
 
@@ -823,18 +823,18 @@ jobs:
 ```
 
 然后需要在 Github Secrets 中新建两个字段 `ALGOLIA_APPLICATION_ID` 和 `ALGOLIA_API_KEY`，值分别为前面步骤中获取到的 Application ID 和 <u>Admin API Key</u>。
-![image-20241026215148195](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410262151334.png)
+![](https://img.xiaorang.fun/202502251712836.png)
 
 ###### 测试
 
 在完成以上步骤之后，提交并推送代码至 Github，这样就会触发 Github Action，执行咱们编写的 CI 脚本，如下所示：
-![image-20241026220019199](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410262200327.png)
+![](https://img.xiaorang.fun/202502251712837.png)
 
 运行成功之后，咱们回到 algolia，可以发现已经成功爬取到咱们网站的数据。
-![image-20241026220641780](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410262206919.png)
+![](https://img.xiaorang.fun/202502251712838.png)
 
 咱们访问一下文档/博客地址，可以看到已经可以成功搜索到数据。
-![image-20241026220925701](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410262209835.png)
+![](https://img.xiaorang.fun/202502251712839.png)
 
 ### outline
 
@@ -891,17 +891,17 @@ export default {
 }
 ```
 
-![image-20240129214525891](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161803310.png)
+![](https://img.xiaorang.fun/202502251712840.png)
 
 ## Markdown 扩展
 
-VitePress 带有内置的 Markdown 扩展。对于一些简单的扩展，如标题锚点、自定义容器、代码块中的语法高亮、在代码块中实现行高亮、行号等等此处就不再赘述，咱们要说的是如果在 markdown 文件中使用 `plantuml` 代码块的话，访问页面时渲染不出来该如何解决？此时就需要用到 Vitepress 的 [高级扩展](https://vitepress.dev/zh/guide/markdown#advanced-configuration)。
+VitePress 带有内置的 Markdown 扩展。对于一些简单的扩展，如标题锚点、自定义容器、代码块中的语法高亮、在代码块中实现行高亮、行号等等此处就不再赘述，咱们要说的是如果在 markdown 文件中使用 `plantuml` 代码块的话，访问页面时渲染不出来该如何解决？此时就需要用到 Vitepress 的[高级扩展](https://vitepress.dev/zh/guide/markdown#advanced-configuration)。
 
 VitePress 使用 [markdown-it](https://github.com/markdown-it/markdown-it) 作为 Markdown 渲染器。上面提到的很多扩展功能都是通过自定义插件实现的。可以使用 `.vitepress/config.js` 中的 `markdown` 选项来进一步自定义 `markdown-it` 实例。
 
 ### PlantUML 支持
 
-本人查到一款插件 [markdown-it-textual-uml](https://github.com/manastalukdar/markdown-it-textual-uml)，使用 `pnpm add markdown-it-textual-uml` 命令下载该插件，然后需要按照如下所示配置`.vitepress/config.mts` 文件中的 `markdown` 选项。
+本人查到一款插件 [markdown-it-textual-uml](https://github.com/manastalukdar/markdown-it-textual-uml)，使用 `pnpm add markdown-it-textual-uml` 命令下载该插件，然后需要按照如下所示配置 `.vitepress/config.mts` 文件中的 `markdown` 选项。
 
 ```ts {15}
 import { defineConfig } from "vitepress";
@@ -1104,7 +1104,7 @@ export default defineConfig({
 4. 接下来需要在 Github 上创建一个新的仓库，如 `docs`，名称可以根据自己的喜欢来命名，然后在存储库设置中的"Pages"菜单项下，选择"Build and deployment > Source > GitHub Actions"。
 5. 然后使用 `git remote add origin git@github.com:xihuanxiaorang/docs.git` 命令关联远程仓库，最后使用 `git branch -M main` 和 `git push -u origin main` 命令推送到远程仓库。
 6. 将更改推送到 `main` 分支并等待 GitHub Action 工作流完成。你应该看到站点部署到 `https://<username>.github.io/[repository]/` 或 `https://<custom-domain>/`，这取决于你的设置。你的站点将在每次推送到 `main` 分支时自动部署。
-   ![image-20240130150323588](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161803168.png)
+   ![](https://img.xiaorang.fun/202502251712841.png)
 
 ## Q&A
 
@@ -1113,10 +1113,10 @@ export default defineConfig({
 > 本人在 Vitepress 上提的 issue：[部署到Github Pages之后，如果使用自定义域名的话样式会丢失 · Issue #3513 · vuejs/vitepress](https://github.com/vuejs/vitepress/issues/3513)，大佬已经给出具体解决方案！
 
 咱们此时去 Github 存储库设置中的"Pages"菜单项查看，访问博客站点，如下所示：
-![image-20240130151813465](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161803042.png)
+![](https://img.xiaorang.fun/202502251712842.png)
 
 惊讶地发现与咱们在本地时看到的完全不一样，样式居然全都丢失了！
-![image-20240130152033715](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161803754.png)
+![](https://img.xiaorang.fun/202502251722851.png)
 
 那么该如何解决呢？有如下几种解决方案：
 
@@ -1131,7 +1131,7 @@ export default defineConfig({
 		})
 		```
 
-小伙伴们可以自行尝试一下，如果觉得不对的可以到这个 [部署到Github Pages之后，如果使用自定义域名的话样式会丢失](https://github.com/vuejs/vitepress/issues/3513) Issue 上提出自己的想法。
+小伙伴们可以自行尝试一下，如果觉得不对的可以到这个[部署到Github Pages之后，如果使用自定义域名的话样式会丢失](https://github.com/vuejs/vitepress/issues/3513) Issue 上提出自己的想法。
 
 ### 如何使用自定义字体
 
@@ -1152,7 +1152,7 @@ VitePress 使用 [Inter](https://rsms.me/inter/) 作为默认字体，并且将�
 	}
 	```
 
-   本人是使用的[谷歌在线字体](https://fonts.google.com/)，小伙伴若是喜欢其他的字体可以自行搜索->添加->导入，也可以通过 `@font-face` 引用本地字体文件的方式实现，具体细节请查阅 [扩展默认主题 | VitePress](https://vitepress.dev/zh/guide/extending-default-theme#using-different-fonts)。
+   本人是使用的[谷歌在线字体](https://fonts.google.com/)，小伙伴若是喜欢其他的字体可以自行搜索->添加->导入，也可以通过 `@font-face` 引用本地字体文件的方式实现，具体细节请查阅[扩展默认主题 | VitePress](https://vitepress.dev/zh/guide/extending-default-theme#using-different-fonts)。
 
 2. 在 `.vitepress/theme/index.ts` 文件中导入该 `custom.css` 文件；
 

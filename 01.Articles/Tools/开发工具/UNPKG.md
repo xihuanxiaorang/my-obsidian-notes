@@ -3,7 +3,7 @@ tags:
   - DevKit
   - CDN
 create_time: 2024-12-29 11:14
-update_time: 2025/02/14 18:37
+update_time: 2025/02/25 18:05
 ---
 
 UNPKG 是一个快速、全球性的 CDN（内容分发网络），为 [npm](https://www.npmjs.com/) 上的所有包提供服务。它可以通过 URL 加载任意 npm 包中的文件，简单方便，URL 格式如下：
@@ -27,4 +27,4 @@ https://unpkg.com/:package@:version/:file
    - `https://unpkg.com/vue`：当省略文件路径时，UNPKG 会尝试加载包中 `package.json` 的 `unpkg` 字段指定的文件。如果该字段不存在，则会回退到 `main` 字段指定的文件。
 4. **查看包内所有文件列表（在 URL 末尾添加斜杠 `/`）**：
    - `https://unpkg.com/vue/`：显示 Vue 包内所有文件的列表（如下图所示），方便查找所需的文件路径。
-     ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412291158897.png)
+     ![](https://img.xiaorang.fun/202502251805050.png)

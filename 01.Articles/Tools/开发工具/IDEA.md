@@ -2,7 +2,7 @@
 tags:
   - DevKit
 create_time: 2024-12-28T17:27:00
-update_time: 2025/02/19 19:00
+update_time: 2025/02/25 17:45
 ---
 
 ## 快捷键
@@ -36,26 +36,26 @@ update_time: 2025/02/19 19:00
 ### 如何隐藏不想看到的文件夹或者文件？
 
 File ➡ Settings ➡ Editor ➡ File Types ➡ Ignore Files and Folders，配置不想看到的文件夹或者文件。
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161055880.png)
+![](https://img.xiaorang.fun/202502251743993.png)
 
 如果配置无误还能看到文件夹或者文件的话，请确保没有勾选显示排除的文件选项，如果勾选了的话取消勾选即可！
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161055214.png)
+![](https://img.xiaorang.fun/202502251743994.png)
 
 ### 以 TODO 为例添加自定义的实时模板
 
 设置 ➡ 编辑器 ➡ 实时模板，先创建一个属于自己的分组，组名可以根据自己的喜欢取；
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161055676.png)在创建的分组下新建一个模板，以 <span style="background:rgba(255, 183, 139, 0.55)">TODO</span> 为例，步骤如下所示：
+![](https://img.xiaorang.fun/202502251743995.png)在创建的分组下新建一个模板，以 <span style="background:rgba(255, 183, 139, 0.55)">TODO</span> 为例，步骤如下所示：
 
 1. 先右键选中新创建的分组，然后点击 + 号选择实时模板；
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161056580.png)
+   ![](https://img.xiaorang.fun/202502251743996.png)
 2. 填写模板信息，缩写，描述信息，模板文本，以及编辑模板文本中涉及到的变量，最后选择该模板应用于 Java 环境；
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161056766.png)
+   ![](https://img.xiaorang.fun/202502251743997.png)
 3. 设置 ➡ 编辑器 ➡ TODO，先创建一个模式，按照如下方式进行填写；
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161056463.png)
+   ![](https://img.xiaorang.fun/202502251743998.png)
 4. 添加一个筛选器，名称任意，模式选择上面新建的，最后点击确定退出设置；
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161056016.png)
+   ![](https://img.xiaorang.fun/202502251743000.png)
 5. 打开 TODO 窗口，选中咱们新建的筛选器，这样就只会显示出咱们添加的 TODO，把其他人或其他引入的第三方项目中的 TODO 给过滤掉！
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161056250.png)
+   ![](https://img.xiaorang.fun/202502251743001.png)
 
 ### 设置文件的行分隔符为 LF
 
@@ -64,17 +64,17 @@ File ➡ Settings ➡ Editor ➡ File Types ➡ Ignore Files and Folders，配�
 ### 添加 JDK
 
 1. 点击 "文件"，选择 "项目结构"，快捷键是 "Ctrl+Alt+Shift+S"。
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161057412.png)
+   ![](https://img.xiaorang.fun/202502251743002.png)
 2. 弹出 "Project Structure" 窗口，点击 "项目"，选择 "SDK"。
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161057348.png)
+   ![](https://img.xiaorang.fun/202502251743003.png)
 3. 选择下拉框中的 "下载 JDK..."。
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161057240.png)
+   ![](https://img.xiaorang.fun/202502251743004.png)
 4. 弹出 "下载 JDK" 窗口，选择自己需要的 JDK 版本（如 1.8，17 等等），供应商（如 Amazon，Oracle 等）以及安装路径，最后点击 "下载" 按钮，等待下载完成即可。
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161057318.png)
+   ![](https://img.xiaorang.fun/202502251743005.png)
 5. 耐心等待下载安装完成...
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161057490.png)
+   ![](https://img.xiaorang.fun/202502251743006.png)
 6. 如果 "SDK" 处的文字不再显示红色就代表已经下载安装完成，最后点击 "确定" 按钮就大功告成啦🌸🌸🌸
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161057677.png)
+   ![](https://img.xiaorang.fun/202502251743007.png)
 
 ## 插件
 
@@ -97,12 +97,12 @@ TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。
 大多数翻译服务都需要注册账号才能访问他们的服务（如：OpenAI、DeepL、有道翻译等）。因此您可能需要注册一个帐号，并获取其**认证密钥**，然后在插件内绑定**认证密钥**：**Preferences (Settings)** ➡️ **Tools** ➡️ **Translation** ➡️ **常规** ➡️ **翻译引擎** ➡️ **配置...**
 
 以**有道翻译**为例，登陆控制台 ➡️ 应用总览 ➡️ 创建应用 ➡️ 填写相关信息（如应用名称：IntelliJ IDEA Translation，选择服务：文本翻译和文档翻译，接入方式选择：API，应用类别：实用工具） ➡️ 确定。
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161058062.png)
+![](https://img.xiaorang.fun/202502251743008.png)
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161058281.png)
+![](https://img.xiaorang.fun/202502251743009.png)
 
 复制应用 ID 以及密钥信息，如下所示：
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161058081.png)
+![](https://img.xiaorang.fun/202502251743010.png)
 
 ### LeetCode Editor
 
@@ -111,7 +111,7 @@ TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。
 > 官方文档地址： [leetcode-editor/README_ZH.md at master · shuzijun/leetcode-editor (github.com)](https://github.com/shuzijun/leetcode-editor/blob/master/README_ZH.md)
 
 文档已经详细介绍了插件的使用方法，借鉴官方的自定义代码生成配置，一步步摸索完善，如下所示：
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161058984.png)
+![](https://img.xiaorang.fun/202502251743011.png)
 
 + CodeFileName
 
@@ -146,22 +146,22 @@ TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。
 ### 快速生成测试类
 
 对某个类快速生成测试类：选中需要生成测试代码的类 ➡ 右键 ➡ Go To ➡ Test ➡ Create New Test。
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161059977.png)
+![](https://img.xiaorang.fun/202502251743012.png)
 
 ## 激活🚀
 
 ### 下载补丁
 
 访问 [JETBRA.IN CHECKER | IPFS](https://3.jetbra.in/) 网站，打开后会发现是一个 IPFS Checker 页面，我们在这个页面中选择一个可用的链接打开。，如下所示：
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202409071812676.png)
+![](https://img.xiaorang.fun/202502251743013.png)
 
 点击页面中的 `jetbra.zip` 链接开始下载我们所需的补丁。
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202409071813297.png)
+![](https://img.xiaorang.fun/202502251743014.png)
 
 ### 安装补丁
 
 首先解压 `jetbra.zip`，然后双击运行 `scripts` 文件夹中的 `install-current-user.vbs` 程序，如下所示：
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202409071820697.png)
+![](https://img.xiaorang.fun/202502251743015.png)
 
 > [!tip]
 > 如果你曾经安装过 `jetbra` 系列的旧版补丁，需要先运行 `uninstall` 开头的脚本。
@@ -181,4 +181,4 @@ PREFIX,https://account.jetbrains.com.cn/lservice/rpc/validateKey.action
 ### 使用激活码进行激活
 
 激活码的好处是离线使用，不需要联网验证。你可以在刚才热心大佬的网站 [JETBRA.IN CHECKER | IPFS](https://3.jetbra.in/) 上获取对应产品的激活码。
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202409071826975.png)
+![](https://img.xiaorang.fun/202502251743016.png)

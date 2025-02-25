@@ -2,7 +2,7 @@
 tags:
   - Tool
 create_time: 2024-12-28T17:34:00
-update_time: 2025/02/14 18:38
+update_time: 2025/02/25 17:32
 ---
 
 > [!quote]
@@ -35,7 +35,7 @@ update_time: 2025/02/14 18:38
 1. 访问 [yt-dlp GitHub Release 页面](https://github.com/yt-dlp/yt-dlp/releases)。
 2. 在页面中，向下滚动找到 **"Assets"** 部分。
 3. 以 Windows 系统为例，点击 **`yt-dlp.exe`** 文件链接进行下载。
-  ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412181055659.png)
+  ![](https://img.xiaorang.fun/202502251729692.png)
 4. 下载完成后，将 `yt-dlp.exe` 文件放到一个合适的位置，例如 `E:\yt-dlp`。
 
 ## 环境变量配置
@@ -45,7 +45,7 @@ update_time: 2025/02/14 18:38
 3. 在 **系统变量** 中找到 **Path**，点击 **编辑**，然后 **新增** `yt-dlp.exe` 文件所在的路径，如：`E:\yt-dlp`。
 4. 点击 **"确定"** 保存设置。
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412182128444.png)
+![](https://img.xiaorang.fun/202502251729693.png)
 
 打开终端，输入以下命令：
 
@@ -66,9 +66,9 @@ yt-dlp <视频链接>
 ```
 
 如下所示：
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412182317055.png)
+![](https://img.xiaorang.fun/202502251729694.png)
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412182316871.png)
+![](https://img.xiaorang.fun/202502251729695.png)
 
 上图框出的部分大致意思是：在使用 `yt-dlp` 下载视频时，想要下载的高质量格式（如 4K 超清或 1080P 60 帧）可能需要你成为某个网站的 **付费会员**。为了验证你的身份并获取这些格式，你需要提供 **认证信息**，例如通过 cookies 模拟登录状态。
 
@@ -94,15 +94,15 @@ yt-dlp <视频链接>
 
 2. **手动提取 cookies**
    如果你使用的是其他浏览器，或不想使用 `--cookies-from-browser`，你可以借助浏览器插件 [Get cookies.txt LOCALLY](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc) 导出浏览器所有 cookies 到一个 `cookies.txt` 文件，然后通过 ` --cookies ` 参数将其传递给 ` yt-dlp `。
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412182248144.png)
+   ![](https://img.xiaorang.fun/202502251729696.png)
 
 	```bash
 	yt-dlp --cookies "E:\yt-dlp\cookies.txt" <视频链接>
 	```
 
 通过上述步骤，成功提供 cookies 后，你可以顺利下载高质量的视频。下载完成后的显示效果如下：
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412182311704.png)
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412182312722.png)
+![](https://img.xiaorang.fun/202502251729697.png)
+![](https://img.xiaorang.fun/202502251729698.png)
 
 ### 选择视频格式和质量
 
@@ -130,7 +130,7 @@ yt-dlp --list-formats <视频链接>
 - **VCODEC**：视频编码格式。
 - **ACODEC**：音频编码格式。
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412191826909.png)
+![](https://img.xiaorang.fun/202502251729699.png)
 
 - **下载 1080p 视频和最佳音频：**
   假设你使用 `--list-formats` 查看可用格式后，发现 1080p 分辨率的视频格式 ID 为 `30116`，最佳音频格式 ID 为 `30280`。你可以使用以下命令下载：
@@ -139,7 +139,7 @@ yt-dlp --list-formats <视频链接>
 	yt-dlp -f 30116+30280 <视频链接>
 	```
 
-	![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412192216153.png)
+	![](https://img.xiaorang.fun/202502251729700.png)
 
 	在这个例子中：
 	- `30116` 是 1080p 分辨率的视频格式，适用于需要下载 1080p 视频的情况。
@@ -151,7 +151,7 @@ yt-dlp --list-formats <视频链接>
 	yt-dlp -f 30120+30280 <视频链接>
 	```
 
-	![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412192228708.png)
+	![](https://img.xiaorang.fun/202502251729701.png)
 
 ### 下载音频
 
@@ -164,7 +164,7 @@ yt-dlp -x --audio-format mp3 https://www.youtube.com/watch?v=dQw4w9WgXcQ
 - `-x`：仅提取音频。
 - `--audio-format mp3`：将音频转换为 MP3 格式。
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412192209110.png)
+![](https://img.xiaorang.fun/202502251729702.png)
 
 ### 下载播放列表
 
@@ -175,7 +175,7 @@ yt-dlp <视频链接>
 ```
 
 在 Bilibili 中，视频合集的 URL 通常是包含多个视频的页面，运行此命令后，`yt-dlp` 会自动下载合集中的所有视频。
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412192254244.png)
+![](https://img.xiaorang.fun/202502251729703.png)
 
 ### 自定义输出文件名
 
@@ -198,4 +198,4 @@ yt-dlp -o "%(title)s.%(ext)s" <视频链接>
 yt-dlp -o "%(uploader)s - %(title)s.%(ext)s" <视频链接>
 ```
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412192310083.png)
+![](https://img.xiaorang.fun/202502251729704.png)

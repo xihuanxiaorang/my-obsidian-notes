@@ -3,7 +3,7 @@ tags:
   - DevKit
   - Python
 create_time: 2024-12-28T17:30:00
-update_time: 2025/02/14 18:37
+update_time: 2025/02/25 18:04
 ---
 
 > [!quote]
@@ -14,7 +14,7 @@ update_time: 2025/02/14 18:37
 ## What is The Fuck？
 
 The Fuck 是一个开源的命令行工具，它可以智能地纠正你在终端中输入的错误命令。无论是拼写错误、参数错误还是其他常见错误，The Fuck 都能帮你自动修正并重新执行命令。它支持多种常见的 Shell，包括 Bash、Zsh 和 Fish。
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412201836531.gif)
+![](https://img.xiaorang.fun/202502251804341.gif)
 
 ## Installation
 
@@ -29,7 +29,7 @@ The Fuck 是一个开源的命令行工具，它可以智能地纠正你在终�
 	pip install thefuck
 	```
 
-	![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412201822554.png)
+	![](https://img.xiaorang.fun/202502251804342.png)
 3. **配置 Shell**
    安装完成后，你需要配置你的 Shell 来使用 The Fuck。根据你使用的 Shell 类型，添加以下内容到你的配置文件中：
    - **Bash**: 编辑 `~/.bashrc` 文件，添加以下内容：
@@ -95,7 +95,7 @@ The Fuck 的使用非常简单。当你在终端中输入错误命令时，只�
 	    branch
 	```
 
-	![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412202254920.png)
+	![](https://img.xiaorang.fun/202502251804343.png)
 
 2. **缺少参数**
    假设你输入了一个缺少参数的命令 `ls -l`，终端会提示错误：
@@ -116,7 +116,7 @@ The Fuck 的使用非常简单。当你在终端中输入错误命令时，只�
 
 ^7aeede
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412201900200.png)
+![](https://img.xiaorang.fun/202502251804344.png)
 该错误是由于 `imp` 模块在 Python 3.12 中被移除了。The Fuck 依赖该模块，但它已经被弃用并在最新的 Python 版本中被删除。因此，你需要做一些调整以使 The Fuck 在 Python 3.12 中工作。
 有两种解决方法：
 1. 降级 Python 版本 👍

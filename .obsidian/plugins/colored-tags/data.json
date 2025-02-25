@@ -90,7 +90,8 @@
     "SpringCloudAlibaba": 78,
     "Nacos": 79,
     "SpringCloud": 80,
-    "DevKit": 81
+    "DevKit": 81,
+    "public": 82
   },
   "_version": 3
 }
