@@ -4,7 +4,7 @@ tags:
   - Git
   - DevKit
 create_time: 2024-12-28T18:02:00
-update_time: 2025/02/25 18:08
+update_time: 2025/02/25 19:09
 ---
 
 ## 如何提交一个 PR？
@@ -75,10 +75,10 @@ Github 的 Token 是一种用于身份验证的密钥，允许你在脚本、命
 	- 在左侧导航栏，找到 **Developer settings** > **Personal access tokens** > **Tokens (classic)**。
 3. 创建新 Token
 	1. 点击 **Generate new token (Classic)** 按钮。
-	   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161737003.png)
+	   ![](https://img.xiaorang.fun/202502251859187.png)
 	2. 在 **Note** 中填写 Token 的用途（例如：`PicList 图床`），方便区分。
 	3. 在 **Expiration（过期时间）** 中选择有效期（推荐 90 天或 1 年）。
-	   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161737958.png)
+	   ![](https://img.xiaorang.fun/202502251859006.png)
 4. 设置权限
 	根据你的需求勾选相应的权限。对于图床配置，需要勾选 `repo`，确保拥有对仓库的完全读写权限。
 5. 生成 Token
@@ -90,11 +90,11 @@ Github 的 Token 是一种用于身份验证的密钥，允许你在脚本、命
 ## 如何选择开源协议
 
 > [!quote]
-> 本节内容全部来源于 [如何选择开源许可证？ - 阮一峰的网络日志 (ruanyifeng.com)](https://www.ruanyifeng.com/blog/2011/05/how_to_choose_free_software_licenses.html)
+> 本节内容全部来源于[如何选择开源许可证？ - 阮一峰的网络日志 (ruanyifeng.com)](https://www.ruanyifeng.com/blog/2011/05/how_to_choose_free_software_licenses.html)
 
 如何为代码选择开源许可证，这是一个问题。
 
-世界上的开源许可证，大概有 [上百种](https://www.gnu.org/licenses/license-list.html)。很少有人搞得清楚它们的区别。即使在最流行的六种：[GPL](https://www.gnu.org/licenses/gpl-3.0.html)、[BSD](https://en.wikipedia.org/wiki/BSD_licenses)、[MIT](https://en.wikipedia.org/wiki/MIT_License)、[Mozilla](https://www.mozilla.org/en-US/MPL/)、[Apache](https://www.apache.org/licenses/LICENSE-2.0) 和 L[GPL](https://www.gnu.org/licenses/lgpl-3.0.html) 之中做选择，也很复杂。
+世界上的开源许可证，大概有[上百种](https://www.gnu.org/licenses/license-list.html)。很少有人搞得清楚它们的区别。即使在最流行的六种：[GPL](https://www.gnu.org/licenses/gpl-3.0.html)、[BSD](https://en.wikipedia.org/wiki/BSD_licenses)、[MIT](https://en.wikipedia.org/wiki/MIT_License)、[Mozilla](https://www.mozilla.org/en-US/MPL/)、[Apache](https://www.apache.org/licenses/LICENSE-2.0) 和 L [GPL](https://www.gnu.org/licenses/lgpl-3.0.html) 之中做选择，也很复杂。
 
 乌克兰程序员 [Paul Bagwell](https://web.archive.org/web/20110503183702/http://pbagwl.com/post/5078147450/description-of-popular-software-licenses) 画了一张分析图，说明应该怎么选择。这是我见过的最简单的讲解，只用两分钟，你就能搞清楚这六种许可证之间的最大区别。
 
@@ -134,24 +134,24 @@ endif
 > [!info]
 > 同名指的是与自己 Gihub 用户名相同！
 
-当仓库的名称与用户名相同时，此仓库会被视作一个✨*特殊*✨仓库，此仓库中的 README.md 文件会展示在 Github 个人主页，咱们就是利用这个机制来自定义并美化咱们的个人主页。
+当仓库的名称与用户名相同时，此仓库会被视作一个✨*特殊*✨仓库，此仓库中的 README. md 文件会展示在 Github 个人主页，咱们就是利用这个机制来自定义并美化咱们的个人主页。
 
 举个栗子：本人的 Github 用户名为 xihuanxiaorang，那么我创建的仓库名称就为 xihuanxiaorang。
 
 > [!caution]
 > **<font style="color:#ae3520;">此仓库必须设置为公开（public）状态！</font>**
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161713137.png)
+![](https://img.xiaorang.fun/202502251859879.png)
 
 ### 美化之旅
 
 仓库创建完成之后，咱们就可以开始参考各路大佬的个人主页来美化自己的个人主页。
 
-在仓库的 README.md 文件中有一段默认内容，咱们可以将其删除掉，以便改写成咱们自己想要的效果。如果不想阅读以下繁琐的教程，直接给出本人的 Github 个人主页所对应的仓库地址：[xihuanxiaorang/xihuanxiaorang: 个人主页 (github.com)](https://github.com/xihuanxiaorang/xihuanxiaorang)，小伙伴们可以对照着完善自己的个人主页效果。
+在仓库的 README. md 文件中有一段默认内容，咱们可以将其删除掉，以便改写成咱们自己想要的效果。如果不想阅读以下繁琐的教程，直接给出本人的 Github 个人主页所对应的仓库地址：[xihuanxiaorang/xihuanxiaorang: 个人主页 (github.com)](https://github.com/xihuanxiaorang/xihuanxiaorang)，小伙伴们可以对照着完善自己的个人主页效果。
 
 #### 小徽章
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161714497.png)
+![](https://img.xiaorang.fun/202502251900673.png)
 
 此部分效果主要分为如下两种：
 
@@ -160,20 +160,20 @@ endif
 
 #### 打字机效果
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161714793.gif)
+![](https://img.xiaorang.fun/202502251901880.gif)
 
 此部分效果主要通过 [DenverCoder1/readme-typing-svg: ⚡ Dynamically generated, customizable SVG that gives the appearance of typing and deleting text for use on your profile page, repositories, or website. (github.com)](https://github.com/DenverCoder1/readme-typing-svg) 开源项目实现。
 
-该项目还提供一个可以实时预览轻松定制键入SVG的在线工具：[Readme Typing SVG - Demo Site (demolab.com)](https://readme-typing-svg.demolab.com/demo/)。
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161714432.png)
+该项目还提供一个可以实时预览轻松定制键入 SVG 的在线工具：[Readme Typing SVG - Demo Site (demolab.com)](https://readme-typing-svg.demolab.com/demo/)。
+![](https://img.xiaorang.fun/202502251901189.png)
 
 #### 技术栈图标
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161714530.png)
+![](https://img.xiaorang.fun/202502251902095.png)
 
 此部分效果主要通过 [tandpfun/skill-icons: Showcase your skills on your Github readme or resumé with ease ✨](https://github.com/tandpfun/skill-icons) 开源项目实现。
 
-将下面的代码块复制并粘贴到 README.md 文件中，以添加技能图标元素！
+将下面的代码块复制并粘贴到 README. md 文件中，以添加技能图标元素！
 
 将 `?i=js,html,css` 更改为用","分隔的技能列表！你可以在[此处](https://github.com/tandpfun/skill-icons?tab=readme-ov-file#icons-list)找到完整的图标列表。
 
@@ -183,7 +183,7 @@ endif
 
 #### Github 数据概览
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161714405.png)
+![](https://img.xiaorang.fun/202502251902267.png)
 
 此效果主要通过 [anuraghazra/github-readme-stats: :zap: Dynamically generated stats for your github readmes](https://github.com/anuraghazra/github-readme-stats) 开源项目实现。
 
@@ -202,11 +202,11 @@ endif
 此效果主要通过 [DenverCoder1/github-readme-streak-stats: 🔥 Stay motivated and show off your contribution streak! 🌟 Display your total contributions, current streak, and longest streak on your GitHub profile README](https://github.com/DenverCoder1/github-readme-streak-stats) 开源项目实现。
 
 该项目还提供一个可以通过实时预览定制你的连胜统计卡的在线工具：[GitHub Readme Streak Stats Demo (demolab.com)](https://streak-stats.demolab.com/demo/)。
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161715176.png)
+![](https://img.xiaorang.fun/202502251903293.png)
 
 #### 贡献图
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161715712.png)
+![](https://img.xiaorang.fun/202502251903395.png)
 
 此效果主要通过 [Ashutosh00710/github-readme-activity-graph: A dynamically generated activity graph to show your GitHub activities of last 31 days.](https://github.com/Ashutosh00710/github-readme-activity-graph) 开源项目实现。
 
@@ -220,20 +220,20 @@ endif
 
 #### 贪吃蛇效果
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161715736.svg)
+![](https://img.xiaorang.fun/202502251904005.svg)
 
 此效果主要通过 [Platane/snk: 🟩⬜ Generates a snake game from a github user contributions graph and output a screen capture as animated svg or gif](https://github.com/Platane/snk) 开源项目实现。
 
 具体实现步骤如下所示：
 
 1. 创建一个新的 Github Access Token：点击 Github 右上角的头像 ➡️ settings ➡️ Developer Settings ➡️ Personal access tokens (classic) ➡️ Generate new token (classic)
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161715889.png)
+   ![](https://img.xiaorang.fun/202502251904887.png)
 
 2. 为当前仓库创建一个名为 `GH_TOKEN` 的密钥，值为上一步创建的 Github Access Token：前往当前仓库 Settings ➡️ Secrets and variables ➡️ Actions secrets and variables ➡️ New Repository secret。
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161715244.png)
+   ![](https://img.xiaorang.fun/202502251905688.png)
 
 3. 修改工作流权限：前往当前仓库 Settings ➡️ Actions ➡️ General ➡️ Workflow permissions ➡️ 设置为读写权限。
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161716304)
+   ![](https://img.xiaorang.fun/202502251905905.png)
 
 4. 在当前仓库的 `.github/workflows` 目录下创建一个名为 `snake.yml` 的新工作流文件，内容如下所示：
 
@@ -295,7 +295,7 @@ endif
 
 #### 代码编写总时长
 
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161717311)
+![](https://img.xiaorang.fun/202502251905692.png)
 
 此效果主要 [athul/waka-readme: Wakatime Weekly Metrics on your Profile Readme. (github.com)](https://github.com/athul/waka-readme) 开源项目实现。
 
@@ -305,10 +305,10 @@ endif
 2. 登录后，从 [https://wakatime.com/api-key/](https://wakatime.com/api-key/) 获取你的 WakaTime API 密钥
 3. 在你最喜欢的编辑器（IDE）中安装 [WakaTime 插件](https://wakatime.com/plugins)
 4. 粘贴你的 API 密钥到插件设置中，如下所示：
-    ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161718467.png)
+    ![](https://img.xiaorang.fun/202502251906623.png)
 
 5. 为当前仓库创建一个名为 `WAKATIME_API_KEY` 的密钥，值为上一步中拷贝的 API 密钥：前往当前仓库 Settings ➡️ Secrets and variables ➡️ Actions secrets and variables ➡️ New Repository secret。
-    ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412161718383)
+    ![](https://img.xiaorang.fun/202502251906080.png)
 
 6. 在当前仓库的 `.github/workflows` 目录下创建一个名为 `waka-readme.yml` 的新工作流文件，内容如下所示：
 
@@ -339,7 +339,7 @@ endif
 	          SHOW_TOTAL: true
 	```
 
-7. 使用方式：复制粘贴以下特殊注释后保存 README.md 文件，统计效果将出现在两者之间。
+7. 使用方式：复制粘贴以下特殊注释后保存 README. md 文件，统计效果将出现在两者之间。
 
 	```markdown
 	<!--START_SECTION:waka-->
@@ -363,7 +363,7 @@ endif
   <img src="https://readme-typing-svg.demolab.com?font=Orbitron&size=25&pause=1000&center=true&vCenter=true&random=false&width=600&lines=Welcome+to+my+GitHub+profile+page!;I+am+super+obsessed+with+programming!" />
 </p>
 
-<img src="https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202405170053667.gif" alt="gif" width="360px" align="right" />
+<img src="https://img.xiaorang.fun/202502251908109.gif" alt="gif" width="360px" align="right" />
 
 ### 🧐 More About Me
 

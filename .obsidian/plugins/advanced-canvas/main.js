@@ -1900,6 +1900,11 @@ var BUILTIN_EDGE_STYLE_ATTRIBUTES = [
         icon: "arrow-circle-outline",
         label: "Circle Outline",
         value: "circle-outline"
+      },
+      {
+        icon: "tally-1",
+        label: "Blunt",
+        value: "blunt"
       }
     ]
   },
@@ -1960,6 +1965,10 @@ var CanvasEvent = {
   NodeChanged: `${PLUGIN_EVENT_PREFIX}:node-changed`,
   EdgeChanged: `${PLUGIN_EVENT_PREFIX}:edge-changed`,
   NodeTextContentChanged: `${PLUGIN_EVENT_PREFIX}:node-text-content-changed`,
+  EdgeConnectionDragging: {
+    Before: `${PLUGIN_EVENT_PREFIX}:edge-connection-dragging:before`,
+    After: `${PLUGIN_EVENT_PREFIX}:edge-connection-dragging:after`
+  },
   NodeRemoved: `${PLUGIN_EVENT_PREFIX}:node-removed`,
   EdgeRemoved: `${PLUGIN_EVENT_PREFIX}:edge-removed`,
   OnCopy: `${PLUGIN_EVENT_PREFIX}:copy`,
@@ -2060,6 +2069,8 @@ var DEFAULT_SETTINGS_VALUES = {
   zoomToClonedNode: true,
   cloneNodeMargin: 20,
   expandNodeStepSize: 20,
+  floatingEdgeFeatureEnabled: false,
+  newEdgeFromSideFloating: false,
   flipEdgeFeatureEnabled: true,
   betterExportFeatureEnabled: true,
   betterReadonlyEnabled: true,
@@ -2279,6 +2290,18 @@ var SETTINGS = {
         description: "The step size for expanding the node.",
         type: "number",
         parse: (value) => Math.max(1, parseInt(value) || 0)
+      }
+    }
+  },
+  floatingEdgeFeatureEnabled: {
+    label: "Floating edges (auto edge side)",
+    description: "Create edges that are automatically placed on the most suitable side of the node by dragging the edge over the target node without placing it over a specific side connection point.",
+    infoSection: "auto-edge-side",
+    children: {
+      newEdgeFromSideFloating: {
+        label: "New edge from side floating",
+        description: 'When enabled, the "from" side of the edge will always be floating.',
+        type: "boolean"
       }
     }
   },
@@ -3208,6 +3231,110 @@ var Patcher = class {
   }
 };
 
+// src/utils/bbox-helper.ts
+var BBoxHelper = class {
+  static combineBBoxes(bboxes) {
+    let minX = Infinity;
+    let minY = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+    for (let bbox of bboxes) {
+      minX = Math.min(minX, bbox.minX);
+      minY = Math.min(minY, bbox.minY);
+      maxX = Math.max(maxX, bbox.maxX);
+      maxY = Math.max(maxY, bbox.maxY);
+    }
+    return { minX, minY, maxX, maxY };
+  }
+  static scaleBBox(bbox, scale) {
+    let diffX = (scale - 1) * (bbox.maxX - bbox.minX);
+    let diffY = (scale - 1) * (bbox.maxY - bbox.minY);
+    return {
+      minX: bbox.minX - diffX / 2,
+      maxX: bbox.maxX + diffX / 2,
+      minY: bbox.minY - diffY / 2,
+      maxY: bbox.maxY + diffY / 2
+    };
+  }
+  static isColliding(bbox1, bbox2) {
+    return bbox1.minX <= bbox2.maxX && bbox1.maxX >= bbox2.minX && bbox1.minY <= bbox2.maxY && bbox1.maxY >= bbox2.minY;
+  }
+  static insideBBox(position, bbox, canTouchEdge) {
+    var _a, _b, _c, _d;
+    const providedBBox = {
+      minX: (_a = position.minX) != null ? _a : position.x,
+      minY: (_b = position.minY) != null ? _b : position.y,
+      maxX: (_c = position.maxX) != null ? _c : position.x,
+      maxY: (_d = position.maxY) != null ? _d : position.y
+    };
+    return canTouchEdge ? providedBBox.minX >= bbox.minX && providedBBox.maxX <= bbox.maxX && providedBBox.minY >= bbox.minY && providedBBox.maxY <= bbox.maxY : providedBBox.minX > bbox.minX && providedBBox.maxX < bbox.maxX && providedBBox.minY > bbox.minY && providedBBox.maxY < bbox.maxY;
+  }
+  static enlargeBBox(bbox, padding) {
+    return {
+      minX: bbox.minX - padding,
+      minY: bbox.minY - padding,
+      maxX: bbox.maxX + padding,
+      maxY: bbox.maxY + padding
+    };
+  }
+  static moveInDirection(position, side, distance) {
+    switch (side) {
+      case "top":
+        return { x: position.x, y: position.y - distance };
+      case "right":
+        return { x: position.x + distance, y: position.y };
+      case "bottom":
+        return { x: position.x, y: position.y + distance };
+      case "left":
+        return { x: position.x - distance, y: position.y };
+    }
+  }
+  static getCenterOfBBoxSide(bbox, side) {
+    switch (side) {
+      case "top":
+        return { x: (bbox.minX + bbox.maxX) / 2, y: bbox.minY };
+      case "right":
+        return { x: bbox.maxX, y: (bbox.minY + bbox.maxY) / 2 };
+      case "bottom":
+        return { x: (bbox.minX + bbox.maxX) / 2, y: bbox.maxY };
+      case "left":
+        return { x: bbox.minX, y: (bbox.minY + bbox.maxY) / 2 };
+    }
+  }
+  static getSideVector(side) {
+    switch (side) {
+      case "top":
+        return { x: 0, y: 1 };
+      case "right":
+        return { x: 1, y: 0 };
+      case "bottom":
+        return { x: 0, y: -1 };
+      case "left":
+        return { x: -1, y: 0 };
+      default:
+        return { x: 0, y: 0 };
+    }
+  }
+  static getOppositeSide(side) {
+    switch (side) {
+      case "top":
+        return "bottom";
+      case "right":
+        return "left";
+      case "bottom":
+        return "top";
+      case "left":
+        return "right";
+    }
+  }
+  static isHorizontal(side) {
+    return side === "left" || side === "right";
+  }
+  static direction(side) {
+    return side === "right" || side === "bottom" ? 1 : -1;
+  }
+};
+
 // src/patchers/canvas-patcher.ts
 var CanvasPatcher = class extends Patcher {
   async patch() {
@@ -3488,6 +3615,17 @@ var CanvasPatcher = class extends Patcher {
         const result = next.call(this, ...args);
         that.triggerWorkspaceEvent(CanvasEvent.NodeBBoxRequested, this.canvas, node, result);
         return result;
+      }),
+      onConnectionPointerdown: PatchHelper.OverrideExisting((next) => function(e, side) {
+        const addEdgeEventRef = that.plugin.app.workspace.on(CanvasEvent.EdgeAdded, (_canvas, edge) => {
+          that.triggerWorkspaceEvent(CanvasEvent.EdgeConnectionDragging.Before, this.canvas, edge, e, true, "to");
+          that.plugin.app.workspace.offref(addEdgeEventRef);
+          document.addEventListener("pointerup", (e2) => {
+            that.triggerWorkspaceEvent(CanvasEvent.EdgeConnectionDragging.After, this.canvas, edge, e2, true, "to");
+          }, { once: true });
+        });
+        const result = next.call(this, e, side);
+        return result;
       })
     });
     this.runAfterInitialized(node, () => {
@@ -3500,10 +3638,10 @@ var CanvasPatcher = class extends Patcher {
     PatchHelper.patch(this.plugin, edge, {
       setData: PatchHelper.OverrideExisting((next) => function(data, addHistory) {
         const result = next.call(this, data);
-        if (edge.initialized && !edge.isDirty) {
-          edge.isDirty = true;
-          that.triggerWorkspaceEvent(CanvasEvent.EdgeChanged, this.canvas, edge);
-          delete edge.isDirty;
+        if (this.initialized && !this.isDirty) {
+          this.isDirty = true;
+          that.triggerWorkspaceEvent(CanvasEvent.EdgeChanged, this.canvas, this);
+          delete this.isDirty;
         }
         this.canvas.data = this.canvas.getData();
         this.canvas.view.requestSave();
@@ -3513,12 +3651,24 @@ var CanvasPatcher = class extends Patcher {
       }),
       render: PatchHelper.OverrideExisting((next) => function(...args) {
         const result = next.call(this, ...args);
-        that.triggerWorkspaceEvent(CanvasEvent.EdgeChanged, this.canvas, edge);
+        that.triggerWorkspaceEvent(CanvasEvent.EdgeChanged, this.canvas, this);
         return result;
       }),
       getCenter: PatchHelper.OverrideExisting((next) => function(...args) {
         const result = next.call(this, ...args);
-        that.triggerWorkspaceEvent(CanvasEvent.EdgeCenterRequested, this.canvas, edge, result);
+        that.triggerWorkspaceEvent(CanvasEvent.EdgeCenterRequested, this.canvas, this, result);
+        return result;
+      }),
+      onConnectionPointerdown: PatchHelper.OverrideExisting((next) => function(e) {
+        const result = next.call(this, e);
+        const eventPos = this.canvas.posFromEvt(e);
+        const fromPos = BBoxHelper.getCenterOfBBoxSide(this.from.node.getBBox(), this.from.side);
+        const toPos = BBoxHelper.getCenterOfBBoxSide(this.to.node.getBBox(), this.to.side);
+        const draggingSide = Math.hypot(eventPos.x - fromPos.x, eventPos.y - fromPos.y) > Math.hypot(eventPos.x - toPos.x, eventPos.y - toPos.y) ? "to" : "from";
+        that.triggerWorkspaceEvent(CanvasEvent.EdgeConnectionDragging.Before, this.canvas, this, e, false, draggingSide);
+        document.addEventListener("pointerup", (e2) => {
+          that.triggerWorkspaceEvent(CanvasEvent.EdgeConnectionDragging.After, this.canvas, this, e2, false, draggingSide);
+        }, { once: true });
         return result;
       })
     });
@@ -3814,112 +3964,6 @@ var OutgoingLinksPatcher = class extends Patcher {
 
 // src/utils/canvas-helper.ts
 var import_obsidian7 = require("obsidian");
-
-// src/utils/bbox-helper.ts
-var BBoxHelper = class {
-  static combineBBoxes(bboxes) {
-    let minX = Infinity;
-    let minY = Infinity;
-    let maxX = -Infinity;
-    let maxY = -Infinity;
-    for (let bbox of bboxes) {
-      minX = Math.min(minX, bbox.minX);
-      minY = Math.min(minY, bbox.minY);
-      maxX = Math.max(maxX, bbox.maxX);
-      maxY = Math.max(maxY, bbox.maxY);
-    }
-    return { minX, minY, maxX, maxY };
-  }
-  static scaleBBox(bbox, scale) {
-    let diffX = (scale - 1) * (bbox.maxX - bbox.minX);
-    let diffY = (scale - 1) * (bbox.maxY - bbox.minY);
-    return {
-      minX: bbox.minX - diffX / 2,
-      maxX: bbox.maxX + diffX / 2,
-      minY: bbox.minY - diffY / 2,
-      maxY: bbox.maxY + diffY / 2
-    };
-  }
-  static isColliding(bbox1, bbox2) {
-    return bbox1.minX <= bbox2.maxX && bbox1.maxX >= bbox2.minX && bbox1.minY <= bbox2.maxY && bbox1.maxY >= bbox2.minY;
-  }
-  static insideBBox(position, bbox, canTouchEdge) {
-    var _a, _b, _c, _d;
-    const providedBBox = {
-      minX: (_a = position.minX) != null ? _a : position.x,
-      minY: (_b = position.minY) != null ? _b : position.y,
-      maxX: (_c = position.maxX) != null ? _c : position.x,
-      maxY: (_d = position.maxY) != null ? _d : position.y
-    };
-    return canTouchEdge ? providedBBox.minX >= bbox.minX && providedBBox.maxX <= bbox.maxX && providedBBox.minY >= bbox.minY && providedBBox.maxY <= bbox.maxY : providedBBox.minX > bbox.minX && providedBBox.maxX < bbox.maxX && providedBBox.minY > bbox.minY && providedBBox.maxY < bbox.maxY;
-  }
-  static enlargeBBox(bbox, padding) {
-    return {
-      minX: bbox.minX - padding,
-      minY: bbox.minY - padding,
-      maxX: bbox.maxX + padding,
-      maxY: bbox.maxY + padding
-    };
-  }
-  static moveInDirection(position, side, distance) {
-    switch (side) {
-      case "top":
-        return { x: position.x, y: position.y - distance };
-      case "right":
-        return { x: position.x + distance, y: position.y };
-      case "bottom":
-        return { x: position.x, y: position.y + distance };
-      case "left":
-        return { x: position.x - distance, y: position.y };
-    }
-  }
-  static getCenterOfBBoxSide(bbox, side) {
-    switch (side) {
-      case "top":
-        return { x: (bbox.minX + bbox.maxX) / 2, y: bbox.minY };
-      case "right":
-        return { x: bbox.maxX, y: (bbox.minY + bbox.maxY) / 2 };
-      case "bottom":
-        return { x: (bbox.minX + bbox.maxX) / 2, y: bbox.maxY };
-      case "left":
-        return { x: bbox.minX, y: (bbox.minY + bbox.maxY) / 2 };
-    }
-  }
-  static getSideVector(side) {
-    switch (side) {
-      case "top":
-        return { x: 0, y: 1 };
-      case "right":
-        return { x: 1, y: 0 };
-      case "bottom":
-        return { x: 0, y: -1 };
-      case "left":
-        return { x: -1, y: 0 };
-      default:
-        return { x: 0, y: 0 };
-    }
-  }
-  static getOppositeSide(side) {
-    switch (side) {
-      case "top":
-        return "bottom";
-      case "right":
-        return "left";
-      case "bottom":
-        return "top";
-      case "left":
-        return "right";
-    }
-  }
-  static isHorizontal(side) {
-    return side === "left" || side === "right";
-  }
-  static direction(side) {
-    return side === "right" || side === "bottom" ? 1 : -1;
-  }
-};
-
-// src/utils/canvas-helper.ts
 var _CanvasHelper = class _CanvasHelper {
   static canvasCommand(plugin, check, run) {
     return (checking) => {
@@ -7118,6 +7162,127 @@ var ExportCanvasExtension = class extends CanvasExtension {
   }
 };
 
+// src/canvas-extensions/floating-edge-canvas-extension.ts
+var FloatingEdgeCanvasExtension = class extends CanvasExtension {
+  isEnabled() {
+    return "floatingEdgeFeatureEnabled";
+  }
+  init() {
+    this.plugin.registerEvent(this.plugin.app.workspace.on(
+      CanvasEvent.NodeMoved,
+      (canvas, node) => this.onNodeMoved(canvas, node)
+    ));
+    this.plugin.registerEvent(this.plugin.app.workspace.on(
+      CanvasEvent.EdgeConnectionDragging.Before,
+      (canvas, edge, event, newEdge, side) => this.onEdgeStartedDragging(canvas, edge, event, newEdge, side)
+    ));
+    this.plugin.registerEvent(this.plugin.app.workspace.on(
+      CanvasEvent.EdgeConnectionDragging.After,
+      (canvas, edge, event, newEdge, side) => this.onEdgeStoppedDragging(canvas, edge, event, newEdge, side)
+    ));
+  }
+  onNodeMoved(canvas, node) {
+    const affectedEdges = canvas.getEdgesForNode(node);
+    for (const edge of affectedEdges)
+      this.updateEdgeConnectionSide(edge);
+  }
+  updateEdgeConnectionSide(edge) {
+    const edgeData = edge.getData();
+    if (edgeData.fromFloating) {
+      const fixedNodeConnectionPoint = BBoxHelper.getCenterOfBBoxSide(edge.to.node.getBBox(), edge.to.side);
+      const bestSide = this.getBestSideForFloatingEdge(fixedNodeConnectionPoint, edge.from.node);
+      if (bestSide !== edge.from.side) {
+        edge.setData({
+          ...edgeData,
+          fromSide: bestSide
+        });
+      }
+    }
+    if (edgeData.toFloating) {
+      const fixedNodeConnectionPoint = BBoxHelper.getCenterOfBBoxSide(edge.from.node.getBBox(), edge.from.side);
+      const bestSide = this.getBestSideForFloatingEdge(fixedNodeConnectionPoint, edge.to.node);
+      if (bestSide !== edge.to.side) {
+        edge.setData({
+          ...edgeData,
+          toSide: bestSide
+        });
+      }
+    }
+  }
+  getBestSideForFloatingEdge(sourcePos, target) {
+    const targetBBox = target.getBBox();
+    const possibleSides = ["top", "right", "bottom", "left"];
+    const possibleTargetPos = possibleSides.map((side) => [side, BBoxHelper.getCenterOfBBoxSide(targetBBox, side)]);
+    let bestSide = null;
+    let bestDistance = Infinity;
+    for (const [side, pos] of possibleTargetPos) {
+      const distance = Math.sqrt(Math.pow(sourcePos.x - pos.x, 2) + Math.pow(sourcePos.y - pos.y, 2));
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        bestSide = side;
+      }
+    }
+    return bestSide;
+  }
+  onEdgeStartedDragging(canvas, edge, _event, newEdge, _side) {
+    if (newEdge && this.plugin.settings.getSetting("newEdgeFromSideFloating"))
+      edge.setData({
+        ...edge.getData(),
+        fromFloating: true
+        // New edges can only get dragged from the "from" side
+      });
+    let cachedViewportNodes = null;
+    let hasNaNFloatingEdgeDropZones = false;
+    this.onPointerMove = (event) => {
+      if (cachedViewportNodes === null || hasNaNFloatingEdgeDropZones || canvas.viewportChanged) {
+        hasNaNFloatingEdgeDropZones = false;
+        cachedViewportNodes = canvas.getViewportNodes().map((node) => {
+          const nodeFloatingEdgeDropZone = this.getFloatingEdgeDropZoneForNode(node);
+          if (isNaN(nodeFloatingEdgeDropZone.minX) || isNaN(nodeFloatingEdgeDropZone.minY) || isNaN(nodeFloatingEdgeDropZone.maxX) || isNaN(nodeFloatingEdgeDropZone.maxY))
+            hasNaNFloatingEdgeDropZones = true;
+          return [node, nodeFloatingEdgeDropZone];
+        });
+      }
+      for (const [node, nodeFloatingEdgeDropZoneClientRect] of cachedViewportNodes) {
+        const hovering = BBoxHelper.insideBBox({ x: event.clientX, y: event.clientY }, nodeFloatingEdgeDropZoneClientRect, true);
+        node.nodeEl.classList.toggle("hovering-floating-edge-zone", hovering);
+      }
+    };
+    document.addEventListener("pointermove", this.onPointerMove);
+  }
+  onEdgeStoppedDragging(_canvas, edge, event, _newEdge, side) {
+    document.removeEventListener("pointermove", this.onPointerMove);
+    const dropZoneNode = side === "from" ? edge.from.node : edge.to.node;
+    const floatingEdgeDropZone = this.getFloatingEdgeDropZoneForNode(dropZoneNode);
+    const wasDroppedInFloatingEdgeDropZone = BBoxHelper.insideBBox({ x: event.clientX, y: event.clientY }, floatingEdgeDropZone, true);
+    const edgeData = edge.getData();
+    if (side === "from" && wasDroppedInFloatingEdgeDropZone == edgeData.fromFloating)
+      return;
+    if (side === "to" && wasDroppedInFloatingEdgeDropZone == edgeData.toFloating)
+      return;
+    if (side === "from")
+      edgeData.fromFloating = wasDroppedInFloatingEdgeDropZone;
+    else
+      edgeData.toFloating = wasDroppedInFloatingEdgeDropZone;
+    edge.setData(edgeData);
+    this.updateEdgeConnectionSide(edge);
+  }
+  getFloatingEdgeDropZoneForNode(node) {
+    const nodeElClientBoundingRect = node.nodeEl.getBoundingClientRect();
+    const nodeFloatingEdgeDropZoneElStyle = window.getComputedStyle(node.nodeEl, ":after");
+    const nodeFloatingEdgeDropZoneSize = {
+      width: parseFloat(nodeFloatingEdgeDropZoneElStyle.getPropertyValue("width")),
+      height: parseFloat(nodeFloatingEdgeDropZoneElStyle.getPropertyValue("height"))
+    };
+    return {
+      minX: nodeElClientBoundingRect.left + (nodeElClientBoundingRect.width - nodeFloatingEdgeDropZoneSize.width) / 2,
+      minY: nodeElClientBoundingRect.top + (nodeElClientBoundingRect.height - nodeFloatingEdgeDropZoneSize.height) / 2,
+      maxX: nodeElClientBoundingRect.right - (nodeElClientBoundingRect.width - nodeFloatingEdgeDropZoneSize.width) / 2,
+      maxY: nodeElClientBoundingRect.bottom - (nodeElClientBoundingRect.height - nodeFloatingEdgeDropZoneSize.height) / 2
+    };
+  }
+};
+
 // src/managers/css-styles-config-manager.ts
 var import_obsidian13 = require("obsidian");
 var CssStylesConfigManager = class {
@@ -7658,6 +7823,8 @@ var EdgeStylesExtension = class extends CanvasExtension {
       return `0,0 5,10 0,20 -5,10`;
     else if (arrowStyle === "circle" || arrowStyle === "circle-outline")
       return `0 0, 4.95 1.8, 7.5 6.45, 6.6 11.7, 2.7 15, -2.7 15, -6.6 11.7, -7.5 6.45, -4.95 1.8`;
+    else if (arrowStyle === "blunt")
+      return `-10,8 10,8 10,6 -10,6`;
     else
       return `0,0 6.5,10.4 -6.5,10.4`;
   }
@@ -7798,7 +7965,8 @@ var EdgeExposerExtension = class extends CanvasExtension {
 var EXPOSED_SETTINGS = [
   "disableFontSizeRelativeToZoom",
   "collapsibleGroupsFeatureEnabled",
-  "collapsedGroupPreviewOnDrag"
+  "collapsedGroupPreviewOnDrag",
+  "floatingEdgeFeatureEnabled"
 ];
 var CanvasWrapperExposerExtension = class extends CanvasExtension {
   isEnabled() {
@@ -7852,6 +8020,7 @@ var CANVAS_EXTENSIONS = [
   VariableBreakpointCanvasExtension,
   BetterDefaultSettingsCanvasExtension,
   CommandsCanvasExtension,
+  FloatingEdgeCanvasExtension,
   FlipEdgeCanvasExtension,
   ZOrderingCanvasExtension,
   BetterReadonlyCanvasExtension,

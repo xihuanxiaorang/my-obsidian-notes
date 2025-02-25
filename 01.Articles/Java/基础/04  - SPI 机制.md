@@ -3,7 +3,7 @@ tags:
   - Java
 repository: https://github.com/xihuanxiaorang/java-study/tree/core-study/core-study/spi-study
 create_time: 2024-12-28T17:52:00
-update_time: 2025/02/08 11:34
+update_time: 2025/02/25 18:15
 ---
 
 ## 简介
@@ -160,7 +160,7 @@ public class Driver extends NonRegisteringDriver implements java.sql.Driver {
 3. 文件内容：写入 Service 实现类（即 Service Provider）的全限定类名。多个实现类需换行分开，每行一个。
 
 以 MySQL 数据库驱动为例，查看 mysql-connector-java 的 jar 包。在 resources/META-INF/services 目录下存在一个名称为 java. sql. Driver（Service 接口的全限定类名）的配置文件，其内容是 MySQL 数据库驱动类的全限定类名： `com.mysql.cj.jdbc.Driver` 。
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412151731091.png)
+![](https://img.xiaorang.fun/202502251814555.png)
 
 ### Service Provider 类必须具备无参构造方法
 
@@ -309,9 +309,9 @@ public class Driver extends NonRegisteringDriver implements java. sql. Driver { 
 测试：
 
 1. simple-company 模块先只引入 simple-isp-mobile 模块，测试结果如下所示：
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412151846021.png)
+   ![](https://img.xiaorang.fun/202502251814556.png)
 2. 然后将网络服务商替换成联通，也就是将依赖的模块换成 simple-isp-unicom，代码不需要做任何改动，测试结果如下所示：
-   ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412151846865.png)
+   ![](https://img.xiaorang.fun/202502251814557.png)
 
 ## SPI & SpringBoot 自动配置
 
@@ -336,7 +336,7 @@ SpringBoot 项目启动的时候默认会自动扫描当前项目的 package，�
 ![[Java SPI & SpringBoot 自动配置设计思想| 1500]]
 
 以 [mybatis-spring-boot-autoconfigure](https://github.com/mybatis/spring-boot-starter/tree/master/mybatis-spring-boot-autoconfigure/src/main/java/org/mybatis/spring/boot/autoconfigure) 为例来分析一下 SpringBoot 自动配置：
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412151907253.png)
+![](https://img.xiaorang.fun/202502251814558.png)
 
 由上图可知，在 mybatis-spring-boot-autoconfigure 中存在两个自动配置类，分别是 MybatisAutoConfiguration 和 MybatisLanguageDriverAutoConfiguration，然后在 resources 目录下的 META-INF 中确实存在一个 spring. factories 配置文件，里面的内容是 K = V 的格式，其中 KEY 是 EnableAutoConfiguration 的全限定类名，VALUE 则是两个自动配置类的全限定类名，两个类名之间用逗号隔开。
 

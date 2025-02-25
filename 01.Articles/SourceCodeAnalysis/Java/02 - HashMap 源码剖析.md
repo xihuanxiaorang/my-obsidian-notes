@@ -5,7 +5,7 @@ tags:
   - SourceCodeAnalysis
   - DataStructure
 create_time: 2024-12-24 17:50
-update_time: 2025/01/17 18:00
+update_time: 2025/02/25 18:17
 version: 8
 ---
 
@@ -443,11 +443,11 @@ V putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) {
    4. **红黑树结构**：调用树节点的 `split` 方法完成迁移。
 
 在迁移数据时，原链表会被拆分为<u>低位链表</u>和<u>高位链表</u>，然后分别插入到新数组的<u>当前索引位置</u>和<u>当前索引位置 + 原数组长度</u>。这个结论是怎么来的呢？举个栗子，如下图所示：（a）和 (b) 分别表示扩容前和扩容后 key1 和 key2 在数组中的索引位置。
-![image.png](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412162334584.png) ^e07431
+![](https://img.xiaorang.fun/202502251817385.png) ^e07431
 - 扩容前：
 	- 如 (a) 所示，key1 和 key2 的 hash 值后四位相同，所以在旧数组中计算出的索引位置相同，都等于 5，它们在同一个链表上。
 - 扩容后：
-  ![image.png](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202412162335948.png)
+  ![](https://img.xiaorang.fun/202502251817387.png)
 	- 数组长度 `n` 扩展为原来的两倍（从 16 到 32），此时 `n-1` 的二进制表示在高位多了 1 个 bit 位，用于区分高位与低位节点。
 	- 新数组下标计算的变化：
 	  - `key1` 的索引位置不变，仍为 5。
@@ -693,7 +693,7 @@ final Node<K,V> removeNode(int hash, Object key, Object value,
     - `table` 中包含大量未使用的空槽位，直接序列化整个数组会浪费存储空间。
     - 自定义序列化逻辑可以仅保存实际存在的键值对，避免存储无效数据，从而减少存储和传输的开销。
 2. **保证跨 JVM 一致性**
-    - `HashMap` 的数据存储位置依赖于键的 `hashCode`，而 `Object.hashCode ()` 是基于 native 实现的，在不同 JVM 上可能有不同的结果。
+    - `HashMap` 的数据存储位置依赖于键的 `hashCode`，而 `Object. hashCode ()` 是基于 native 实现的，在不同 JVM 上可能有不同的结果。
     - 通过序列化键值对而非直接保存数组，反序列化时重新计算哈希值并重新存储数据，可以确保在不同 JVM 环境下的数据一致性。
 
 #### writeObject 方法

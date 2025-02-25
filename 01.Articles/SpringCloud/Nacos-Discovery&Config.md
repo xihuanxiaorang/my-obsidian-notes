@@ -3,7 +3,7 @@ tags:
   - SpringCloudAlibaba
   - SpringCloud
 create_time: 2025-02-17T23:17:00
-update_time: 2025/02/23 18:22
+update_time: 2025/02/25 18:58
 ---
 
 Nacos 是 Dynamic Naming and Configuration Service 的首字母简称，是 Alibaba 开源的、易于构建云原生应用的动态**服务发现**、**配置管理**和**服务管理**平台。
@@ -37,7 +37,7 @@ Nacos 依赖 Java 环境来运行，请确保是在以下版本环境中安装�
 2. 64 bit JDK 1.8+；
   1. 下载，请务必选对版本！
      [Download the Latest Java LTS Free](https://www.oracle.com/java/technologies/downloads/#java8)
-     ![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011511013.png)
+     ![](https://img.xiaorang.fun/202502251843034.png)
   2. 解压
 
 		```bash
@@ -65,7 +65,7 @@ Nacos 依赖 Java 环境来运行，请确保是在以下版本环境中安装�
 	```
 
 6. 使用 `java -version` 命令验证是否安装成功
-	![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011513845.png)
+   ![](https://img.xiaorang.fun/202502251844953.png)
 
 ### 版本选择
 
@@ -77,7 +77,7 @@ Nacos 依赖 Java 环境来运行，请确保是在以下版本环境中安装�
 | 2021.0.5.0         | 2021.0.5     | 2.6.13         | 2.2.0 |
 
 如上表所示，假如 SpringCloudAlibaba 选择 2.2.9. RELEASE 版本，则 Nacos 组件对应的版本为 2.1.0，因此需要安装 2.1.0 版本的 nacos-server 服务器 [Release 2.1.0 (Apr 29, 2022) · alibaba/nacos (github.com)](https://github.com/alibaba/nacos/releases/tag/2.1.0)
-![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011514024.png)
+![](https://img.xiaorang.fun/202502251845862.png)
 
 ```bash
 tar -zxvf nacos-server-2.1.0.tar.gz
@@ -86,25 +86,27 @@ tar -zxvf nacos-server-2.1.0.tar.gz
 ### 启动服务器
 
 Linux & 单机模式 `sh startup.sh -m standalone`
-![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011514320.png) 查看日志 `tail -f ../logs/nacos.log`
-![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011514458.png)
+![](https://img.xiaorang.fun/202502251845429.png)
+查看日志 `tail -f ../logs/nacos.log`
+![](https://img.xiaorang.fun/202502251846106.png)
 
 > [!note]
 > 服务器防火墙需要开放 8848 端口！
 
 访问 <http://42.194.233.222:8848/nacos>
-![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011514543.png) 如上图所示，说明 nacos 服务器已经安装完成，可以正式开始使用！默认账号密码都是 nacos。
+![](https://img.xiaorang.fun/202502251846142.png)
+如上图所示，说明 nacos 服务器已经安装完成，可以正式开始使用！默认账号密码都是 nacos。
 
 ---
 
 由于本人的 Linux 服务器比较差，所以换到 Windows 环境下使用，具体步骤如下所示：
 
 1. 下载安装包并解压；
-	![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011515323.png)
+   ![](https://img.xiaorang.fun/202502251846752.png)
 2. 进入解压文件夹目录，使用 `.\startup.cmd -m standalone` 命令启动 Nacos 服务器；
-	![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011515748.png)
+	![](https://img.xiaorang.fun/202502251847457.png)
 3. 访问 <http://localhost:8848/nacos/>，默认账号密码都是 nacos.
-	![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011515080.png)
+	![](https://img.xiaorang.fun/202502251847117.png)
 
 ## Spring Cloud Alibaba Nacos Discovery
 
@@ -127,7 +129,7 @@ Linux & 单机模式 `sh startup.sh -m standalone`
 
 ### 一个使用 Nacos Discovery 进行服务注册/发现并调用的例子
 
-![202308011517289.jpeg | 900](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011517289.jpeg)
+![|900](https://img.xiaorang.fun/202502251848469.png)
 
 #### 父模块
 
@@ -346,7 +348,7 @@ public class NacosProviderApplication {
 > 在启动 Provider 应用之前请先确保 Nacos 服务已经启动！
 
 项目启动成功之后，查看 Nacos 控制台，可以看到 nacos-provider 服务已经注册成功！
-![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011518660.png)
+![](https://img.xiaorang.fun/202502251848795.png)
 
 #### 启动一个 Consumer 应用
 
@@ -480,9 +482,7 @@ public class NacosConsumerApplication {
 在这个例子中咱们注入了一个 `LoadBalancerClient` 的实例（因为 `spring-cloud-starter-alibaba-nacos-discovery` 内置了 **Ribbon**，所以可以直接注入 `LoadBalancerClient`），并且手动的实例化一个 `RestTemplate`，同时将 `spring. application. name` 的配置值注入到应用中来，目的是调用 Provider 提供的服务时，将当前配置的应用名给显示出来。
 
 项目启动成功之后，查看 Nacos 控制台，可以看到 nacos-consumer 服务已经注册成功！
-
-![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011525191.png)
-
+![](https://img.xiaorang.fun/202502251849107.png)
 访问 <http://localhost:8082/echo/app-name>，浏览器输出 "Hello Nacos Discovery nacos-consumer" 字样。
 
 ### Nacos Discovery 对外暴露的 Endpoint
@@ -495,9 +495,9 @@ public class NacosConsumerApplication {
 > [!ATTENTION]
 >
 > 此处有一个坑，官方文档说 EndPoint 的访问地址为 `http://ip:port/actuator/nacos-discovery`，其实这是错的，本人尝试许久都不行，访问一直报 404！如下所示：
-> ![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011533022.png)
+> ![](https://img.xiaorang.fun/202502251849685.png)
 > 后面直接访问一下 `http://ip:port/actuator`，发现 nacos discovery 的 EndPoint 访问地址为 `http://ip:port/actuator/nacosdiscovery`，nacos 与 discovery 之间并没有什么短横线！
-> ![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011529608.png)
+> ![](https://img.xiaorang.fun/202502251850297.png)
 
 访问 <http://localhost:8081/actuator/nacosdiscovery>，Provider 服务实例访问 EndPoint 的信息如下所示：
 
@@ -618,7 +618,9 @@ Group  :    DEFAULT_GROUP
 >
 > dataId 是以 **properties（默认的文件扩展名方式）**为扩展名。
 
-![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011534793.png)![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011534294.png)
+![](https://img.xiaorang.fun/202502251850186.png)
+
+![](https://img.xiaorang.fun/202502251850254.png)
 
 #### 客户端使用方式
 
@@ -754,7 +756,7 @@ user name :nacos-config-properties; age: 90
                     user.age: 68
    ```
 
-  ![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011538005.png)
+	![](https://img.xiaorang.fun/202502251851832.png)
 
 这两步完成之后，重新启动示例程序，可以看到如下输出结果：
 
@@ -842,7 +844,7 @@ Group  :        DEFAULT_GROUP
 配置内容:        current.env: develop-env
 ```
 
-![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011539821.png)
+![](https://img.xiaorang.fun/202502251852176.png)
 
 启动 SpringBoot 应用测试的代码如下所示：
 
@@ -907,7 +909,7 @@ Group  :        DEFAULT_GROUP
 
 ```
 
-![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011540363.png)
+![](https://img.xiaorang.fun/202502251852981.png)
 
 启动测试程序，输出结果如下所示：
 
@@ -923,7 +925,7 @@ in product-env enviroment; user name :nacos-config-yaml-update; age: 68
 
 > [!IMPORTANT]
 > 通常的做法是通过 **`-Dspring. Profiles. Active=<profile>`** 参数指定其配置来达到环境间灵活的切换；如下所示：
-> ![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308011541299.png)
+> ![](https://img.xiaorang.fun/202502251852341.png)
 
 ### 支持自定义 Namespace 的配置
 
@@ -1031,7 +1033,7 @@ spring.cloud.nacos.config.shared-configs[0].refresh=true
 - B：通过 `spring. cloud. nacos. config. extension-configs[n]. data-id` 的方式支持多个扩展 dataId 的配置；
 - C：通过内部相关规则（应用名、应用名 + profile）自动生成相关的 dataId 配置；
 
-当三种方式共同使用时，它们的优先级关系是：`A < B < C`。 ![nacos配置优先级](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310210247585.svg)
+当三种方式共同使用时，它们的优先级关系是：`A < B < C`。
 
 ### Nacos Config 对外暴露的 Endpoint
 
@@ -1173,7 +1175,7 @@ ${prefix}-${spring.profiles.active}.${file-extension}
 ### Nacos 服务启动报错
 
 当使用 `.\startup. cmd -m standalone` 命令启动 Nacos 服务器时，抛出如下错误：
-![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202312021009386.png)
+![](https://img.xiaorang.fun/202502251853979.png)
 
 解决方案：将 Java 环境变量 `JAVA_HOME` 更换为更高的 JDK8 版本或直接使用 JDK11 版本及以上。
 
