@@ -18,7 +18,7 @@
   },
   "alwaysUpdateLinks": true,
   "propertiesInDocument": "visible",
-  "useMarkdownLinks": true,
-  "newLinkFormat": "relative",
+  "useMarkdownLinks": false,
+  "newLinkFormat": "shortest",
   "smartIndentList": true
 }
