@@ -5,7 +5,7 @@ tags:
   - SourceCodeAnalysis
   - DataStructure
 create_time: 2025-01-02 23:31
-update_time: 2025/02/26 11:31
+update_time: 2025/02/26 11:32
 version: 8
 ---
 
@@ -58,7 +58,7 @@ version: 8
 ## 底层数据结构（链表）
 
 `LinkedList` 的底层采用**双向链表**结构存储数据。与 ArrayList 的顺序存储不同，[[02 - 链表.canvas|链表]]结构不需要连续的内存空间，而是由一系列 `Node` 节点通过指针连接起来。其底层结构如下图所示：
-![双向链表数据结构 | 1000](双向链表数据结构.md)
+![双向链表数据结构 | 1000](../../../03.Excalidraw/双向链表数据结构.md)
 
 ![[双向链表数据结构| 1000]]
 
