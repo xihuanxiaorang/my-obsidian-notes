@@ -104,6 +104,18 @@
       "width": 940,
       "x": 418,
       "y": -80
+    },
+    {
+      "color": "6",
+      "height": 540,
+      "id": "b25a77bb134643c4",
+      "styleAttributes": {
+      },
+      "text": "```mermaid\n%%{init: {'theme':'default'}}%%\ngraph TD\n\tB[控制层（Controller）] -->|VO| A[视图层（View）]\n\tA -->|DTO| B\n\tB -->|DTO| C[业务逻辑层（Service）]\n\tC -->|DTO / VO| B\n\tC -->|BO| C\n\tC <-->|DO / PO| D[数据持久层（DAO）]\n\tD <--> E[(Database)]\n```",
+      "type": "text",
+      "width": 600,
+      "x": -240,
+      "y": 560
     }
   ]
 }
