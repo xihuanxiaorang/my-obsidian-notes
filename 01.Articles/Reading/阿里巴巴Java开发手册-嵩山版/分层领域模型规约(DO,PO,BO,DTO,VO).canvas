@@ -1,0 +1,109 @@
+{
+  "edges": [
+  ],
+  "nodes": [
+    {
+      "color": "4",
+      "height": 280,
+      "id": "2c5740108ab0fb7d",
+      "styleAttributes": {
+        "textAlign": null
+      },
+      "text": "## POJO\n\nPOJO（Plain Ordinary Java Object）：\n- **定义**：POJO 是指普通的 Java 对象，不依赖于任何特定框架或库。\n- **特点**：\n    - 不需要继承特定基类或实现接口。\n    - 仅包含简单的属性和标准的 getter/setter 方法。\n    - 包括 DO、PO、DTO、BO、VO 等。",
+      "type": "text",
+      "width": 600,
+      "x": -240,
+      "y": 240
+    },
+    {
+      "color": "4",
+      "height": 280,
+      "id": "b0dd179c1f5fc3a7",
+      "styleAttributes": {
+        "textAlign": null
+      },
+      "text": "## DO\n\nDO（Data Object）：\n\n- **定义**：数据对象，通常与数据库表结构一一对应。\n- **用途**：通过 DAO 层操作数据库，作为 **领域驱动设计（DDD）** 中的**领域对象（Domain Object）**，代表核心业务实体。\n- **命名建议**：为避免与 Java 关键字 `do` 冲突，常用 `model`、`bean` 或 `entity` 作为包名，类名则以 `DO` 结尾（如：`SysRoleDO`、`SysUserDO`）。\n",
+      "type": "text",
+      "width": 660,
+      "x": 404,
+      "y": 240
+    },
+    {
+      "color": "4",
+      "height": 280,
+      "id": "839fda2467997129",
+      "styleAttributes": {
+        "textAlign": null
+      },
+      "text": "## PO\n\nPO（Persistent Object）：\n- **定义**：持久化对象，指可以被持久化存储（如数据库）并从中读取的对象。\n- **特点**：专注于与数据库交互，与数据库表结构一一对应。\n-  PO 和 DO 在某些情况下类似，但 PO 更专注于持久化操作。",
+      "type": "text",
+      "width": 500,
+      "x": 1108,
+      "y": 240
+    },
+    {
+      "color": "4",
+      "height": 280,
+      "id": "d281329037b59a30",
+      "styleAttributes": {
+        "textAlign": null
+      },
+      "text": "## BO\n\nBO（Business Object）：\n\n- **定义**：业务对象，可以由 Service 层输出的封装业务逻辑的对象。\n- **作用**：负责执行业务操作，处理业务规则，协调不同领域对象之间的交互。\n- **所在层**：BO 是 Service 层的核心，处理复杂的业务逻辑，并提供对外的业务接口，通常不涉及数据持久化。",
+      "type": "text",
+      "width": 580,
+      "x": 1652,
+      "y": 240
+    },
+    {
+      "color": "4",
+      "height": 280,
+      "id": "2294a7031cda9984",
+      "styleAttributes": {
+        "textAlign": null
+      },
+      "text": "## DTO\n\nDTO（Data Transfer Object）：\n\n- **定义**：数据传输对象，用于在不同层或不同系统之间传递数据，尤其是在跨网络或服务调用时。\n- **特点**：DTO 是纯数据对象，不包含业务逻辑，旨在减少数据传输开销和避免传输冗余数据。\n- **所在层**：\n    - **Controller 层**：用于接收客户端请求数据并转发到 Service 层，或将处理结果返回给客户端。\n    - **Service 层**：接收 DTO 作为输入，处理业务逻辑，并返回 DTO 作为简洁的业务结果。\n",
+      "type": "text",
+      "width": 920,
+      "x": 2276,
+      "y": 240
+    },
+    {
+      "color": "4",
+      "height": 280,
+      "id": "b4a78ac1c681763f",
+      "styleAttributes": {
+        "textAlign": null
+      },
+      "text": "## VO\n\nVO（View Object）：\n\n- **定义**：视图对象，通常用于 Controller 层向视图层（如模板渲染引擎）传输数据。\n- **作用**：封装了视图层所需的数据，通常不可变，专注于展示数据。\n- **所在层**：VO 位于 Controller 层，主要用于传递数据给前端显示，避免将领域对象直接暴露给前端。\n",
+      "type": "text",
+      "width": 560,
+      "x": 3240,
+      "y": 240
+    },
+    {
+      "color": "3",
+      "height": 280,
+      "id": "f0d1ddf88fad7263",
+      "styleAttributes": {
+        "textAlign": null
+      },
+      "text": "## 发车前\n1. 无论是 DO、BO、还是 VO....等。说到底都是用于区分和标识代码、并无强业务含义。即使不用、也可以写出完美无缺的代码。\n2. 不必过分纠结各种命名、适合自己的才是最好的。如 SysUserDo 和 SysUser 都可以表述数据库用户实体。",
+      "type": "text",
+      "width": 600,
+      "x": -240,
+      "y": -80
+    },
+    {
+      "color": "1",
+      "height": 280,
+      "id": "f2008467a0967ba5",
+      "styleAttributes": {
+      },
+      "text": "【**强制**】类名使用 UpperCamelCase 风格,但以下情形例外: DO / BO / DTO / VO / AO /  PO / UID 等。\n\n- 正例: ForceCode / UserDO / HtmlDTO / XmlService / TcpUdpDeal / TaPromotion  \n- 反例: forcecode / UserDo / HTMLDto / XMLService / TCPUDPDeal / TAPromotion",
+      "type": "text",
+      "width": 940,
+      "x": 418,
+      "y": -80
+    }
+  ]
+}
