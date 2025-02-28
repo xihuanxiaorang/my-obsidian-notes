@@ -57,8 +57,7 @@
               "title": "Projects"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -90,7 +89,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#public",
+                "query": "正则表达式",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -186,12 +185,13 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "00.Overview/01 - 任务清单.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "大纲"
+              "title": "01 - 任务清单 的大纲"
             }
           },
           {
@@ -256,38 +256,40 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
+    "00.Overview/02 - 参考资料.md",
+    "01.Articles/Tool/篡改猴(Tampermonkey).md",
+    "01.Articles/Misc/如何选择开源协议.md",
+    "01.Articles/Misc/搞定UML类图！.md",
+    "01.Articles/Misc/全面了解 RSS.md",
+    "01.Articles/Misc/DevIssues.md",
+    "02.Inbox/MapStruct.md",
+    "01.Articles/DevKit/内网穿透工具.md",
+    "Zttachments/Pasted image 20250228183530.png",
+    "01.Articles/Tool/yt-dlp.md",
+    "01.Articles/DevKit/Git.md",
+    "02.Inbox/正则表达式.md",
+    "01.Articles/Tool/手摸手教你搭建部署 Vitepress 博客.md",
+    "01.Articles/Announcements/WebStorm 和 Rider 现在对非商业用途免费了.md",
+    "01.Articles/Tool/Office Tool Plus.md",
+    "01.Articles/Misc/如何将阿里云域名托管至 Cloudflare？.md",
+    "01.Articles/Misc/Misc & Ideas & Inbox & Articles.md",
+    "01.Articles/Java/Basic/03  - Java8 新特性.md",
+    "01.Articles/Java/Basic/02  - 嵌套类.md",
     "01.Articles/Reading/阿里巴巴Java开发手册-嵩山版/分层领域模型规约(DO,PO,BO,DTO,VO).canvas",
     "03.Excalidraw/Drawing 2025-02-27 19.02.37.excalidraw.md",
     "02.Inbox/Java9 新特性.md",
     "03.Excalidraw/C语言知识点03-函数的参数传递.md",
     "Zttachments/Pasted image 20250226175120.png",
-    "00.Overview/02 - 参考资料.md",
     "02.Inbox/分层领域模型规约.md",
     "03.Excalidraw/分层领域模型规约.md",
     "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
     "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/02 - 鸡尾酒排序.md",
     "01.Articles/Reading/阿里巴巴Java开发手册-嵩山版",
-    "01.Articles/Misc/Misc & Ideas & Inbox & Articles.md",
     "01.Articles/Java/Other/Java 集合架构体系图.md",
     "01.Articles/Java/Other",
     "01.Articles/Java/Other/Arrays.md",
     "04.Canvas/未命名 1.canvas",
-    "01.Articles/SourceCodeAnalysis/Java/03 - LinkedList 源码剖析.md",
-    "03.Excalidraw/双向链表数据结构.md",
-    "02.Inbox/Maven.md",
-    "01.Articles/SpringCloud/Nacos-Discovery&Config.md",
-    "00.Overview/01 - 任务清单.md",
-    "01.Articles/Tools/其他工具/手摸手教你搭建部署 Vitepress 博客.md",
-    "01.Articles/Tools/开发工具/WSL2.md",
-    "01.Articles/Tools/开发工具/Github.md",
-    "01.Articles/Vue/01 - 通过 CDN 使用 Vue.md",
-    "02.Inbox/Teleport.md",
-    "02.Inbox/Suspense.md",
-    "02.Inbox/HTML5.md",
-    "02.Inbox/DeepSeek-R1.md",
-    "02.Inbox/响应式状态.md",
-    "02.Inbox/模板语法.md",
     "Zttachments/Pasted image 20250223232027.png",
     "Zttachments/Pasted image 20250223231621.png",
     "Zttachments/Pasted image 20250223231305.png",
@@ -296,7 +298,6 @@
     "Zttachments/Pasted image 20250223230356.png",
     "Zttachments/Pasted image 20250222230801.png",
     "Zttachments/Pasted image 20250222230936.png",
-    "Zttachments/Pasted image 20250222185115.png",
     "01.Articles/SpringCloud",
     "01.Articles/SpringFrameworkEcosystem",
     "01.Articles/Tools/开发工具/Cursor/package.json",

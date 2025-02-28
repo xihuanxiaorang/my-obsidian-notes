@@ -1160,7 +1160,7 @@ __export(src_exports, {
   default: () => SmartConnectionsPlugin
 });
 module.exports = __toCommonJS(src_exports);
-var import_obsidian22 = __toESM(require("obsidian"), 1);
+var import_obsidian23 = __toESM(require("obsidian"), 1);
 
 // node_modules/smart-environment/components/settings.js
 async function build_html(scope, opts = {}) {
@@ -1450,7 +1450,7 @@ var SmartEnv = class {
    * If a newer version is loaded into a runtime that already has an older environment,
    * an automatic reload of all existing mains will occur.
    */
-  static version = 2.1;
+  static version = 2.11;
   scope_name = "smart_env";
   static global_ref = typeof window !== "undefined" ? window : global;
   global_ref = typeof window !== "undefined" ? window : global;
@@ -3307,7 +3307,7 @@ var SmartViewObsidianAdapter = class extends SmartViewAdapter {
 };
 
 // node_modules/smart-environment/obsidian.js
-var import_obsidian4 = require("obsidian");
+var import_obsidian5 = require("obsidian");
 
 // node_modules/smart-environment/node_modules/smart-sources/node_modules/smart-collections/utils/collection_instance_name_from.js
 function collection_instance_name_from(class_name) {
@@ -3548,19 +3548,23 @@ var CollectionItem = class _CollectionItem {
       exclude_key_starts_with,
       exclude_key_starts_with_any,
       exclude_key_includes,
+      exclude_key_includes_any,
       key_ends_with,
       key_starts_with,
       key_starts_with_any,
-      key_includes
+      key_includes,
+      key_includes_any
     } = filter_opts;
     if (exclude_keys?.includes(this.key)) return false;
     if (exclude_key_starts_with && this.key.startsWith(exclude_key_starts_with)) return false;
     if (exclude_key_starts_with_any && exclude_key_starts_with_any.some((prefix) => this.key.startsWith(prefix))) return false;
     if (exclude_key_includes && this.key.includes(exclude_key_includes)) return false;
+    if (exclude_key_includes_any && exclude_key_includes_any.some((include) => this.key.includes(include))) return false;
     if (key_ends_with && !this.key.endsWith(key_ends_with)) return false;
     if (key_starts_with && !this.key.startsWith(key_starts_with)) return false;
     if (key_starts_with_any && !key_starts_with_any.some((prefix) => this.key.startsWith(prefix))) return false;
     if (key_includes && !this.key.includes(key_includes)) return false;
+    if (key_includes_any && !key_includes_any.some((include) => this.key.includes(include))) return false;
     return true;
   }
   /**
@@ -5108,13 +5112,14 @@ var SmartEntities = class extends Collection {
       }
       opts.exclude_key_starts_with_any.push(entity.source_key || entity.key);
       if (exclude_filter) {
-        if (typeof exclude_filter === "string") opts.exclude_key_starts_with_any.push(exclude_filter);
-        else if (Array.isArray(exclude_filter)) opts.exclude_key_starts_with_any.push(...exclude_filter);
+        if (!Array.isArray(opts.exclude_key_includes_any)) opts.exclude_key_includes_any = [];
+        if (typeof exclude_filter === "string") opts.exclude_key_includes_any.push(exclude_filter);
+        else if (exclude_filter.includes(",")) opts.exclude_key_includes_any.push(...exclude_filter.split(","));
       }
       if (include_filter) {
-        if (!Array.isArray(opts.key_starts_with_any)) opts.key_starts_with_any = [];
-        if (typeof include_filter === "string") opts.key_starts_with_any.push(include_filter);
-        else if (Array.isArray(include_filter)) opts.key_starts_with_any.push(...include_filter);
+        if (!Array.isArray(opts.key_includes_any)) opts.key_includes_any = [];
+        if (typeof include_filter === "string") opts.key_includes_any.push(include_filter);
+        else if (include_filter.includes(",")) opts.key_includes_any.push(...include_filter.split(","));
       }
       if (exclude_inlinks && entity?.inlinks?.length) {
         if (!Array.isArray(opts.exclude_key_starts_with_any)) opts.exclude_key_starts_with_any = [];
@@ -6112,7 +6117,14 @@ ${remove_smart_blocks.map((item) => `${item.reason} - ${item.key}`).join("\n")}`
    * Imports items (SmartSources or SmartBlocks) that have been flagged for import.
    */
   async process_source_import_queue(opts = {}) {
-    const { process_embed_queue = true } = opts;
+    const { process_embed_queue = true, import_all = false } = opts;
+    if (import_all) {
+      Object.values(this.items).forEach((item) => {
+        item._queue_import = true;
+        if (item.data.last_import?.at) item.data.last_import.at = 0;
+        if (item.data.last_import?.hash) item.data.last_import.hash = null;
+      });
+    }
     const import_queue = Object.values(this.items).filter((item) => item._queue_import);
     console.log("import_queue " + import_queue.length);
     if (import_queue.length) {
@@ -7377,10 +7389,99 @@ async function parse_links(source, content) {
 }
 
 // node_modules/smart-environment/node_modules/smart-sources/content_parsers/parse_metadata.js
-function parse_metadata(source, content) {
+async function parse_metadata(source, content) {
   if (!source.source_adapter?.get_metadata) return;
-  const { frontmatter } = source.source_adapter?.get_metadata?.(content);
-  source.data.metadata = frontmatter;
+  const metadata = await source.source_adapter?.get_metadata?.(content);
+  source.data.metadata = metadata;
+}
+
+// node_modules/smart-environment/node_modules/smart-sources/utils/parse_frontmatter.js
+function parse_value(raw_value) {
+  const trimmed = raw_value.trim();
+  if (trimmed.startsWith('"') && trimmed.endsWith('"') || trimmed.startsWith("'") && trimmed.endsWith("'")) {
+    return trimmed.slice(1, -1);
+  }
+  const lower = trimmed.toLowerCase();
+  if (lower === "true") return true;
+  if (lower === "false") return false;
+  if (!isNaN(trimmed) && trimmed !== "") {
+    return Number(trimmed);
+  }
+  return trimmed;
+}
+function parse_yaml_block(yaml_block) {
+  const lines = yaml_block.split(/\r?\n/);
+  const data = {};
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    i++;
+    if (!line.trim() || line.trim().startsWith("#")) {
+      continue;
+    }
+    const match = line.match(/^([^:]+)\s*:\s*(.*)$/);
+    if (!match) {
+      continue;
+    }
+    const key = match[1].trim();
+    let value = match[2].trim();
+    if (value === ">" || value === "|") {
+      const multiline_lines = [];
+      while (i < lines.length) {
+        const next_line = lines[i];
+        if (!/^\s+/.test(next_line) || next_line.trim().startsWith("#")) {
+          break;
+        }
+        multiline_lines.push(next_line.replace(/^\s+/, ""));
+        i++;
+      }
+      const joined = multiline_lines.join("\n");
+      data[key] = parse_value(joined);
+    } else if (value === "") {
+      const arr = [];
+      let array_consumed = false;
+      while (i < lines.length) {
+        const next_line = lines[i];
+        if (!next_line.trim().startsWith("- ")) {
+          break;
+        }
+        const item_value = next_line.trim().slice(2);
+        arr.push(parse_value(item_value));
+        i++;
+        array_consumed = true;
+      }
+      if (array_consumed) {
+        data[key] = arr;
+      } else {
+        data[key] = "";
+      }
+    } else {
+      data[key] = parse_value(value);
+    }
+  }
+  return data;
+}
+function parse_frontmatter(content) {
+  if (!content.startsWith("---")) {
+    return { frontmatter: {}, body: content };
+  }
+  const lines = content.split(/\r?\n/);
+  let end_index = -1;
+  for (let i = 1; i < lines.length; i++) {
+    if (lines[i].trim() === "---") {
+      end_index = i;
+      break;
+    }
+  }
+  if (end_index === -1) {
+    return { frontmatter: {}, body: content };
+  }
+  const frontmatter_lines = lines.slice(1, end_index);
+  const frontmatter_block = frontmatter_lines.join("\n");
+  const frontmatter = parse_yaml_block(frontmatter_block);
+  const body_lines = lines.slice(end_index + 1);
+  const body = body_lines.join("\n");
+  return { frontmatter, body };
 }
 
 // node_modules/smart-environment/node_modules/smart-sources/adapters/markdown_source.js
@@ -7733,19 +7834,23 @@ var CollectionItem2 = class _CollectionItem {
       exclude_key_starts_with,
       exclude_key_starts_with_any,
       exclude_key_includes,
+      exclude_key_includes_any,
       key_ends_with,
       key_starts_with,
       key_starts_with_any,
-      key_includes
+      key_includes,
+      key_includes_any
     } = filter_opts;
     if (exclude_keys?.includes(this.key)) return false;
     if (exclude_key_starts_with && this.key.startsWith(exclude_key_starts_with)) return false;
     if (exclude_key_starts_with_any && exclude_key_starts_with_any.some((prefix) => this.key.startsWith(prefix))) return false;
     if (exclude_key_includes && this.key.includes(exclude_key_includes)) return false;
+    if (exclude_key_includes_any && exclude_key_includes_any.some((include) => this.key.includes(include))) return false;
     if (key_ends_with && !this.key.endsWith(key_ends_with)) return false;
     if (key_starts_with && !this.key.startsWith(key_starts_with)) return false;
     if (key_starts_with_any && !key_starts_with_any.some((prefix) => this.key.startsWith(prefix))) return false;
     if (key_includes && !this.key.includes(key_includes)) return false;
+    if (key_includes_any && !key_includes_any.some((include) => this.key.includes(include))) return false;
     return true;
   }
   /**
@@ -9293,13 +9398,14 @@ var SmartEntities2 = class extends Collection2 {
       }
       opts.exclude_key_starts_with_any.push(entity.source_key || entity.key);
       if (exclude_filter) {
-        if (typeof exclude_filter === "string") opts.exclude_key_starts_with_any.push(exclude_filter);
-        else if (Array.isArray(exclude_filter)) opts.exclude_key_starts_with_any.push(...exclude_filter);
+        if (!Array.isArray(opts.exclude_key_includes_any)) opts.exclude_key_includes_any = [];
+        if (typeof exclude_filter === "string") opts.exclude_key_includes_any.push(exclude_filter);
+        else if (exclude_filter.includes(",")) opts.exclude_key_includes_any.push(...exclude_filter.split(","));
       }
       if (include_filter) {
-        if (!Array.isArray(opts.key_starts_with_any)) opts.key_starts_with_any = [];
-        if (typeof include_filter === "string") opts.key_starts_with_any.push(include_filter);
-        else if (Array.isArray(include_filter)) opts.key_starts_with_any.push(...include_filter);
+        if (!Array.isArray(opts.key_includes_any)) opts.key_includes_any = [];
+        if (typeof include_filter === "string") opts.key_includes_any.push(include_filter);
+        else if (include_filter.includes(",")) opts.key_includes_any.push(...include_filter.split(","));
       }
       if (exclude_inlinks && entity?.inlinks?.length) {
         if (!Array.isArray(opts.exclude_key_starts_with_any)) opts.exclude_key_starts_with_any = [];
@@ -11045,7 +11151,1106 @@ function clean_and_update_source_blocks(source, blocks_obj) {
   source.queue_save();
 }
 
+// node_modules/smart-environment/node_modules/smart-notices/smart_notices.js
+var import_obsidian2 = require("obsidian");
+
+// node_modules/smart-environment/node_modules/smart-notices/notices.js
+var NOTICES = {
+  item_excluded: {
+    en: "Cannot show Smart Connections for excluded entity: {{entity_key}}"
+  },
+  load_env: {
+    en: "Mobile detected: to prevent performance issues, click to load Smart Environment when ready.",
+    button: {
+      en: `Load Smart Env`,
+      callback: (scope) => {
+        scope.load_env();
+      }
+    },
+    timeout: 0
+  },
+  missing_entity: {
+    en: "No entity found for key: {{key}}"
+  },
+  notice_muted: {
+    en: "Notice muted"
+  },
+  new_version_available: {
+    en: "A new version is available! (v{{version}})",
+    timeout: 15e3,
+    button: {
+      en: "Release notes",
+      callback: (scope) => {
+        window.open("https://github.com/brianpetro/obsidian-smart-connections/releases", "_blank");
+      }
+    }
+  },
+  new_early_access_version_available: {
+    en: "A new early access version is available! (v{{version}})"
+  },
+  supporter_key_required: {
+    en: "Supporter license key required for early access update"
+  },
+  revert_to_stable_release: {
+    en: 'Click "Check for Updates" in the community plugins tab and complete the update for Smart Connections to finish reverting to the stable release.',
+    timeout: 0
+  },
+  action_installed: {
+    en: 'Installed action "{{name}}"'
+  },
+  action_install_error: {
+    en: 'Error installing action "{{name}}": {{error}}',
+    timeout: 0
+  },
+  embed_model_not_loaded: {
+    en: "Embed model not loaded. Please wait for the model to load and try again."
+  },
+  embed_search_text_failed: {
+    en: "Failed to embed search text."
+  },
+  error_in_embedding_search: {
+    en: "Error in embedding search. See console for details."
+  },
+  copied_to_clipboard: {
+    en: "Message: {{content}} copied successfully."
+  },
+  copy_failed: {
+    en: "Unable to copy message to clipboard."
+  },
+  copied_chatgpt_url_to_clipboard: {
+    en: "ChatGPT URL copied to clipboard."
+  },
+  loading_collection: {
+    en: "Loading {{collection_key}}..."
+  },
+  done_loading_collection: {
+    en: "{{collection_key}} loaded."
+  },
+  saving_collection: {
+    en: "Saving {{collection_key}}..."
+  },
+  initial_scan: {
+    en: "[{{collection_key}}] Starting initial scan...",
+    timeout: 0
+  },
+  done_initial_scan: {
+    en: "[{{collection_key}}] Initial scan complete.",
+    timeout: 3e3
+  },
+  pruning_collection: {
+    en: "Pruning {{collection_key}}..."
+  },
+  done_pruning_collection: {
+    en: "Pruned {{count}} items from {{collection_key}}."
+  },
+  embedding_progress: {
+    en: "Embedding progress: {{progress}} / {{total}}\n{{tokens_per_second}} tokens/sec using {{model_name}}",
+    button: {
+      en: "Pause",
+      callback: (scope) => {
+        console.log("pausing");
+        scope.env.smart_sources.entities_vector_adapter.halt_embed_queue_processing();
+      }
+    },
+    timeout: 0
+  },
+  embedding_complete: {
+    en: "Embedding complete. {{total_embeddings}} embeddings created. {{tokens_per_second}} tokens/sec using {{model_name}}",
+    timeout: 0
+  },
+  embedding_paused: {
+    en: "Embedding paused. Progress: {{progress}} / {{total}}\n{{tokens_per_second}} tokens/sec using {{model_name}}",
+    button: {
+      en: "Resume",
+      callback: (scope) => {
+        scope.env.smart_sources.entities_vector_adapter.resume_embed_queue_processing(100);
+      }
+    },
+    timeout: 0
+  },
+  import_progress: {
+    en: "Importing... {{progress}} / {{total}} sources",
+    timeout: 0
+  },
+  done_import: {
+    en: "Import complete. {{count}} sources imported in {{time_in_seconds}}s",
+    timeout: 0
+  },
+  no_import_queue: {
+    en: "No items in import queue"
+  },
+  clearing_all: {
+    en: "Clearing all data...",
+    timeout: 0
+  },
+  done_clearing_all: {
+    en: "All data cleared and reimported",
+    timeout: 3e3
+  },
+  image_extracting: {
+    en: "Extracting text from Image(s)",
+    timeout: 0
+  },
+  pdf_extracting: {
+    en: "Extracting text from PDF(s)",
+    timeout: 0
+  },
+  insufficient_settings: {
+    en: "Insufficient settings for {{key}}, missing: {{missing}}",
+    timeout: 0
+  }
+};
+
+// node_modules/smart-environment/node_modules/smart-notices/node_modules/smart-environment/components/settings.js
+async function build_html2(scope, opts = {}) {
+  const env_settings_html = Object.entries(scope.settings_config).map(([setting_key, setting_config]) => {
+    if (!setting_config.setting) setting_config.setting = setting_key;
+    return this.render_setting_html(setting_config);
+  }).join("\n");
+  const env_collections_containers_html = Object.entries(scope.collections).map(([collection_key, collection]) => {
+    return `<div data-smart-settings="${collection_key}"></div>`;
+  }).join("\n");
+  const html = `
+    <div class="">
+      ${env_settings_html}
+      ${env_collections_containers_html}
+    </div>
+  `;
+  return html;
+}
+async function render5(scope, opts = {}) {
+  const html = await build_html2.call(this, scope, opts);
+  const frag = this.create_doc_fragment(html);
+  return await post_process4.call(this, scope, frag, opts);
+}
+async function post_process4(scope, frag, opts = {}) {
+  await this.render_setting_components(frag, { scope });
+  const env_collections_containers = frag.querySelectorAll("[data-smart-settings]");
+  for (const env_collections_container of env_collections_containers) {
+    const collection_key = env_collections_container.dataset.smartSettings;
+    const collection = scope[collection_key];
+    await collection.render_settings(env_collections_container);
+  }
+  return frag;
+}
+
+// node_modules/smart-environment/node_modules/smart-notices/node_modules/smart-environment/node_modules/smart-settings/smart_settings.js
+var SmartSettings2 = class {
+  /**
+   * Creates an instance of SmartEnvSettings.
+   * @param {Object} main - The main object to contain the instance (smart_settings) and getter (settings)
+   * @param {Object} [opts={}] - Configuration options.
+   */
+  constructor(main, opts = {}) {
+    this.main = main;
+    this.opts = opts;
+    this._fs = null;
+    this._settings = {};
+    this._saved = false;
+    this.save_timeout = null;
+  }
+  static async create(main, opts = {}) {
+    const smart_settings = new this(main, opts);
+    await smart_settings.load();
+    main.smart_settings = smart_settings;
+    Object.defineProperty(main, "settings", {
+      get() {
+        return smart_settings.settings;
+      },
+      set(settings) {
+        smart_settings.settings = settings;
+      }
+    });
+    return smart_settings;
+  }
+  static create_sync(main, opts = {}) {
+    const smart_settings = new this(main, opts);
+    smart_settings.load_sync();
+    main.smart_settings = smart_settings;
+    Object.defineProperty(main, "settings", {
+      get() {
+        return smart_settings.settings;
+      },
+      set(settings) {
+        smart_settings.settings = settings;
+      }
+    });
+    return smart_settings;
+  }
+  /**
+   * Gets the current settings, wrapped with an observer to handle changes.
+   * @returns {Proxy} A proxy object that observes changes to the settings.
+   */
+  get settings() {
+    return observe_object2(this._settings, (property, value, target) => {
+      if (this.save_timeout) clearTimeout(this.save_timeout);
+      this.save_timeout = setTimeout(() => {
+        this.save(this._settings);
+        this.save_timeout = null;
+      }, 1e3);
+    });
+  }
+  /**
+   * Sets the current settings.
+   * @param {Object} settings - The new settings to apply.
+   */
+  set settings(settings) {
+    this._settings = settings;
+  }
+  async save(settings = this._settings) {
+    if (typeof this.opts.save === "function") await this.opts.save(settings);
+    else await this.main.save_settings(settings);
+  }
+  async load() {
+    if (typeof this.opts.load === "function") this._settings = await this.opts.load();
+    else this._settings = await this.main.load_settings();
+  }
+  load_sync() {
+    if (typeof this.opts.load === "function") this._settings = this.opts.load();
+    else this._settings = this.main.load_settings();
+  }
+};
+function observe_object2(obj, on_change) {
+  function create_proxy(target) {
+    return new Proxy(target, {
+      set(target2, property, value) {
+        if (target2[property] !== value) {
+          target2[property] = value;
+          on_change(property, value, target2);
+        }
+        if (typeof value === "object" && value !== null) {
+          target2[property] = create_proxy(value);
+        }
+        return true;
+      },
+      get(target2, property) {
+        const result = target2[property];
+        if (typeof result === "object" && result !== null) {
+          return create_proxy(result);
+        }
+        return result;
+      },
+      deleteProperty(target2, property) {
+        if (property in target2) {
+          delete target2[property];
+          on_change(property, void 0, target2);
+        }
+        return true;
+      }
+    });
+  }
+  return create_proxy(obj);
+}
+
+// node_modules/smart-environment/node_modules/smart-notices/node_modules/smart-environment/utils/is_plain_object.js
+function is_plain_object3(o) {
+  if (o === null) return false;
+  if (typeof o !== "object") return false;
+  if (Array.isArray(o)) return false;
+  if (o instanceof Function) return false;
+  if (o instanceof Date) return false;
+  return Object.getPrototypeOf(o) === Object.prototype;
+}
+
+// node_modules/smart-environment/node_modules/smart-notices/node_modules/smart-environment/utils/deep_merge.js
+function deep_merge4(target, source) {
+  for (const key in source) {
+    if (!Object.prototype.hasOwnProperty.call(source, key)) continue;
+    if (is_plain_object3(source[key]) && is_plain_object3(target[key])) {
+      deep_merge4(target[key], source[key]);
+    } else {
+      target[key] = source[key];
+    }
+  }
+  return target;
+}
+
+// node_modules/smart-environment/node_modules/smart-notices/node_modules/smart-environment/utils/camel_case_to_snake_case.js
+function camel_case_to_snake_case4(str) {
+  const result = str.replace(/([A-Z])/g, (match) => `_${match.toLowerCase()}`).replace(/^_/, "").replace(/2$/, "");
+  return result;
+}
+
+// node_modules/smart-environment/node_modules/smart-notices/node_modules/smart-environment/utils/normalize_opts.js
+function normalize_opts2(opts) {
+  if (!opts.collections) opts.collections = {};
+  if (!opts.modules) opts.modules = {};
+  Object.entries(opts.collections).forEach(([key, val]) => {
+    if (typeof val === "function") {
+      opts.collections[key] = { class: val };
+    }
+    const new_key = camel_case_to_snake_case4(key);
+    if (new_key !== key) {
+      opts.collections[new_key] = opts.collections[key];
+      delete opts.collections[key];
+    }
+    if (!opts.collections[new_key].collection_key) opts.collections[new_key].collection_key = new_key;
+  });
+  Object.entries(opts.modules).forEach(([key, val]) => {
+    if (typeof val === "function") {
+      opts.modules[key] = { class: val };
+    }
+    const new_key = camel_case_to_snake_case4(key);
+    if (new_key !== key) {
+      opts.modules[new_key] = opts.modules[key];
+      delete opts.modules[key];
+    }
+  });
+  if (!opts.item_types) opts.item_types = {};
+  if (!opts.items) opts.items = {};
+  Object.entries(opts.item_types).forEach(([key, val]) => {
+    if (typeof val === "function") {
+      const new_key = camel_case_to_snake_case4(key);
+      opts.items[new_key] = {
+        class: val,
+        actions: {},
+        ...opts.items[new_key] || {}
+      };
+    }
+  });
+  return opts;
+}
+
+// node_modules/smart-environment/node_modules/smart-notices/node_modules/smart-environment/utils/deep_clone_config.js
+function is_plain_object4(value) {
+  if (!value || typeof value !== "object") return false;
+  const proto = Object.getPrototypeOf(value);
+  return proto === Object.prototype || proto === null;
+}
+function deep_clone_config2(input) {
+  if (Array.isArray(input)) {
+    return input.map((item) => deep_clone_config2(item));
+  }
+  if (is_plain_object4(input)) {
+    const output = {};
+    for (const [k, v] of Object.entries(input)) {
+      output[k] = deep_clone_config2(v);
+    }
+    return output;
+  }
+  return input;
+}
+
+// node_modules/smart-environment/node_modules/smart-notices/node_modules/smart-environment/utils/deep_merge_no_overwrite.js
+function deep_merge_no_overwrite2(target, source, path = []) {
+  if (!is_plain_object3(target) || !is_plain_object3(source)) {
+    return target;
+  }
+  if (path.includes(source)) {
+    return target;
+  }
+  path.push(source);
+  for (const key of Object.keys(source)) {
+    if (!Object.prototype.hasOwnProperty.call(source, key)) {
+      continue;
+    }
+    const val = source[key];
+    if (Array.isArray(target[key]) && Array.isArray(val)) {
+      target[key].push(...val);
+    } else if (is_plain_object3(val)) {
+      if (!is_plain_object3(target[key])) {
+        target[key] = {};
+      }
+      deep_merge_no_overwrite2(target[key], val, [...path]);
+    } else if (!Object.prototype.hasOwnProperty.call(target, key)) {
+      target[key] = val;
+    }
+  }
+  return target;
+}
+
+// node_modules/smart-environment/node_modules/smart-notices/node_modules/smart-environment/utils/merge_env_config.js
+function merge_env_config2(target, incoming) {
+  for (const [key, value] of Object.entries(incoming)) {
+    if (typeof value === "object" && value !== null) {
+      if (Array.isArray(value)) {
+        target[key] = [...target[key] || [], ...value];
+      } else {
+        if (!target[key]) target[key] = {};
+        deep_merge_no_overwrite2(target[key], value);
+      }
+    } else {
+      if (target[key] !== void 0) {
+        console.warn(
+          `SmartEnv: Overwriting existing property ${key} in smart_env_config`,
+          { old: target[key], new: value }
+        );
+      }
+      target[key] = value;
+    }
+  }
+  return target;
+}
+
+// node_modules/smart-environment/node_modules/smart-notices/node_modules/smart-environment/smart_env.js
+var SmartEnv2 = class {
+  /**
+   * @type {number} version - Bump this number when shipping a new version of SmartEnv.
+   * If a newer version is loaded into a runtime that already has an older environment,
+   * an automatic reload of all existing mains will occur.
+   */
+  static version = 2.11;
+  scope_name = "smart_env";
+  static global_ref = typeof window !== "undefined" ? window : global;
+  global_ref = typeof window !== "undefined" ? window : global;
+  constructor(opts = {}) {
+    this.state = "init";
+    this._components = {};
+    this.collections = {};
+    this.load_timeout = null;
+  }
+  /**
+   * Returns the config object for the SmartEnv instance.
+   * @returns {Object} The config object.
+   */
+  get config() {
+    if (!this._config) {
+      this._config = {};
+      for (const [main_key, { main, opts }] of Object.entries(this.smart_env_configs)) {
+        if (!main) {
+          console.warn(`SmartEnv: '${main_key}' has been unloaded, skipping inclusion in smart_env`);
+          delete this.smart_env_configs[main_key];
+          continue;
+        }
+        merge_env_config2(
+          this._config,
+          deep_clone_config2(
+            normalize_opts2(opts)
+          )
+        );
+      }
+    }
+    return this._config;
+  }
+  get env_start_wait_time() {
+    if (typeof this.config.env_start_wait_time === "number") return this.config.env_start_wait_time;
+    return 5e3;
+  }
+  static get global_env() {
+    return this.global_ref.smart_env;
+  }
+  static set global_env(env) {
+    this.global_ref.smart_env = env;
+  }
+  static get mains() {
+    return Object.keys(this.global_ref.smart_env_configs || {});
+  }
+  get mains() {
+    return Object.keys(this.global_ref.smart_env_configs || {});
+  }
+  static get should_reload() {
+    if (!this.global_env) return true;
+    if (this.global_env.state === "loaded") return true;
+    if (this.global_env.constructor.version < this.version) {
+      console.warn("SmartEnv: Reloading environment because of version mismatch", `${this.version} > ${this.global_env.constructor.version}`);
+      return true;
+    }
+    return false;
+  }
+  static get smart_env_configs() {
+    if (!this.global_ref.smart_env_configs) this.global_ref.smart_env_configs = {};
+    return this.global_ref.smart_env_configs;
+  }
+  get smart_env_configs() {
+    if (!this.global_ref.smart_env_configs) this.global_ref.smart_env_configs = {};
+    return this.global_ref.smart_env_configs;
+  }
+  /**
+   * Waits for either a specific main to be registered in the environment,
+   * or (if `opts.main` is not specified) waits for environment collections to load.
+   * @param {object} opts
+   * @param {object} [opts.main] - if set, the function waits until that main is found.
+   * @returns {Promise<SmartEnv>} Resolves with the environment instance
+   */
+  static wait_for(opts = {}) {
+    return new Promise((resolve) => {
+      if (opts.main) {
+        const interval = setInterval(() => {
+          if (this.global_env && this.global_env.mains.includes(opts.main)) {
+            clearInterval(interval);
+            resolve(this.global_env);
+          }
+        }, 1e3);
+      } else {
+        const interval = setInterval(() => {
+          if (this.global_env && this.global_env.state === "loaded") {
+            clearInterval(interval);
+            resolve(this.global_env);
+          }
+        }, 100);
+      }
+    });
+  }
+  /**
+   * Creates or updates a SmartEnv instance.
+   * - If a global environment exists and is an older version, it is unloaded and replaced.
+   * - If the environment is the same version or newer, it reuses the existing environment.
+   * @param {Object} main - The main object to be added to the SmartEnv instance.
+   * @param {Object} [main_env_opts={}] - Options for configuring the SmartEnv instance.
+   * @returns {SmartEnv} The SmartEnv instance.
+   * @throws {TypeError} If an invalid main object is provided.
+   * @throws {Error} If there's an error creating or updating the SmartEnv instance.
+   */
+  static async create(main, main_env_opts = null) {
+    if (!main || typeof main !== "object") {
+      throw new TypeError("SmartEnv: Invalid main object provided");
+    }
+    if (!main_env_opts) {
+      if (!main.smart_env_config) {
+        throw new Error("SmartEnv: No main_env_opts or main.smart_env_config provided");
+      }
+      main_env_opts = main.smart_env_config;
+    }
+    this.add_main(main, main_env_opts);
+    if (this.should_reload) {
+      this.global_env = new this();
+      await this.global_env.fs.load_files();
+      await SmartSettings2.create(this.global_env);
+    }
+    clearTimeout(this.global_env.load_timeout);
+    this.global_env.load_timeout = setTimeout(async () => {
+      await this.global_env.load();
+    }, this.global_env.env_start_wait_time);
+    return this.global_env;
+  }
+  static add_main(main, main_env_opts = null) {
+    if (this.global_env?._config) this.global_env._config = null;
+    const main_key = camel_case_to_snake_case4(main.constructor.name);
+    this.smart_env_configs[main_key] = { main, opts: main_env_opts };
+    this.create_env_getter(main);
+  }
+  /**
+   * Creates a dynamic environment getter on any instance object.
+   * The returned 'env' property will yield the global `smart_env`.
+   * @param {Object} instance_to_receive_getter
+   */
+  static create_env_getter(instance_to_receive_getter) {
+    Object.defineProperty(instance_to_receive_getter, "env", {
+      get: function() {
+        return (typeof window !== "undefined" ? window : global).smart_env;
+      }
+      // configurable: true
+    });
+  }
+  create_env_getter(instance_to_receive_getter) {
+    this.constructor.create_env_getter(instance_to_receive_getter);
+  }
+  async load() {
+    await this.init_collections();
+    for (const [main_key, { main, opts }] of Object.entries(this.smart_env_configs)) {
+      this[main_key] = main;
+      await this.ready_to_load_collections(main);
+    }
+    await this.load_collections();
+    this.state = "loaded";
+  }
+  /**
+   * Initializes collection classes if they have an 'init' function.
+   * @param {Object} [config=this.opts]
+   */
+  async init_collections(config = this.config) {
+    for (const key of Object.keys(config.collections || {})) {
+      const _class = config.collections[key]?.class;
+      if (typeof _class?.init !== "function") continue;
+      await _class.init(this, { ...config.collections[key] });
+      this.collections[key] = "init";
+    }
+  }
+  /**
+   * Hook for main classes that optionally implement `ready_to_load_collections()`.
+   * @param {Object} main
+   */
+  async ready_to_load_collections(main) {
+    if (typeof main?.ready_to_load_collections === "function") {
+      await main.ready_to_load_collections();
+    }
+    return true;
+  }
+  /**
+   * Loads any available collections, processing their load queues.
+   * @param {Object} [collections=this.collections] - Key-value map of collection instances.
+   */
+  async load_collections(collections = this.collections) {
+    for (const key of Object.keys(collections || {})) {
+      if (typeof this[key]?.process_load_queue === "function") {
+        if (this.state === "init" && this[key].opts.prevent_load_on_init === true) continue;
+        await this[key].process_load_queue();
+      }
+      this.collections[key] = "loaded";
+    }
+  }
+  /**
+   * Removes a main from the window.smart_env_configs to exclude it on reload
+   * @param {Class} main_class
+   * @param {Object|null} [unload_config=null]
+   */
+  static unload_main(main) {
+    const main_key = camel_case_to_snake_case4(main.constructor.name);
+    this.smart_env_configs[main_key] = null;
+    delete this.smart_env_configs[main_key];
+  }
+  unload_main(main) {
+    this.constructor.unload_main(main);
+  }
+  /**
+   * Triggers a save event in all known collections.
+   */
+  save() {
+    for (const key of Object.keys(this.collections)) {
+      this[key].process_save_queue?.();
+    }
+  }
+  /**
+   * Initialize a module from the configured `this.opts.modules`.
+   * @param {string} module_key
+   * @param {object} opts
+   * @returns {object|null} instance of the requested module or null if not found
+   */
+  init_module(module_key, opts = {}) {
+    const module_config = this.opts.modules[module_key];
+    if (!module_config) {
+      return console.warn(`SmartEnv: module ${module_key} not found`);
+    }
+    opts = {
+      ...{ ...module_config, class: null },
+      ...opts
+    };
+    return new module_config.class(opts);
+  }
+  /**
+   * Exposes a settings template function from environment opts or defaults.
+   * @returns {Function}
+   */
+  get settings_template() {
+    return this.opts.components?.smart_env?.settings || render5;
+  }
+  /**
+   * Renders settings UI into a container, using the environment's `settings_template`.
+   * @param {HTMLElement} [container=this.settings_container]
+   */
+  async render_settings(container = this.settings_container) {
+    if (!this.settings_container || container !== this.settings_container) {
+      this.settings_container = container;
+    }
+    if (!container) {
+      throw new Error("Container is required");
+    }
+    const frag = await this.render_component("settings", this, {});
+    container.innerHTML = "";
+    container.appendChild(frag);
+    return frag;
+  }
+  /**
+   * Renders a named component using an optional scope and options.
+   * @param {string} component_key
+   * @param {Object} scope
+   * @param {Object} [opts]
+   * @returns {Promise<HTMLElement>}
+   */
+  async render_component(component_key, scope, opts = {}) {
+    const component_renderer = this.get_component(component_key, scope);
+    const frag = await component_renderer(scope, opts);
+    return frag;
+  }
+  /**
+   * Retrieves or creates a memoized component renderer function.
+   * @param {string} component_key
+   * @param {Object} scope
+   * @returns {Function|undefined}
+   */
+  get_component(component_key, scope) {
+    const scope_name = scope.collection_key ?? scope.scope_name;
+    const _cache_key = scope_name ? `${scope_name}-${component_key}` : component_key;
+    if (!this._components[_cache_key]) {
+      try {
+        if (this.opts.components[scope_name]?.[component_key]) {
+          this._components[_cache_key] = this.opts.components[scope_name][component_key].bind(
+            this.init_module("smart_view")
+          );
+        } else if (this.opts.components[component_key]) {
+          this._components[_cache_key] = this.opts.components[component_key].bind(
+            this.init_module("smart_view")
+          );
+        } else {
+          console.warn(
+            `SmartEnv: component ${component_key} not found for scope ${scope_name}`
+          );
+        }
+      } catch (e) {
+        console.error("Error getting component", e);
+        console.log(
+          `scope_name: ${scope_name}; component_key: ${component_key}; this.opts.components: ${Object.keys(
+            this.opts.components || {}
+          ).join(", ")}; this.opts.components[scope_name]: ${Object.keys(
+            this.opts.components[scope_name] || {}
+          ).join(", ")}`
+        );
+      }
+    }
+    return this._components[_cache_key];
+  }
+  /**
+   * Lazily instantiate the module 'smart_view'.
+   * @returns {object}
+   */
+  get smart_view() {
+    if (!this._smart_view) {
+      this._smart_view = this.init_module("smart_view");
+    }
+    return this._smart_view;
+  }
+  /**
+   * A built-in settings schema for this environment.
+   * @returns {Object}
+   */
+  get settings_config() {
+    return {
+      is_obsidian_vault: {
+        name: "Obsidian Vault",
+        description: "Toggle on if this is an Obsidian vault.",
+        type: "toggle",
+        default: false
+      },
+      file_exclusions: {
+        name: "File Exclusions",
+        description: "Comma-separated list of files to exclude.",
+        type: "text",
+        default: "",
+        callback: "update_exclusions"
+      },
+      folder_exclusions: {
+        name: "Folder Exclusions",
+        description: "Comma-separated list of folders to exclude.",
+        type: "text",
+        default: "",
+        callback: "update_exclusions"
+      },
+      excluded_headings: {
+        name: "Excluded Headings",
+        description: "Comma-separated list of headings to exclude.",
+        type: "text",
+        default: ""
+      }
+    };
+  }
+  get global_prop() {
+    return this.opts.global_prop ?? "smart_env";
+  }
+  get global_ref() {
+    return this.opts.global_ref ?? (typeof window !== "undefined" ? window : global) ?? {};
+  }
+  get item_types() {
+    return this.opts.item_types;
+  }
+  get fs_module_config() {
+    return this.opts.modules.smart_fs;
+  }
+  get fs() {
+    if (!this.smart_fs) {
+      this.smart_fs = new this.fs_module_config.class(this, {
+        adapter: this.fs_module_config.adapter,
+        fs_path: this.opts.env_path || ""
+      });
+    }
+    return this.smart_fs;
+  }
+  get env_data_dir() {
+    const env_settings_files = this.fs.file_paths?.filter((path) => path.endsWith("smart_env.json")) || [];
+    let env_data_dir = ".smart-env";
+    if (env_settings_files.length > 0) {
+      if (env_settings_files.length > 1) {
+        const env_data_dir_counts = env_settings_files.map((path) => {
+          const dir = path.split("/").slice(-2, -1)[0];
+          return {
+            dir,
+            count: this.fs.file_paths.filter((p) => p.includes(dir)).length
+          };
+        });
+        env_data_dir = env_data_dir_counts.reduce(
+          (max, dirObj) => dirObj.count > max.count ? dirObj : max,
+          env_data_dir_counts[0]
+        ).dir;
+      } else {
+        env_data_dir = env_settings_files[0].split("/").slice(-2, -1)[0];
+      }
+    }
+    return env_data_dir;
+  }
+  get data_fs() {
+    if (!this._fs) {
+      this._fs = new this.fs_module_config.class(this, {
+        adapter: this.fs_module_config.adapter,
+        fs_path: this.data_fs_path
+      });
+    }
+    return this._fs;
+  }
+  get data_fs_path() {
+    if (!this._data_fs_path) {
+      this._data_fs_path = (this.opts.env_path + (this.opts.env_path ? this.opts.env_path.includes("\\") ? "\\" : "/" : "") + this.env_data_dir).replace(/\\\\/g, "\\").replace(/\/\//g, "/");
+    }
+    return this._data_fs_path;
+  }
+  /**
+   * Saves the current settings to the file system.
+   * @param {Object|null} [settings=null] - Optional settings to override the current settings before saving.
+   * @returns {Promise<void>}
+   */
+  async save_settings(settings) {
+    this._saved = false;
+    if (!await this.data_fs.exists("")) {
+      await this.data_fs.mkdir("");
+    }
+    await this.data_fs.write("smart_env.json", JSON.stringify(settings, null, 2));
+    this._saved = true;
+  }
+  /**
+   * Loads settings from the file system, merging with any `default_settings` or `smart_env_settings`.
+   * @returns {Promise<Object>} the loaded settings
+   */
+  async load_settings() {
+    if (!await this.data_fs.exists("smart_env.json")) await this.save_settings({});
+    let settings = JSON.parse(JSON.stringify(this.opts.default_settings || {}));
+    deep_merge4(settings, JSON.parse(await this.data_fs.read("smart_env.json")));
+    deep_merge4(settings, this.opts?.smart_env_settings || {});
+    this._saved = true;
+    return settings;
+  }
+  /**
+   * Refreshes file-system state if exclusions changed,
+   * then re-renders relevant settings UI
+   */
+  async update_exclusions() {
+    this.smart_sources._fs = null;
+    await this.smart_sources.fs.init();
+    this.smart_sources.render_settings();
+  }
+  // DEPRECATED
+  /** @deprecated access `this.state` and `collection.state` directly instead */
+  get collections_loaded() {
+    return this.state === "loaded";
+  }
+  /** @deprecated Use this['main_class_name'] instead of this.main/this.plugin */
+  get main() {
+    return this.smart_env_configs[this.mains[0]].main;
+  }
+  /**
+   * @deprecated use component pattern instead
+   */
+  get ejs() {
+    return this.opts.ejs;
+  }
+  /**
+   * @deprecated use component pattern instead
+   */
+  get templates() {
+    return this.opts.templates;
+  }
+  /**
+   * @deprecated use component pattern instead
+   */
+  get views() {
+    return this.opts.views;
+  }
+  /**
+   * @deprecated use this.config instead
+   */
+  get opts() {
+    return this.config;
+  }
+  /**
+   * @deprecated Use this.main_class_name instead of this.plugin
+   */
+  get plugin() {
+    return this.main;
+  }
+};
+
+// node_modules/smart-environment/node_modules/smart-notices/smart_notices.js
+function define_default_create_methods(notices, scope = null) {
+  for (const key of Object.keys(notices)) {
+    const notice_obj = notices[key];
+    if (typeof notice_obj.create !== "function") {
+      notice_obj.create = function(opts = {}) {
+        let text = this.en ?? key;
+        for (const [k, v] of Object.entries(opts)) {
+          text = text.replace(new RegExp(`{{${k}}}`, "g"), String(v));
+        }
+        let button;
+        if (!opts.button && this.button) {
+          const btn_label = typeof this.button.en === "string" ? this.button.en : "OK";
+          button = {
+            text: btn_label,
+            callback: typeof this.button.callback === "function" ? this.button.callback : () => {
+            }
+            // no-op
+          };
+        } else {
+          button = opts.button;
+        }
+        let final_timeout = opts.timeout ?? this.timeout ?? 5e3;
+        return {
+          text,
+          button,
+          timeout: final_timeout,
+          confirm: opts.confirm,
+          // pass any user-provided confirm
+          immutable: opts.immutable
+          // pass any user-provided immutable
+        };
+      };
+    }
+  }
+  return notices;
+}
+var SmartNotices = class {
+  /**
+   * @param {Object} scope - The main plugin instance
+   */
+  constructor(scope, adapter = null) {
+    this.scope = scope;
+    this.main = scope;
+    SmartEnv2.create_env_getter(this);
+    this.active = {};
+    this.adapter = adapter || this.env.config.modules.smart_notices.adapter;
+    define_default_create_methods(NOTICES, scope);
+  }
+  /** plugin settings for notices (muted, etc.) */
+  get settings() {
+    return this.env?.settings?.smart_notices || {};
+  }
+  /**
+   * Displays a notice by key or custom message.
+   * Usage:
+   *   notices.show('load_env', { scope: this });
+   *
+   * @param {string} id - The notice key or custom ID
+   * @param {object} opts - Additional user opts
+   */
+  show(id, opts = {}) {
+    let message = null;
+    if (typeof opts === "string") {
+      message = opts;
+    } else {
+      opts = opts || {};
+    }
+    if (!opts.scope) {
+      opts.scope = this.main;
+    }
+    const normalized_id = this._normalize_notice_key(id);
+    if (this.settings?.muted?.[normalized_id]) {
+      if (opts.confirm?.callback) {
+        opts.confirm.callback();
+      }
+      return;
+    }
+    const notice_entry = NOTICES[id];
+    let derived = {
+      text: message || id,
+      timeout: opts.timeout ?? 5e3,
+      button: opts.button,
+      immutable: opts.immutable,
+      confirm: opts.confirm
+    };
+    if (notice_entry?.create) {
+      const result = notice_entry.create({ ...opts, scope: this.main });
+      derived.text = message || result.text;
+      derived.timeout = result.timeout;
+      derived.button = result.button;
+      derived.immutable = result.immutable;
+      derived.confirm = result.confirm;
+    }
+    const content_fragment = this._build_fragment(normalized_id, derived.text, derived);
+    if (this.active[normalized_id]?.noticeEl?.parentElement) {
+      return this.active[normalized_id].setMessage(content_fragment, derived.timeout);
+    }
+    return this._render_notice(normalized_id, content_fragment, derived);
+  }
+  /**
+   * Normalizes the notice key to a safe string.
+   */
+  _normalize_notice_key(key) {
+    return key.replace(/[^a-zA-Z0-9_-]/g, "_");
+  }
+  /**
+   * Creates and tracks the notice instance
+   */
+  _render_notice(normalized_id, content_fragment, { timeout }) {
+    this.active[normalized_id] = new this.adapter(content_fragment, timeout);
+    return this.active[normalized_id];
+  }
+  /**
+   * Builds a DocumentFragment with notice text & possible buttons
+   */
+  _build_fragment(id, text, { button, confirm: confirm2, immutable }) {
+    const frag = document.createDocumentFragment();
+    frag.createEl("p", {
+      cls: "sc-notice-head",
+      text: `[Smart Connections v${this.main.manifest.version}]`
+    });
+    const content = frag.createEl("p", { cls: "sc-notice-content", text });
+    const actions = frag.createEl("div", { cls: "sc-notice-actions" });
+    if (confirm2?.text && typeof confirm2.callback === "function") {
+      this._add_button(confirm2, actions);
+    }
+    if (button?.text && typeof button.callback === "function") {
+      this._add_button(button, actions);
+    }
+    if (!immutable) {
+      this._add_mute_button(id, actions);
+    }
+    return frag;
+  }
+  /**
+   * Creates a <button> appended to the container
+   */
+  _add_button(btnConfig, container) {
+    const btn = document.createElement("button");
+    btn.innerHTML = btnConfig.text;
+    btn.addEventListener("click", (e) => {
+      if (btnConfig.stay_open) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      btnConfig.callback?.(this.main);
+    });
+    container.appendChild(btn);
+  }
+  /**
+   * Mute button
+   */
+  _add_mute_button(id, container) {
+    const btn = document.createElement("button");
+    (0, import_obsidian2.setIcon)(btn, "bell-off");
+    btn.addEventListener("click", () => {
+      if (!this.settings.muted) this.settings.muted = {};
+      this.settings.muted[id] = true;
+      if (NOTICES["notice muted"]) {
+        this.show("notice muted", null, { timeout: 2e3 });
+      }
+    });
+    container.appendChild(btn);
+  }
+  /**
+   * Hides & clears all active notices
+   */
+  unload() {
+    for (const id in this.active) {
+      this.remove(id);
+    }
+  }
+  /**
+   * Removes an active notice by key
+   */
+  remove(id) {
+    const normalized_id = this._normalize_notice_key(id);
+    this.active[normalized_id]?.hide();
+    delete this.active[normalized_id];
+  }
+};
+
 // node_modules/smart-environment/obsidian.js
+var import_obsidian6 = require("obsidian");
 var OBSIDIAN_DEFAULTS = {
   env_path: "",
   modules: {
@@ -11056,11 +12261,11 @@ var OBSIDIAN_DEFAULTS = {
     smart_view: {
       class: SmartView,
       adapter: SmartViewObsidianAdapter
+    },
+    smart_notices: {
+      class: SmartNotices,
+      adapter: import_obsidian6.Notice
     }
-    // smart_notices: {
-    //   class: SmartNotices,
-    //   adapter: Notice,
-    // },
   },
   collections: {
     smart_sources: {
@@ -11121,7 +12326,7 @@ var OBSIDIAN_DEFAULTS = {
     }
   }
 };
-var SmartEnv2 = class extends SmartEnv {
+var SmartEnv3 = class extends SmartEnv {
   static async create(plugin, main_env_opts = {}) {
     const opts = merge_env_config(main_env_opts, OBSIDIAN_DEFAULTS);
     return await super.create(plugin, opts);
@@ -11131,7 +12336,7 @@ var SmartEnv2 = class extends SmartEnv {
     const plugin = this.main;
     plugin.registerEvent(
       plugin.app.vault.on("create", (file) => {
-        if (file instanceof import_obsidian4.TFile) {
+        if (file instanceof import_obsidian5.TFile && this.smart_sources?.source_adapters?.[file.extension]) {
           this.smart_sources?.init_file_path(file.path);
           this.smart_sources?.fs.include_file(file.path);
         }
@@ -11139,7 +12344,7 @@ var SmartEnv2 = class extends SmartEnv {
     );
     plugin.registerEvent(
       plugin.app.vault.on("rename", (file) => {
-        if (file instanceof import_obsidian4.TFile) {
+        if (file instanceof import_obsidian5.TFile && this.smart_sources?.source_adapters?.[file.extension]) {
           this.smart_sources?.init_file_path(file.path);
           this.smart_sources?.fs.include_file(file.path);
         }
@@ -11147,7 +12352,7 @@ var SmartEnv2 = class extends SmartEnv {
     );
     plugin.registerEvent(
       plugin.app.vault.on("modify", (file) => {
-        if (file instanceof import_obsidian4.TFile) {
+        if (file instanceof import_obsidian5.TFile && this.smart_sources?.source_adapters?.[file.extension]) {
           const source = this.smart_sources?.get(file.path);
           if (source) {
             source.queue_import();
@@ -11162,5638 +12367,8 @@ var SmartEnv2 = class extends SmartEnv {
   }
 };
 
-// node_modules/smart-sources/node_modules/smart-collections/utils/collection_instance_name_from.js
-function collection_instance_name_from3(class_name) {
-  if (class_name.endsWith("Item")) {
-    return class_name.replace(/Item$/, "").toLowerCase();
-  }
-  return class_name.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase().replace(/y$/, "ie") + "s";
-}
-
-// node_modules/smart-sources/node_modules/smart-collections/utils/helpers.js
-function create_uid3(data) {
-  const str = JSON.stringify(data);
-  let hash = 0;
-  if (str.length === 0) return hash;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash = hash & hash;
-    if (hash < 0) hash = hash * -1;
-  }
-  return hash.toString() + str.length;
-}
-function deep_merge4(target, source) {
-  for (const key in source) {
-    if (source.hasOwnProperty(key)) {
-      if (is_obj(source[key]) && is_obj(target[key])) deep_merge4(target[key], source[key]);
-      else target[key] = source[key];
-    }
-  }
-  return target;
-  function is_obj(item) {
-    return item && typeof item === "object" && !Array.isArray(item);
-  }
-}
-
-// node_modules/smart-sources/node_modules/smart-collections/utils/deep_equal.js
-function deep_equal3(obj1, obj2, visited = /* @__PURE__ */ new WeakMap()) {
-  if (obj1 === obj2) return true;
-  if (obj1 === null || obj2 === null || obj1 === void 0 || obj2 === void 0) return false;
-  if (typeof obj1 !== typeof obj2 || Array.isArray(obj1) !== Array.isArray(obj2)) return false;
-  if (Array.isArray(obj1)) {
-    if (obj1.length !== obj2.length) return false;
-    return obj1.every((item, index) => deep_equal3(item, obj2[index], visited));
-  }
-  if (typeof obj1 === "object") {
-    if (visited.has(obj1)) return visited.get(obj1) === obj2;
-    visited.set(obj1, obj2);
-    const keys1 = Object.keys(obj1);
-    const keys2 = Object.keys(obj2);
-    if (keys1.length !== keys2.length) return false;
-    return keys1.every((key) => deep_equal3(obj1[key], obj2[key], visited));
-  }
-  return obj1 === obj2;
-}
-
-// node_modules/smart-sources/node_modules/smart-collections/item.js
-var CollectionItem3 = class _CollectionItem {
-  /**
-   * Default properties for an instance of CollectionItem.
-   * Override in subclasses to define different defaults.
-   * @returns {Object}
-   */
-  static get defaults() {
-    return {
-      data: {}
-    };
-  }
-  /**
-   * @param {Object} env - The environment/context.
-   * @param {Object|null} [data=null] - Initial data for the item.
-   */
-  constructor(env, data = null) {
-    this.env = env;
-    this.config = this.env?.config;
-    this.merge_defaults();
-    if (data) deep_merge4(this.data, data);
-    if (!this.data.class_name) this.data.class_name = this.constructor.name;
-  }
-  /**
-   * Loads an item from data and initializes it.
-   * @param {Object} env
-   * @param {Object} data
-   * @returns {CollectionItem}
-   */
-  static load(env, data) {
-    const item = new this(env, data);
-    item.init();
-    return item;
-  }
-  /**
-   * Merge default properties from the entire inheritance chain.
-   * @private
-   */
-  merge_defaults() {
-    let current_class = this.constructor;
-    while (current_class) {
-      for (let key in current_class.defaults) {
-        const default_val = current_class.defaults[key];
-        if (typeof default_val === "object") {
-          this[key] = { ...default_val, ...this[key] };
-        } else {
-          this[key] = this[key] === void 0 ? default_val : this[key];
-        }
-      }
-      current_class = Object.getPrototypeOf(current_class);
-    }
-  }
-  /**
-   * Generates or retrieves a unique key for the item.
-   * Key syntax supports:
-   * - `[i]` for sequences
-   * - `/` for super-sources (groups, directories, clusters)
-   * - `#` for sub-sources (blocks)
-   * @returns {string} The unique key
-   */
-  get_key() {
-    return create_uid3(this.data);
-  }
-  /**
-   * Updates the item data and returns true if changed.
-   * @param {Object} data
-   * @returns {boolean} True if data changed.
-   */
-  update_data(data) {
-    const sanitized_data = this.sanitize_data(data);
-    const current_data = { ...this.data };
-    deep_merge4(current_data, sanitized_data);
-    const changed = !deep_equal3(this.data, current_data);
-    if (!changed) return false;
-    this.data = current_data;
-    return true;
-  }
-  /**
-   * Sanitizes data for saving. Ensures no circular references.
-   * @param {*} data
-   * @returns {*} Sanitized data.
-   */
-  sanitize_data(data) {
-    if (data instanceof _CollectionItem) return data.ref;
-    if (Array.isArray(data)) return data.map((val) => this.sanitize_data(val));
-    if (typeof data === "object" && data !== null) {
-      return Object.keys(data).reduce((acc, key) => {
-        acc[key] = this.sanitize_data(data[key]);
-        return acc;
-      }, {});
-    }
-    return data;
-  }
-  /**
-   * Initializes the item. Override as needed.
-   * @param {Object} [input_data] - Additional data that might be provided on creation.
-   */
-  init(input_data) {
-  }
-  /**
-   * Queues this item for saving.
-   */
-  queue_save() {
-    this._queue_save = true;
-  }
-  /**
-   * Saves this item using its data adapter.
-   * @returns {Promise<void>}
-   */
-  async save() {
-    try {
-      await this.data_adapter.save_item(this);
-      this.init();
-    } catch (err) {
-      this._queue_save = true;
-      console.error(err, err.stack);
-    }
-  }
-  /**
-   * Queues this item for loading.
-   */
-  queue_load() {
-    this._queue_load = true;
-  }
-  /**
-   * Loads this item using its data adapter.
-   * @returns {Promise<void>}
-   */
-  async load() {
-    try {
-      await this.data_adapter.load_item(this);
-      this.init();
-    } catch (err) {
-      this._load_error = err;
-      this.on_load_error(err);
-    }
-  }
-  /**
-   * Handles load errors by re-queuing for load.
-   * Override if needed.
-   * @param {Error} err
-   */
-  on_load_error(err) {
-    this.queue_load();
-  }
-  /**
-   * Validates the item before saving. Checks for presence and validity of key.
-   * @returns {boolean}
-   */
-  validate_save() {
-    if (!this.key) return false;
-    if (this.key.trim() === "") return false;
-    if (this.key === "undefined") return false;
-    return true;
-  }
-  /**
-   * Marks this item as deleted. This does not immediately remove it from memory,
-   * but queues a save that will result in the item being removed from persistent storage.
-   */
-  delete() {
-    this.deleted = true;
-    this.queue_save();
-  }
-  /**
-   * Filters items in the collection based on provided options.
-   * functional filter (returns true or false) for filtering items in collection; called by collection class
-   * @param {Object} filter_opts - Filtering options.
-   * @param {string} [filter_opts.exclude_key] - A single key to exclude.
-   * @param {string[]} [filter_opts.exclude_keys] - An array of keys to exclude. If exclude_key is provided, it's added to this array.
-   * @param {string} [filter_opts.exclude_key_starts_with] - Exclude keys starting with this string.
-   * @param {string[]} [filter_opts.exclude_key_starts_with_any] - Exclude keys starting with any of these strings.
-   * @param {string} [filter_opts.exclude_key_includes] - Exclude keys that include this string.
-   * @param {string} [filter_opts.key_ends_with] - Include only keys ending with this string.
-   * @param {string} [filter_opts.key_starts_with] - Include only keys starting with this string.
-   * @param {string[]} [filter_opts.key_starts_with_any] - Include only keys starting with any of these strings.
-   * @param {string} [filter_opts.key_includes] - Include only keys that include this string.
-   * @returns {boolean} True if the item passes the filter, false otherwise.
-   */
-  filter(filter_opts = {}) {
-    const {
-      exclude_key,
-      exclude_keys = exclude_key ? [exclude_key] : [],
-      exclude_key_starts_with,
-      exclude_key_starts_with_any,
-      exclude_key_includes,
-      key_ends_with,
-      key_starts_with,
-      key_starts_with_any,
-      key_includes
-    } = filter_opts;
-    if (exclude_keys?.includes(this.key)) return false;
-    if (exclude_key_starts_with && this.key.startsWith(exclude_key_starts_with)) return false;
-    if (exclude_key_starts_with_any && exclude_key_starts_with_any.some((prefix) => this.key.startsWith(prefix))) return false;
-    if (exclude_key_includes && this.key.includes(exclude_key_includes)) return false;
-    if (key_ends_with && !this.key.endsWith(key_ends_with)) return false;
-    if (key_starts_with && !this.key.startsWith(key_starts_with)) return false;
-    if (key_starts_with_any && !key_starts_with_any.some((prefix) => this.key.startsWith(prefix))) return false;
-    if (key_includes && !this.key.includes(key_includes)) return false;
-    return true;
-  }
-  /**
-   * Parses item data for additional processing. Override as needed.
-   */
-  parse() {
-  }
-  /**
-   * Helper function to render a component in the item scope
-   * @param {*} component_key 
-   * @param {*} opts 
-   * @returns 
-   */
-  async render_component(component_key, opts = {}) {
-    return await this.env.render_component(component_key, this, opts);
-  }
-  get actions() {
-    if (!this._actions) {
-      this._actions = Object.entries(this.env.opts.items[this.item_type_key].actions || {}).reduce((acc, [k, v]) => {
-        acc[k] = v.bind(this);
-        return acc;
-      }, {});
-    }
-    return this._actions;
-  }
-  /**
-   * Derives the collection key from the class name.
-   * @returns {string}
-   */
-  static get collection_key() {
-    let name = this.name;
-    if (name.match(/\d$/)) name = name.slice(0, -1);
-    return collection_instance_name_from3(name);
-  }
-  /**
-   * @returns {string} The collection key for this item.
-   */
-  get collection_key() {
-    let name = this.constructor.name;
-    if (name.match(/\d$/)) name = name.slice(0, -1);
-    return collection_instance_name_from3(name);
-  }
-  /**
-   * Retrieves the parent collection from the environment.
-   * @returns {Collection}
-   */
-  get collection() {
-    return this.env[this.collection_key];
-  }
-  /**
-   * @returns {string} The item's key.
-   */
-  get key() {
-    return this.data?.key || this.get_key();
-  }
-  get item_type_key() {
-    let name = this.constructor.name;
-    if (name.match(/\d$/)) name = name.slice(0, -1);
-    return camel_case_to_snake_case4(name);
-  }
-  /**
-   * A simple reference object for this item.
-   * @returns {{collection_key: string, key: string}}
-   */
-  get ref() {
-    return { collection_key: this.collection_key, key: this.key };
-  }
-  /**
-   * @returns {Object} The data adapter for this item's collection.
-   */
-  get data_adapter() {
-    return this.collection.data_adapter;
-  }
-  /**
-   * @returns {Object} The filesystem adapter.
-   */
-  get data_fs() {
-    return this.collection.data_fs;
-  }
-  /**
-   * Access to collection-level settings.
-   * @returns {Object}
-   */
-  get settings() {
-    if (!this.env.settings[this.collection_key]) this.env.settings[this.collection_key] = {};
-    return this.env.settings[this.collection_key];
-  }
-  set settings(settings) {
-    this.env.settings[this.collection_key] = settings;
-    this.env.smart_settings.save();
-  }
-  /**
-   * Render this item into a container using the item's component.
-   * @deprecated 2024-12-02 Use explicit component pattern from environment
-   * @param {HTMLElement} container
-   * @param {Object} opts
-   * @returns {Promise<HTMLElement>}
-   */
-  async render_item(container, opts = {}) {
-    const frag = await this.component.call(this.smart_view, this, opts);
-    container.innerHTML = "";
-    container.appendChild(frag);
-    return container;
-  }
-  /**
-   * @deprecated use env.smart_view
-   * @returns {Object}
-   */
-  get smart_view() {
-    if (!this._smart_view) this._smart_view = this.env.init_module("smart_view");
-    return this._smart_view;
-  }
-  /**
-   * Override in child classes to set the component for this item
-   * @deprecated 2024-12-02
-   * @returns {Function} The render function for this component
-   */
-  get component() {
-    return item_component;
-  }
-};
-function camel_case_to_snake_case4(str) {
-  const result = str.replace(/([A-Z])/g, (match) => `_${match.toLowerCase()}`).replace(/^_/, "").replace(/2$/, "");
-  return result;
-}
-
-// node_modules/smart-sources/node_modules/smart-collections/collection.js
-var AsyncFunction3 = Object.getPrototypeOf(async function() {
-}).constructor;
-var Collection3 = class {
-  /**
-   * Constructs a new Collection instance.
-   *
-   * @param {Object} env - The environment context containing configurations and adapters.
-   * @param {Object} [opts={}] - Optional configuration.
-   * @param {string} [opts.collection_key] - Custom key to override default collection name.
-   * @param {string} [opts.data_dir] - Custom data directory path.
-   * @param {boolean} [opts.prevent_load_on_init] - Whether to prevent loading items on initialization.
-   */
-  constructor(env, opts = {}) {
-    this.env = env;
-    this.opts = opts;
-    if (opts.collection_key) this.collection_key = opts.collection_key;
-    this.env[this.collection_key] = this;
-    this.config = this.env.config;
-    this.items = {};
-    this.loaded = null;
-    this._loading = false;
-    this.load_time_ms = null;
-    this.settings_container = null;
-  }
-  /**
-   * Initializes a new collection in the environment. Override in subclass if needed.
-   *
-   * @param {Object} env
-   * @param {Object} [opts={}]
-   * @returns {Promise<void>}
-   */
-  static async init(env, opts = {}) {
-    env[this.collection_key] = new this(env, opts);
-    await env[this.collection_key].init();
-    env.collections[this.collection_key] = "init";
-  }
-  /**
-   * The unique collection key derived from the class name.
-   * @returns {string}
-   */
-  static get collection_key() {
-    let name = this.name;
-    if (name.match(/\d$/)) name = name.slice(0, -1);
-    return name.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase();
-  }
-  /**
-   * Instance-level init. Override in subclasses if necessary.
-   * @returns {Promise<void>}
-   */
-  async init() {
-  }
-  /**
-   * Creates or updates an item in the collection.
-   * - If `data` includes a key that matches an existing item, that item is updated.
-   * - Otherwise, a new item is created.
-   * After updating or creating, the item is validated. If validation fails, the item is logged and returned without being saved.
-   * If validation succeeds for a new item, it is added to the collection and marked for saving.
-   *
-   * If the item’s `init()` method is async, a promise is returned that resolves once init completes.
-   *
-   * @param {Object} [data={}] - Data for creating/updating an item.
-   * @returns {Promise<Item>|Item} The created or updated item. May return a promise if `init()` is async.
-   */
-  create_or_update(data = {}) {
-    const existing_item = this.find_by(data);
-    const item = existing_item ? existing_item : new this.item_type(this.env);
-    item._queue_save = !existing_item;
-    const data_changed = item.update_data(data);
-    if (!existing_item && !item.validate_save()) {
-      return item;
-    }
-    if (!existing_item) {
-      this.set(item);
-    }
-    if (existing_item && !data_changed) return existing_item;
-    if (item.init instanceof AsyncFunction3) {
-      return new Promise((resolve) => {
-        item.init(data).then(() => resolve(item));
-      });
-    }
-    item.init(data);
-    return item;
-  }
-  /**
-   * Finds an item by partial data match (first checks key). If `data.key` provided,
-   * returns the item with that key; otherwise attempts a match by merging data.
-   *
-   * @param {Object} data - Data to match against.
-   * @returns {Item|null}
-   */
-  find_by(data) {
-    if (data.key) return this.get(data.key);
-    const temp = new this.item_type(this.env);
-    const temp_data = JSON.parse(JSON.stringify(data, temp.sanitize_data(data)));
-    deep_merge4(temp.data, temp_data);
-    return temp.key ? this.get(temp.key) : null;
-  }
-  /**
-   * Filters items based on provided filter options or a custom function.
-   *
-   * @param {Object|Function} [filter_opts={}] - Filter options or a predicate function.
-   * @returns {Item[]} Array of filtered items.
-   */
-  filter(filter_opts = {}) {
-    if (typeof filter_opts === "function") {
-      return Object.values(this.items).filter(filter_opts);
-    }
-    filter_opts = this.prepare_filter(filter_opts);
-    const results = [];
-    const { first_n } = filter_opts;
-    for (const item of Object.values(this.items)) {
-      if (first_n && results.length >= first_n) break;
-      if (item.filter(filter_opts)) results.push(item);
-    }
-    return results;
-  }
-  /**
-   * Alias for `filter()`
-   * @param {Object|Function} filter_opts
-   * @returns {Item[]}
-   */
-  list(filter_opts) {
-    return this.filter(filter_opts);
-  }
-  /**
-   * Prepares filter options. Can be overridden by subclasses to normalize filter options.
-   *
-   * @param {Object} filter_opts
-   * @returns {Object} Prepared filter options.
-   */
-  prepare_filter(filter_opts) {
-    return filter_opts;
-  }
-  /**
-   * Retrieves an item by key.
-   * @param {string} key
-   * @returns {Item|undefined}
-   */
-  get(key) {
-    return this.items[key];
-  }
-  /**
-   * Retrieves multiple items by an array of keys.
-   * @param {string[]} keys
-   * @returns {Item[]}
-   */
-  get_many(keys = []) {
-    if (!Array.isArray(keys)) {
-      console.error("get_many called with non-array keys:", keys);
-      return [];
-    }
-    return keys.map((key) => this.get(key)).filter(Boolean);
-  }
-  /**
-   * Retrieves a random item from the collection, optionally filtered by options.
-   * @param {Object} [opts]
-   * @returns {Item|undefined}
-   */
-  get_rand(opts = null) {
-    if (opts) {
-      const filtered = this.filter(opts);
-      return filtered[Math.floor(Math.random() * filtered.length)];
-    }
-    const keys = this.keys;
-    return this.items[keys[Math.floor(Math.random() * keys.length)]];
-  }
-  /**
-   * Adds or updates an item in the collection.
-   * @param {Item} item
-   */
-  set(item) {
-    if (!item.key) throw new Error("Item must have a key property");
-    this.items[item.key] = item;
-  }
-  /**
-   * Updates multiple items by their keys.
-   * @param {string[]} keys
-   * @param {Object} data
-   */
-  update_many(keys = [], data = {}) {
-    this.get_many(keys).forEach((item) => item.update_data(data));
-  }
-  /**
-   * Clears all items from the collection.
-   */
-  clear() {
-    this.items = {};
-  }
-  /**
-   * @returns {string} The collection key, can be overridden by opts.collection_key
-   */
-  get collection_key() {
-    return this._collection_key ? this._collection_key : this.constructor.collection_key;
-  }
-  set collection_key(key) {
-    this._collection_key = key;
-  }
-  /**
-   * Lazily initializes and returns the data adapter instance for this collection.
-   * @returns {Object} The data adapter instance.
-   */
-  get data_adapter() {
-    if (!this._data_adapter) {
-      const AdapterClass = this.get_adapter_class("data");
-      this._data_adapter = new AdapterClass(this);
-    }
-    return this._data_adapter;
-  }
-  get_adapter_class(type) {
-    const config = this.env.opts.collections?.[this.collection_key];
-    const adapter_key = type + "_adapter";
-    const adapter_module = config?.[adapter_key] ?? this.env.opts.collections?.smart_collections?.[adapter_key];
-    if (typeof adapter_module === "function") return adapter_module;
-    if (typeof adapter_module?.collection === "function") return adapter_module.collection;
-    throw new Error(`No '${type}' adapter class found for ${this.collection_key} or smart_collections`);
-  }
-  /**
-   * Data directory strategy for this collection. Defaults to 'multi'.
-   * @returns {string}
-   */
-  get data_dir() {
-    return "multi";
-  }
-  /**
-   * File system adapter from the environment.
-   * @returns {Object}
-   */
-  get data_fs() {
-    return this.env.data_fs;
-  }
-  /**
-   * Derives the corresponding item class name based on this collection's class name.
-   * @returns {string}
-   */
-  get item_class_name() {
-    let name = this.constructor.name;
-    if (name.match(/\d$/)) name = name.slice(0, -1);
-    if (name.endsWith("ies")) return name.slice(0, -3) + "y";
-    else if (name.endsWith("s")) return name.slice(0, -1);
-    return name + "Item";
-  }
-  /**
-   * Derives a readable item name from the item class name.
-   * @returns {string}
-   */
-  get item_name() {
-    return this.item_class_name.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase();
-  }
-  /**
-   * Retrieves the item type (constructor) from the environment.
-   * @returns {Function} Item constructor.
-   */
-  get item_type() {
-    return this.env.item_types[this.item_class_name];
-  }
-  /**
-   * Returns an array of all keys in the collection.
-   * @returns {string[]}
-   */
-  get keys() {
-    return Object.keys(this.items);
-  }
-  /**
-   * @deprecated use data_adapter instead (2024-09-14)
-   */
-  get adapter() {
-    return this.data_adapter;
-  }
-  /**
-   * @method process_save_queue
-   * @description 
-   * Saves items flagged for saving (_queue_save) back to AJSON or SQLite. This ensures persistent storage 
-   * of any updates made since last load/import. This method also writes changes to disk (AJSON files or DB).
-   */
-  async process_save_queue(opts = {}) {
-    if (opts.force) {
-      Object.values(this.items).forEach((item) => item._queue_save = true);
-    }
-    await this.data_adapter.process_save_queue(opts);
-  }
-  /**
-   * @alias process_save_queue
-   * @returns {Promise<void>}
-   */
-  async save(opts = {}) {
-    await this.process_save_queue(opts);
-  }
-  /**
-   * @method process_load_queue
-   * @description 
-   * Loads items that have been flagged for loading (_queue_load). This may involve 
-   * reading from AJSON/SQLite or re-importing from markdown if needed. 
-   * Called once initial environment is ready and collections are known.
-   */
-  async process_load_queue() {
-    await this.data_adapter.process_load_queue();
-  }
-  /**
-   * Retrieves processed settings configuration.
-   * @returns {Object}
-   */
-  get settings_config() {
-    return this.process_settings_config({});
-  }
-  /**
-   * Processes given settings config, adding prefixes and handling conditionals.
-   *
-   * @private
-   * @param {Object} _settings_config
-   * @param {string} [prefix='']
-   * @returns {Object}
-   */
-  process_settings_config(_settings_config, prefix = "") {
-    const add_prefix = (key) => prefix && !key.includes(`${prefix}.`) ? `${prefix}.${key}` : key;
-    return Object.entries(_settings_config).reduce((acc, [key, val]) => {
-      let new_val = { ...val };
-      if (new_val.conditional) {
-        if (!new_val.conditional(this)) return acc;
-        delete new_val.conditional;
-      }
-      if (new_val.callback) new_val.callback = add_prefix(new_val.callback);
-      if (new_val.btn_callback) new_val.btn_callback = add_prefix(new_val.btn_callback);
-      if (new_val.options_callback) new_val.options_callback = add_prefix(new_val.options_callback);
-      const new_key = add_prefix(this.process_setting_key(key));
-      acc[new_key] = new_val;
-      return acc;
-    }, {});
-  }
-  /**
-   * Processes an individual setting key. Override if needed.
-   * @param {string} key
-   * @returns {string}
-   */
-  process_setting_key(key) {
-    return key;
-  }
-  /**
-   * Default settings for this collection. Override in subclasses as needed.
-   * @returns {Object}
-   */
-  get default_settings() {
-    return {};
-  }
-  /**
-   * Current settings for the collection.
-   * Initializes with default settings if none exist.
-   * @returns {Object}
-   */
-  get settings() {
-    if (!this.env.settings[this.collection_key]) {
-      this.env.settings[this.collection_key] = this.default_settings;
-    }
-    return this.env.settings[this.collection_key];
-  }
-  /**
-   * @deprecated use env.smart_view instead
-   * @returns {Object} smart_view instance
-   */
-  get smart_view() {
-    if (!this._smart_view) this._smart_view = this.env.init_module("smart_view");
-    return this._smart_view;
-  }
-  /**
-   * Renders the settings for the collection into a given container.
-   * @param {HTMLElement} [container=this.settings_container]
-   * @param {Object} opts
-   * @returns {Promise<HTMLElement>}
-   */
-  async render_settings(container = this.settings_container, opts = {}) {
-    return await this.render_collection_settings(container, opts);
-  }
-  /**
-   * Helper function to render collection settings.
-   * @param {HTMLElement} [container=this.settings_container]
-   * @param {Object} opts
-   * @returns {Promise<HTMLElement>}
-   */
-  async render_collection_settings(container = this.settings_container, opts = {}) {
-    if (container && (!this.settings_container || this.settings_container !== container)) {
-      this.settings_container = container;
-    } else if (!container) {
-      container = this.env.smart_view.create_doc_fragment("<div></div>");
-    }
-    container.innerHTML = `<div class="sc-loading">Loading ${this.collection_key} settings...</div>`;
-    const frag = await this.env.render_component("settings", this, opts);
-    container.innerHTML = "";
-    container.appendChild(frag);
-    return container;
-  }
-  /**
-   * Unloads collection data from memory.
-   */
-  unload() {
-    this.clear();
-    this.unloaded = true;
-  }
-  /**
-   * Runs load process for all items in the collection, triggering queue loads and rendering settings after done.
-   * @returns {Promise<void>}
-   */
-  async run_data_load() {
-    this.loaded = null;
-    this.load_time_ms = null;
-    Object.values(this.items).forEach((item) => item.queue_load());
-    this.notices?.show("loading_collection", { collection_key: this.collection_key });
-    await this.process_load_queue();
-    this.notices?.remove("loading_collection");
-    this.notices?.show("done_loading_collection", { collection_key: this.collection_key });
-    this.render_settings();
-  }
-  /**
-   * Helper function to render a component in the collection scope
-   * @param {*} component_key 
-   * @param {*} opts 
-   * @returns 
-   */
-  async render_component(component_key, opts = {}) {
-    return await this.env.render_component(component_key, this, opts);
-  }
-};
-
-// node_modules/smart-sources/node_modules/smart-entities/adapters/_adapter.js
-var EntitiesVectorAdapter3 = class {
-  /**
-   * @constructor
-   * @param {Object} collection - The collection (SmartEntities or derived class) instance.
-   */
-  constructor(collection) {
-    this.collection = collection;
-  }
-  /**
-   * Find the nearest entities to the given vector.
-   * @async
-   * @param {number[]} vec - The reference vector.
-   * @param {Object} [filter={}] - Optional filters (limit, exclude, etc.)
-   * @returns {Promise<Array<{item:Object, score:number}>>} Array of results sorted by score descending.
-   * @throws {Error} Not implemented by default.
-   */
-  async nearest(vec, filter = {}) {
-    throw new Error("EntitiesVectorAdapter.nearest() not implemented");
-  }
-  /**
-   * Find the furthest entities from the given vector.
-   * @async
-   * @param {number[]} vec - The reference vector.
-   * @param {Object} [filter={}] - Optional filters (limit, exclude, etc.)
-   * @returns {Promise<Array<{item:Object, score:number}>>} Array of results sorted by score ascending (furthest).
-   * @throws {Error} Not implemented by default.
-   */
-  async furthest(vec, filter = {}) {
-    throw new Error("EntitiesVectorAdapter.furthest() not implemented");
-  }
-  /**
-   * Embed a batch of entities.
-   * @async
-   * @param {Object[]} entities - Array of entity instances to embed.
-   * @returns {Promise<void>}
-   * @throws {Error} Not implemented by default.
-   */
-  async embed_batch(entities) {
-    throw new Error("EntitiesVectorAdapter.embed_batch() not implemented");
-  }
-  /**
-   * Process a queue of entities waiting to be embedded.
-   * Typically, this will call embed_batch in batches and update entities.
-   * @async
-   * @param {Object[]} embed_queue - Array of entities to embed.
-   * @returns {Promise<void>}
-   * @throws {Error} Not implemented by default.
-   */
-  async process_embed_queue(embed_queue) {
-    throw new Error("EntitiesVectorAdapter.process_embed_queue() not implemented");
-  }
-};
-var EntityVectorAdapter3 = class {
-  /**
-   * @constructor
-   * @param {Object} item - The SmartEntity instance that this adapter is associated with.
-   */
-  constructor(item) {
-    this.item = item;
-  }
-  /**
-   * Retrieve the current vector embedding for this entity.
-   * @async
-   * @returns {Promise<number[]|undefined>} The entity's vector or undefined if not set.
-   * @throws {Error} Not implemented by default.
-   */
-  async get_vec() {
-    throw new Error("EntityVectorAdapter.get_vec() not implemented");
-  }
-  /**
-   * Store/update the vector embedding for this entity.
-   * @async
-   * @param {number[]} vec - The vector to set.
-   * @returns {Promise<void>}
-   * @throws {Error} Not implemented by default.
-   */
-  async set_vec(vec) {
-    throw new Error("EntityVectorAdapter.set_vec() not implemented");
-  }
-  /**
-   * Delete/remove the vector embedding for this entity.
-   * @async
-   * @returns {Promise<void>}
-   * @throws {Error} Not implemented by default.
-   */
-  async delete_vec() {
-    throw new Error("EntityVectorAdapter.delete_vec() not implemented");
-  }
-};
-
-// node_modules/smart-sources/node_modules/smart-entities/utils/cos_sim.js
-function cos_sim3(vector1, vector2) {
-  if (vector1.length !== vector2.length) {
-    throw new Error("Vectors must have the same length");
-  }
-  let dot_product = 0;
-  let magnitude1 = 0;
-  let magnitude2 = 0;
-  const epsilon = 1e-8;
-  for (let i = 0; i < vector1.length; i++) {
-    dot_product += vector1[i] * vector2[i];
-    magnitude1 += vector1[i] * vector1[i];
-    magnitude2 += vector2[i] * vector2[i];
-  }
-  magnitude1 = Math.sqrt(magnitude1);
-  magnitude2 = Math.sqrt(magnitude2);
-  if (magnitude1 < epsilon || magnitude2 < epsilon) {
-    return 0;
-  }
-  return dot_product / (magnitude1 * magnitude2);
-}
-
-// node_modules/smart-sources/node_modules/smart-entities/utils/results_acc.js
-function results_acc3(_acc, result, ct = 10) {
-  if (_acc.results.size < ct) {
-    _acc.results.add(result);
-    if (_acc.results.size === ct && _acc.min === Number.POSITIVE_INFINITY) {
-      let { minScore, minObj } = find_min3(_acc.results);
-      _acc.min = minScore;
-      _acc.minResult = minObj;
-    }
-  } else if (result.score > _acc.min) {
-    _acc.results.add(result);
-    _acc.results.delete(_acc.minResult);
-    let { minScore, minObj } = find_min3(_acc.results);
-    _acc.min = minScore;
-    _acc.minResult = minObj;
-  }
-}
-function furthest_acc3(_acc, result, ct = 10) {
-  if (_acc.results.size < ct) {
-    _acc.results.add(result);
-    if (_acc.results.size === ct && _acc.max === Number.NEGATIVE_INFINITY) {
-      let { maxScore, maxObj } = find_max3(_acc.results);
-      _acc.max = maxScore;
-      _acc.maxResult = maxObj;
-    }
-  } else if (result.score < _acc.max) {
-    _acc.results.add(result);
-    _acc.results.delete(_acc.maxResult);
-    let { maxScore, maxObj } = find_max3(_acc.results);
-    _acc.max = maxScore;
-    _acc.maxResult = maxObj;
-  }
-}
-function find_min3(results) {
-  let minScore = Number.POSITIVE_INFINITY;
-  let minObj = null;
-  for (const obj of results) {
-    if (obj.score < minScore) {
-      minScore = obj.score;
-      minObj = obj;
-    }
-  }
-  return { minScore, minObj };
-}
-function find_max3(results) {
-  let maxScore = Number.NEGATIVE_INFINITY;
-  let maxObj = null;
-  for (const obj of results) {
-    if (obj.score > maxScore) {
-      maxScore = obj.score;
-      maxObj = obj;
-    }
-  }
-  return { maxScore, maxObj };
-}
-
-// node_modules/smart-sources/node_modules/smart-entities/utils/sort_by_score.js
-function sort_by_score3(a, b) {
-  const epsilon = 1e-9;
-  const score_diff = a.score - b.score;
-  if (Math.abs(score_diff) < epsilon) return 0;
-  return score_diff > 0 ? -1 : 1;
-}
-function sort_by_score_descending3(a, b) {
-  return sort_by_score3(a, b);
-}
-function sort_by_score_ascending3(a, b) {
-  return sort_by_score3(a, b) * -1;
-}
-
-// node_modules/smart-sources/node_modules/smart-entities/adapters/default.js
-var DefaultEntitiesVectorAdapter3 = class extends EntitiesVectorAdapter3 {
-  constructor(collection) {
-    super(collection);
-    this._is_processing_embed_queue = false;
-    this._reset_embed_queue_stats();
-  }
-  /**
-   * Find the nearest entities to the given vector.
-   * @async
-   * @param {number[]} vec - The reference vector.
-   * @param {Object} [filter={}] - Optional filters (limit, exclude, etc.)
-   * @returns {Promise<Array<{item:Object, score:number}>>} Array of results sorted by score descending.
-   */
-  async nearest(vec, filter = {}) {
-    if (!vec || !Array.isArray(vec)) {
-      throw new Error("Invalid vector input to nearest()");
-    }
-    const {
-      limit = 50
-      // TODO: default configured in settings
-    } = filter;
-    const nearest = this.collection.filter(filter).reduce((acc, item) => {
-      if (!item.vec) return acc;
-      const result = { item, score: cos_sim3(vec, item.vec) };
-      results_acc3(acc, result, limit);
-      return acc;
-    }, { min: 0, results: /* @__PURE__ */ new Set() });
-    return Array.from(nearest.results).sort(sort_by_score_descending3);
-  }
-  /**
-   * Find the furthest entities from the given vector.
-   * @async
-   * @param {number[]} vec - The reference vector.
-   * @param {Object} [filter={}] - Optional filters (limit, exclude, etc.)
-   * @returns {Promise<Array<{item:Object, score:number}>>} Array of results sorted by score ascending (furthest).
-   */
-  async furthest(vec, filter = {}) {
-    if (!vec || !Array.isArray(vec)) {
-      throw new Error("Invalid vector input to furthest()");
-    }
-    const {
-      limit = 50
-      // TODO: default configured in settings
-    } = filter;
-    const furthest = this.collection.filter(filter).reduce((acc, item) => {
-      if (!item.vec) return acc;
-      const result = { item, score: cos_sim3(vec, item.vec) };
-      furthest_acc3(acc, result, limit);
-      return acc;
-    }, { max: 0, results: /* @__PURE__ */ new Set() });
-    return Array.from(furthest.results).sort(sort_by_score_ascending3);
-  }
-  /**
-   * Embed a batch of entities.
-   * @async
-   * @param {Object[]} entities - Array of entity instances to embed.
-   * @returns {Promise<void>}
-   */
-  async embed_batch(entities) {
-    if (!this.collection.embed_model) {
-      throw new Error("No embed_model found in collection for embedding");
-    }
-    await Promise.all(entities.map((e) => e.get_embed_input()));
-    const embeddings = await this.collection.embed_model.embed_batch(entities);
-    embeddings.forEach((emb, i) => {
-      const entity = entities[i];
-      entity.vec = emb.vec;
-      if (emb.tokens !== void 0) entity.tokens = emb.tokens;
-    });
-  }
-  /**
-   * Process a queue of entities waiting to be embedded.
-   * Prevents multiple concurrent runs by using `_is_processing_embed_queue`.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async process_embed_queue() {
-    if (this._is_processing_embed_queue) {
-      console.log("process_embed_queue is already running, skipping concurrent call.");
-      return;
-    }
-    this._is_processing_embed_queue = true;
-    try {
-      const embed_queue = this.collection.embed_queue;
-      this._reset_embed_queue_stats();
-      if (this.collection.embed_model_key === "None") {
-        console.log(`Smart Connections: No active embedding model for ${this.collection.collection_key}, skipping embedding`);
-        return;
-      }
-      if (!this.collection.embed_model) {
-        console.log(`Smart Connections: No active embedding model for ${this.collection.collection_key}, skipping embedding`);
-        return;
-      }
-      const datetime_start = /* @__PURE__ */ new Date();
-      if (!embed_queue.length) {
-        console.log(`Smart Connections: No items in ${this.collection.collection_key} embed queue`);
-        return;
-      }
-      console.log(`Time spent getting embed queue: ${(/* @__PURE__ */ new Date()).getTime() - datetime_start.getTime()}ms`);
-      console.log(`Processing ${this.collection.collection_key} embed queue: ${embed_queue.length} items`);
-      for (let i = 0; i < embed_queue.length; i += this.collection.embed_model.batch_size) {
-        if (this.is_queue_halted) {
-          this.is_queue_halted = false;
-          break;
-        }
-        const batch = embed_queue.slice(i, i + this.collection.embed_model.batch_size);
-        await Promise.all(batch.map((item) => item.get_embed_input()));
-        try {
-          const start_time = Date.now();
-          await this.embed_batch(batch);
-          this.total_time += Date.now() - start_time;
-        } catch (e) {
-          if (e && e.message && e.message.includes("API key not set")) {
-            this.halt_embed_queue_processing(`API key not set for ${this.collection.embed_model_key}
-Please set the API key in the settings.`);
-          }
-          console.error(e);
-          console.error(`Error processing ${this.collection.collection_key} embed queue: ` + JSON.stringify(e || {}, null, 2));
-        }
-        batch.forEach((item) => {
-          item.embed_hash = item.read_hash;
-          item._queue_save = true;
-        });
-        this.embedded_total += batch.length;
-        this.total_tokens += batch.reduce((acc, item) => acc + (item.tokens || 0), 0);
-        this._show_embed_progress_notice(embed_queue.length);
-        if (this.embedded_total - this.last_save_total > 1e3) {
-          this.last_save_total = this.embedded_total;
-          await this.collection.process_save_queue();
-          if (this.collection.block_collection) {
-            console.log(`Saving ${this.collection.block_collection.collection_key} block collection`);
-            await this.collection.block_collection.process_save_queue();
-          }
-        }
-      }
-      this._show_embed_completion_notice(embed_queue.length);
-      await this.collection.process_save_queue();
-      if (this.collection.block_collection) {
-        await this.collection.block_collection.process_save_queue();
-      }
-    } finally {
-      this._is_processing_embed_queue = false;
-    }
-  }
-  /**
-   * Displays the embedding progress notice.
-   * @private
-   * @returns {void}
-   */
-  _show_embed_progress_notice(embed_queue_length) {
-    if (this.embedded_total - this.last_notice_embedded_total < 100) return;
-    this.last_notice_embedded_total = this.embedded_total;
-    this.notices?.show("embedding_progress", {
-      progress: this.embedded_total,
-      total: embed_queue_length,
-      tokens_per_second: this._calculate_embed_tokens_per_second(),
-      model_name: this.collection.embed_model_key
-    });
-  }
-  /**
-   * Displays the embedding completion notice.
-   * @private
-   * @returns {void}
-   */
-  _show_embed_completion_notice() {
-    this.notices?.remove("embedding_progress");
-    this.notices?.show("embedding_complete", {
-      total_embeddings: this.embedded_total,
-      tokens_per_second: this._calculate_embed_tokens_per_second(),
-      model_name: this.collection.embed_model_key
-    });
-  }
-  /**
-   * Halts the embed queue processing.
-   * @param {string|null} msg - Optional message.
-   */
-  halt_embed_queue_processing(msg = null) {
-    this.is_queue_halted = true;
-    console.log("Embed queue processing halted");
-    this.notices?.remove("embedding_progress");
-    this.notices?.show("embedding_paused", {
-      progress: this.embedded_total,
-      total: this.collection._embed_queue.length,
-      tokens_per_second: this._calculate_embed_tokens_per_second(),
-      model_name: this.collection.embed_model_key
-    });
-  }
-  /**
-   * Resumes the embed queue processing after a delay.
-   * @param {number} [delay=0] - The delay in milliseconds before resuming.
-   * @returns {void}
-   */
-  resume_embed_queue_processing(delay = 0) {
-    console.log("resume_embed_queue_processing");
-    this.notices?.remove("embedding_paused");
-    setTimeout(() => {
-      this.embedded_total = 0;
-      this.process_embed_queue();
-    }, delay);
-  }
-  /**
-   * Calculates the number of tokens processed per second.
-   * @private
-   * @returns {number} Tokens per second.
-   */
-  _calculate_embed_tokens_per_second() {
-    const elapsed_time = this.total_time / 1e3;
-    return Math.round(this.total_tokens / (elapsed_time || 1));
-  }
-  /**
-   * Resets the statistics related to embed queue processing.
-   * @private
-   * @returns {void}
-   */
-  _reset_embed_queue_stats() {
-    this.collection._embed_queue = [];
-    this.embedded_total = 0;
-    this.is_queue_halted = false;
-    this.last_save_total = 0;
-    this.last_notice_embedded_total = 0;
-    this.total_tokens = 0;
-    this.total_time = 0;
-  }
-  get notices() {
-    return this.collection.notices;
-  }
-};
-var DefaultEntityVectorAdapter3 = class extends EntityVectorAdapter3 {
-  get data() {
-    return this.item.data;
-  }
-  /**
-   * Retrieve the current vector embedding for this entity.
-   * @async
-   * @returns {Promise<number[]|undefined>} The entity's vector or undefined if not set.
-   */
-  async get_vec() {
-    return this.vec;
-  }
-  /**
-   * Store/update the vector embedding for this entity.
-   * @async
-   * @param {number[]} vec - The vector to set.
-   * @returns {Promise<void>}
-   */
-  async set_vec(vec) {
-    this.vec = vec;
-  }
-  /**
-   * Delete/remove the vector embedding for this entity.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async delete_vec() {
-    if (this.item.data?.embeddings?.[this.item.embed_model_key]) {
-      delete this.item.data.embeddings[this.item.embed_model_key].vec;
-    }
-  }
-  // adds synchronous get/set for vec
-  get vec() {
-    return this.item.data?.embeddings?.[this.item.embed_model_key]?.vec;
-  }
-  set vec(vec) {
-    if (!this.item.data.embeddings) {
-      this.item.data.embeddings = {};
-    }
-    if (!this.item.data.embeddings[this.item.embed_model_key]) {
-      this.item.data.embeddings[this.item.embed_model_key] = {};
-    }
-    this.item.data.embeddings[this.item.embed_model_key].vec = vec;
-  }
-};
-
-// node_modules/smart-sources/node_modules/smart-entities/components/entity.js
-async function render5(entity, opts = {}) {
-  let markdown;
-  if (should_render_embed3(entity)) markdown = entity.embed_link;
-  else markdown = process_for_rendering3(await entity.read());
-  let frag;
-  if (entity.env.settings.smart_view_filter.render_markdown) frag = await this.render_markdown(markdown, entity);
-  else frag = this.create_doc_fragment(markdown);
-  return await post_process4.call(this, entity, frag, opts);
-}
-function process_for_rendering3(content) {
-  if (content.includes("```dataview")) content = content.replace(/```dataview/g, "```\\dataview");
-  if (content.includes("![[")) content = content.replace(/\!\[\[/g, "! [[");
-  return content;
-}
-async function post_process4(scope, frag, opts = {}) {
-  return frag;
-}
-function should_render_embed3(entity) {
-  if (!entity) return false;
-  if (entity.is_canvas || entity.is_excalidraw) return true;
-  return false;
-}
-
-// node_modules/smart-sources/node_modules/smart-entities/actions/find_connections.js
-async function find_connections4(params = {}) {
-  const filter_opts = this.prepare_find_connections_filter_opts(params);
-  const limit = params.filter?.limit || params.limit || this.env.settings.smart_view_filter?.results_limit || 10;
-  const cache_key = this.key + JSON.stringify(params);
-  if (!this.env.connections_cache) this.env.connections_cache = {};
-  if (!this.env.connections_cache[cache_key]) {
-    const connections = (await this.nearest(filter_opts)).sort(sort_by_score3).slice(0, limit);
-    this.connections_to_cache(cache_key, connections);
-  }
-  return this.connections_from_cache(cache_key);
-}
-
-// node_modules/smart-sources/node_modules/smart-entities/smart_entity.js
-var SmartEntity3 = class extends CollectionItem3 {
-  /**
-   * Creates an instance of SmartEntity.
-   * @constructor
-   * @param {Object} env - The environment instance.
-   * @param {Object} [opts={}] - Configuration options.
-   */
-  constructor(env, opts = {}) {
-    super(env, opts);
-    this.entity_adapter = new DefaultEntityVectorAdapter3(this);
-  }
-  /**
-   * Provides default values for a SmartEntity instance.
-   * @static
-   * @readonly
-   * @returns {Object} The default values.
-   */
-  static get defaults() {
-    return {
-      data: {
-        path: null,
-        last_embed: {
-          hash: null
-        },
-        embeddings: {}
-      }
-    };
-  }
-  get vector_adapter() {
-    if (!this._vector_adapter) {
-      this._vector_adapter = new this.collection.opts.vector_adapter.item(this);
-    }
-    return this._vector_adapter;
-  }
-  /**
-   * Initializes the SmartEntity instance.
-   * Checks if the entity has a vector and if it matches the model dimensions.
-   * If not, it queues an embed.
-   * Removes embeddings for inactive models.
-   * @returns {void}
-   */
-  init() {
-    super.init();
-    if (!this.vec) {
-      this.queue_embed();
-    } else if (this.vec.length !== this.embed_model.model_config.dims) {
-      this.vec = null;
-      this.queue_embed();
-    }
-    Object.entries(this.data.embeddings || {}).forEach(([model, embedding]) => {
-      if (model !== this.embed_model_key) {
-        this.data.embeddings[model] = null;
-        delete this.data.embeddings[model];
-      }
-    });
-  }
-  /**
-   * Queues the entity for embedding.
-   * @returns {void}
-   */
-  queue_embed() {
-    this._queue_embed = true;
-  }
-  /**
-   * Finds the nearest entities to this entity.
-   * @param {Object} [filter={}] - Optional filters to apply.
-   * @returns {Array<{item:Object, score:number}>} An array of result objects with score and item.
-   */
-  async nearest(filter = {}) {
-    return await this.collection.nearest_to(this, filter);
-  }
-  /**
-   * Prepares the input for embedding.
-   * @async
-   * @param {string} [content=null] - Optional content to use instead of calling subsequent read()
-   * @returns {Promise<void>} Should be overridden in child classes.
-   */
-  async get_embed_input(content = null) {
-  }
-  // override in child class
-  /**
-   * Retrieves the embed input, either from cache or by generating it.
-   * @readonly
-   * @returns {string|Promise<string>} The embed input string or a promise resolving to it.
-   */
-  get embed_input() {
-    return this._embed_input ? this._embed_input : this.get_embed_input();
-  }
-  /**
-   * Prepares filter options for finding connections based on parameters.
-   * @param {Object} [params={}] - Parameters for finding connections.
-   * @returns {Object} The prepared filter options.
-   */
-  prepare_find_connections_filter_opts(params = {}) {
-    const opts = {
-      ...this.env.settings.smart_view_filter || {},
-      ...params,
-      entity: this
-    };
-    if (opts.filter?.limit) delete opts.filter.limit;
-    if (opts.limit) delete opts.limit;
-    return opts;
-  }
-  /**
-   * Finds connections relevant to this entity based on provided parameters.
-   * @async
-   * @param {Object} [params={}] - Parameters for finding connections.
-   * @returns {Array<{item:Object, score:number}>} An array of result objects with score and item.
-   */
-  async find_connections(params = {}) {
-    return await this.actions.find_connections(params);
-  }
-  /**
-   * Retrieves connections from the cache based on the cache key.
-   * @param {string} cache_key - The cache key.
-   * @returns {Array<{item:Object, score:number}>} The cached connections.
-   */
-  connections_from_cache(cache_key) {
-    return this.env.connections_cache[cache_key];
-  }
-  /**
-   * Stores connections in the cache with the provided cache key.
-   * @param {string} cache_key - The cache key.
-   * @param {Array<{item:Object, score:number}>} connections - The connections to cache.
-   * @returns {void}
-   */
-  connections_to_cache(cache_key, connections) {
-    this.env.connections_cache[cache_key] = connections;
-  }
-  get read_hash() {
-    return this.data.last_read?.hash;
-  }
-  set read_hash(hash) {
-    if (!this.data.last_read) this.data.last_read = {};
-    this.data.last_read.hash = hash;
-  }
-  get embedding_data() {
-    if (!this.data.embeddings[this.embed_model_key]) {
-      this.data.embeddings[this.embed_model_key] = {};
-    }
-    return this.data.embeddings[this.embed_model_key];
-  }
-  get last_embed() {
-    if (!this.embedding_data.last_embed) {
-      this.embedding_data.last_embed = {};
-      if (this.data.last_embed) {
-        this.embedding_data.last_embed = this.data.last_embed;
-        delete this.data.last_embed;
-        this.queue_save();
-      }
-    }
-    return this.embedding_data.last_embed;
-  }
-  get embed_hash() {
-    return this.last_embed?.hash;
-  }
-  set embed_hash(hash) {
-    if (!this.embedding_data.last_embed) this.embedding_data.last_embed = {};
-    this.embedding_data.last_embed.hash = hash;
-  }
-  /**
-   * Gets the embed link for the entity.
-   * @readonly
-   * @returns {string} The embed link.
-   */
-  get embed_link() {
-    return `![[${this.path}]]`;
-  }
-  /**
-   * Gets the key of the embedding model.
-   * @readonly
-   * @returns {string} The embedding model key.
-   */
-  get embed_model_key() {
-    return this.collection.embed_model_key;
-  }
-  /**
-   * Gets the name of the entity, formatted based on settings.
-   * @readonly
-   * @returns {string} The entity name.
-   */
-  get name() {
-    return (!this.should_show_full_path ? this.path.split("/").pop() : this.path.split("/").join(" > ")).split("#").join(" > ").replace(".md", "");
-  }
-  /**
-   * Determines whether to show the full path of the entity.
-   * @readonly
-   * @returns {boolean} True if the full path should be shown, false otherwise.
-   */
-  get should_show_full_path() {
-    return this.env.settings.smart_view_filter?.show_full_path;
-  }
-  /**
-   * @deprecated Use embed_model instead.
-   * @readonly
-   * @returns {Object} The smart embedding model.
-   */
-  get smart_embed() {
-    return this.embed_model;
-  }
-  /**
-   * Gets the embedding model instance from the collection.
-   * @readonly
-   * @returns {Object} The embedding model instance.
-   */
-  get embed_model() {
-    return this.collection.embed_model;
-  }
-  /**
-   * Determines if the entity should be embedded.
-   * @readonly
-   * @returns {boolean} True if no vector is set, false otherwise.
-   */
-  get should_embed() {
-    return !this.vec && this.size > (this.settings?.min_chars || 300);
-  }
-  /**
-   * Sets the error for the embedding model.
-   * @param {string} error - The error message.
-   */
-  set error(error) {
-    this.data.embeddings[this.embed_model_key].error = error;
-  }
-  /**
-   * Gets the number of tokens associated with the entity's embedding.
-   * @readonly
-   * @returns {number|undefined} The number of tokens, or undefined if not set.
-   */
-  get tokens() {
-    return this.last_embed?.tokens;
-  }
-  /**
-   * Sets the number of tokens for the embedding.
-   * @param {number} tokens - The number of tokens.
-   */
-  set tokens(tokens) {
-    this.last_embed.tokens = tokens;
-  }
-  /**
-   * Gets the vector representation from the entity adapter.
-   * @readonly
-   * @returns {Array<number>|undefined} The vector or undefined if not set.
-   */
-  get vec() {
-    return this.entity_adapter.vec;
-  }
-  /**
-   * Sets the vector representation in the entity adapter.
-   * @param {Array<number>} vec - The vector to set.
-   */
-  set vec(vec) {
-    this.entity_adapter.vec = vec;
-    this._queue_embed = false;
-    this._embed_input = null;
-    this.queue_save();
-  }
-  /**
-   * Removes all embeddings from the entity.
-   * @returns {void}
-   */
-  remove_embeddings() {
-    this.data.embeddings = null;
-    this.queue_save();
-  }
-  /**
-   * Retrieves the key of the entity.
-   * @returns {string} The entity key.
-   */
-  get_key() {
-    return this.data.key || this.data.path;
-  }
-  /**
-   * Retrieves the path of the entity.
-   * @readonly
-   * @returns {string|null} The entity path.
-   */
-  get path() {
-    return this.data.path;
-  }
-  /**
-   * Gets the component responsible for rendering the entity.
-   * @readonly
-   * @returns {Function} The render function for the entity component.
-   */
-  get component() {
-    return render5;
-  }
-  get is_unembedded() {
-    if (!this.vec) return true;
-    if (!this.embed_hash || this.embed_hash !== this.read_hash) return true;
-    return false;
-  }
-  // COMPONENTS 2024-11-27
-  get connections_component() {
-    if (!this._connections_component) this._connections_component = this.components?.connections?.bind(this.smart_view);
-    return this._connections_component;
-  }
-  async render_connections(container, opts = {}) {
-    if (container) container.innerHTML = "Loading connections...";
-    const frag = await this.env.render_component("connections", this, opts);
-    if (container) {
-      container.innerHTML = "";
-      container.appendChild(frag);
-    }
-    return frag;
-  }
-};
-
-// node_modules/smart-sources/node_modules/smart-entities/smart_entities.js
-var SmartEntities3 = class extends Collection3 {
-  /**
-   * Creates an instance of SmartEntities.
-   * @constructor
-   * @param {Object} env - The environment instance.
-   * @param {Object} opts - Configuration options.
-   */
-  constructor(env, opts) {
-    super(env, opts);
-    this.entities_vector_adapter = new DefaultEntitiesVectorAdapter3(this);
-    this.model_instance_id = null;
-    this._embed_queue = [];
-  }
-  /**
-   * Initializes the SmartEntities instance by loading embeddings.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async init() {
-    await super.init();
-    await this.load_smart_embed();
-    if (!this.embed_model) {
-      console.log(`SmartEmbed not loaded for **${this.collection_key}**. Continuing without embedding capabilities.`);
-    }
-  }
-  /**
-   * Loads the smart embedding model.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async load_smart_embed() {
-    if (this.embed_model_key === "None") return;
-    if (!this.embed_model) return;
-    if (this.embed_model.is_loading) return console.log(`SmartEmbedModel already loading for ${this.embed_model_key}`);
-    if (this.embed_model.is_loaded) return console.log(`SmartEmbedModel already loaded for ${this.embed_model_key}`);
-    try {
-      console.log(`Loading SmartEmbedModel in ${this.collection_key}, current state: ${this.embed_model.state}`);
-      await this.embed_model.load();
-    } catch (e) {
-      console.error(`Error loading SmartEmbedModel for ${this.embed_model.model_key}`);
-      console.error(e);
-    }
-  }
-  /**
-   * Unloads the smart embedding model.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async unload() {
-    if (typeof this.embed_model?.unload === "function") {
-      this.embed_model.unload();
-      this.embed_model = null;
-    }
-    super.unload();
-  }
-  /**
-   * Gets the key of the embedding model.
-   * @readonly
-   * @returns {string} The embedding model key.
-   */
-  get embed_model_key() {
-    return this.embed_model?.model_key;
-  }
-  /**
-   * Gets or creates the container for smart embeddings in the DOM.
-   * @readonly
-   * @returns {HTMLElement|undefined} The container element or undefined if not available.
-   */
-  get smart_embed_container() {
-    if (!this.model_instance_id) return console.log("model_key not set");
-    const id = this.model_instance_id.replace(/[^a-zA-Z0-9]/g, "_");
-    if (!window.document) return console.log("window.document not available");
-    if (window.document.querySelector(`#${id}`)) return window.document.querySelector(`#${id}`);
-    const container = window.document.createElement("div");
-    container.id = id;
-    window.document.body.appendChild(container);
-    return container;
-  }
-  /**
-   * @deprecated Use embed_model instead.
-   * @readonly
-   * @returns {Object} The smart embedding model.
-   */
-  get smart_embed() {
-    return this.embed_model;
-  }
-  /**
-   * Gets the embedding model instance.
-   * @readonly
-   * @returns {Object|null} The embedding model instance or null if none.
-   */
-  get embed_model() {
-    if (!this.env._embed_model && this.env.opts.modules.smart_embed_model?.class) this.env._embed_model = new this.env.opts.modules.smart_embed_model.class({
-      settings: this.settings.embed_model,
-      adapters: this.env.opts.modules.smart_embed_model?.adapters,
-      re_render_settings: this.re_render_settings.bind(this),
-      reload_model: this.reload_embed_model.bind(this)
-    });
-    return this.env._embed_model;
-  }
-  set embed_model(embed_model) {
-    this.env._embed_model = embed_model;
-  }
-  reload_embed_model() {
-    console.log("reload_embed_model");
-    this.embed_model.unload();
-    this.env._embed_model = null;
-  }
-  re_render_settings() {
-    this.settings_container.innerHTML = "";
-    this.render_settings();
-  }
-  /**
-   * Finds the nearest entities to a given entity.
-   * @async
-   * @param {Object} entity - The reference entity.
-   * @param {Object} [filter={}] - Optional filters to apply.
-   * @returns {Promise<Array<{item:Object, score:number}>>} An array of result objects with score and item.
-   */
-  async nearest_to(entity, filter = {}) {
-    return await this.nearest(entity.vec, filter);
-  }
-  /**
-   * Finds the nearest entities to a vector using the default adapter.
-   * @async
-   * @param {Array<number>} vec - The vector to compare against.
-   * @param {Object} [filter={}] - Optional filters to apply.
-   * @returns {Promise<Array<{item:Object, score:number}>>} An array of result objects with score and item.
-   */
-  async nearest(vec, filter = {}) {
-    if (!vec) {
-      console.warn("nearest: no vec");
-      return [];
-    }
-    return await this.entities_vector_adapter.nearest(vec, filter);
-  }
-  /**
-   * Finds the furthest entities from a vector using the default adapter.
-   * @async
-   * @param {Array<number>} vec - The vector to compare against.
-   * @param {Object} [filter={}] - Optional filters to apply.
-   * @returns {Promise<Array<{item:Object, score:number}>>} An array of result objects with score and item.
-   */
-  async furthest(vec, filter = {}) {
-    if (!vec) return console.warn("furthest: no vec");
-    return await this.entities_vector_adapter.furthest(vec, filter);
-  }
-  /**
-   * Gets the file name based on collection key and embedding model key.
-   * @readonly
-   * @returns {string} The constructed file name.
-   */
-  get file_name() {
-    return this.collection_key + "-" + this.embed_model_key.split("/").pop();
-  }
-  /**
-   * Calculates the relevance of an item based on the search filter.
-   * @param {Object} item - The item to calculate relevance for.
-   * @param {Object} search_filter - The search filter containing keywords.
-   * @returns {number} The relevance score:
-   *                   1 if any keyword is found in the item's path,
-   *                   0 otherwise (default relevance for keyword in content).
-   */
-  calculate_relevance(item, search_filter) {
-    if (search_filter.keywords.some((keyword) => item.path?.includes(keyword))) return 1;
-    return 0;
-  }
-  /**
-   * Prepares the filter options by incorporating entity-based filters.
-   * @param {Object} [opts={}] - The filter options.
-   * @param {Object} [opts.entity] - The entity to base the filters on.
-   * @param {string|string[]} [opts.exclude_filter] - Keys or prefixes to exclude.
-   * @param {string|string[]} [opts.include_filter] - Keys or prefixes to include.
-   * @param {boolean} [opts.exclude_inlinks] - Whether to exclude inlinks of the entity.
-   * @param {boolean} [opts.exclude_outlinks] - Whether to exclude outlinks of the entity.
-   * @returns {Object} The modified filter options.
-   */
-  prepare_filter(opts = {}) {
-    const {
-      entity,
-      exclude_filter,
-      include_filter,
-      exclude_inlinks,
-      exclude_outlinks
-    } = opts;
-    if (entity) {
-      if (typeof opts.exclude_key_starts_with_any === "undefined") opts.exclude_key_starts_with_any = [];
-      if (opts.exclude_key_starts_with) {
-        opts.exclude_key_starts_with_any = [
-          opts.exclude_key_starts_with
-        ];
-        delete opts.exclude_key_starts_with;
-      }
-      opts.exclude_key_starts_with_any.push(entity.source_key || entity.key);
-      if (exclude_filter) {
-        if (typeof exclude_filter === "string") opts.exclude_key_starts_with_any.push(exclude_filter);
-        else if (Array.isArray(exclude_filter)) opts.exclude_key_starts_with_any.push(...exclude_filter);
-      }
-      if (include_filter) {
-        if (!Array.isArray(opts.key_starts_with_any)) opts.key_starts_with_any = [];
-        if (typeof include_filter === "string") opts.key_starts_with_any.push(include_filter);
-        else if (Array.isArray(include_filter)) opts.key_starts_with_any.push(...include_filter);
-      }
-      if (exclude_inlinks && entity?.inlinks?.length) {
-        if (!Array.isArray(opts.exclude_key_starts_with_any)) opts.exclude_key_starts_with_any = [];
-        opts.exclude_key_starts_with_any.push(...entity.inlinks);
-      }
-      if (exclude_outlinks && entity?.outlinks?.length) {
-        if (!Array.isArray(opts.exclude_key_starts_with_any)) opts.exclude_key_starts_with_any = [];
-        opts.exclude_key_starts_with_any.push(...entity.outlinks);
-      }
-    }
-    return opts;
-  }
-  /**
-   * Looks up entities based on hypothetical content.
-   * @async
-   * @param {Object} [params={}] - The parameters for the lookup.
-   * @param {Array<string>} [params.hypotheticals=[]] - The hypothetical content to lookup.
-   * @param {Object} [params.filter] - The filter to use for the lookup.
-   * @param {number} [params.k] - Deprecated: Use `filter.limit` instead.
-   * @returns {Promise<Array<Result>|Object>} The lookup results or an error object.
-   */
-  async lookup(params = {}) {
-    const { hypotheticals = [] } = params;
-    if (!hypotheticals?.length) return { error: "hypotheticals is required" };
-    if (!this.embed_model) return { error: "Embedding search is not enabled." };
-    const hyp_vecs = await this.embed_model.embed_batch(hypotheticals.map((h) => ({ embed_input: h })));
-    const limit = params.filter?.limit || params.k || this.env.settings.lookup_k || 10;
-    if (params.filter?.limit) delete params.filter.limit;
-    const filter = {
-      ...this.env.chats?.current?.scope || {},
-      ...params.filter || {}
-    };
-    const results = await hyp_vecs.reduce(async (acc_promise, embedding, i) => {
-      const acc = await acc_promise;
-      const results2 = await this.nearest(embedding.vec, filter);
-      results2.forEach((result) => {
-        if (!acc[result.item.path] || result.score > acc[result.item.path].score) {
-          acc[result.item.path] = {
-            key: result.item.key,
-            score: result.score,
-            item: result.item,
-            hypothetical_i: i
-          };
-        } else {
-          result.score = acc[result.item.path].score;
-        }
-      });
-      return acc;
-    }, Promise.resolve({}));
-    console.log(results);
-    const top_k = Object.values(results).sort(sort_by_score3).slice(0, limit);
-    console.log(`Found and returned ${top_k.length} ${this.collection_key}.`);
-    return top_k;
-  }
-  /**
-   * Gets the configuration for settings.
-   * @readonly
-   * @returns {Object} The settings configuration.
-   */
-  get settings_config() {
-    return settings_config4;
-  }
-  async render_settings(container = this.settings_container, opts = {}) {
-    container = await this.render_collection_settings(container, opts);
-    const embed_model_settings_frag = await this.env.render_component("settings", this.embed_model, opts);
-    container.appendChild(embed_model_settings_frag);
-    return container;
-  }
-  /**
-   * Gets the notices from the environment.
-   * @readonly
-   * @returns {Object} The notices object.
-   */
-  get notices() {
-    return this.env.smart_connections_plugin?.notices || this.env.main?.notices;
-  }
-  /**
-   * Gets the embed queue containing items to be embedded.
-   * @readonly
-   * @returns {Array<Object>} The embed queue.
-   */
-  get embed_queue() {
-    if (!this._embed_queue?.length) this._embed_queue = Object.values(this.items).filter((item) => item._queue_embed && item.should_embed);
-    return this._embed_queue;
-  }
-  /**
-   * Processes the embed queue by delegating to the default vector adapter.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async process_embed_queue() {
-    await this.entities_vector_adapter.process_embed_queue();
-  }
-  /**
-   * Handles changes to the embedding model by reinitializing and processing the load queue.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async embed_model_changed() {
-    await this.unload();
-    await this.init();
-    this.render_settings();
-    await this.process_load_queue();
-  }
-  get connections_filter_config() {
-    return connections_filter_config3;
-  }
-};
-var settings_config4 = {
-  "min_chars": {
-    name: "Minimum length",
-    type: "number",
-    description: "Minimum length of entity to embed (in characters).",
-    placeholder: "Enter number ex. 300",
-    default: 300
-  }
-};
-var connections_filter_config3 = {
-  "smart_view_filter.show_full_path": {
-    "name": "Show Full Path",
-    "type": "toggle",
-    "description": "Show full path in view.",
-    "callback": "re_render"
-  },
-  "smart_view_filter.render_markdown": {
-    "name": "Render Markdown",
-    "type": "toggle",
-    "description": "Render markdown in results.",
-    "callback": "re_render"
-  },
-  "smart_view_filter.results_limit": {
-    "name": "Results Limit",
-    "type": "number",
-    "description": "Limit the number of results.",
-    "default": 20,
-    "callback": "re_render"
-  },
-  "smart_view_filter.exclude_inlinks": {
-    "name": "Exclude Inlinks",
-    "type": "toggle",
-    "description": "Exclude inlinks.",
-    "callback": "re_render_settings"
-  },
-  "smart_view_filter.exclude_outlinks": {
-    "name": "Exclude Outlinks",
-    "type": "toggle",
-    "description": "Exclude outlinks.",
-    "callback": "re_render_settings"
-  },
-  "smart_view_filter.include_filter": {
-    "name": "Include Filter",
-    "type": "text",
-    "description": "Require that results match this value.",
-    "callback": "re_render"
-  },
-  "smart_view_filter.exclude_filter": {
-    "name": "Exclude Filter",
-    "type": "text",
-    "description": "Exclude results that match this value.",
-    "callback": "re_render"
-  }
-};
-
-// node_modules/smart-sources/components/source.js
-async function render6(source, opts = {}) {
-  let markdown;
-  if (should_render_embed3(source)) markdown = source.embed_link;
-  else markdown = process_for_rendering3(await source.read());
-  let frag;
-  if (source.env.settings.smart_view_filter.render_markdown) frag = await this.render_markdown(markdown, source);
-  else frag = this.create_doc_fragment(`<span>${markdown}</span>`);
-  return await post_process4.call(this, source, frag, opts);
-}
-
-// node_modules/smart-sources/actions/find_connections.js
-async function find_connections5(params = {}) {
-  let connections;
-  if (this.block_collection.settings.embed_blocks && params.exclude_source_connections) connections = [];
-  else connections = await find_connections4.call(this, params);
-  const filter_opts = this.prepare_find_connections_filter_opts(params);
-  const limit = params.filter?.limit || params.limit || this.env.settings.smart_view_filter?.results_limit || 20;
-  if (params.filter?.limit) delete params.filter.limit;
-  if (params.limit) delete params.limit;
-  if (!params.exclude_blocks_from_source_connections) {
-    const cache_key = this.key + JSON.stringify(params) + "_blocks";
-    if (!this.env.connections_cache) this.env.connections_cache = {};
-    if (!this.env.connections_cache[cache_key]) {
-      const nearest = (await this.env.smart_blocks.nearest(this.vec, filter_opts)).sort(sort_by_score3).slice(0, limit);
-      this.connections_to_cache(cache_key, nearest);
-    }
-    connections = [
-      ...connections,
-      ...this.connections_from_cache(cache_key)
-    ].sort(sort_by_score3).slice(0, limit);
-  }
-  return connections;
-}
-
-// node_modules/smart-sources/smart_source.js
-var SmartSource2 = class extends SmartEntity3 {
-  /**
-   * Provides default values for a SmartSource instance.
-   * @static
-   * @readonly
-   * @returns {Object} The default values.
-   */
-  static get defaults() {
-    return {
-      data: {
-        last_read: {
-          hash: null,
-          mtime: 0
-        },
-        embeddings: {}
-      },
-      _embed_input: null,
-      // Stored temporarily
-      _queue_load: true
-    };
-  }
-  /**
-   * Initializes the SmartSource instance by queuing an import if blocks are missing.
-   * @returns {void}
-   */
-  init() {
-    super.init();
-    if (!this.data.blocks) this.queue_import();
-  }
-  /**
-   * Queues the SmartSource for import.
-   * @returns {void}
-   */
-  queue_import() {
-    this._queue_import = true;
-  }
-  /**
-   * Imports the SmartSource by checking for updates and parsing content.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async import() {
-    this._queue_import = false;
-    try {
-      await this.source_adapter.import();
-    } catch (err) {
-      if (err.code === "ENOENT") {
-        console.log(`Smart Connections: Deleting ${this.path} data because it no longer exists on disk`);
-        this.delete();
-      } else {
-        console.warn("Smart Connections: Error during import: re-queueing import", err);
-        this.queue_import();
-      }
-    }
-  }
-  async parse_content(content = null) {
-    if (this.block_collection && typeof this.block_collection.import_source === "function") {
-      await this.block_collection.import_source(this, content);
-    }
-    const parse_fns = this.env?.opts?.collections?.smart_sources?.content_parsers || [];
-    for (const fn of parse_fns) {
-      await fn(this, content);
-    }
-    if (this.data.last_import?.hash === this.data.last_read?.hash) {
-      if (this.data.blocks) return;
-    }
-  }
-  /**
-   * Finds connections relevant to this SmartSource based on provided parameters.
-   * @async
-   * @param {Object} [params={}] - Parameters for finding connections.
-   * @param {boolean} [params.exclude_source_connections=false] - Whether to exclude source connections.
-   * @param {boolean} [params.exclude_blocks_from_source_connections=false] - Whether to exclude block connections from source connections.
-   * @returns {Array<SmartSource>} An array of relevant SmartSource entities.
-   */
-  async find_connections(params = {}) {
-    return await this.actions.find_connections(params);
-  }
-  /**
-   * Prepares the embed input for the SmartSource by reading content and applying exclusions.
-   * @async
-   * @returns {Promise<string|false>} The embed input string or `false` if already embedded.
-   */
-  async get_embed_input(content = null) {
-    if (typeof this._embed_input === "string" && this._embed_input.length) return this._embed_input;
-    if (!content) content = await this.read();
-    if (this.excluded_lines.length) {
-      const content_lines = content.split("\n");
-      this.excluded_lines.forEach((lines) => {
-        const { start, end } = lines;
-        for (let i = start; i <= end; i++) {
-          content_lines[i] = "";
-        }
-      });
-      content = content_lines.filter((line) => line.length).join("\n");
-    }
-    const breadcrumbs = this.path.split("/").join(" > ").replace(".md", "");
-    const max_tokens = this.collection.embed_model.model_config.max_tokens || 500;
-    this._embed_input = `${breadcrumbs}:
-${content}`.substring(0, max_tokens * 4);
-    return this._embed_input;
-  }
-  /**
-   * Opens the SmartSource note in the SmartConnections plugin.
-   * @returns {void}
-   */
-  open() {
-    this.env.smart_connections_plugin.open_note(this.path);
-  }
-  /**
-   * Retrieves the block associated with a specific line number.
-   * @param {number} line - The line number to search for.
-   * @returns {SmartBlock|null} The corresponding SmartBlock or `null` if not found.
-   */
-  get_block_by_line(line) {
-    return Object.entries(this.data.blocks || {}).reduce((acc, [sub_key, range]) => {
-      if (acc) return acc;
-      if (range[0] <= line && range[1] >= line) {
-        const block = this.block_collection.get(this.key + sub_key);
-        if (block?.vec) return block;
-      }
-      return acc;
-    }, null);
-  }
-  /**
-   * Checks if the source file exists in the file system.
-   * @async
-   * @returns {Promise<boolean>} A promise that resolves to `true` if the file exists, `false` otherwise.
-   */
-  async has_source_file() {
-    return await this.fs.exists(this.path);
-  }
-  // CRUD
-  /**
-   * FILTER/SEARCH METHODS
-   */
-  /**
-   * Searches for keywords within the entity's data and content.
-   * @async
-   * @param {Object} search_filter - The search filter object.
-   * @param {string[]} search_filter.keywords - An array of keywords to search for.
-   * @param {string} [search_filter.type='any'] - The type of search to perform. 'any' counts all matching keywords, 'all' counts only if all keywords match.
-   * @returns {Promise<number>} A promise that resolves to the number of matching keywords.
-   */
-  async search(search_filter = {}) {
-    const { keywords, type = "any", limit } = search_filter;
-    if (!keywords || !Array.isArray(keywords)) {
-      console.warn("Entity.search: keywords not set or is not an array");
-      return 0;
-    }
-    if (limit && this.collection.search_results_ct >= limit) return 0;
-    const lowercased_keywords = keywords.map((keyword) => keyword.toLowerCase());
-    const content = await this.read();
-    const lowercased_content = content.toLowerCase();
-    const lowercased_path = this.path.toLowerCase();
-    const matching_keywords = lowercased_keywords.filter(
-      (keyword) => lowercased_path.includes(keyword) || lowercased_content.includes(keyword)
-    );
-    if (type === "all") {
-      return matching_keywords.length === lowercased_keywords.length ? matching_keywords.length : 0;
-    } else {
-      return matching_keywords.length;
-    }
-  }
-  /**
-   * ADAPTER METHODS
-   */
-  /**
-   * Appends content to the end of the source file.
-   * @async
-   * @param {string} content - The content to append to the file.
-   * @returns {Promise<void>} A promise that resolves when the operation is complete.
-   */
-  async append(content) {
-    await this.source_adapter.append(content);
-    await this.import();
-  }
-  /**
-   * Updates the entire content of the source file.
-   * @async
-   * @param {string} full_content - The new content to write to the file.
-   * @param {Object} [opts={}] - Additional options for the update.
-   * @returns {Promise<void>} A promise that resolves when the operation is complete.
-   */
-  async update(full_content, opts = {}) {
-    try {
-      await this.source_adapter.update(full_content, opts);
-      await this.import();
-    } catch (error) {
-      console.error("Error during update:", error);
-      throw error;
-    }
-  }
-  /**
-   * Reads the entire content of the source file.
-   * @async
-   * @param {Object} [opts={}] - Additional options for reading.
-   * @returns {Promise<string>} A promise that resolves with the content of the file.
-   */
-  async read(opts = {}) {
-    try {
-      const content = await this.source_adapter.read(opts);
-      return content;
-    } catch (error) {
-      console.error("Error during read:", error);
-      throw error;
-    }
-  }
-  /**
-   * Removes the source file from the file system and deletes the entity.
-   * This is different from `delete()` because it also removes the source file.
-   * @async
-   * @returns {Promise<void>} A promise that resolves when the operation is complete.
-   */
-  async remove() {
-    try {
-      await this.source_adapter.remove();
-    } catch (error) {
-      console.error("Error during remove:", error);
-      throw error;
-    }
-  }
-  /**
-   * Moves the current source to a new location.
-   * Handles the destination as a string (new path) or entity (block or source).
-   *
-   * @async
-   * @param {string|Object|SmartEntity} entity_ref - The destination path or entity to move to.
-   * @throws {Error} If the entity reference is invalid.
-   * @returns {Promise<void>} A promise that resolves when the move operation is complete.
-   */
-  async move_to(entity_ref) {
-    try {
-      await this.source_adapter.move_to(entity_ref);
-    } catch (error) {
-      console.error("error_during_move:", error);
-      throw error;
-    }
-  }
-  /**
-   * Merges the given content into the current source.
-   * Parses the content into blocks and either appends to existing blocks, replaces blocks, or replaces all content.
-   *
-   * @async
-   * @param {string} content - The content to merge into the current source.
-   * @param {Object} [opts={}] - Options object.
-   * @param {string} [opts.mode='append'] - The merge mode: 'append', 'replace_blocks', or 'replace_all'.
-   * @returns {Promise<void>}
-   */
-  async merge(content, opts = {}) {
-    try {
-      await this.source_adapter.merge(content, opts);
-      await this.import();
-    } catch (error) {
-      console.error("Error during merge:", error);
-      throw error;
-    }
-  }
-  /**
-   * Handles errors during the load process.
-   * @param {Error} err - The error encountered during load.
-   * @returns {void}
-   */
-  on_load_error(err) {
-    super.on_load_error(err);
-    if (err.code === "ENOENT") {
-      this._queue_load = false;
-      this.queue_import();
-    }
-  }
-  // GETTERS
-  /**
-   * Retrieves the block collection associated with SmartSources.
-   * @readonly
-   * @returns {SmartBlocks} The block collection instance.
-   */
-  get block_collection() {
-    return this.env.smart_blocks;
-  }
-  /**
-   * Retrieves the vector representations of all blocks within the SmartSource.
-   * @readonly
-   * @returns {Array<Array<number>>} An array of vectors.
-   */
-  get block_vecs() {
-    return this.blocks.map((block) => block.vec).filter((vec) => vec);
-  }
-  /**
-   * Retrieves all blocks associated with the SmartSource.
-   * @readonly
-   * @returns {Array<SmartBlock>} An array of SmartBlock instances.
-   * @description
-   * Uses block refs (Fastest) to get blocks without iterating over all blocks
-   */
-  get blocks() {
-    if (this.data.blocks) return this.block_collection.get_many(Object.keys(this.data.blocks).map((key) => this.key + key));
-    return [];
-  }
-  /**
-   * Determines if the SmartSource is excluded from processing.
-   * @readonly
-   * @returns {boolean} `true` if excluded, `false` otherwise.
-   */
-  get excluded() {
-    return this.fs.is_excluded(this.path);
-  }
-  /**
-   * Retrieves the lines excluded from embedding.
-   * @readonly
-   * @returns {Array<Object>} An array of objects with `start` and `end` line numbers.
-   */
-  get excluded_lines() {
-    return this.blocks.filter((block) => block.excluded).map((block) => block.lines);
-  }
-  /**
-   * Retrieves the file system instance from the SmartSource's collection.
-   * @readonly
-   * @returns {SmartFS} The file system instance.
-   */
-  get fs() {
-    return this.collection.fs;
-  }
-  /**
-   * Retrieves the file object associated with the SmartSource.
-   * @readonly
-   * @returns {Object} The file object.
-   */
-  get file() {
-    return this.fs.files[this.path];
-  }
-  /**
-   * Retrieves the file name of the SmartSource.
-   * @readonly
-   * @returns {string} The file name.
-   */
-  get file_name() {
-    return this.path.split("/").pop();
-  }
-  /**
-   * Retrieves the file path of the SmartSource.
-   * @readonly
-   * @returns {string} The file path.
-   */
-  get file_path() {
-    return this.path;
-  }
-  /**
-   * Retrieves the file type based on the file extension.
-   * @readonly
-   * @returns {string} The file type in lowercase.
-   */
-  get file_type() {
-    if (!this._ext) {
-      const pcs = this.data.path?.split(".");
-      pcs.shift();
-      while (pcs.length) {
-        const ext = pcs.join(".").toLowerCase();
-        if (this.source_adapters[ext]) return ext;
-        pcs.shift();
-      }
-      this._ext = this.data.path?.split(".").pop() || "md";
-    }
-    return this._ext;
-  }
-  /**
-   * Retrieves the modification time of the SmartSource.
-   * @readonly
-   * @returns {number} The modification time.
-   */
-  get mtime() {
-    return this.file?.stat?.mtime || 0;
-  }
-  /**
-   * Retrieves the size of the SmartSource.
-   * @readonly
-   * @returns {number} The size.
-   */
-  get size() {
-    return this.file?.stat?.size || 0;
-  }
-  /**
-   * Retrieves the last import stat of the SmartSource.
-   * @readonly
-   * @returns {Object} The last import stat.
-   */
-  get last_import() {
-    return this.data?.last_import;
-  }
-  /**
-   * Retrieves the last import modification time of the SmartSource.
-   * @readonly
-   * @returns {number} The last import modification time.
-   */
-  get last_import_mtime() {
-    return this.last_import?.mtime || 0;
-  }
-  /**
-   * Retrieves the last import size of the SmartSource.
-   * @readonly
-   * @returns {number} The last import size.
-   */
-  get last_import_size() {
-    return this.last_import?.size || 0;
-  }
-  /**
-   * Retrieves the paths of inlinks to this SmartSource.
-   * @readonly
-   * @returns {Array<string>} An array of inlink paths.
-   */
-  get inlinks() {
-    return Object.keys(this.collection.links?.[this.path] || {});
-  }
-  /**
-   * Determines if the SmartSource is a canvas file.
-   * @readonly
-   * @returns {boolean} `true` if the file is a canvas, `false` otherwise.
-   */
-  get is_canvas() {
-    return this.path.endsWith("canvas");
-  }
-  /**
-   * Determines if the SmartSource is an Excalidraw file.
-   * @readonly
-   * @returns {boolean} `true` if the file is Excalidraw, `false` otherwise.
-   */
-  get is_excalidraw() {
-    return this.path.endsWith("excalidraw.md");
-  }
-  /**
-   * Determines if the SmartSource is gone (i.e., the file no longer exists).
-   * @readonly
-   * @returns {boolean} `true` if gone, `false` otherwise.
-   */
-  get is_gone() {
-    return !this.file;
-  }
-  /**
-   * Retrieves the last read hash of the SmartSource.
-   * @readonly
-   * @returns {string|undefined} The last read hash or `undefined` if not set.
-   */
-  get last_read() {
-    return this.data.last_read;
-  }
-  get metadata() {
-    return this.data.metadata;
-  }
-  /**
-   * Retrieves the display name of the SmartSource.
-   * @readonly
-   * @returns {string} The display name.
-   */
-  get name() {
-    if (this.should_show_full_path) return this.path.split("/").join(" > ").replace(".md", "");
-    return this.path.split("/").pop().replace(".md", "");
-  }
-  get outdated() {
-    return this.source_adapter.outdated;
-  }
-  /**
-   * Retrieves the outlink paths from the SmartSource.
-   * @readonly
-   * @returns {Array<string>} An array of outlink paths.
-   */
-  get outlinks() {
-    return (this.data.outlinks || []).map((link) => {
-      const link_ref = link?.target || link;
-      if (link_ref.startsWith("http")) return null;
-      const link_path = this.fs.get_link_target_path(link_ref, this.file_path);
-      return link_path;
-    }).filter((link_path) => link_path);
-  }
-  get path() {
-    return this.data.path || this.data.key;
-  }
-  get should_embed() {
-    return !this.vec || !this.embed_hash || this.embed_hash !== this.read_hash;
-  }
-  get source_adapters() {
-    return this.collection.source_adapters;
-  }
-  get source_adapter() {
-    if (this._source_adapter) return this._source_adapter;
-    if (this.source_adapters[this.file_type]) this._source_adapter = new this.source_adapters[this.file_type](this);
-    else {
-      console.log("No source adapter found for", this.file_type, this);
-    }
-    return this._source_adapter;
-  }
-  // COMPONENTS
-  /**
-   * Retrieves the component responsible for rendering the SmartSource.
-   * @readonly
-   * @returns {Function} The render function for the source component.
-   */
-  get component() {
-    return render6;
-  }
-  // Currently unused, but useful for later
-  /**
-   * Calculates the mean vector of all blocks within the SmartSource.
-   * @readonly
-   * @returns {Array<number>|null} The mean vector or `null` if no vectors are present.
-   */
-  get mean_block_vec() {
-    return this._mean_block_vec ? this._mean_block_vec : this._mean_block_vec = this.block_vecs.reduce((acc, vec) => acc.map((val, i) => val + vec[i]), Array(384).fill(0)).map((val) => val / this.block_vecs.length);
-  }
-  /**
-   * Calculates the median vector of all blocks within the SmartSource.
-   * @readonly
-   * @returns {Array<number>|null} The median vector or `null` if no vectors are present.
-   */
-  get median_block_vec() {
-    if (this._median_block_vec) return this._median_block_vec;
-    if (!this.block_vecs.length) return null;
-    const vec_length = this.block_vecs[0].length;
-    this._median_block_vec = new Array(vec_length);
-    const mid = Math.floor(this.block_vecs.length / 2);
-    for (let i = 0; i < vec_length; i++) {
-      const values = this.block_vecs.map((vec) => vec[i]).sort((a, b) => a - b);
-      this._median_block_vec[i] = this.block_vecs.length % 2 !== 0 ? values[mid] : (values[mid - 1] + values[mid]) / 2;
-    }
-    return this._median_block_vec;
-  }
-  // DEPRECATED methods
-  /**
-   * @async
-   * @deprecated Use `read` instead.
-   * @returns {Promise<string>} A promise that resolves with the content of the file.
-   */
-  async _read() {
-    return await this.source_adapter._read();
-  }
-  /**
-   * @async
-   * @deprecated Use `remove` instead.
-   * @returns {Promise<void>} A promise that resolves when the entity is destroyed.
-   */
-  async destroy() {
-    await this.remove();
-  }
-  /**
-   * @async
-   * @deprecated Use `update` instead.
-   * @param {string} content - The content to update.
-   * @returns {Promise<void>}
-   */
-  async _update(content) {
-    await this.source_adapter.update(content);
-  }
-  /**
-   * @deprecated Use `source` instead.
-   * @readonly
-   * @returns {SmartSource} The associated SmartSource instance.
-   */
-  get t_file() {
-    return this.fs.files[this.path];
-  }
-};
-var smart_source_default2 = {
-  class: SmartSource2,
-  actions: {
-    find_connections: find_connections5
-  }
-};
-
-// node_modules/smart-sources/smart_sources.js
-var SmartSources2 = class extends SmartEntities3 {
-  /**
-   * Creates an instance of SmartSources.
-   * @constructor
-   * @param {Object} env - The environment instance.
-   * @param {Object} [opts={}] - Configuration options.
-   */
-  constructor(env, opts = {}) {
-    super(env, opts);
-    this.search_results_ct = 0;
-    this._excluded_headings = null;
-  }
-  /**
-   * Initializes the SmartSources instance by performing an initial scan of sources.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async init() {
-    await super.init();
-    this.notices?.show("initial_scan", { collection_key: this.collection_key });
-    await this.init_items();
-    this.notices?.remove("initial_scan");
-    this.notices?.show("done_initial_scan", { collection_key: this.collection_key });
-  }
-  /**
-   * Initializes items by setting up the file system and loading sources.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async init_items() {
-    this._fs = null;
-    await this.fs.init();
-    Object.values(this.fs.files).filter((file) => this.source_adapters[file.extension]).forEach((file) => this.init_file_path(file.path));
-    this.notices?.remove("initial_scan");
-    this.notices?.show("done_initial_scan", { collection_key: this.collection_key });
-  }
-  /**
-   * Initializes a file path by creating a new SmartSource instance.
-   * @param {string} file_path - The path of the file to initialize.
-   * @returns {SmartSource} The initialized SmartSource instance.
-   */
-  init_file_path(file_path) {
-    return this.items[file_path] = new this.item_type(this.env, { path: file_path });
-  }
-  /**
-   * Removes old data files by pruning sources and blocks.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async prune() {
-    await this.fs.refresh();
-    this.notices?.show("pruning_collection", { collection_key: this.collection_key });
-    const remove_sources = Object.values(this.items).filter((item) => {
-      if (item.is_gone) {
-        item.reason = "is_gone";
-        return true;
-      }
-      if (item.excluded) {
-        item.reason = "excluded";
-        return true;
-      }
-      if (!item.data.blocks) {
-        item.reason = "!data.blocks";
-        return true;
-      }
-      return false;
-    });
-    for (let i = 0; i < remove_sources.length; i++) {
-      const source = remove_sources[i];
-      console.log(source.reason);
-    }
-    this.notices?.remove("pruning sources");
-    this.notices?.show("done_pruning_collection", { collection_key: this.collection_key, count: remove_sources.length });
-    this.notices?.show("pruning_collection", { collection_key: this.block_collection.collection_key });
-    const remove_smart_blocks = Object.values(this.block_collection.items).filter((item) => {
-      if (!item.vec) return false;
-      if (item.is_gone) {
-        item.reason = "is_gone";
-        return true;
-      }
-      if (!item.should_embed) {
-        item.reason = "!should_embed";
-        return true;
-      }
-      return false;
-    });
-    for (let i = 0; i < remove_smart_blocks.length; i++) {
-      const item = remove_smart_blocks[i];
-      if (item.is_gone) item.delete();
-      else item.remove_embeddings();
-    }
-    this.notices?.remove("pruning_collection");
-    this.notices?.show("done_pruning_collection", { collection_key: this.block_collection.collection_key, count: remove_smart_blocks.length });
-    console.log(`Pruned ${remove_smart_blocks.length} blocks:
-${remove_smart_blocks.map((item) => `${item.reason} - ${item.key}`).join("\n")}`);
-    await this.process_save_queue(true);
-    const items_w_vec = Object.values(this.items).filter((item) => item.vec);
-    for (const item of items_w_vec) {
-      if (item.source_adapter.should_import) item.queue_import();
-      else if (item.should_embed) item.queue_embed();
-    }
-  }
-  /**
-   * Builds a map of links between sources.
-   * @returns {Object} An object mapping link paths to source keys.
-   */
-  build_links_map() {
-    const start_time = Date.now();
-    this.links = {};
-    for (const source of Object.values(this.items)) {
-      for (const link of source.outlinks) {
-        if (!this.links[link]) this.links[link] = {};
-        this.links[link][source.key] = true;
-      }
-    }
-    const end_time = Date.now();
-    console.log(`Time spent building links: ${end_time - start_time}ms`);
-    return this.links;
-  }
-  /**
-   * Creates a new source with the given key and content.
-   * @async
-   * @param {string} key - The key (path) of the new source.
-   * @param {string} content - The content to write to the new source.
-   * @returns {Promise<SmartSource>} The created SmartSource instance.
-   */
-  async create(key, content) {
-    await this.fs.write(key, content);
-    await this.fs.refresh();
-    const source = await this.create_or_update({ path: key });
-    await source.import();
-    return source;
-  }
-  /**
-   * Performs a lexical search for matching SmartSource content.
-   * @async
-   * @param {Object} search_filter - The filter criteria for the search.
-   * @param {string[]} search_filter.keywords - An array of keywords to search for.
-   * @param {number} [search_filter.limit] - The maximum number of results to return.
-   * @returns {Promise<Array<SmartSource>>} A promise that resolves to an array of matching SmartSource entities.
-   */
-  async search(search_filter = {}) {
-    const {
-      keywords,
-      limit,
-      ...filter_opts
-    } = search_filter;
-    if (!keywords) {
-      console.warn("search_filter.keywords not set");
-      return [];
-    }
-    this.search_results_ct = 0;
-    const initial_results = this.filter(filter_opts);
-    const search_results = [];
-    for (let i = 0; i < initial_results.length; i += 10) {
-      const batch = initial_results.slice(i, i + 10);
-      const batch_results = await Promise.all(
-        batch.map(async (item) => {
-          try {
-            const matches = await item.search(search_filter);
-            if (matches) {
-              this.search_results_ct++;
-              return { item, score: matches };
-            } else return null;
-          } catch (error) {
-            console.error(`Error searching item ${item.id || "unknown"}:`, error);
-            return null;
-          }
-        })
-      );
-      search_results.push(...batch_results.filter(Boolean));
-    }
-    return search_results.sort((a, b) => b.score - a.score).map((result) => result.item);
-  }
-  /**
-   * Looks up entities based on the provided parameters.
-   * @async
-   * @param {Object} [params={}] - Parameters for the lookup.
-   * @param {Object} [params.filter] - Filter options.
-   * @param {number} [params.k] - Deprecated. Use `params.filter.limit` instead.
-   * @returns {Promise<Array<SmartSource>>} A promise that resolves to an array of matching SmartSource entities.
-   */
-  async lookup(params = {}) {
-    const limit = params.filter?.limit || params.k || this.env.settings.lookup_k || 10;
-    if (params.filter?.limit) delete params.filter.limit;
-    let results = await super.lookup(params);
-    if (this.block_collection?.settings?.embed_blocks) {
-      console.log("lookup block_collection");
-      results = [
-        ...results,
-        ...await this.block_collection.lookup(params)
-      ].sort(sort_by_score3);
-    }
-    console.log(results);
-    return results.slice(0, limit);
-  }
-  /**
-   * Processes the load queue by loading items and optionally importing them.
-   * Called after a "re-load" from settings, or after environment init.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async process_load_queue() {
-    await super.process_load_queue();
-    if (this.collection_key === "smart_sources" && this.env.smart_blocks) {
-      Object.values(this.env.smart_blocks.items).forEach((item) => item.init());
-    }
-    if (this.block_collection) {
-      this.block_collection.loaded = Object.keys(this.block_collection.items).length;
-    }
-    if (!this.opts.prevent_import_on_load) {
-      await this.process_source_import_queue(this.opts);
-    }
-    this.build_links_map();
-  }
-  /**
-   * @method process_source_import_queue
-   * @description 
-   * Imports items (SmartSources or SmartBlocks) that have been flagged for import.
-   */
-  async process_source_import_queue(opts = {}) {
-    const { process_embed_queue = true } = opts;
-    const import_queue = Object.values(this.items).filter((item) => item._queue_import);
-    console.log("import_queue " + import_queue.length);
-    if (import_queue.length) {
-      const time_start = Date.now();
-      for (let i = 0; i < import_queue.length; i += 100) {
-        this.notices?.show("import_progress", {
-          progress: i,
-          total: import_queue.length
-        });
-        await Promise.all(import_queue.slice(i, i + 100).map((item) => item.import()));
-      }
-      this.notices?.remove("import_progress");
-      this.notices?.show("done_import", {
-        count: import_queue.length,
-        time_in_seconds: (Date.now() - time_start) / 1e3
-      });
-    } else {
-      this.notices?.show("no_import_queue");
-    }
-    this.build_links_map();
-    if (process_embed_queue) await this.process_embed_queue();
-    else console.log("skipping process_embed_queue");
-    await this.process_save_queue();
-    await this.block_collection?.process_save_queue();
-  }
-  /**
-   * Retrieves the source adapters based on the collection configuration.
-   * @readonly
-   * @returns {Object} An object mapping file extensions to adapter constructors.
-   */
-  get source_adapters() {
-    if (!this._source_adapters) {
-      const source_adapters = Object.values(this.env.opts.collections?.[this.collection_key]?.source_adapters || {});
-      const _source_adapters = source_adapters.reduce((acc, adapter) => {
-        adapter.extensions?.forEach((ext) => acc[ext] = adapter);
-        return acc;
-      }, {});
-      if (Object.keys(_source_adapters).length) {
-        this._source_adapters = _source_adapters;
-      }
-    }
-    return this._source_adapters;
-  }
-  reset_source_adapters() {
-    this._source_adapters = null;
-    this.render_settings();
-  }
-  /**
-   * Retrieves the notices system from the environment.
-   * @readonly
-   * @returns {Object} The notices object.
-   */
-  get notices() {
-    return this.env.smart_connections_plugin?.notices || this.env.main?.notices;
-  }
-  /**
-   * Retrieves the currently active note.
-   * @readonly
-   * @returns {SmartSource|null} The current SmartSource instance or null if none.
-   */
-  get current_note() {
-    return this.get(this.env.smart_connections_plugin.app.workspace.getActiveFile().path);
-  }
-  /**
-   * Retrieves the file system instance, initializing it if necessary.
-   * @readonly
-   * @returns {SmartFS} The file system instance.
-   */
-  get fs() {
-    if (!this._fs) {
-      this._fs = new this.env.opts.modules.smart_fs.class(this.env, {
-        adapter: this.env.opts.modules.smart_fs.adapter,
-        fs_path: this.env.opts.env_path || "",
-        exclude_patterns: this.excluded_patterns || []
-      });
-    }
-    return this._fs;
-  }
-  /**
-   * Retrieves the settings configuration by combining superclass settings and adapter-specific settings.
-   * @readonly
-   * @returns {Object} The settings configuration object.
-   */
-  get settings_config() {
-    const _settings_config = {
-      "load": {
-        "name": "Load",
-        "description": "Load sources.",
-        "type": "button",
-        "callback": "run_load",
-        "conditional": () => !this.loaded && this.collection_key === "smart_sources"
-      },
-      "re_import": {
-        "name": "Re-Import",
-        "description": "Re-import all sources.",
-        "type": "button",
-        "callback": "run_re_import",
-        "conditional": () => this.loaded && this.collection_key === "smart_sources"
-      },
-      "prune": {
-        "name": "Prune",
-        "description": "Remove sources and blocks that are no longer needed.",
-        "type": "button",
-        "callback": "run_prune",
-        "conditional": () => this.loaded && this.collection_key === "smart_sources"
-      },
-      "clear_all": {
-        "name": "Clear All",
-        "description": "Clear all data and reimport sources.",
-        "type": "button_with_confirm",
-        "callback": "run_clear_all",
-        "confirm": "Are you sure you want to clear all data and re-import?",
-        "conditional": () => this.loaded && this.collection_key === "smart_sources"
-      },
-      ...super.settings_config,
-      "enable_image_adapter": {
-        "name": "Image Adapter",
-        "description": "Enable image processing.",
-        "type": "toggle",
-        "default": false,
-        "callback": "reset_source_adapters"
-      },
-      "enable_pdf_adapter": {
-        "name": "PDF Adapter",
-        "description": "Enable PDF processing.",
-        "type": "toggle",
-        "default": false,
-        "callback": "reset_source_adapters"
-      },
-      ...this.process_settings_config(settings_config5),
-      ...Object.entries(this.source_adapters).reduce((acc, [file_extension, adapter_constructor]) => {
-        if (acc[adapter_constructor]) return acc;
-        const item = this.items[Object.keys(this.items).find((i) => i.endsWith(file_extension))];
-        const adapter_instance = new adapter_constructor(item || new this.item_type(this.env, {}));
-        if (adapter_instance.settings_config) {
-          acc[adapter_constructor.name] = {
-            type: "html",
-            value: `<h4>${adapter_constructor.name} adapter</h4>`
-          };
-          acc = { ...acc, ...adapter_instance.settings_config };
-        }
-        return acc;
-      }, {})
-    };
-    if (!["png", "jpg", "jpeg"].some((ext) => this.env.opts.collections?.[this.collection_key]?.source_adapters?.[ext])) delete _settings_config.enable_image_adapter;
-    if (!this.env.opts.collections?.[this.collection_key]?.source_adapters?.["pdf"]) delete _settings_config.enable_pdf_adapter;
-    return _settings_config;
-  }
-  /**
-   * Retrieves the block collection associated with SmartSources.
-   * @readonly
-   * @returns {SmartBlocks} The block collection instance.
-   */
-  get block_collection() {
-    return this.env.smart_blocks;
-  }
-  /**
-   * Retrieves the embed queue containing items and their blocks to be embedded.
-   * @readonly
-   * @returns {Array<Object>} The embed queue.
-   */
-  get embed_queue() {
-    if (!this._embed_queue.length) {
-      try {
-        const embed_blocks = this.block_collection.settings.embed_blocks;
-        this._embed_queue = Object.values(this.items).reduce((acc, item) => {
-          if (item._queue_embed && item.should_embed && item.is_unembedded) acc.push(item);
-          if (embed_blocks) item.blocks.forEach((block) => {
-            if (block._queue_embed && block.should_embed && block.is_unembedded) acc.push(block);
-          });
-          return acc;
-        }, []);
-      } catch (e) {
-        console.error(`Error getting embed queue:`, e);
-      }
-    }
-    return this._embed_queue;
-  }
-  /**
-   * Runs the load process by invoking superclass methods and rendering settings.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async run_data_load() {
-    await super.run_data_load();
-    this.block_collection.render_settings();
-    this.render_settings();
-  }
-  /**
-   * Runs the import process by queuing imports for changed items and processing the import queue.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async run_re_import() {
-    const start_time = Date.now();
-    Object.values(this.items).forEach((item) => {
-      if (item.data.last_import?.at) item.data.last_import.at = 0;
-      item.queue_import();
-      item.queue_embed();
-      item.blocks.forEach((block) => block.queue_embed());
-    });
-    await this.process_source_import_queue();
-    const end_time = Date.now();
-    console.log(`Time spent importing: ${end_time - start_time}ms`);
-    this.render_settings();
-    this.block_collection.render_settings();
-  }
-  /**
-   * Runs the prune process to clean up sources and blocks.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async run_prune() {
-    await this.prune();
-    await this.process_save_queue();
-    this.render_settings();
-    this.block_collection.render_settings();
-  }
-  /**
-   * Clears all data by removing sources and blocks, reinitializing the file system, and reimporting items.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async run_clear_all() {
-    this.notices?.show("clearing_all");
-    await this.data_fs.remove_dir(this.data_dir, true);
-    this.clear();
-    this.block_collection.clear();
-    this._fs = null;
-    await this.fs.init();
-    await this.init_items();
-    this._excluded_headings = null;
-    Object.values(this.items).forEach((item) => {
-      item.queue_import();
-      item.queue_embed();
-      item.loaded_at = Date.now() + 9999999999;
-    });
-    this.notices?.remove("clearing_all");
-    this.notices?.show("done_clearing_all");
-    await this.process_source_import_queue();
-  }
-  /**
-   * Retrieves patterns for excluding files/folders from processing.
-   * @readonly
-   * @returns {Array<string>}
-   */
-  get excluded_patterns() {
-    return [
-      ...this.file_exclusions?.map((file) => `${file}**`) || [],
-      ...(this.folder_exclusions || []).map((folder) => `${folder}**`),
-      this.env.env_data_dir + "/**"
-    ];
-  }
-  /**
-   * Retrieves the file exclusion patterns from settings.
-   * @readonly
-   * @returns {Array<string>} An array of file exclusion patterns.
-   */
-  get file_exclusions() {
-    return this.env.settings?.file_exclusions?.length ? this.env.settings.file_exclusions.split(",").map((file) => file.trim()) : [];
-  }
-  /**
-   * Retrieves the folder exclusion patterns from settings.
-   * @readonly
-   * @returns {Array<string>} An array of folder exclusion patterns.
-   */
-  get folder_exclusions() {
-    return this.env.settings?.folder_exclusions?.length ? this.env.settings.folder_exclusions.split(",").map((folder) => {
-      folder = folder.trim();
-      if (folder.slice(-1) !== "/") return folder + "/";
-      return folder;
-    }) : [];
-  }
-  /**
-   * Retrieves the excluded headings from settings.
-   * @readonly
-   * @returns {Array<string>} An array of excluded headings.
-   */
-  get excluded_headings() {
-    if (!this._excluded_headings) {
-      this._excluded_headings = this.env.settings?.excluded_headings?.length ? this.env.settings.excluded_headings.split(",").map((heading) => heading.trim()) : [];
-    }
-    return this._excluded_headings;
-  }
-  /**
-   * Retrieves the count of included files that are not excluded.
-   * @readonly
-   * @returns {number} The number of included files.
-   */
-  get included_files() {
-    const extensions = Object.keys(this.source_adapters);
-    return this.fs.file_paths.filter((file_path) => extensions.some((ext) => file_path.endsWith(ext)) && !this.fs.is_excluded(file_path)).length;
-  }
-  /**
-   * Retrieves the total number of files, regardless of exclusion.
-   * @readonly
-   * @returns {number} The total number of files.
-   */
-  get total_files() {
-    return this.fs.file_paths.filter((file) => file.endsWith(".md") || file.endsWith(".canvas")).length;
-  }
-};
-var settings_config5 = {
-  "smart_change.active": {
-    "name": "Smart Change (change safety)",
-    "description": "Enable Smart Changes (prevents accidental deletions/overwrites).",
-    "type": "toggle",
-    "default": true
-  }
-};
-
-// node_modules/smart-blocks/node_modules/smart-collections/utils/collection_instance_name_from.js
-function collection_instance_name_from4(class_name) {
-  if (class_name.endsWith("Item")) {
-    return class_name.replace(/Item$/, "").toLowerCase();
-  }
-  return class_name.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase().replace(/y$/, "ie") + "s";
-}
-
-// node_modules/smart-blocks/node_modules/smart-collections/utils/helpers.js
-function create_uid4(data) {
-  const str = JSON.stringify(data);
-  let hash = 0;
-  if (str.length === 0) return hash;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash = hash & hash;
-    if (hash < 0) hash = hash * -1;
-  }
-  return hash.toString() + str.length;
-}
-function deep_merge5(target, source) {
-  for (const key in source) {
-    if (source.hasOwnProperty(key)) {
-      if (is_obj(source[key]) && is_obj(target[key])) deep_merge5(target[key], source[key]);
-      else target[key] = source[key];
-    }
-  }
-  return target;
-  function is_obj(item) {
-    return item && typeof item === "object" && !Array.isArray(item);
-  }
-}
-
-// node_modules/smart-blocks/node_modules/smart-collections/utils/deep_equal.js
-function deep_equal4(obj1, obj2, visited = /* @__PURE__ */ new WeakMap()) {
-  if (obj1 === obj2) return true;
-  if (obj1 === null || obj2 === null || obj1 === void 0 || obj2 === void 0) return false;
-  if (typeof obj1 !== typeof obj2 || Array.isArray(obj1) !== Array.isArray(obj2)) return false;
-  if (Array.isArray(obj1)) {
-    if (obj1.length !== obj2.length) return false;
-    return obj1.every((item, index) => deep_equal4(item, obj2[index], visited));
-  }
-  if (typeof obj1 === "object") {
-    if (visited.has(obj1)) return visited.get(obj1) === obj2;
-    visited.set(obj1, obj2);
-    const keys1 = Object.keys(obj1);
-    const keys2 = Object.keys(obj2);
-    if (keys1.length !== keys2.length) return false;
-    return keys1.every((key) => deep_equal4(obj1[key], obj2[key], visited));
-  }
-  return obj1 === obj2;
-}
-
-// node_modules/smart-blocks/node_modules/smart-collections/item.js
-var CollectionItem4 = class _CollectionItem {
-  /**
-   * Default properties for an instance of CollectionItem.
-   * Override in subclasses to define different defaults.
-   * @returns {Object}
-   */
-  static get defaults() {
-    return {
-      data: {}
-    };
-  }
-  /**
-   * @param {Object} env - The environment/context.
-   * @param {Object|null} [data=null] - Initial data for the item.
-   */
-  constructor(env, data = null) {
-    this.env = env;
-    this.config = this.env?.config;
-    this.merge_defaults();
-    if (data) deep_merge5(this.data, data);
-    if (!this.data.class_name) this.data.class_name = this.constructor.name;
-  }
-  /**
-   * Loads an item from data and initializes it.
-   * @param {Object} env
-   * @param {Object} data
-   * @returns {CollectionItem}
-   */
-  static load(env, data) {
-    const item = new this(env, data);
-    item.init();
-    return item;
-  }
-  /**
-   * Merge default properties from the entire inheritance chain.
-   * @private
-   */
-  merge_defaults() {
-    let current_class = this.constructor;
-    while (current_class) {
-      for (let key in current_class.defaults) {
-        const default_val = current_class.defaults[key];
-        if (typeof default_val === "object") {
-          this[key] = { ...default_val, ...this[key] };
-        } else {
-          this[key] = this[key] === void 0 ? default_val : this[key];
-        }
-      }
-      current_class = Object.getPrototypeOf(current_class);
-    }
-  }
-  /**
-   * Generates or retrieves a unique key for the item.
-   * Key syntax supports:
-   * - `[i]` for sequences
-   * - `/` for super-sources (groups, directories, clusters)
-   * - `#` for sub-sources (blocks)
-   * @returns {string} The unique key
-   */
-  get_key() {
-    return create_uid4(this.data);
-  }
-  /**
-   * Updates the item data and returns true if changed.
-   * @param {Object} data
-   * @returns {boolean} True if data changed.
-   */
-  update_data(data) {
-    const sanitized_data = this.sanitize_data(data);
-    const current_data = { ...this.data };
-    deep_merge5(current_data, sanitized_data);
-    const changed = !deep_equal4(this.data, current_data);
-    if (!changed) return false;
-    this.data = current_data;
-    return true;
-  }
-  /**
-   * Sanitizes data for saving. Ensures no circular references.
-   * @param {*} data
-   * @returns {*} Sanitized data.
-   */
-  sanitize_data(data) {
-    if (data instanceof _CollectionItem) return data.ref;
-    if (Array.isArray(data)) return data.map((val) => this.sanitize_data(val));
-    if (typeof data === "object" && data !== null) {
-      return Object.keys(data).reduce((acc, key) => {
-        acc[key] = this.sanitize_data(data[key]);
-        return acc;
-      }, {});
-    }
-    return data;
-  }
-  /**
-   * Initializes the item. Override as needed.
-   * @param {Object} [input_data] - Additional data that might be provided on creation.
-   */
-  init(input_data) {
-  }
-  /**
-   * Queues this item for saving.
-   */
-  queue_save() {
-    this._queue_save = true;
-  }
-  /**
-   * Saves this item using its data adapter.
-   * @returns {Promise<void>}
-   */
-  async save() {
-    try {
-      await this.data_adapter.save_item(this);
-      this.init();
-    } catch (err) {
-      this._queue_save = true;
-      console.error(err, err.stack);
-    }
-  }
-  /**
-   * Queues this item for loading.
-   */
-  queue_load() {
-    this._queue_load = true;
-  }
-  /**
-   * Loads this item using its data adapter.
-   * @returns {Promise<void>}
-   */
-  async load() {
-    try {
-      await this.data_adapter.load_item(this);
-      this.init();
-    } catch (err) {
-      this._load_error = err;
-      this.on_load_error(err);
-    }
-  }
-  /**
-   * Handles load errors by re-queuing for load.
-   * Override if needed.
-   * @param {Error} err
-   */
-  on_load_error(err) {
-    this.queue_load();
-  }
-  /**
-   * Validates the item before saving. Checks for presence and validity of key.
-   * @returns {boolean}
-   */
-  validate_save() {
-    if (!this.key) return false;
-    if (this.key.trim() === "") return false;
-    if (this.key === "undefined") return false;
-    return true;
-  }
-  /**
-   * Marks this item as deleted. This does not immediately remove it from memory,
-   * but queues a save that will result in the item being removed from persistent storage.
-   */
-  delete() {
-    this.deleted = true;
-    this.queue_save();
-  }
-  /**
-   * Filters items in the collection based on provided options.
-   * functional filter (returns true or false) for filtering items in collection; called by collection class
-   * @param {Object} filter_opts - Filtering options.
-   * @param {string} [filter_opts.exclude_key] - A single key to exclude.
-   * @param {string[]} [filter_opts.exclude_keys] - An array of keys to exclude. If exclude_key is provided, it's added to this array.
-   * @param {string} [filter_opts.exclude_key_starts_with] - Exclude keys starting with this string.
-   * @param {string[]} [filter_opts.exclude_key_starts_with_any] - Exclude keys starting with any of these strings.
-   * @param {string} [filter_opts.exclude_key_includes] - Exclude keys that include this string.
-   * @param {string} [filter_opts.key_ends_with] - Include only keys ending with this string.
-   * @param {string} [filter_opts.key_starts_with] - Include only keys starting with this string.
-   * @param {string[]} [filter_opts.key_starts_with_any] - Include only keys starting with any of these strings.
-   * @param {string} [filter_opts.key_includes] - Include only keys that include this string.
-   * @returns {boolean} True if the item passes the filter, false otherwise.
-   */
-  filter(filter_opts = {}) {
-    const {
-      exclude_key,
-      exclude_keys = exclude_key ? [exclude_key] : [],
-      exclude_key_starts_with,
-      exclude_key_starts_with_any,
-      exclude_key_includes,
-      key_ends_with,
-      key_starts_with,
-      key_starts_with_any,
-      key_includes
-    } = filter_opts;
-    if (exclude_keys?.includes(this.key)) return false;
-    if (exclude_key_starts_with && this.key.startsWith(exclude_key_starts_with)) return false;
-    if (exclude_key_starts_with_any && exclude_key_starts_with_any.some((prefix) => this.key.startsWith(prefix))) return false;
-    if (exclude_key_includes && this.key.includes(exclude_key_includes)) return false;
-    if (key_ends_with && !this.key.endsWith(key_ends_with)) return false;
-    if (key_starts_with && !this.key.startsWith(key_starts_with)) return false;
-    if (key_starts_with_any && !key_starts_with_any.some((prefix) => this.key.startsWith(prefix))) return false;
-    if (key_includes && !this.key.includes(key_includes)) return false;
-    return true;
-  }
-  /**
-   * Parses item data for additional processing. Override as needed.
-   */
-  parse() {
-  }
-  /**
-   * Helper function to render a component in the item scope
-   * @param {*} component_key 
-   * @param {*} opts 
-   * @returns 
-   */
-  async render_component(component_key, opts = {}) {
-    return await this.env.render_component(component_key, this, opts);
-  }
-  get actions() {
-    if (!this._actions) {
-      this._actions = Object.entries(this.env.opts.items[this.item_type_key].actions || {}).reduce((acc, [k, v]) => {
-        acc[k] = v.bind(this);
-        return acc;
-      }, {});
-    }
-    return this._actions;
-  }
-  /**
-   * Derives the collection key from the class name.
-   * @returns {string}
-   */
-  static get collection_key() {
-    let name = this.name;
-    if (name.match(/\d$/)) name = name.slice(0, -1);
-    return collection_instance_name_from4(name);
-  }
-  /**
-   * @returns {string} The collection key for this item.
-   */
-  get collection_key() {
-    let name = this.constructor.name;
-    if (name.match(/\d$/)) name = name.slice(0, -1);
-    return collection_instance_name_from4(name);
-  }
-  /**
-   * Retrieves the parent collection from the environment.
-   * @returns {Collection}
-   */
-  get collection() {
-    return this.env[this.collection_key];
-  }
-  /**
-   * @returns {string} The item's key.
-   */
-  get key() {
-    return this.data?.key || this.get_key();
-  }
-  get item_type_key() {
-    let name = this.constructor.name;
-    if (name.match(/\d$/)) name = name.slice(0, -1);
-    return camel_case_to_snake_case5(name);
-  }
-  /**
-   * A simple reference object for this item.
-   * @returns {{collection_key: string, key: string}}
-   */
-  get ref() {
-    return { collection_key: this.collection_key, key: this.key };
-  }
-  /**
-   * @returns {Object} The data adapter for this item's collection.
-   */
-  get data_adapter() {
-    return this.collection.data_adapter;
-  }
-  /**
-   * @returns {Object} The filesystem adapter.
-   */
-  get data_fs() {
-    return this.collection.data_fs;
-  }
-  /**
-   * Access to collection-level settings.
-   * @returns {Object}
-   */
-  get settings() {
-    if (!this.env.settings[this.collection_key]) this.env.settings[this.collection_key] = {};
-    return this.env.settings[this.collection_key];
-  }
-  set settings(settings) {
-    this.env.settings[this.collection_key] = settings;
-    this.env.smart_settings.save();
-  }
-  /**
-   * Render this item into a container using the item's component.
-   * @deprecated 2024-12-02 Use explicit component pattern from environment
-   * @param {HTMLElement} container
-   * @param {Object} opts
-   * @returns {Promise<HTMLElement>}
-   */
-  async render_item(container, opts = {}) {
-    const frag = await this.component.call(this.smart_view, this, opts);
-    container.innerHTML = "";
-    container.appendChild(frag);
-    return container;
-  }
-  /**
-   * @deprecated use env.smart_view
-   * @returns {Object}
-   */
-  get smart_view() {
-    if (!this._smart_view) this._smart_view = this.env.init_module("smart_view");
-    return this._smart_view;
-  }
-  /**
-   * Override in child classes to set the component for this item
-   * @deprecated 2024-12-02
-   * @returns {Function} The render function for this component
-   */
-  get component() {
-    return item_component;
-  }
-};
-function camel_case_to_snake_case5(str) {
-  const result = str.replace(/([A-Z])/g, (match) => `_${match.toLowerCase()}`).replace(/^_/, "").replace(/2$/, "");
-  return result;
-}
-
-// node_modules/smart-blocks/node_modules/smart-collections/collection.js
-var AsyncFunction4 = Object.getPrototypeOf(async function() {
-}).constructor;
-var Collection4 = class {
-  /**
-   * Constructs a new Collection instance.
-   *
-   * @param {Object} env - The environment context containing configurations and adapters.
-   * @param {Object} [opts={}] - Optional configuration.
-   * @param {string} [opts.collection_key] - Custom key to override default collection name.
-   * @param {string} [opts.data_dir] - Custom data directory path.
-   * @param {boolean} [opts.prevent_load_on_init] - Whether to prevent loading items on initialization.
-   */
-  constructor(env, opts = {}) {
-    this.env = env;
-    this.opts = opts;
-    if (opts.collection_key) this.collection_key = opts.collection_key;
-    this.env[this.collection_key] = this;
-    this.config = this.env.config;
-    this.items = {};
-    this.loaded = null;
-    this._loading = false;
-    this.load_time_ms = null;
-    this.settings_container = null;
-  }
-  /**
-   * Initializes a new collection in the environment. Override in subclass if needed.
-   *
-   * @param {Object} env
-   * @param {Object} [opts={}]
-   * @returns {Promise<void>}
-   */
-  static async init(env, opts = {}) {
-    env[this.collection_key] = new this(env, opts);
-    await env[this.collection_key].init();
-    env.collections[this.collection_key] = "init";
-  }
-  /**
-   * The unique collection key derived from the class name.
-   * @returns {string}
-   */
-  static get collection_key() {
-    let name = this.name;
-    if (name.match(/\d$/)) name = name.slice(0, -1);
-    return name.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase();
-  }
-  /**
-   * Instance-level init. Override in subclasses if necessary.
-   * @returns {Promise<void>}
-   */
-  async init() {
-  }
-  /**
-   * Creates or updates an item in the collection.
-   * - If `data` includes a key that matches an existing item, that item is updated.
-   * - Otherwise, a new item is created.
-   * After updating or creating, the item is validated. If validation fails, the item is logged and returned without being saved.
-   * If validation succeeds for a new item, it is added to the collection and marked for saving.
-   *
-   * If the item’s `init()` method is async, a promise is returned that resolves once init completes.
-   *
-   * @param {Object} [data={}] - Data for creating/updating an item.
-   * @returns {Promise<Item>|Item} The created or updated item. May return a promise if `init()` is async.
-   */
-  create_or_update(data = {}) {
-    const existing_item = this.find_by(data);
-    const item = existing_item ? existing_item : new this.item_type(this.env);
-    item._queue_save = !existing_item;
-    const data_changed = item.update_data(data);
-    if (!existing_item && !item.validate_save()) {
-      return item;
-    }
-    if (!existing_item) {
-      this.set(item);
-    }
-    if (existing_item && !data_changed) return existing_item;
-    if (item.init instanceof AsyncFunction4) {
-      return new Promise((resolve) => {
-        item.init(data).then(() => resolve(item));
-      });
-    }
-    item.init(data);
-    return item;
-  }
-  /**
-   * Finds an item by partial data match (first checks key). If `data.key` provided,
-   * returns the item with that key; otherwise attempts a match by merging data.
-   *
-   * @param {Object} data - Data to match against.
-   * @returns {Item|null}
-   */
-  find_by(data) {
-    if (data.key) return this.get(data.key);
-    const temp = new this.item_type(this.env);
-    const temp_data = JSON.parse(JSON.stringify(data, temp.sanitize_data(data)));
-    deep_merge5(temp.data, temp_data);
-    return temp.key ? this.get(temp.key) : null;
-  }
-  /**
-   * Filters items based on provided filter options or a custom function.
-   *
-   * @param {Object|Function} [filter_opts={}] - Filter options or a predicate function.
-   * @returns {Item[]} Array of filtered items.
-   */
-  filter(filter_opts = {}) {
-    if (typeof filter_opts === "function") {
-      return Object.values(this.items).filter(filter_opts);
-    }
-    filter_opts = this.prepare_filter(filter_opts);
-    const results = [];
-    const { first_n } = filter_opts;
-    for (const item of Object.values(this.items)) {
-      if (first_n && results.length >= first_n) break;
-      if (item.filter(filter_opts)) results.push(item);
-    }
-    return results;
-  }
-  /**
-   * Alias for `filter()`
-   * @param {Object|Function} filter_opts
-   * @returns {Item[]}
-   */
-  list(filter_opts) {
-    return this.filter(filter_opts);
-  }
-  /**
-   * Prepares filter options. Can be overridden by subclasses to normalize filter options.
-   *
-   * @param {Object} filter_opts
-   * @returns {Object} Prepared filter options.
-   */
-  prepare_filter(filter_opts) {
-    return filter_opts;
-  }
-  /**
-   * Retrieves an item by key.
-   * @param {string} key
-   * @returns {Item|undefined}
-   */
-  get(key) {
-    return this.items[key];
-  }
-  /**
-   * Retrieves multiple items by an array of keys.
-   * @param {string[]} keys
-   * @returns {Item[]}
-   */
-  get_many(keys = []) {
-    if (!Array.isArray(keys)) {
-      console.error("get_many called with non-array keys:", keys);
-      return [];
-    }
-    return keys.map((key) => this.get(key)).filter(Boolean);
-  }
-  /**
-   * Retrieves a random item from the collection, optionally filtered by options.
-   * @param {Object} [opts]
-   * @returns {Item|undefined}
-   */
-  get_rand(opts = null) {
-    if (opts) {
-      const filtered = this.filter(opts);
-      return filtered[Math.floor(Math.random() * filtered.length)];
-    }
-    const keys = this.keys;
-    return this.items[keys[Math.floor(Math.random() * keys.length)]];
-  }
-  /**
-   * Adds or updates an item in the collection.
-   * @param {Item} item
-   */
-  set(item) {
-    if (!item.key) throw new Error("Item must have a key property");
-    this.items[item.key] = item;
-  }
-  /**
-   * Updates multiple items by their keys.
-   * @param {string[]} keys
-   * @param {Object} data
-   */
-  update_many(keys = [], data = {}) {
-    this.get_many(keys).forEach((item) => item.update_data(data));
-  }
-  /**
-   * Clears all items from the collection.
-   */
-  clear() {
-    this.items = {};
-  }
-  /**
-   * @returns {string} The collection key, can be overridden by opts.collection_key
-   */
-  get collection_key() {
-    return this._collection_key ? this._collection_key : this.constructor.collection_key;
-  }
-  set collection_key(key) {
-    this._collection_key = key;
-  }
-  /**
-   * Lazily initializes and returns the data adapter instance for this collection.
-   * @returns {Object} The data adapter instance.
-   */
-  get data_adapter() {
-    if (!this._data_adapter) {
-      const AdapterClass = this.get_adapter_class("data");
-      this._data_adapter = new AdapterClass(this);
-    }
-    return this._data_adapter;
-  }
-  get_adapter_class(type) {
-    const config = this.env.opts.collections?.[this.collection_key];
-    const adapter_key = type + "_adapter";
-    const adapter_module = config?.[adapter_key] ?? this.env.opts.collections?.smart_collections?.[adapter_key];
-    if (typeof adapter_module === "function") return adapter_module;
-    if (typeof adapter_module?.collection === "function") return adapter_module.collection;
-    throw new Error(`No '${type}' adapter class found for ${this.collection_key} or smart_collections`);
-  }
-  /**
-   * Data directory strategy for this collection. Defaults to 'multi'.
-   * @returns {string}
-   */
-  get data_dir() {
-    return "multi";
-  }
-  /**
-   * File system adapter from the environment.
-   * @returns {Object}
-   */
-  get data_fs() {
-    return this.env.data_fs;
-  }
-  /**
-   * Derives the corresponding item class name based on this collection's class name.
-   * @returns {string}
-   */
-  get item_class_name() {
-    let name = this.constructor.name;
-    if (name.match(/\d$/)) name = name.slice(0, -1);
-    if (name.endsWith("ies")) return name.slice(0, -3) + "y";
-    else if (name.endsWith("s")) return name.slice(0, -1);
-    return name + "Item";
-  }
-  /**
-   * Derives a readable item name from the item class name.
-   * @returns {string}
-   */
-  get item_name() {
-    return this.item_class_name.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase();
-  }
-  /**
-   * Retrieves the item type (constructor) from the environment.
-   * @returns {Function} Item constructor.
-   */
-  get item_type() {
-    return this.env.item_types[this.item_class_name];
-  }
-  /**
-   * Returns an array of all keys in the collection.
-   * @returns {string[]}
-   */
-  get keys() {
-    return Object.keys(this.items);
-  }
-  /**
-   * @deprecated use data_adapter instead (2024-09-14)
-   */
-  get adapter() {
-    return this.data_adapter;
-  }
-  /**
-   * @method process_save_queue
-   * @description 
-   * Saves items flagged for saving (_queue_save) back to AJSON or SQLite. This ensures persistent storage 
-   * of any updates made since last load/import. This method also writes changes to disk (AJSON files or DB).
-   */
-  async process_save_queue(opts = {}) {
-    if (opts.force) {
-      Object.values(this.items).forEach((item) => item._queue_save = true);
-    }
-    await this.data_adapter.process_save_queue(opts);
-  }
-  /**
-   * @alias process_save_queue
-   * @returns {Promise<void>}
-   */
-  async save(opts = {}) {
-    await this.process_save_queue(opts);
-  }
-  /**
-   * @method process_load_queue
-   * @description 
-   * Loads items that have been flagged for loading (_queue_load). This may involve 
-   * reading from AJSON/SQLite or re-importing from markdown if needed. 
-   * Called once initial environment is ready and collections are known.
-   */
-  async process_load_queue() {
-    await this.data_adapter.process_load_queue();
-  }
-  /**
-   * Retrieves processed settings configuration.
-   * @returns {Object}
-   */
-  get settings_config() {
-    return this.process_settings_config({});
-  }
-  /**
-   * Processes given settings config, adding prefixes and handling conditionals.
-   *
-   * @private
-   * @param {Object} _settings_config
-   * @param {string} [prefix='']
-   * @returns {Object}
-   */
-  process_settings_config(_settings_config, prefix = "") {
-    const add_prefix = (key) => prefix && !key.includes(`${prefix}.`) ? `${prefix}.${key}` : key;
-    return Object.entries(_settings_config).reduce((acc, [key, val]) => {
-      let new_val = { ...val };
-      if (new_val.conditional) {
-        if (!new_val.conditional(this)) return acc;
-        delete new_val.conditional;
-      }
-      if (new_val.callback) new_val.callback = add_prefix(new_val.callback);
-      if (new_val.btn_callback) new_val.btn_callback = add_prefix(new_val.btn_callback);
-      if (new_val.options_callback) new_val.options_callback = add_prefix(new_val.options_callback);
-      const new_key = add_prefix(this.process_setting_key(key));
-      acc[new_key] = new_val;
-      return acc;
-    }, {});
-  }
-  /**
-   * Processes an individual setting key. Override if needed.
-   * @param {string} key
-   * @returns {string}
-   */
-  process_setting_key(key) {
-    return key;
-  }
-  /**
-   * Default settings for this collection. Override in subclasses as needed.
-   * @returns {Object}
-   */
-  get default_settings() {
-    return {};
-  }
-  /**
-   * Current settings for the collection.
-   * Initializes with default settings if none exist.
-   * @returns {Object}
-   */
-  get settings() {
-    if (!this.env.settings[this.collection_key]) {
-      this.env.settings[this.collection_key] = this.default_settings;
-    }
-    return this.env.settings[this.collection_key];
-  }
-  /**
-   * @deprecated use env.smart_view instead
-   * @returns {Object} smart_view instance
-   */
-  get smart_view() {
-    if (!this._smart_view) this._smart_view = this.env.init_module("smart_view");
-    return this._smart_view;
-  }
-  /**
-   * Renders the settings for the collection into a given container.
-   * @param {HTMLElement} [container=this.settings_container]
-   * @param {Object} opts
-   * @returns {Promise<HTMLElement>}
-   */
-  async render_settings(container = this.settings_container, opts = {}) {
-    return await this.render_collection_settings(container, opts);
-  }
-  /**
-   * Helper function to render collection settings.
-   * @param {HTMLElement} [container=this.settings_container]
-   * @param {Object} opts
-   * @returns {Promise<HTMLElement>}
-   */
-  async render_collection_settings(container = this.settings_container, opts = {}) {
-    if (container && (!this.settings_container || this.settings_container !== container)) {
-      this.settings_container = container;
-    } else if (!container) {
-      container = this.env.smart_view.create_doc_fragment("<div></div>");
-    }
-    container.innerHTML = `<div class="sc-loading">Loading ${this.collection_key} settings...</div>`;
-    const frag = await this.env.render_component("settings", this, opts);
-    container.innerHTML = "";
-    container.appendChild(frag);
-    return container;
-  }
-  /**
-   * Unloads collection data from memory.
-   */
-  unload() {
-    this.clear();
-    this.unloaded = true;
-  }
-  /**
-   * Runs load process for all items in the collection, triggering queue loads and rendering settings after done.
-   * @returns {Promise<void>}
-   */
-  async run_data_load() {
-    this.loaded = null;
-    this.load_time_ms = null;
-    Object.values(this.items).forEach((item) => item.queue_load());
-    this.notices?.show("loading_collection", { collection_key: this.collection_key });
-    await this.process_load_queue();
-    this.notices?.remove("loading_collection");
-    this.notices?.show("done_loading_collection", { collection_key: this.collection_key });
-    this.render_settings();
-  }
-  /**
-   * Helper function to render a component in the collection scope
-   * @param {*} component_key 
-   * @param {*} opts 
-   * @returns 
-   */
-  async render_component(component_key, opts = {}) {
-    return await this.env.render_component(component_key, this, opts);
-  }
-};
-
-// node_modules/smart-blocks/node_modules/smart-entities/adapters/_adapter.js
-var EntitiesVectorAdapter4 = class {
-  /**
-   * @constructor
-   * @param {Object} collection - The collection (SmartEntities or derived class) instance.
-   */
-  constructor(collection) {
-    this.collection = collection;
-  }
-  /**
-   * Find the nearest entities to the given vector.
-   * @async
-   * @param {number[]} vec - The reference vector.
-   * @param {Object} [filter={}] - Optional filters (limit, exclude, etc.)
-   * @returns {Promise<Array<{item:Object, score:number}>>} Array of results sorted by score descending.
-   * @throws {Error} Not implemented by default.
-   */
-  async nearest(vec, filter = {}) {
-    throw new Error("EntitiesVectorAdapter.nearest() not implemented");
-  }
-  /**
-   * Find the furthest entities from the given vector.
-   * @async
-   * @param {number[]} vec - The reference vector.
-   * @param {Object} [filter={}] - Optional filters (limit, exclude, etc.)
-   * @returns {Promise<Array<{item:Object, score:number}>>} Array of results sorted by score ascending (furthest).
-   * @throws {Error} Not implemented by default.
-   */
-  async furthest(vec, filter = {}) {
-    throw new Error("EntitiesVectorAdapter.furthest() not implemented");
-  }
-  /**
-   * Embed a batch of entities.
-   * @async
-   * @param {Object[]} entities - Array of entity instances to embed.
-   * @returns {Promise<void>}
-   * @throws {Error} Not implemented by default.
-   */
-  async embed_batch(entities) {
-    throw new Error("EntitiesVectorAdapter.embed_batch() not implemented");
-  }
-  /**
-   * Process a queue of entities waiting to be embedded.
-   * Typically, this will call embed_batch in batches and update entities.
-   * @async
-   * @param {Object[]} embed_queue - Array of entities to embed.
-   * @returns {Promise<void>}
-   * @throws {Error} Not implemented by default.
-   */
-  async process_embed_queue(embed_queue) {
-    throw new Error("EntitiesVectorAdapter.process_embed_queue() not implemented");
-  }
-};
-var EntityVectorAdapter4 = class {
-  /**
-   * @constructor
-   * @param {Object} item - The SmartEntity instance that this adapter is associated with.
-   */
-  constructor(item) {
-    this.item = item;
-  }
-  /**
-   * Retrieve the current vector embedding for this entity.
-   * @async
-   * @returns {Promise<number[]|undefined>} The entity's vector or undefined if not set.
-   * @throws {Error} Not implemented by default.
-   */
-  async get_vec() {
-    throw new Error("EntityVectorAdapter.get_vec() not implemented");
-  }
-  /**
-   * Store/update the vector embedding for this entity.
-   * @async
-   * @param {number[]} vec - The vector to set.
-   * @returns {Promise<void>}
-   * @throws {Error} Not implemented by default.
-   */
-  async set_vec(vec) {
-    throw new Error("EntityVectorAdapter.set_vec() not implemented");
-  }
-  /**
-   * Delete/remove the vector embedding for this entity.
-   * @async
-   * @returns {Promise<void>}
-   * @throws {Error} Not implemented by default.
-   */
-  async delete_vec() {
-    throw new Error("EntityVectorAdapter.delete_vec() not implemented");
-  }
-};
-
-// node_modules/smart-blocks/node_modules/smart-entities/utils/cos_sim.js
-function cos_sim4(vector1, vector2) {
-  if (vector1.length !== vector2.length) {
-    throw new Error("Vectors must have the same length");
-  }
-  let dot_product = 0;
-  let magnitude1 = 0;
-  let magnitude2 = 0;
-  const epsilon = 1e-8;
-  for (let i = 0; i < vector1.length; i++) {
-    dot_product += vector1[i] * vector2[i];
-    magnitude1 += vector1[i] * vector1[i];
-    magnitude2 += vector2[i] * vector2[i];
-  }
-  magnitude1 = Math.sqrt(magnitude1);
-  magnitude2 = Math.sqrt(magnitude2);
-  if (magnitude1 < epsilon || magnitude2 < epsilon) {
-    return 0;
-  }
-  return dot_product / (magnitude1 * magnitude2);
-}
-
-// node_modules/smart-blocks/node_modules/smart-entities/utils/results_acc.js
-function results_acc4(_acc, result, ct = 10) {
-  if (_acc.results.size < ct) {
-    _acc.results.add(result);
-    if (_acc.results.size === ct && _acc.min === Number.POSITIVE_INFINITY) {
-      let { minScore, minObj } = find_min4(_acc.results);
-      _acc.min = minScore;
-      _acc.minResult = minObj;
-    }
-  } else if (result.score > _acc.min) {
-    _acc.results.add(result);
-    _acc.results.delete(_acc.minResult);
-    let { minScore, minObj } = find_min4(_acc.results);
-    _acc.min = minScore;
-    _acc.minResult = minObj;
-  }
-}
-function furthest_acc4(_acc, result, ct = 10) {
-  if (_acc.results.size < ct) {
-    _acc.results.add(result);
-    if (_acc.results.size === ct && _acc.max === Number.NEGATIVE_INFINITY) {
-      let { maxScore, maxObj } = find_max4(_acc.results);
-      _acc.max = maxScore;
-      _acc.maxResult = maxObj;
-    }
-  } else if (result.score < _acc.max) {
-    _acc.results.add(result);
-    _acc.results.delete(_acc.maxResult);
-    let { maxScore, maxObj } = find_max4(_acc.results);
-    _acc.max = maxScore;
-    _acc.maxResult = maxObj;
-  }
-}
-function find_min4(results) {
-  let minScore = Number.POSITIVE_INFINITY;
-  let minObj = null;
-  for (const obj of results) {
-    if (obj.score < minScore) {
-      minScore = obj.score;
-      minObj = obj;
-    }
-  }
-  return { minScore, minObj };
-}
-function find_max4(results) {
-  let maxScore = Number.NEGATIVE_INFINITY;
-  let maxObj = null;
-  for (const obj of results) {
-    if (obj.score > maxScore) {
-      maxScore = obj.score;
-      maxObj = obj;
-    }
-  }
-  return { maxScore, maxObj };
-}
-
-// node_modules/smart-blocks/node_modules/smart-entities/utils/sort_by_score.js
-function sort_by_score4(a, b) {
-  const epsilon = 1e-9;
-  const score_diff = a.score - b.score;
-  if (Math.abs(score_diff) < epsilon) return 0;
-  return score_diff > 0 ? -1 : 1;
-}
-function sort_by_score_descending4(a, b) {
-  return sort_by_score4(a, b);
-}
-function sort_by_score_ascending4(a, b) {
-  return sort_by_score4(a, b) * -1;
-}
-
-// node_modules/smart-blocks/node_modules/smart-entities/adapters/default.js
-var DefaultEntitiesVectorAdapter4 = class extends EntitiesVectorAdapter4 {
-  constructor(collection) {
-    super(collection);
-    this._is_processing_embed_queue = false;
-    this._reset_embed_queue_stats();
-  }
-  /**
-   * Find the nearest entities to the given vector.
-   * @async
-   * @param {number[]} vec - The reference vector.
-   * @param {Object} [filter={}] - Optional filters (limit, exclude, etc.)
-   * @returns {Promise<Array<{item:Object, score:number}>>} Array of results sorted by score descending.
-   */
-  async nearest(vec, filter = {}) {
-    if (!vec || !Array.isArray(vec)) {
-      throw new Error("Invalid vector input to nearest()");
-    }
-    const {
-      limit = 50
-      // TODO: default configured in settings
-    } = filter;
-    const nearest = this.collection.filter(filter).reduce((acc, item) => {
-      if (!item.vec) return acc;
-      const result = { item, score: cos_sim4(vec, item.vec) };
-      results_acc4(acc, result, limit);
-      return acc;
-    }, { min: 0, results: /* @__PURE__ */ new Set() });
-    return Array.from(nearest.results).sort(sort_by_score_descending4);
-  }
-  /**
-   * Find the furthest entities from the given vector.
-   * @async
-   * @param {number[]} vec - The reference vector.
-   * @param {Object} [filter={}] - Optional filters (limit, exclude, etc.)
-   * @returns {Promise<Array<{item:Object, score:number}>>} Array of results sorted by score ascending (furthest).
-   */
-  async furthest(vec, filter = {}) {
-    if (!vec || !Array.isArray(vec)) {
-      throw new Error("Invalid vector input to furthest()");
-    }
-    const {
-      limit = 50
-      // TODO: default configured in settings
-    } = filter;
-    const furthest = this.collection.filter(filter).reduce((acc, item) => {
-      if (!item.vec) return acc;
-      const result = { item, score: cos_sim4(vec, item.vec) };
-      furthest_acc4(acc, result, limit);
-      return acc;
-    }, { max: 0, results: /* @__PURE__ */ new Set() });
-    return Array.from(furthest.results).sort(sort_by_score_ascending4);
-  }
-  /**
-   * Embed a batch of entities.
-   * @async
-   * @param {Object[]} entities - Array of entity instances to embed.
-   * @returns {Promise<void>}
-   */
-  async embed_batch(entities) {
-    if (!this.collection.embed_model) {
-      throw new Error("No embed_model found in collection for embedding");
-    }
-    await Promise.all(entities.map((e) => e.get_embed_input()));
-    const embeddings = await this.collection.embed_model.embed_batch(entities);
-    embeddings.forEach((emb, i) => {
-      const entity = entities[i];
-      entity.vec = emb.vec;
-      if (emb.tokens !== void 0) entity.tokens = emb.tokens;
-    });
-  }
-  /**
-   * Process a queue of entities waiting to be embedded.
-   * Prevents multiple concurrent runs by using `_is_processing_embed_queue`.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async process_embed_queue() {
-    if (this._is_processing_embed_queue) {
-      console.log("process_embed_queue is already running, skipping concurrent call.");
-      return;
-    }
-    this._is_processing_embed_queue = true;
-    try {
-      const embed_queue = this.collection.embed_queue;
-      this._reset_embed_queue_stats();
-      if (this.collection.embed_model_key === "None") {
-        console.log(`Smart Connections: No active embedding model for ${this.collection.collection_key}, skipping embedding`);
-        return;
-      }
-      if (!this.collection.embed_model) {
-        console.log(`Smart Connections: No active embedding model for ${this.collection.collection_key}, skipping embedding`);
-        return;
-      }
-      const datetime_start = /* @__PURE__ */ new Date();
-      if (!embed_queue.length) {
-        console.log(`Smart Connections: No items in ${this.collection.collection_key} embed queue`);
-        return;
-      }
-      console.log(`Time spent getting embed queue: ${(/* @__PURE__ */ new Date()).getTime() - datetime_start.getTime()}ms`);
-      console.log(`Processing ${this.collection.collection_key} embed queue: ${embed_queue.length} items`);
-      for (let i = 0; i < embed_queue.length; i += this.collection.embed_model.batch_size) {
-        if (this.is_queue_halted) {
-          this.is_queue_halted = false;
-          break;
-        }
-        const batch = embed_queue.slice(i, i + this.collection.embed_model.batch_size);
-        await Promise.all(batch.map((item) => item.get_embed_input()));
-        try {
-          const start_time = Date.now();
-          await this.embed_batch(batch);
-          this.total_time += Date.now() - start_time;
-        } catch (e) {
-          if (e && e.message && e.message.includes("API key not set")) {
-            this.halt_embed_queue_processing(`API key not set for ${this.collection.embed_model_key}
-Please set the API key in the settings.`);
-          }
-          console.error(e);
-          console.error(`Error processing ${this.collection.collection_key} embed queue: ` + JSON.stringify(e || {}, null, 2));
-        }
-        batch.forEach((item) => {
-          item.embed_hash = item.read_hash;
-          item._queue_save = true;
-        });
-        this.embedded_total += batch.length;
-        this.total_tokens += batch.reduce((acc, item) => acc + (item.tokens || 0), 0);
-        this._show_embed_progress_notice(embed_queue.length);
-        if (this.embedded_total - this.last_save_total > 1e3) {
-          this.last_save_total = this.embedded_total;
-          await this.collection.process_save_queue();
-          if (this.collection.block_collection) {
-            console.log(`Saving ${this.collection.block_collection.collection_key} block collection`);
-            await this.collection.block_collection.process_save_queue();
-          }
-        }
-      }
-      this._show_embed_completion_notice(embed_queue.length);
-      await this.collection.process_save_queue();
-      if (this.collection.block_collection) {
-        await this.collection.block_collection.process_save_queue();
-      }
-    } finally {
-      this._is_processing_embed_queue = false;
-    }
-  }
-  /**
-   * Displays the embedding progress notice.
-   * @private
-   * @returns {void}
-   */
-  _show_embed_progress_notice(embed_queue_length) {
-    if (this.embedded_total - this.last_notice_embedded_total < 100) return;
-    this.last_notice_embedded_total = this.embedded_total;
-    this.notices?.show("embedding_progress", {
-      progress: this.embedded_total,
-      total: embed_queue_length,
-      tokens_per_second: this._calculate_embed_tokens_per_second(),
-      model_name: this.collection.embed_model_key
-    });
-  }
-  /**
-   * Displays the embedding completion notice.
-   * @private
-   * @returns {void}
-   */
-  _show_embed_completion_notice() {
-    this.notices?.remove("embedding_progress");
-    this.notices?.show("embedding_complete", {
-      total_embeddings: this.embedded_total,
-      tokens_per_second: this._calculate_embed_tokens_per_second(),
-      model_name: this.collection.embed_model_key
-    });
-  }
-  /**
-   * Halts the embed queue processing.
-   * @param {string|null} msg - Optional message.
-   */
-  halt_embed_queue_processing(msg = null) {
-    this.is_queue_halted = true;
-    console.log("Embed queue processing halted");
-    this.notices?.remove("embedding_progress");
-    this.notices?.show("embedding_paused", {
-      progress: this.embedded_total,
-      total: this.collection._embed_queue.length,
-      tokens_per_second: this._calculate_embed_tokens_per_second(),
-      model_name: this.collection.embed_model_key
-    });
-  }
-  /**
-   * Resumes the embed queue processing after a delay.
-   * @param {number} [delay=0] - The delay in milliseconds before resuming.
-   * @returns {void}
-   */
-  resume_embed_queue_processing(delay = 0) {
-    console.log("resume_embed_queue_processing");
-    this.notices?.remove("embedding_paused");
-    setTimeout(() => {
-      this.embedded_total = 0;
-      this.process_embed_queue();
-    }, delay);
-  }
-  /**
-   * Calculates the number of tokens processed per second.
-   * @private
-   * @returns {number} Tokens per second.
-   */
-  _calculate_embed_tokens_per_second() {
-    const elapsed_time = this.total_time / 1e3;
-    return Math.round(this.total_tokens / (elapsed_time || 1));
-  }
-  /**
-   * Resets the statistics related to embed queue processing.
-   * @private
-   * @returns {void}
-   */
-  _reset_embed_queue_stats() {
-    this.collection._embed_queue = [];
-    this.embedded_total = 0;
-    this.is_queue_halted = false;
-    this.last_save_total = 0;
-    this.last_notice_embedded_total = 0;
-    this.total_tokens = 0;
-    this.total_time = 0;
-  }
-  get notices() {
-    return this.collection.notices;
-  }
-};
-var DefaultEntityVectorAdapter4 = class extends EntityVectorAdapter4 {
-  get data() {
-    return this.item.data;
-  }
-  /**
-   * Retrieve the current vector embedding for this entity.
-   * @async
-   * @returns {Promise<number[]|undefined>} The entity's vector or undefined if not set.
-   */
-  async get_vec() {
-    return this.vec;
-  }
-  /**
-   * Store/update the vector embedding for this entity.
-   * @async
-   * @param {number[]} vec - The vector to set.
-   * @returns {Promise<void>}
-   */
-  async set_vec(vec) {
-    this.vec = vec;
-  }
-  /**
-   * Delete/remove the vector embedding for this entity.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async delete_vec() {
-    if (this.item.data?.embeddings?.[this.item.embed_model_key]) {
-      delete this.item.data.embeddings[this.item.embed_model_key].vec;
-    }
-  }
-  // adds synchronous get/set for vec
-  get vec() {
-    return this.item.data?.embeddings?.[this.item.embed_model_key]?.vec;
-  }
-  set vec(vec) {
-    if (!this.item.data.embeddings) {
-      this.item.data.embeddings = {};
-    }
-    if (!this.item.data.embeddings[this.item.embed_model_key]) {
-      this.item.data.embeddings[this.item.embed_model_key] = {};
-    }
-    this.item.data.embeddings[this.item.embed_model_key].vec = vec;
-  }
-};
-
-// node_modules/smart-blocks/node_modules/smart-entities/components/entity.js
-async function render7(entity, opts = {}) {
-  let markdown;
-  if (should_render_embed4(entity)) markdown = entity.embed_link;
-  else markdown = process_for_rendering4(await entity.read());
-  let frag;
-  if (entity.env.settings.smart_view_filter.render_markdown) frag = await this.render_markdown(markdown, entity);
-  else frag = this.create_doc_fragment(markdown);
-  return await post_process5.call(this, entity, frag, opts);
-}
-function process_for_rendering4(content) {
-  if (content.includes("```dataview")) content = content.replace(/```dataview/g, "```\\dataview");
-  if (content.includes("![[")) content = content.replace(/\!\[\[/g, "! [[");
-  return content;
-}
-async function post_process5(scope, frag, opts = {}) {
-  return frag;
-}
-function should_render_embed4(entity) {
-  if (!entity) return false;
-  if (entity.is_canvas || entity.is_excalidraw) return true;
-  return false;
-}
-
-// node_modules/smart-blocks/node_modules/smart-entities/actions/find_connections.js
-async function find_connections6(params = {}) {
-  const filter_opts = this.prepare_find_connections_filter_opts(params);
-  const limit = params.filter?.limit || params.limit || this.env.settings.smart_view_filter?.results_limit || 10;
-  const cache_key = this.key + JSON.stringify(params);
-  if (!this.env.connections_cache) this.env.connections_cache = {};
-  if (!this.env.connections_cache[cache_key]) {
-    const connections = (await this.nearest(filter_opts)).sort(sort_by_score4).slice(0, limit);
-    this.connections_to_cache(cache_key, connections);
-  }
-  return this.connections_from_cache(cache_key);
-}
-
-// node_modules/smart-blocks/node_modules/smart-entities/smart_entity.js
-var SmartEntity4 = class extends CollectionItem4 {
-  /**
-   * Creates an instance of SmartEntity.
-   * @constructor
-   * @param {Object} env - The environment instance.
-   * @param {Object} [opts={}] - Configuration options.
-   */
-  constructor(env, opts = {}) {
-    super(env, opts);
-    this.entity_adapter = new DefaultEntityVectorAdapter4(this);
-  }
-  /**
-   * Provides default values for a SmartEntity instance.
-   * @static
-   * @readonly
-   * @returns {Object} The default values.
-   */
-  static get defaults() {
-    return {
-      data: {
-        path: null,
-        last_embed: {
-          hash: null
-        },
-        embeddings: {}
-      }
-    };
-  }
-  get vector_adapter() {
-    if (!this._vector_adapter) {
-      this._vector_adapter = new this.collection.opts.vector_adapter.item(this);
-    }
-    return this._vector_adapter;
-  }
-  /**
-   * Initializes the SmartEntity instance.
-   * Checks if the entity has a vector and if it matches the model dimensions.
-   * If not, it queues an embed.
-   * Removes embeddings for inactive models.
-   * @returns {void}
-   */
-  init() {
-    super.init();
-    if (!this.vec) {
-      this.queue_embed();
-    } else if (this.vec.length !== this.embed_model.model_config.dims) {
-      this.vec = null;
-      this.queue_embed();
-    }
-    Object.entries(this.data.embeddings || {}).forEach(([model, embedding]) => {
-      if (model !== this.embed_model_key) {
-        this.data.embeddings[model] = null;
-        delete this.data.embeddings[model];
-      }
-    });
-  }
-  /**
-   * Queues the entity for embedding.
-   * @returns {void}
-   */
-  queue_embed() {
-    this._queue_embed = true;
-  }
-  /**
-   * Finds the nearest entities to this entity.
-   * @param {Object} [filter={}] - Optional filters to apply.
-   * @returns {Array<{item:Object, score:number}>} An array of result objects with score and item.
-   */
-  async nearest(filter = {}) {
-    return await this.collection.nearest_to(this, filter);
-  }
-  /**
-   * Prepares the input for embedding.
-   * @async
-   * @param {string} [content=null] - Optional content to use instead of calling subsequent read()
-   * @returns {Promise<void>} Should be overridden in child classes.
-   */
-  async get_embed_input(content = null) {
-  }
-  // override in child class
-  /**
-   * Retrieves the embed input, either from cache or by generating it.
-   * @readonly
-   * @returns {string|Promise<string>} The embed input string or a promise resolving to it.
-   */
-  get embed_input() {
-    return this._embed_input ? this._embed_input : this.get_embed_input();
-  }
-  /**
-   * Prepares filter options for finding connections based on parameters.
-   * @param {Object} [params={}] - Parameters for finding connections.
-   * @returns {Object} The prepared filter options.
-   */
-  prepare_find_connections_filter_opts(params = {}) {
-    const opts = {
-      ...this.env.settings.smart_view_filter || {},
-      ...params,
-      entity: this
-    };
-    if (opts.filter?.limit) delete opts.filter.limit;
-    if (opts.limit) delete opts.limit;
-    return opts;
-  }
-  /**
-   * Finds connections relevant to this entity based on provided parameters.
-   * @async
-   * @param {Object} [params={}] - Parameters for finding connections.
-   * @returns {Array<{item:Object, score:number}>} An array of result objects with score and item.
-   */
-  async find_connections(params = {}) {
-    return await this.actions.find_connections(params);
-  }
-  /**
-   * Retrieves connections from the cache based on the cache key.
-   * @param {string} cache_key - The cache key.
-   * @returns {Array<{item:Object, score:number}>} The cached connections.
-   */
-  connections_from_cache(cache_key) {
-    return this.env.connections_cache[cache_key];
-  }
-  /**
-   * Stores connections in the cache with the provided cache key.
-   * @param {string} cache_key - The cache key.
-   * @param {Array<{item:Object, score:number}>} connections - The connections to cache.
-   * @returns {void}
-   */
-  connections_to_cache(cache_key, connections) {
-    this.env.connections_cache[cache_key] = connections;
-  }
-  get read_hash() {
-    return this.data.last_read?.hash;
-  }
-  set read_hash(hash) {
-    if (!this.data.last_read) this.data.last_read = {};
-    this.data.last_read.hash = hash;
-  }
-  get embedding_data() {
-    if (!this.data.embeddings[this.embed_model_key]) {
-      this.data.embeddings[this.embed_model_key] = {};
-    }
-    return this.data.embeddings[this.embed_model_key];
-  }
-  get last_embed() {
-    if (!this.embedding_data.last_embed) {
-      this.embedding_data.last_embed = {};
-      if (this.data.last_embed) {
-        this.embedding_data.last_embed = this.data.last_embed;
-        delete this.data.last_embed;
-        this.queue_save();
-      }
-    }
-    return this.embedding_data.last_embed;
-  }
-  get embed_hash() {
-    return this.last_embed?.hash;
-  }
-  set embed_hash(hash) {
-    if (!this.embedding_data.last_embed) this.embedding_data.last_embed = {};
-    this.embedding_data.last_embed.hash = hash;
-  }
-  /**
-   * Gets the embed link for the entity.
-   * @readonly
-   * @returns {string} The embed link.
-   */
-  get embed_link() {
-    return `![[${this.path}]]`;
-  }
-  /**
-   * Gets the key of the embedding model.
-   * @readonly
-   * @returns {string} The embedding model key.
-   */
-  get embed_model_key() {
-    return this.collection.embed_model_key;
-  }
-  /**
-   * Gets the name of the entity, formatted based on settings.
-   * @readonly
-   * @returns {string} The entity name.
-   */
-  get name() {
-    return (!this.should_show_full_path ? this.path.split("/").pop() : this.path.split("/").join(" > ")).split("#").join(" > ").replace(".md", "");
-  }
-  /**
-   * Determines whether to show the full path of the entity.
-   * @readonly
-   * @returns {boolean} True if the full path should be shown, false otherwise.
-   */
-  get should_show_full_path() {
-    return this.env.settings.smart_view_filter?.show_full_path;
-  }
-  /**
-   * @deprecated Use embed_model instead.
-   * @readonly
-   * @returns {Object} The smart embedding model.
-   */
-  get smart_embed() {
-    return this.embed_model;
-  }
-  /**
-   * Gets the embedding model instance from the collection.
-   * @readonly
-   * @returns {Object} The embedding model instance.
-   */
-  get embed_model() {
-    return this.collection.embed_model;
-  }
-  /**
-   * Determines if the entity should be embedded.
-   * @readonly
-   * @returns {boolean} True if no vector is set, false otherwise.
-   */
-  get should_embed() {
-    return !this.vec && this.size > (this.settings?.min_chars || 300);
-  }
-  /**
-   * Sets the error for the embedding model.
-   * @param {string} error - The error message.
-   */
-  set error(error) {
-    this.data.embeddings[this.embed_model_key].error = error;
-  }
-  /**
-   * Gets the number of tokens associated with the entity's embedding.
-   * @readonly
-   * @returns {number|undefined} The number of tokens, or undefined if not set.
-   */
-  get tokens() {
-    return this.last_embed?.tokens;
-  }
-  /**
-   * Sets the number of tokens for the embedding.
-   * @param {number} tokens - The number of tokens.
-   */
-  set tokens(tokens) {
-    this.last_embed.tokens = tokens;
-  }
-  /**
-   * Gets the vector representation from the entity adapter.
-   * @readonly
-   * @returns {Array<number>|undefined} The vector or undefined if not set.
-   */
-  get vec() {
-    return this.entity_adapter.vec;
-  }
-  /**
-   * Sets the vector representation in the entity adapter.
-   * @param {Array<number>} vec - The vector to set.
-   */
-  set vec(vec) {
-    this.entity_adapter.vec = vec;
-    this._queue_embed = false;
-    this._embed_input = null;
-    this.queue_save();
-  }
-  /**
-   * Removes all embeddings from the entity.
-   * @returns {void}
-   */
-  remove_embeddings() {
-    this.data.embeddings = null;
-    this.queue_save();
-  }
-  /**
-   * Retrieves the key of the entity.
-   * @returns {string} The entity key.
-   */
-  get_key() {
-    return this.data.key || this.data.path;
-  }
-  /**
-   * Retrieves the path of the entity.
-   * @readonly
-   * @returns {string|null} The entity path.
-   */
-  get path() {
-    return this.data.path;
-  }
-  /**
-   * Gets the component responsible for rendering the entity.
-   * @readonly
-   * @returns {Function} The render function for the entity component.
-   */
-  get component() {
-    return render7;
-  }
-  get is_unembedded() {
-    if (!this.vec) return true;
-    if (!this.embed_hash || this.embed_hash !== this.read_hash) return true;
-    return false;
-  }
-  // COMPONENTS 2024-11-27
-  get connections_component() {
-    if (!this._connections_component) this._connections_component = this.components?.connections?.bind(this.smart_view);
-    return this._connections_component;
-  }
-  async render_connections(container, opts = {}) {
-    if (container) container.innerHTML = "Loading connections...";
-    const frag = await this.env.render_component("connections", this, opts);
-    if (container) {
-      container.innerHTML = "";
-      container.appendChild(frag);
-    }
-    return frag;
-  }
-};
-
-// node_modules/smart-blocks/node_modules/smart-entities/smart_entities.js
-var SmartEntities4 = class extends Collection4 {
-  /**
-   * Creates an instance of SmartEntities.
-   * @constructor
-   * @param {Object} env - The environment instance.
-   * @param {Object} opts - Configuration options.
-   */
-  constructor(env, opts) {
-    super(env, opts);
-    this.entities_vector_adapter = new DefaultEntitiesVectorAdapter4(this);
-    this.model_instance_id = null;
-    this._embed_queue = [];
-  }
-  /**
-   * Initializes the SmartEntities instance by loading embeddings.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async init() {
-    await super.init();
-    await this.load_smart_embed();
-    if (!this.embed_model) {
-      console.log(`SmartEmbed not loaded for **${this.collection_key}**. Continuing without embedding capabilities.`);
-    }
-  }
-  /**
-   * Loads the smart embedding model.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async load_smart_embed() {
-    if (this.embed_model_key === "None") return;
-    if (!this.embed_model) return;
-    if (this.embed_model.is_loading) return console.log(`SmartEmbedModel already loading for ${this.embed_model_key}`);
-    if (this.embed_model.is_loaded) return console.log(`SmartEmbedModel already loaded for ${this.embed_model_key}`);
-    try {
-      console.log(`Loading SmartEmbedModel in ${this.collection_key}, current state: ${this.embed_model.state}`);
-      await this.embed_model.load();
-    } catch (e) {
-      console.error(`Error loading SmartEmbedModel for ${this.embed_model.model_key}`);
-      console.error(e);
-    }
-  }
-  /**
-   * Unloads the smart embedding model.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async unload() {
-    if (typeof this.embed_model?.unload === "function") {
-      this.embed_model.unload();
-      this.embed_model = null;
-    }
-    super.unload();
-  }
-  /**
-   * Gets the key of the embedding model.
-   * @readonly
-   * @returns {string} The embedding model key.
-   */
-  get embed_model_key() {
-    return this.embed_model?.model_key;
-  }
-  /**
-   * Gets or creates the container for smart embeddings in the DOM.
-   * @readonly
-   * @returns {HTMLElement|undefined} The container element or undefined if not available.
-   */
-  get smart_embed_container() {
-    if (!this.model_instance_id) return console.log("model_key not set");
-    const id = this.model_instance_id.replace(/[^a-zA-Z0-9]/g, "_");
-    if (!window.document) return console.log("window.document not available");
-    if (window.document.querySelector(`#${id}`)) return window.document.querySelector(`#${id}`);
-    const container = window.document.createElement("div");
-    container.id = id;
-    window.document.body.appendChild(container);
-    return container;
-  }
-  /**
-   * @deprecated Use embed_model instead.
-   * @readonly
-   * @returns {Object} The smart embedding model.
-   */
-  get smart_embed() {
-    return this.embed_model;
-  }
-  /**
-   * Gets the embedding model instance.
-   * @readonly
-   * @returns {Object|null} The embedding model instance or null if none.
-   */
-  get embed_model() {
-    if (!this.env._embed_model && this.env.opts.modules.smart_embed_model?.class) this.env._embed_model = new this.env.opts.modules.smart_embed_model.class({
-      settings: this.settings.embed_model,
-      adapters: this.env.opts.modules.smart_embed_model?.adapters,
-      re_render_settings: this.re_render_settings.bind(this),
-      reload_model: this.reload_embed_model.bind(this)
-    });
-    return this.env._embed_model;
-  }
-  set embed_model(embed_model) {
-    this.env._embed_model = embed_model;
-  }
-  reload_embed_model() {
-    console.log("reload_embed_model");
-    this.embed_model.unload();
-    this.env._embed_model = null;
-  }
-  re_render_settings() {
-    this.settings_container.innerHTML = "";
-    this.render_settings();
-  }
-  /**
-   * Finds the nearest entities to a given entity.
-   * @async
-   * @param {Object} entity - The reference entity.
-   * @param {Object} [filter={}] - Optional filters to apply.
-   * @returns {Promise<Array<{item:Object, score:number}>>} An array of result objects with score and item.
-   */
-  async nearest_to(entity, filter = {}) {
-    return await this.nearest(entity.vec, filter);
-  }
-  /**
-   * Finds the nearest entities to a vector using the default adapter.
-   * @async
-   * @param {Array<number>} vec - The vector to compare against.
-   * @param {Object} [filter={}] - Optional filters to apply.
-   * @returns {Promise<Array<{item:Object, score:number}>>} An array of result objects with score and item.
-   */
-  async nearest(vec, filter = {}) {
-    if (!vec) {
-      console.warn("nearest: no vec");
-      return [];
-    }
-    return await this.entities_vector_adapter.nearest(vec, filter);
-  }
-  /**
-   * Finds the furthest entities from a vector using the default adapter.
-   * @async
-   * @param {Array<number>} vec - The vector to compare against.
-   * @param {Object} [filter={}] - Optional filters to apply.
-   * @returns {Promise<Array<{item:Object, score:number}>>} An array of result objects with score and item.
-   */
-  async furthest(vec, filter = {}) {
-    if (!vec) return console.warn("furthest: no vec");
-    return await this.entities_vector_adapter.furthest(vec, filter);
-  }
-  /**
-   * Gets the file name based on collection key and embedding model key.
-   * @readonly
-   * @returns {string} The constructed file name.
-   */
-  get file_name() {
-    return this.collection_key + "-" + this.embed_model_key.split("/").pop();
-  }
-  /**
-   * Calculates the relevance of an item based on the search filter.
-   * @param {Object} item - The item to calculate relevance for.
-   * @param {Object} search_filter - The search filter containing keywords.
-   * @returns {number} The relevance score:
-   *                   1 if any keyword is found in the item's path,
-   *                   0 otherwise (default relevance for keyword in content).
-   */
-  calculate_relevance(item, search_filter) {
-    if (search_filter.keywords.some((keyword) => item.path?.includes(keyword))) return 1;
-    return 0;
-  }
-  /**
-   * Prepares the filter options by incorporating entity-based filters.
-   * @param {Object} [opts={}] - The filter options.
-   * @param {Object} [opts.entity] - The entity to base the filters on.
-   * @param {string|string[]} [opts.exclude_filter] - Keys or prefixes to exclude.
-   * @param {string|string[]} [opts.include_filter] - Keys or prefixes to include.
-   * @param {boolean} [opts.exclude_inlinks] - Whether to exclude inlinks of the entity.
-   * @param {boolean} [opts.exclude_outlinks] - Whether to exclude outlinks of the entity.
-   * @returns {Object} The modified filter options.
-   */
-  prepare_filter(opts = {}) {
-    const {
-      entity,
-      exclude_filter,
-      include_filter,
-      exclude_inlinks,
-      exclude_outlinks
-    } = opts;
-    if (entity) {
-      if (typeof opts.exclude_key_starts_with_any === "undefined") opts.exclude_key_starts_with_any = [];
-      if (opts.exclude_key_starts_with) {
-        opts.exclude_key_starts_with_any = [
-          opts.exclude_key_starts_with
-        ];
-        delete opts.exclude_key_starts_with;
-      }
-      opts.exclude_key_starts_with_any.push(entity.source_key || entity.key);
-      if (exclude_filter) {
-        if (typeof exclude_filter === "string") opts.exclude_key_starts_with_any.push(exclude_filter);
-        else if (Array.isArray(exclude_filter)) opts.exclude_key_starts_with_any.push(...exclude_filter);
-      }
-      if (include_filter) {
-        if (!Array.isArray(opts.key_starts_with_any)) opts.key_starts_with_any = [];
-        if (typeof include_filter === "string") opts.key_starts_with_any.push(include_filter);
-        else if (Array.isArray(include_filter)) opts.key_starts_with_any.push(...include_filter);
-      }
-      if (exclude_inlinks && entity?.inlinks?.length) {
-        if (!Array.isArray(opts.exclude_key_starts_with_any)) opts.exclude_key_starts_with_any = [];
-        opts.exclude_key_starts_with_any.push(...entity.inlinks);
-      }
-      if (exclude_outlinks && entity?.outlinks?.length) {
-        if (!Array.isArray(opts.exclude_key_starts_with_any)) opts.exclude_key_starts_with_any = [];
-        opts.exclude_key_starts_with_any.push(...entity.outlinks);
-      }
-    }
-    return opts;
-  }
-  /**
-   * Looks up entities based on hypothetical content.
-   * @async
-   * @param {Object} [params={}] - The parameters for the lookup.
-   * @param {Array<string>} [params.hypotheticals=[]] - The hypothetical content to lookup.
-   * @param {Object} [params.filter] - The filter to use for the lookup.
-   * @param {number} [params.k] - Deprecated: Use `filter.limit` instead.
-   * @returns {Promise<Array<Result>|Object>} The lookup results or an error object.
-   */
-  async lookup(params = {}) {
-    const { hypotheticals = [] } = params;
-    if (!hypotheticals?.length) return { error: "hypotheticals is required" };
-    if (!this.embed_model) return { error: "Embedding search is not enabled." };
-    const hyp_vecs = await this.embed_model.embed_batch(hypotheticals.map((h) => ({ embed_input: h })));
-    const limit = params.filter?.limit || params.k || this.env.settings.lookup_k || 10;
-    if (params.filter?.limit) delete params.filter.limit;
-    const filter = {
-      ...this.env.chats?.current?.scope || {},
-      ...params.filter || {}
-    };
-    const results = await hyp_vecs.reduce(async (acc_promise, embedding, i) => {
-      const acc = await acc_promise;
-      const results2 = await this.nearest(embedding.vec, filter);
-      results2.forEach((result) => {
-        if (!acc[result.item.path] || result.score > acc[result.item.path].score) {
-          acc[result.item.path] = {
-            key: result.item.key,
-            score: result.score,
-            item: result.item,
-            hypothetical_i: i
-          };
-        } else {
-          result.score = acc[result.item.path].score;
-        }
-      });
-      return acc;
-    }, Promise.resolve({}));
-    console.log(results);
-    const top_k = Object.values(results).sort(sort_by_score4).slice(0, limit);
-    console.log(`Found and returned ${top_k.length} ${this.collection_key}.`);
-    return top_k;
-  }
-  /**
-   * Gets the configuration for settings.
-   * @readonly
-   * @returns {Object} The settings configuration.
-   */
-  get settings_config() {
-    return settings_config6;
-  }
-  async render_settings(container = this.settings_container, opts = {}) {
-    container = await this.render_collection_settings(container, opts);
-    const embed_model_settings_frag = await this.env.render_component("settings", this.embed_model, opts);
-    container.appendChild(embed_model_settings_frag);
-    return container;
-  }
-  /**
-   * Gets the notices from the environment.
-   * @readonly
-   * @returns {Object} The notices object.
-   */
-  get notices() {
-    return this.env.smart_connections_plugin?.notices || this.env.main?.notices;
-  }
-  /**
-   * Gets the embed queue containing items to be embedded.
-   * @readonly
-   * @returns {Array<Object>} The embed queue.
-   */
-  get embed_queue() {
-    if (!this._embed_queue?.length) this._embed_queue = Object.values(this.items).filter((item) => item._queue_embed && item.should_embed);
-    return this._embed_queue;
-  }
-  /**
-   * Processes the embed queue by delegating to the default vector adapter.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async process_embed_queue() {
-    await this.entities_vector_adapter.process_embed_queue();
-  }
-  /**
-   * Handles changes to the embedding model by reinitializing and processing the load queue.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async embed_model_changed() {
-    await this.unload();
-    await this.init();
-    this.render_settings();
-    await this.process_load_queue();
-  }
-  get connections_filter_config() {
-    return connections_filter_config4;
-  }
-};
-var settings_config6 = {
-  "min_chars": {
-    name: "Minimum length",
-    type: "number",
-    description: "Minimum length of entity to embed (in characters).",
-    placeholder: "Enter number ex. 300",
-    default: 300
-  }
-};
-var connections_filter_config4 = {
-  "smart_view_filter.show_full_path": {
-    "name": "Show Full Path",
-    "type": "toggle",
-    "description": "Show full path in view.",
-    "callback": "re_render"
-  },
-  "smart_view_filter.render_markdown": {
-    "name": "Render Markdown",
-    "type": "toggle",
-    "description": "Render markdown in results.",
-    "callback": "re_render"
-  },
-  "smart_view_filter.results_limit": {
-    "name": "Results Limit",
-    "type": "number",
-    "description": "Limit the number of results.",
-    "default": 20,
-    "callback": "re_render"
-  },
-  "smart_view_filter.exclude_inlinks": {
-    "name": "Exclude Inlinks",
-    "type": "toggle",
-    "description": "Exclude inlinks.",
-    "callback": "re_render_settings"
-  },
-  "smart_view_filter.exclude_outlinks": {
-    "name": "Exclude Outlinks",
-    "type": "toggle",
-    "description": "Exclude outlinks.",
-    "callback": "re_render_settings"
-  },
-  "smart_view_filter.include_filter": {
-    "name": "Include Filter",
-    "type": "text",
-    "description": "Require that results match this value.",
-    "callback": "re_render"
-  },
-  "smart_view_filter.exclude_filter": {
-    "name": "Exclude Filter",
-    "type": "text",
-    "description": "Exclude results that match this value.",
-    "callback": "re_render"
-  }
-};
-
-// node_modules/smart-blocks/smart_block.js
-var SmartBlock2 = class extends SmartEntity4 {
-  /**
-   * Provides default values for a SmartBlock instance.
-   * @static
-   * @readonly
-   * @returns {Object} The default values.
-   */
-  static get defaults() {
-    return {
-      data: {
-        text: null,
-        length: 0,
-        last_read: {
-          hash: null,
-          at: 0
-        }
-      },
-      _embed_input: ""
-      // Stored temporarily
-    };
-  }
-  get block_adapter() {
-    if (!this._block_adapter) {
-      this._block_adapter = new this.collection.opts.block_adapters[this.file_type](this);
-    }
-    return this._block_adapter;
-  }
-  /**
-   * Initializes the SmartBlock instance by queuing an embed if embedding is enabled.
-   * @returns {void}
-   */
-  init() {
-    if (this.settings.embed_blocks) super.init();
-  }
-  /**
-   * Queues the entity for embedding.
-   * @returns {void}
-   */
-  queue_embed() {
-    this._queue_embed = true;
-    this.source?.queue_embed();
-  }
-  /**
-   * Queues the block for import via the source.
-   * @returns {void}
-   */
-  queue_import() {
-    this.source?.queue_import();
-  }
-  /**
-   * Updates the block's data, clearing embeddings if necessary and preparing embed input.
-   * @param {Object} data - The new data to merge into the block.
-   * @returns {boolean} `true` if data was updated successfully.
-   */
-  update_data(data) {
-    if (this.should_clear_embeddings(data)) {
-      this.data.embeddings = {};
-    }
-    super.update_data(data);
-    return true;
-  }
-  /**
-   * Determines whether to clear embeddings based on the new data.
-   * @param {Object} data - The new data to evaluate.
-   * @returns {boolean} `true` if embeddings should be cleared, `false` otherwise.
-   */
-  should_clear_embeddings(data) {
-    if (this.is_new) return true;
-    if (this.embed_model && this.vec?.length !== this.embed_model.model_config.dims) return true;
-    return false;
-  }
-  /**
-   * Prepares the embed input for the SmartBlock by reading content and generating a hash.
-   * @async
-   * @returns {Promise<string|false>} The embed input string or `false` if already embedded.
-   */
-  async get_embed_input(content = null) {
-    if (typeof this._embed_input !== "string" || !this._embed_input.length) {
-      if (!content) content = await this.read();
-      this._embed_input = this.breadcrumbs + "\n" + content;
-    }
-    return this._embed_input;
-  }
-  // CRUD
-  /**
-   * @method read
-   * @description Reads the block content by delegating to the block adapter.
-   * @async
-   * @returns {Promise<string>} The block content.
-   */
-  async read() {
-    try {
-      return await this.block_adapter.read();
-    } catch (e) {
-      if (e.message.includes("BLOCK NOT FOUND")) {
-        return 'BLOCK NOT FOUND (run "Prune" to remove)';
-      } else {
-        throw e;
-      }
-    }
-  }
-  /**
-   * @method append
-   * @description Appends content to this block by delegating to the block adapter.
-   * @async
-   * @param {string} content
-   * @returns {Promise<void>}
-   */
-  async append(content) {
-    await this.block_adapter.append(content);
-    this.queue_save();
-  }
-  /**
-   * @method update
-   * @description Updates the block content by delegating to the block adapter.
-   * @async
-   * @param {string} new_block_content
-   * @param {Object} [opts={}]
-   * @returns {Promise<void>}
-   */
-  async update(new_block_content, opts = {}) {
-    await this.block_adapter.update(new_block_content, opts);
-    this.queue_save();
-  }
-  /**
-   * @method remove
-   * @description Removes the block by delegating to the block adapter.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async remove() {
-    await this.block_adapter.remove();
-    this.queue_save();
-  }
-  /**
-   * @method move_to
-   * @description Moves the block to another location by delegating to the block adapter.
-   * @async
-   * @param {string} to_key
-   * @returns {Promise<void>}
-   */
-  async move_to(to_key) {
-    await this.block_adapter.move_to(to_key);
-    this.queue_save();
-  }
-  // Getters
-  /**
-   * Retrieves the breadcrumbs representing the block's path within the source.
-   * @readonly
-   * @returns {string} The breadcrumbs string.
-   */
-  get breadcrumbs() {
-    return this.key.split("/").join(" > ").split("#").slice(0, -1).join(" > ").replace(".md", "");
-  }
-  /**
-   * Determines if the block is excluded from embedding based on headings.
-   * @readonly
-   * @returns {boolean} `true` if excluded, `false` otherwise.
-   */
-  get excluded() {
-    const block_headings = this.path.split("#").slice(1);
-    if (this.source_collection.excluded_headings.some((heading) => block_headings.includes(heading))) return true;
-    return this.source.excluded;
-  }
-  /**
-   * Retrieves the file path of the SmartSource associated with the block.
-   * @readonly
-   * @returns {string} The file path.
-   */
-  get file_path() {
-    return this.source?.file_path;
-  }
-  /**
-   * Retrieves the file type of the SmartSource associated with the block.
-   * @readonly
-   * @returns {string} The file type.
-   */
-  get file_type() {
-    return this.source.file_type;
-  }
-  /**
-   * Retrieves the folder path of the block.
-   * @readonly
-   * @returns {string} The folder path.
-   */
-  get folder() {
-    return this.path.split("/").slice(0, -1).join("/");
-  }
-  /**
-   * Retrieves the embed link for the block.
-   * @readonly
-   * @returns {string} The embed link.
-   */
-  get embed_link() {
-    return `![[${this.link}]]`;
-  }
-  /**
-   * Determines if the block has valid line range information.
-   * @readonly
-   * @returns {boolean} `true` if the block has both start and end lines, `false` otherwise.
-   */
-  get has_lines() {
-    return this.lines && this.lines.length === 2;
-  }
-  /**
-   * Determines if the entity is a block based on its key.
-   * @readonly
-   * @returns {boolean} `true` if it's a block, `false` otherwise.
-   */
-  get is_block() {
-    return this.key.includes("#");
-  }
-  /**
-   * Determines if the block is gone (i.e., the source file or block data no longer exists).
-   * @readonly
-   * @returns {boolean} `true` if gone, `false` otherwise.
-   */
-  get is_gone() {
-    if (!this.source?.file) return true;
-    if (!this.source?.data?.blocks?.[this.sub_key]) return true;
-    return false;
-  }
-  get last_read() {
-    return this.data.last_read;
-  }
-  /**
-   * Retrieves the sub-key of the block.
-   * @readonly
-   * @returns {string} The sub-key.
-   */
-  get sub_key() {
-    return "#" + this.key.split("#").slice(1).join("#");
-  }
-  /**
-   * Retrieves the lines range of the block.
-   * @readonly
-   * @returns {Array<number>|undefined} An array containing the start and end lines or `undefined` if not set.
-   */
-  // get lines() { return this.source?.data?.blocks?.[this.sub_key]; }
-  get lines() {
-    return this.data.lines;
-  }
-  /**
-   * Retrieves the starting line number of the block.
-   * @readonly
-   * @returns {number|undefined} The starting line number or `undefined` if not set.
-   */
-  get line_start() {
-    return this.lines?.[0];
-  }
-  /**
-   * Retrieves the ending line number of the block.
-   * @readonly
-   * @returns {number|undefined} The ending line number or `undefined` if not set.
-   */
-  get line_end() {
-    return this.lines?.[1];
-  }
-  /**
-   * Retrieves the link associated with the block, handling page numbers if present.
-   * @readonly
-   * @returns {string} The block link.
-   */
-  get link() {
-    if (/^.*page\s*(\d+).*$/i.test(this.sub_key)) {
-      const number = this.sub_key.match(/^.*page\s*(\d+).*$/i)[1];
-      return `${this.source.path}#page=${number}`;
-    } else {
-      return this.source.path;
-    }
-  }
-  /**
-   * Retrieves the display name of the block.
-   * @readonly
-   * @returns {string} The display name.
-   */
-  get name() {
-    const source_name = this.source.name;
-    const block_path_parts = this.key.split("#").slice(1);
-    if (this.should_show_full_path) return [source_name, ...block_path_parts].join(" > ");
-    if (block_path_parts[block_path_parts.length - 1][0] === "{") block_path_parts.pop();
-    return [source_name, block_path_parts.pop()].join(" > ");
-  }
-  // uses data.lines to get next block
-  get next_block() {
-    if (!this.data.lines) return null;
-    const next_line = this.data.lines[1] + 1;
-    return this.source.blocks?.find((block) => next_line === block.data?.lines?.[0]);
-  }
-  /**
-   * Retrieves the paths of outlinks from the block.
-   * @readonly
-   * @returns {Array<string>} An array of outlink paths.
-   */
-  get outlinks() {
-    return this.source.outlinks;
-  }
-  /**
-   * Retrieves the path of the SmartBlock.
-   * @readonly
-   * @returns {string} The path of the SmartBlock.
-   */
-  get path() {
-    return this.key;
-  }
-  /**
-   * Determines if the block should be embedded based on its coverage and size.
-   * @readonly
-   * @returns {boolean} `true` if it should be embedded, `false` otherwise.
-   */
-  get should_embed() {
-    try {
-      if (this.settings?.min_chars && this.size < this.settings.min_chars) return false;
-      const match_line_start = this.line_start + 1;
-      const match_line_end = this.line_end;
-      const { has_line_start, has_line_end } = Object.entries(this.source?.data?.blocks || {}).reduce((acc, [key, range]) => {
-        if (!key.startsWith(this.sub_key + "#")) return acc;
-        if (range[0] === match_line_start) acc.has_line_start = key;
-        if (range[1] === match_line_end) acc.has_line_end = key;
-        return acc;
-      }, { has_line_start: null, has_line_end: null });
-      if (has_line_start && has_line_end) {
-        const start_block = this.collection.get(this.source_key + has_line_start);
-        if (start_block?.should_embed) {
-          const end_block = this.collection.get(this.source_key + has_line_end);
-          if (end_block?.should_embed) return false;
-        }
-      }
-      return true;
-    } catch (e) {
-      console.error(e, e.stack);
-      console.error(`Error getting should_embed for ${this.key}: ` + JSON.stringify(e || {}, null, 2));
-    }
-  }
-  /**
-   * Retrieves the size of the SmartBlock.
-   * @readonly
-   * @returns {number} The size of the SmartBlock.
-   */
-  get size() {
-    return this.data.size;
-  }
-  /**
-   * Retrieves the SmartSource associated with the block.
-   * @readonly
-   * @returns {SmartSource} The associated SmartSource instance.
-   */
-  get source() {
-    return this.source_collection.get(this.source_key);
-  }
-  /**
-   * Retrieves the SmartSources collection instance.
-   * @readonly
-   * @returns {SmartSources} The SmartSources collection.
-   */
-  get source_collection() {
-    return this.env.smart_sources;
-  }
-  get source_key() {
-    return this.key.split("#")[0];
-  }
-  get sub_blocks() {
-    return this.source?.blocks?.filter((block) => block.key.startsWith(this.key + "#") && block.line_start > this.line_start && block.line_end <= this.line_end) || [];
-  }
-  // source dependent
-  get excluded_lines() {
-    return this.source.excluded_lines;
-  }
-  get file() {
-    return this.source.file;
-  }
-  get is_canvas() {
-    return this.source.is_canvas;
-  }
-  get is_excalidraw() {
-    return this.source.is_excalidraw;
-  }
-  get mtime() {
-    return this.source.mtime;
-  }
-  // DEPRECATED
-  /**
-   * @deprecated Use `source` instead.
-   * @readonly
-   * @returns {SmartSource} The associated SmartSource instance.
-   */
-  get note() {
-    return this.source;
-  }
-  /**
-   * @deprecated Use `source.key` instead.
-   * @readonly
-   * @returns {string} The source key.
-   */
-  get note_key() {
-    return this.key.split("#")[0];
-  }
-};
-var smart_block_default2 = {
-  class: SmartBlock2,
-  actions: {
-    find_connections: find_connections6
-  }
-};
-
-// node_modules/smart-blocks/smart_blocks.js
-var SmartBlocks2 = class extends SmartEntities4 {
-  /**
-   * Initializes the SmartBlocks instance. Currently muted as processing is handled by SmartSources.
-   * @returns {void}
-   */
-  init() {
-  }
-  get fs() {
-    return this.env.smart_sources.fs;
-  }
-  /**
-   * Retrieves the embedding model associated with the SmartSources collection.
-   * @readonly
-   * @returns {Object|undefined} The embedding model instance or `undefined` if not set.
-   */
-  get embed_model() {
-    return this.source_collection?.embed_model;
-  }
-  /**
-   * Retrieves the embedding model key from the SmartSources collection.
-   * @readonly
-   * @returns {string|undefined} The embedding model key or `undefined` if not set.
-   */
-  get embed_model_key() {
-    return this.source_collection?.embed_model_key;
-  }
-  /**
-   * Calculates the expected number of blocks based on the SmartSources collection.
-   * @readonly
-   * @returns {number} The expected count of blocks.
-   */
-  get expected_blocks_ct() {
-    return Object.values(this.source_collection.items).reduce((acc, item) => acc += Object.keys(item.data.blocks || {}).length, 0);
-  }
-  /**
-   * Retrieves the notices system from the environment.
-   * @readonly
-   * @returns {Object} The notices object.
-   */
-  get notices() {
-    return this.env.smart_connections_plugin?.notices || this.env.main?.notices;
-  }
-  /**
-   * Retrieves the settings configuration for SmartBlocks.
-   * @readonly
-   * @returns {Object} The settings configuration object.
-   */
-  get settings_config() {
-    return this.process_settings_config({
-      "embed_blocks": {
-        name: "Embed Blocks",
-        type: "toggle",
-        description: "Embed blocks using the embedding model.",
-        default: true
-      },
-      ...super.settings_config
-    });
-  }
-  render_settings(container, opts = {}) {
-    return this.render_collection_settings(container, opts);
-  }
-  /**
-   * Retrieves the SmartSources collection instance.
-   * @readonly
-   * @returns {SmartSources} The SmartSources collection.
-   */
-  get source_collection() {
-    return this.env.smart_sources;
-  }
-  /**
-   * Processes the embed queue. Currently handled by SmartSources, so this method is muted.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async process_embed_queue() {
-  }
-  /**
-   * Processes the load queue. Currently muted as processing is handled by SmartSources.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async process_load_queue() {
-  }
-  // TEMP: Methods in sources not implemented in blocks
-  /**
-   * @async
-   * @throws {Error} Throws an error indicating the method is not implemented.
-   * @returns {Promise<void>}
-   */
-  async prune() {
-    throw "Not implemented: prune";
-  }
-  /**
-   * @throws {Error} Throws an error indicating the method is not implemented.
-   * @returns {void}
-   */
-  build_links_map() {
-    throw "Not implemented: build_links_map";
-  }
-  /**
-   * @async
-   * @throws {Error} Throws an error indicating the method is not implemented.
-   * @returns {Promise<void>}
-   */
-  async refresh() {
-    throw "Not implemented: refresh";
-  }
-  /**
-   * @async
-   * @throws {Error} Throws an error indicating the method is not implemented.
-   * @returns {Promise<void>}
-   */
-  async search() {
-    throw "Not implemented: search";
-  }
-  /**
-   * @async
-   * @throws {Error} Throws an error indicating the method is not implemented.
-   * @returns {Promise<void>}
-   */
-  async run_data_load() {
-    throw "Not implemented: run_data_load";
-  }
-  /**
-   * @async
-   * @throws {Error} Throws an error indicating the method is not implemented.
-   * @returns {Promise<void>}
-   */
-  async run_re_import() {
-    throw "Not implemented: run_re_import";
-  }
-  /**
-   * @async
-   * @throws {Error} Throws an error indicating the method is not implemented.
-   * @returns {Promise<void>}
-   */
-  async run_refresh() {
-    throw "Not implemented: run_refresh";
-  }
-  /**
-   * @async
-   * @throws {Error} Throws an error indicating the method is not implemented.
-   * @returns {Promise<void>}
-   */
-  async run_force_refresh() {
-    throw "Not implemented: run_force_refresh";
-  }
-};
-
 // node_modules/smart-collections/adapters/_adapter.js
-var CollectionDataAdapter4 = class {
+var CollectionDataAdapter3 = class {
   /**
    * @constructor
    * @param {Object} collection - The collection instance that this adapter manages.
@@ -16806,7 +12381,7 @@ var CollectionDataAdapter4 = class {
    * The class to use for item adapters.
    * @type {typeof ItemDataAdapter}
    */
-  ItemDataAdapter = ItemDataAdapter4;
+  ItemDataAdapter = ItemDataAdapter3;
   /**
    * Optional factory method to create item adapters.
    * If `this.item_adapter_class` is not null, it uses that; otherwise can be overridden by subclasses.
@@ -16876,7 +12451,7 @@ var CollectionDataAdapter4 = class {
     await adapter.load_if_updated();
   }
 };
-var ItemDataAdapter4 = class {
+var ItemDataAdapter3 = class {
   /**
    * @constructor
    * @param {Object} item - The collection item instance that this adapter manages.
@@ -16941,12 +12516,12 @@ var ItemDataAdapter4 = class {
 };
 
 // node_modules/smart-collections/adapters/_file.js
-var FileCollectionDataAdapter4 = class extends CollectionDataAdapter4 {
+var FileCollectionDataAdapter3 = class extends CollectionDataAdapter3 {
   /**
    * The class to use for item adapters.
    * @type {typeof ItemDataAdapter}
    */
-  ItemDataAdapter = FileItemDataAdapter4;
+  ItemDataAdapter = FileItemDataAdapter3;
   /**
    * @returns {Object} Filesystem interface derived from environment or collection settings.
    */
@@ -16954,7 +12529,7 @@ var FileCollectionDataAdapter4 = class extends CollectionDataAdapter4 {
     return this.collection.data_fs || this.collection.env.data_fs;
   }
 };
-var FileItemDataAdapter4 = class extends ItemDataAdapter4 {
+var FileItemDataAdapter3 = class extends ItemDataAdapter3 {
   /**
    * @returns {Object} Filesystem interface derived from environment or collection settings.
    */
@@ -16985,12 +12560,12 @@ var class_to_collection_key3 = {
   "SmartBlock": "smart_blocks",
   "SmartDirectory": "smart_directories"
 };
-var AjsonMultiFileCollectionDataAdapter4 = class extends FileCollectionDataAdapter4 {
+var AjsonMultiFileCollectionDataAdapter3 = class extends FileCollectionDataAdapter3 {
   /**
    * The class to use for item adapters.
    * @type {typeof ItemDataAdapter}
    */
-  ItemDataAdapter = AjsonMultiFileItemDataAdapter4;
+  ItemDataAdapter = AjsonMultiFileItemDataAdapter3;
   /**
    * Load a single item by its key.
    * @async
@@ -17106,7 +12681,7 @@ var AjsonMultiFileCollectionDataAdapter4 = class extends FileCollectionDataAdapt
     return `${JSON.stringify(`${collection_key}:${key}`)}: ${data_value},`;
   }
 };
-var AjsonMultiFileItemDataAdapter4 = class extends FileItemDataAdapter4 {
+var AjsonMultiFileItemDataAdapter3 = class extends FileItemDataAdapter3 {
   /**
    * Derives the `.ajson` file path from the collection's data_dir and item key.
    * @returns {string}
@@ -20273,10 +15848,10 @@ var SmartViewAdapter2 = class {
 };
 
 // node_modules/smart-view/adapters/obsidian.js
-var import_obsidian6 = require("obsidian");
+var import_obsidian8 = require("obsidian");
 var SmartViewObsidianAdapter2 = class extends SmartViewAdapter2 {
   get setting_class() {
-    return import_obsidian6.Setting;
+    return import_obsidian8.Setting;
   }
   open_url(url2) {
     window.open(url2);
@@ -20293,12 +15868,12 @@ var SmartViewObsidianAdapter2 = class extends SmartViewAdapter2 {
     const frag = this.main.create_doc_fragment("<div><div class='inner'></div></div>");
     const container = frag.querySelector(".inner");
     try {
-      await import_obsidian6.MarkdownRenderer.render(
+      await import_obsidian8.MarkdownRenderer.render(
         scope.env.plugin.app,
         markdown,
         container,
         scope?.file_path || "",
-        component || new import_obsidian6.Component()
+        component || new import_obsidian8.Component()
       );
     } catch (e) {
       console.warn("Error rendering markdown in Obsidian adapter", e);
@@ -20306,354 +15881,16 @@ var SmartViewObsidianAdapter2 = class extends SmartViewAdapter2 {
     return frag;
   }
   get_icon_html(name) {
-    return (0, import_obsidian6.getIcon)(name).outerHTML;
+    return (0, import_obsidian8.getIcon)(name).outerHTML;
   }
   // Obsidian Specific
   is_mod_event(event) {
-    return import_obsidian6.Keymap.isModEvent(event);
+    return import_obsidian8.Keymap.isModEvent(event);
   }
 };
-
-// src/smart_notices.js
-var import_obsidian7 = require("obsidian");
-
-// src/notices.js
-var NOTICES = {
-  item_excluded: {
-    en: "Cannot show Smart Connections for excluded entity: {{entity_key}}"
-  },
-  load_env: {
-    en: "Mobile detected: to prevent performance issues, click to load Smart Environment when ready.",
-    button: {
-      en: `Load Smart Env`,
-      callback: (scope) => {
-        scope.load_env();
-      }
-    },
-    timeout: 0
-  },
-  missing_entity: {
-    en: "No entity found for key: {{key}}"
-  },
-  notice_muted: {
-    en: "Notice muted"
-  },
-  new_version_available: {
-    en: "A new version is available! (v{{version}})",
-    timeout: 15e3,
-    button: {
-      en: "Release notes",
-      callback: (scope) => {
-        window.open("https://github.com/brianpetro/obsidian-smart-connections/releases", "_blank");
-      }
-    }
-  },
-  new_early_access_version_available: {
-    en: "A new early access version is available! (v{{version}})"
-  },
-  supporter_key_required: {
-    en: "Supporter license key required for early access update"
-  },
-  revert_to_stable_release: {
-    en: 'Click "Check for Updates" in the community plugins tab and complete the update for Smart Connections to finish reverting to the stable release.',
-    timeout: 0
-  },
-  action_installed: {
-    en: 'Installed action "{{name}}"'
-  },
-  action_install_error: {
-    en: 'Error installing action "{{name}}": {{error}}',
-    timeout: 0
-  },
-  embed_model_not_loaded: {
-    en: "Embed model not loaded. Please wait for the model to load and try again."
-  },
-  embed_search_text_failed: {
-    en: "Failed to embed search text."
-  },
-  error_in_embedding_search: {
-    en: "Error in embedding search. See console for details."
-  },
-  copied_to_clipboard: {
-    en: "Message: {{content}} copied successfully."
-  },
-  copy_failed: {
-    en: "Unable to copy message to clipboard."
-  },
-  copied_chatgpt_url_to_clipboard: {
-    en: "ChatGPT URL copied to clipboard."
-  },
-  loading_collection: {
-    en: "Loading {{collection_key}}..."
-  },
-  done_loading_collection: {
-    en: "{{collection_key}} loaded."
-  },
-  saving_collection: {
-    en: "Saving {{collection_key}}..."
-  },
-  initial_scan: {
-    en: "[{{collection_key}}] Starting initial scan...",
-    timeout: 0
-  },
-  done_initial_scan: {
-    en: "[{{collection_key}}] Initial scan complete.",
-    timeout: 3e3
-  },
-  pruning_collection: {
-    en: "Pruning {{collection_key}}..."
-  },
-  done_pruning_collection: {
-    en: "Pruned {{count}} items from {{collection_key}}."
-  },
-  embedding_progress: {
-    en: "Embedding progress: {{progress}} / {{total}}\n{{tokens_per_second}} tokens/sec using {{model_name}}",
-    button: {
-      en: "Pause",
-      callback: (scope) => {
-        console.log("pausing");
-        scope.env.smart_sources.entities_vector_adapter.halt_embed_queue_processing();
-      }
-    },
-    timeout: 0
-  },
-  embedding_complete: {
-    en: "Embedding complete. {{total_embeddings}} embeddings created. {{tokens_per_second}} tokens/sec using {{model_name}}",
-    timeout: 0
-  },
-  embedding_paused: {
-    en: "Embedding paused. Progress: {{progress}} / {{total}}\n{{tokens_per_second}} tokens/sec using {{model_name}}",
-    button: {
-      en: "Resume",
-      callback: (scope) => {
-        scope.env.smart_sources.entities_vector_adapter.resume_embed_queue_processing(100);
-      }
-    },
-    timeout: 0
-  },
-  import_progress: {
-    en: "Importing... {{progress}} / {{total}} sources",
-    timeout: 0
-  },
-  done_import: {
-    en: "Import complete. {{count}} sources imported in {{time_in_seconds}}s",
-    timeout: 0
-  },
-  no_import_queue: {
-    en: "No items in import queue"
-  },
-  clearing_all: {
-    en: "Clearing all data...",
-    timeout: 0
-  },
-  done_clearing_all: {
-    en: "All data cleared and reimported",
-    timeout: 3e3
-  },
-  image_extracting: {
-    en: "Extracting text from Image(s)",
-    timeout: 0
-  },
-  pdf_extracting: {
-    en: "Extracting text from PDF(s)",
-    timeout: 0
-  },
-  insufficient_settings: {
-    en: "Insufficient settings for {{key}}, missing: {{missing}}",
-    timeout: 0
-  }
-};
-
-// src/smart_notices.js
-function define_default_create_methods(notices, scope = null) {
-  for (const key of Object.keys(notices)) {
-    const notice_obj = notices[key];
-    if (typeof notice_obj.create !== "function") {
-      notice_obj.create = function(opts = {}) {
-        let text = this.en ?? key;
-        for (const [k, v] of Object.entries(opts)) {
-          text = text.replace(new RegExp(`{{${k}}}`, "g"), String(v));
-        }
-        let button;
-        if (!opts.button && this.button) {
-          const btn_label = typeof this.button.en === "string" ? this.button.en : "OK";
-          button = {
-            text: btn_label,
-            callback: typeof this.button.callback === "function" ? this.button.callback : () => {
-            }
-            // no-op
-          };
-        } else {
-          button = opts.button;
-        }
-        let final_timeout = opts.timeout ?? this.timeout ?? 5e3;
-        return {
-          text,
-          button,
-          timeout: final_timeout,
-          confirm: opts.confirm,
-          // pass any user-provided confirm
-          immutable: opts.immutable
-          // pass any user-provided immutable
-        };
-      };
-    }
-  }
-  return notices;
-}
-var SmartNotices = class {
-  /**
-   * @param {Object} scope - The main plugin instance
-   */
-  constructor(scope) {
-    this.scope = scope;
-    this.main = scope;
-    this.active = {};
-    define_default_create_methods(NOTICES, scope);
-  }
-  /** plugin settings for notices (muted, etc.) */
-  get settings() {
-    return this.main.settings.smart_notices;
-  }
-  /** The adapter used to actually show notices (Obsidian's Notice, etc.) */
-  get adapter() {
-    return this.main.smart_env_config.modules.smart_notices.adapter;
-  }
-  /**
-   * Displays a notice by key or custom message.
-   * Usage:
-   *   notices.show('load_env', { scope: this });
-   *
-   * @param {string} id - The notice key or custom ID
-   * @param {object} opts - Additional user opts
-   */
-  show(id, opts = {}) {
-    let message = null;
-    if (typeof opts === "string") {
-      message = opts;
-    } else {
-      opts = opts || {};
-    }
-    if (!opts.scope) {
-      opts.scope = this.main;
-    }
-    const normalized_id = this._normalize_notice_key(id);
-    if (this.settings?.muted?.[normalized_id]) {
-      if (opts.confirm?.callback) {
-        opts.confirm.callback();
-      }
-      return;
-    }
-    const notice_entry = NOTICES[id];
-    let derived = {
-      text: message || id,
-      timeout: opts.timeout ?? 5e3,
-      button: opts.button,
-      immutable: opts.immutable,
-      confirm: opts.confirm
-    };
-    if (notice_entry?.create) {
-      const result = notice_entry.create({ ...opts, scope: this.main });
-      derived.text = message || result.text;
-      derived.timeout = result.timeout;
-      derived.button = result.button;
-      derived.immutable = result.immutable;
-      derived.confirm = result.confirm;
-    }
-    const content_fragment = this._build_fragment(normalized_id, derived.text, derived);
-    if (this.active[normalized_id]?.noticeEl?.parentElement) {
-      return this.active[normalized_id].setMessage(content_fragment, derived.timeout);
-    }
-    return this._render_notice(normalized_id, content_fragment, derived);
-  }
-  /**
-   * Normalizes the notice key to a safe string.
-   */
-  _normalize_notice_key(key) {
-    return key.replace(/[^a-zA-Z0-9_-]/g, "_");
-  }
-  /**
-   * Creates and tracks the notice instance
-   */
-  _render_notice(normalized_id, content_fragment, { timeout }) {
-    this.active[normalized_id] = new this.adapter(content_fragment, timeout);
-    return this.active[normalized_id];
-  }
-  /**
-   * Builds a DocumentFragment with notice text & possible buttons
-   */
-  _build_fragment(id, text, { button, confirm: confirm2, immutable }) {
-    const frag = document.createDocumentFragment();
-    frag.createEl("p", {
-      cls: "sc-notice-head",
-      text: `[Smart Connections v${this.main.manifest.version}]`
-    });
-    const content = frag.createEl("p", { cls: "sc-notice-content", text });
-    const actions = frag.createEl("div", { cls: "sc-notice-actions" });
-    if (confirm2?.text && typeof confirm2.callback === "function") {
-      this._add_button(confirm2, actions);
-    }
-    if (button?.text && typeof button.callback === "function") {
-      this._add_button(button, actions);
-    }
-    if (!immutable) {
-      this._add_mute_button(id, actions);
-    }
-    return frag;
-  }
-  /**
-   * Creates a <button> appended to the container
-   */
-  _add_button(btnConfig, container) {
-    const btn = document.createElement("button");
-    btn.innerHTML = btnConfig.text;
-    btn.addEventListener("click", (e) => {
-      if (btnConfig.stay_open) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-      btnConfig.callback?.(this.main);
-    });
-    container.appendChild(btn);
-  }
-  /**
-   * Mute button
-   */
-  _add_mute_button(id, container) {
-    const btn = document.createElement("button");
-    (0, import_obsidian7.setIcon)(btn, "bell-off");
-    btn.addEventListener("click", () => {
-      if (!this.settings.muted) this.settings.muted = {};
-      this.settings.muted[id] = true;
-      if (NOTICES["notice muted"]) {
-        this.show("notice muted", null, { timeout: 2e3 });
-      }
-    });
-    container.appendChild(btn);
-  }
-  /**
-   * Hides & clears all active notices
-   */
-  unload() {
-    for (const id in this.active) {
-      this.remove(id);
-    }
-  }
-  /**
-   * Removes an active notice by key
-   */
-  remove(id) {
-    const normalized_id = this._normalize_notice_key(id);
-    this.active[normalized_id]?.hide();
-    delete this.active[normalized_id];
-  }
-};
-
-// src/smart_env.config.js
-var import_obsidian13 = require("obsidian");
 
 // node_modules/smart-sources/components/settings.js
-async function build_html2(sources_collection, opts = {}) {
+async function build_html3(sources_collection, opts = {}) {
   const settings_html = Object.entries(sources_collection.settings_config).map(([setting_key, setting_config]) => {
     if (!setting_config.setting) setting_config.setting = setting_key;
     return this.render_setting_html(setting_config);
@@ -20664,12 +15901,12 @@ async function build_html2(sources_collection, opts = {}) {
   </div>`;
   return html;
 }
-async function render8(source_collection, opts = {}) {
-  const html = await build_html2.call(this, source_collection, opts);
+async function render6(source_collection, opts = {}) {
+  const html = await build_html3.call(this, source_collection, opts);
   const frag = this.create_doc_fragment(html);
-  return await post_process6.call(this, source_collection, frag, opts);
+  return await post_process5.call(this, source_collection, frag, opts);
 }
-async function post_process6(source_collection, frag, opts = {}) {
+async function post_process5(source_collection, frag, opts = {}) {
   await this.render_setting_components(frag, { scope: source_collection });
   return frag;
 }
@@ -20721,13 +15958,27 @@ function get_block_heading_html(scope) {
 }
 
 // node_modules/smart-collections/components/settings.js
-async function render9(scope, opts = {}) {
+async function render7(scope, opts = {}) {
   const html = Object.entries(scope.settings_config).map(([setting_key, setting_config]) => {
     if (!setting_config.setting) setting_config.setting = setting_key;
     return this.render_setting_html(setting_config);
   }).join("\n");
   const heading_html = `<h2>${scope.collection_key.split("_").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")} Settings</h2>`;
   const frag = this.create_doc_fragment(heading_html + html);
+  return await post_process6.call(this, scope, frag, opts);
+}
+async function post_process6(scope, frag, opts = {}) {
+  await this.render_setting_components(frag, { scope });
+  return frag;
+}
+
+// node_modules/smart-model/components/settings.js
+async function render8(scope, opts = {}) {
+  const html = Object.entries(scope.settings_config).map(([setting_key, setting_config]) => {
+    if (!setting_config.setting) setting_config.setting = setting_key;
+    return this.render_setting_html(setting_config);
+  }).join("\n");
+  const frag = this.create_doc_fragment(html);
   return await post_process7.call(this, scope, frag, opts);
 }
 async function post_process7(scope, frag, opts = {}) {
@@ -20735,22 +15986,8 @@ async function post_process7(scope, frag, opts = {}) {
   return frag;
 }
 
-// node_modules/smart-model/components/settings.js
-async function render10(scope, opts = {}) {
-  const html = Object.entries(scope.settings_config).map(([setting_key, setting_config]) => {
-    if (!setting_config.setting) setting_config.setting = setting_key;
-    return this.render_setting_html(setting_config);
-  }).join("\n");
-  const frag = this.create_doc_fragment(html);
-  return await post_process8.call(this, scope, frag, opts);
-}
-async function post_process8(scope, frag, opts = {}) {
-  await this.render_setting_components(frag, { scope });
-  return frag;
-}
-
 // src/components/env_settings.js
-async function build_html3(scope, opts = {}) {
+async function build_html4(scope, opts = {}) {
   const env_settings_html = Object.entries(scope.settings_config).map(([setting_key, setting_config]) => {
     if (!setting_config.setting) setting_config.setting = setting_key;
     return this.render_setting_html(setting_config);
@@ -20764,14 +16001,14 @@ async function build_html3(scope, opts = {}) {
   `;
   return html;
 }
-async function render11(scope, opts = {}) {
-  let html = await build_html3.call(this, scope, opts);
+async function render9(scope, opts = {}) {
+  let html = await build_html4.call(this, scope, opts);
   const frag = this.create_doc_fragment(html);
   return await post_process.call(this, scope, frag, opts);
 }
 
 // src/components/connections.js
-async function build_html4(view, opts = {}) {
+async function build_html5(view, opts = {}) {
   const top_bar_buttons = [
     { title: "Refresh", icon: "refresh-cw" },
     { title: "Fold toggle", icon: view.env.settings.expanded_view ? "fold-vertical" : "unfold-vertical" },
@@ -20814,12 +16051,12 @@ async function build_html4(view, opts = {}) {
   </div>`;
   return html;
 }
-async function render12(view, opts = {}) {
-  let html = await build_html4.call(this, view, opts);
+async function render10(view, opts = {}) {
+  let html = await build_html5.call(this, view, opts);
   const frag = this.create_doc_fragment(html);
-  return await post_process9.call(this, view, frag, opts);
+  return await post_process8.call(this, view, frag, opts);
 }
-async function post_process9(view, frag, opts = {}) {
+async function post_process8(view, frag, opts = {}) {
   const container = frag.querySelector(".sc-list");
   const overlay_container = frag.querySelector(".sc-overlay");
   const render_filter_settings = async () => {
@@ -20876,7 +16113,7 @@ async function post_process9(view, frag, opts = {}) {
 }
 
 // src/components/lookup.js
-async function build_html5(collection, opts = {}) {
+async function build_html6(collection, opts = {}) {
   return `<div id="sc-lookup-view">
     <div class="sc-top-bar">
       <button class="sc-fold-toggle">${this.get_icon_html(collection.settings.expanded_view ? "fold-vertical" : "unfold-vertical")}</button>
@@ -20902,12 +16139,12 @@ async function build_html5(collection, opts = {}) {
     </div>
   </div>`;
 }
-async function render15(collection, opts = {}) {
-  let html = await build_html5.call(this, collection, opts);
+async function render13(collection, opts = {}) {
+  let html = await build_html6.call(this, collection, opts);
   const frag = this.create_doc_fragment(html);
-  return await post_process10.call(this, collection, frag, opts);
+  return await post_process9.call(this, collection, frag, opts);
 }
-async function post_process10(collection, frag, opts = {}) {
+async function post_process9(collection, frag, opts = {}) {
   const query_input = frag.querySelector("#query");
   const results_container = frag.querySelector(".sc-list");
   const render_lookup = async (query, results_container2) => {
@@ -20959,8 +16196,8 @@ async function post_process10(collection, frag, opts = {}) {
 }
 
 // src/components/connections_result.js
-var import_obsidian8 = require("obsidian");
-async function build_html6(result, opts = {}) {
+var import_obsidian9 = require("obsidian");
+async function build_html7(result, opts = {}) {
   const item = result.item;
   const score = result.score;
   const expanded_view = item.env.settings.expanded_view;
@@ -20985,12 +16222,12 @@ async function build_html6(result, opts = {}) {
     </div>
   </div>`;
 }
-async function render16(result, opts = {}) {
-  let html = await build_html6.call(this, result, opts);
+async function render14(result, opts = {}) {
+  let html = await build_html7.call(this, result, opts);
   const frag = this.create_doc_fragment(html);
-  return await post_process11.call(this, result, frag, opts);
+  return await post_process10.call(this, result, frag, opts);
 }
-async function post_process11(result, frag, opts = {}) {
+async function post_process10(result, frag, opts = {}) {
   const { item, score } = result;
   const env = item.env;
   const plugin = env.smart_connections_plugin;
@@ -21017,7 +16254,7 @@ async function post_process11(result, frag, opts = {}) {
     }
     const link = result2.dataset.link || result2.dataset.path;
     if (result2.classList.contains("sc-collapsed")) {
-      if (import_obsidian8.Keymap.isModEvent(event)) {
+      if (import_obsidian9.Keymap.isModEvent(event)) {
         console.log("open_note", link, this);
         plugin.open_note(link, event);
       } else {
@@ -21059,21 +16296,21 @@ async function post_process11(result, frag, opts = {}) {
 }
 
 // src/components/connections_results.js
-async function build_html7(results, opts = {}) {
+async function build_html8(results, opts = {}) {
   return ``;
 }
-async function render17(results, opts = {}) {
-  const html = await build_html7.call(this, results, opts);
+async function render15(results, opts = {}) {
+  const html = await build_html8.call(this, results, opts);
   const frag = this.create_doc_fragment(html);
   const result_frags = await Promise.all(results.map((result) => {
-    return render16.call(this, result, { ...opts });
+    return render14.call(this, result, { ...opts });
   }));
   result_frags.forEach((result_frag) => frag.appendChild(result_frag));
   return frag;
 }
 
 // src/views/smart_chat.js
-function build_html8(obsidian_view, opts = {}) {
+function build_html9(obsidian_view, opts = {}) {
   const top_bar_buttons = [
     // { title: 'Open Conversation Note', icon: 'external-link' },
     { title: "New Chat", icon: "plus" },
@@ -21107,12 +16344,12 @@ function build_html8(obsidian_view, opts = {}) {
     ${obsidian_view.attribution || ""}
   `;
 }
-async function render18(obsidian_view, opts = {}) {
-  const html = build_html8.call(this, obsidian_view, opts);
+async function render16(obsidian_view, opts = {}) {
+  const html = build_html9.call(this, obsidian_view, opts);
   const frag = this.create_doc_fragment(html);
-  return await post_process12.call(this, obsidian_view, frag, opts);
+  return await post_process11.call(this, obsidian_view, frag, opts);
 }
-async function post_process12(obsidian_view, frag, opts) {
+async function post_process11(obsidian_view, frag, opts) {
   const chat_box = frag.querySelector(".sc-thread");
   const settings_button = frag.querySelector('button[title="Chat Settings"]');
   const overlay_container = frag.querySelector(".smart-chat-overlay");
@@ -24799,6 +20036,3123 @@ var SmartHttpObsidianResponseAdapter = class extends SmartHttpResponseAdapter3 {
 // src/smart_env.config.js
 var import_obsidian14 = require("obsidian");
 
+// node_modules/smart-sources/node_modules/smart-collections/utils/collection_instance_name_from.js
+function collection_instance_name_from3(class_name) {
+  if (class_name.endsWith("Item")) {
+    return class_name.replace(/Item$/, "").toLowerCase();
+  }
+  return class_name.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase().replace(/y$/, "ie") + "s";
+}
+
+// node_modules/smart-sources/node_modules/smart-collections/utils/helpers.js
+function create_uid3(data) {
+  const str = JSON.stringify(data);
+  let hash = 0;
+  if (str.length === 0) return hash;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash;
+    if (hash < 0) hash = hash * -1;
+  }
+  return hash.toString() + str.length;
+}
+function deep_merge5(target, source) {
+  for (const key in source) {
+    if (source.hasOwnProperty(key)) {
+      if (is_obj(source[key]) && is_obj(target[key])) deep_merge5(target[key], source[key]);
+      else target[key] = source[key];
+    }
+  }
+  return target;
+  function is_obj(item) {
+    return item && typeof item === "object" && !Array.isArray(item);
+  }
+}
+
+// node_modules/smart-sources/node_modules/smart-collections/utils/deep_equal.js
+function deep_equal3(obj1, obj2, visited = /* @__PURE__ */ new WeakMap()) {
+  if (obj1 === obj2) return true;
+  if (obj1 === null || obj2 === null || obj1 === void 0 || obj2 === void 0) return false;
+  if (typeof obj1 !== typeof obj2 || Array.isArray(obj1) !== Array.isArray(obj2)) return false;
+  if (Array.isArray(obj1)) {
+    if (obj1.length !== obj2.length) return false;
+    return obj1.every((item, index) => deep_equal3(item, obj2[index], visited));
+  }
+  if (typeof obj1 === "object") {
+    if (visited.has(obj1)) return visited.get(obj1) === obj2;
+    visited.set(obj1, obj2);
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+    if (keys1.length !== keys2.length) return false;
+    return keys1.every((key) => deep_equal3(obj1[key], obj2[key], visited));
+  }
+  return obj1 === obj2;
+}
+
+// node_modules/smart-sources/node_modules/smart-collections/item.js
+var CollectionItem3 = class _CollectionItem {
+  /**
+   * Default properties for an instance of CollectionItem.
+   * Override in subclasses to define different defaults.
+   * @returns {Object}
+   */
+  static get defaults() {
+    return {
+      data: {}
+    };
+  }
+  /**
+   * @param {Object} env - The environment/context.
+   * @param {Object|null} [data=null] - Initial data for the item.
+   */
+  constructor(env, data = null) {
+    this.env = env;
+    this.config = this.env?.config;
+    this.merge_defaults();
+    if (data) deep_merge5(this.data, data);
+    if (!this.data.class_name) this.data.class_name = this.constructor.name;
+  }
+  /**
+   * Loads an item from data and initializes it.
+   * @param {Object} env
+   * @param {Object} data
+   * @returns {CollectionItem}
+   */
+  static load(env, data) {
+    const item = new this(env, data);
+    item.init();
+    return item;
+  }
+  /**
+   * Merge default properties from the entire inheritance chain.
+   * @private
+   */
+  merge_defaults() {
+    let current_class = this.constructor;
+    while (current_class) {
+      for (let key in current_class.defaults) {
+        const default_val = current_class.defaults[key];
+        if (typeof default_val === "object") {
+          this[key] = { ...default_val, ...this[key] };
+        } else {
+          this[key] = this[key] === void 0 ? default_val : this[key];
+        }
+      }
+      current_class = Object.getPrototypeOf(current_class);
+    }
+  }
+  /**
+   * Generates or retrieves a unique key for the item.
+   * Key syntax supports:
+   * - `[i]` for sequences
+   * - `/` for super-sources (groups, directories, clusters)
+   * - `#` for sub-sources (blocks)
+   * @returns {string} The unique key
+   */
+  get_key() {
+    return create_uid3(this.data);
+  }
+  /**
+   * Updates the item data and returns true if changed.
+   * @param {Object} data
+   * @returns {boolean} True if data changed.
+   */
+  update_data(data) {
+    const sanitized_data = this.sanitize_data(data);
+    const current_data = { ...this.data };
+    deep_merge5(current_data, sanitized_data);
+    const changed = !deep_equal3(this.data, current_data);
+    if (!changed) return false;
+    this.data = current_data;
+    return true;
+  }
+  /**
+   * Sanitizes data for saving. Ensures no circular references.
+   * @param {*} data
+   * @returns {*} Sanitized data.
+   */
+  sanitize_data(data) {
+    if (data instanceof _CollectionItem) return data.ref;
+    if (Array.isArray(data)) return data.map((val) => this.sanitize_data(val));
+    if (typeof data === "object" && data !== null) {
+      return Object.keys(data).reduce((acc, key) => {
+        acc[key] = this.sanitize_data(data[key]);
+        return acc;
+      }, {});
+    }
+    return data;
+  }
+  /**
+   * Initializes the item. Override as needed.
+   * @param {Object} [input_data] - Additional data that might be provided on creation.
+   */
+  init(input_data) {
+  }
+  /**
+   * Queues this item for saving.
+   */
+  queue_save() {
+    this._queue_save = true;
+  }
+  /**
+   * Saves this item using its data adapter.
+   * @returns {Promise<void>}
+   */
+  async save() {
+    try {
+      await this.data_adapter.save_item(this);
+      this.init();
+    } catch (err) {
+      this._queue_save = true;
+      console.error(err, err.stack);
+    }
+  }
+  /**
+   * Queues this item for loading.
+   */
+  queue_load() {
+    this._queue_load = true;
+  }
+  /**
+   * Loads this item using its data adapter.
+   * @returns {Promise<void>}
+   */
+  async load() {
+    try {
+      await this.data_adapter.load_item(this);
+      this.init();
+    } catch (err) {
+      this._load_error = err;
+      this.on_load_error(err);
+    }
+  }
+  /**
+   * Handles load errors by re-queuing for load.
+   * Override if needed.
+   * @param {Error} err
+   */
+  on_load_error(err) {
+    this.queue_load();
+  }
+  /**
+   * Validates the item before saving. Checks for presence and validity of key.
+   * @returns {boolean}
+   */
+  validate_save() {
+    if (!this.key) return false;
+    if (this.key.trim() === "") return false;
+    if (this.key === "undefined") return false;
+    return true;
+  }
+  /**
+   * Marks this item as deleted. This does not immediately remove it from memory,
+   * but queues a save that will result in the item being removed from persistent storage.
+   */
+  delete() {
+    this.deleted = true;
+    this.queue_save();
+  }
+  /**
+   * Filters items in the collection based on provided options.
+   * functional filter (returns true or false) for filtering items in collection; called by collection class
+   * @param {Object} filter_opts - Filtering options.
+   * @param {string} [filter_opts.exclude_key] - A single key to exclude.
+   * @param {string[]} [filter_opts.exclude_keys] - An array of keys to exclude. If exclude_key is provided, it's added to this array.
+   * @param {string} [filter_opts.exclude_key_starts_with] - Exclude keys starting with this string.
+   * @param {string[]} [filter_opts.exclude_key_starts_with_any] - Exclude keys starting with any of these strings.
+   * @param {string} [filter_opts.exclude_key_includes] - Exclude keys that include this string.
+   * @param {string} [filter_opts.key_ends_with] - Include only keys ending with this string.
+   * @param {string} [filter_opts.key_starts_with] - Include only keys starting with this string.
+   * @param {string[]} [filter_opts.key_starts_with_any] - Include only keys starting with any of these strings.
+   * @param {string} [filter_opts.key_includes] - Include only keys that include this string.
+   * @returns {boolean} True if the item passes the filter, false otherwise.
+   */
+  filter(filter_opts = {}) {
+    const {
+      exclude_key,
+      exclude_keys = exclude_key ? [exclude_key] : [],
+      exclude_key_starts_with,
+      exclude_key_starts_with_any,
+      exclude_key_includes,
+      exclude_key_includes_any,
+      key_ends_with,
+      key_starts_with,
+      key_starts_with_any,
+      key_includes,
+      key_includes_any
+    } = filter_opts;
+    if (exclude_keys?.includes(this.key)) return false;
+    if (exclude_key_starts_with && this.key.startsWith(exclude_key_starts_with)) return false;
+    if (exclude_key_starts_with_any && exclude_key_starts_with_any.some((prefix) => this.key.startsWith(prefix))) return false;
+    if (exclude_key_includes && this.key.includes(exclude_key_includes)) return false;
+    if (exclude_key_includes_any && exclude_key_includes_any.some((include) => this.key.includes(include))) return false;
+    if (key_ends_with && !this.key.endsWith(key_ends_with)) return false;
+    if (key_starts_with && !this.key.startsWith(key_starts_with)) return false;
+    if (key_starts_with_any && !key_starts_with_any.some((prefix) => this.key.startsWith(prefix))) return false;
+    if (key_includes && !this.key.includes(key_includes)) return false;
+    if (key_includes_any && !key_includes_any.some((include) => this.key.includes(include))) return false;
+    return true;
+  }
+  /**
+   * Parses item data for additional processing. Override as needed.
+   */
+  parse() {
+  }
+  /**
+   * Helper function to render a component in the item scope
+   * @param {*} component_key 
+   * @param {*} opts 
+   * @returns 
+   */
+  async render_component(component_key, opts = {}) {
+    return await this.env.render_component(component_key, this, opts);
+  }
+  get actions() {
+    if (!this._actions) {
+      this._actions = Object.entries(this.env.opts.items[this.item_type_key].actions || {}).reduce((acc, [k, v]) => {
+        acc[k] = v.bind(this);
+        return acc;
+      }, {});
+    }
+    return this._actions;
+  }
+  /**
+   * Derives the collection key from the class name.
+   * @returns {string}
+   */
+  static get collection_key() {
+    let name = this.name;
+    if (name.match(/\d$/)) name = name.slice(0, -1);
+    return collection_instance_name_from3(name);
+  }
+  /**
+   * @returns {string} The collection key for this item.
+   */
+  get collection_key() {
+    let name = this.constructor.name;
+    if (name.match(/\d$/)) name = name.slice(0, -1);
+    return collection_instance_name_from3(name);
+  }
+  /**
+   * Retrieves the parent collection from the environment.
+   * @returns {Collection}
+   */
+  get collection() {
+    return this.env[this.collection_key];
+  }
+  /**
+   * @returns {string} The item's key.
+   */
+  get key() {
+    return this.data?.key || this.get_key();
+  }
+  get item_type_key() {
+    let name = this.constructor.name;
+    if (name.match(/\d$/)) name = name.slice(0, -1);
+    return camel_case_to_snake_case5(name);
+  }
+  /**
+   * A simple reference object for this item.
+   * @returns {{collection_key: string, key: string}}
+   */
+  get ref() {
+    return { collection_key: this.collection_key, key: this.key };
+  }
+  /**
+   * @returns {Object} The data adapter for this item's collection.
+   */
+  get data_adapter() {
+    return this.collection.data_adapter;
+  }
+  /**
+   * @returns {Object} The filesystem adapter.
+   */
+  get data_fs() {
+    return this.collection.data_fs;
+  }
+  /**
+   * Access to collection-level settings.
+   * @returns {Object}
+   */
+  get settings() {
+    if (!this.env.settings[this.collection_key]) this.env.settings[this.collection_key] = {};
+    return this.env.settings[this.collection_key];
+  }
+  set settings(settings) {
+    this.env.settings[this.collection_key] = settings;
+    this.env.smart_settings.save();
+  }
+  /**
+   * Render this item into a container using the item's component.
+   * @deprecated 2024-12-02 Use explicit component pattern from environment
+   * @param {HTMLElement} container
+   * @param {Object} opts
+   * @returns {Promise<HTMLElement>}
+   */
+  async render_item(container, opts = {}) {
+    const frag = await this.component.call(this.smart_view, this, opts);
+    container.innerHTML = "";
+    container.appendChild(frag);
+    return container;
+  }
+  /**
+   * @deprecated use env.smart_view
+   * @returns {Object}
+   */
+  get smart_view() {
+    if (!this._smart_view) this._smart_view = this.env.init_module("smart_view");
+    return this._smart_view;
+  }
+  /**
+   * Override in child classes to set the component for this item
+   * @deprecated 2024-12-02
+   * @returns {Function} The render function for this component
+   */
+  get component() {
+    return item_component;
+  }
+};
+function camel_case_to_snake_case5(str) {
+  const result = str.replace(/([A-Z])/g, (match) => `_${match.toLowerCase()}`).replace(/^_/, "").replace(/2$/, "");
+  return result;
+}
+
+// node_modules/smart-sources/node_modules/smart-collections/collection.js
+var AsyncFunction3 = Object.getPrototypeOf(async function() {
+}).constructor;
+var Collection3 = class {
+  /**
+   * Constructs a new Collection instance.
+   *
+   * @param {Object} env - The environment context containing configurations and adapters.
+   * @param {Object} [opts={}] - Optional configuration.
+   * @param {string} [opts.collection_key] - Custom key to override default collection name.
+   * @param {string} [opts.data_dir] - Custom data directory path.
+   * @param {boolean} [opts.prevent_load_on_init] - Whether to prevent loading items on initialization.
+   */
+  constructor(env, opts = {}) {
+    this.env = env;
+    this.opts = opts;
+    if (opts.collection_key) this.collection_key = opts.collection_key;
+    this.env[this.collection_key] = this;
+    this.config = this.env.config;
+    this.items = {};
+    this.loaded = null;
+    this._loading = false;
+    this.load_time_ms = null;
+    this.settings_container = null;
+  }
+  /**
+   * Initializes a new collection in the environment. Override in subclass if needed.
+   *
+   * @param {Object} env
+   * @param {Object} [opts={}]
+   * @returns {Promise<void>}
+   */
+  static async init(env, opts = {}) {
+    env[this.collection_key] = new this(env, opts);
+    await env[this.collection_key].init();
+    env.collections[this.collection_key] = "init";
+  }
+  /**
+   * The unique collection key derived from the class name.
+   * @returns {string}
+   */
+  static get collection_key() {
+    let name = this.name;
+    if (name.match(/\d$/)) name = name.slice(0, -1);
+    return name.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase();
+  }
+  /**
+   * Instance-level init. Override in subclasses if necessary.
+   * @returns {Promise<void>}
+   */
+  async init() {
+  }
+  /**
+   * Creates or updates an item in the collection.
+   * - If `data` includes a key that matches an existing item, that item is updated.
+   * - Otherwise, a new item is created.
+   * After updating or creating, the item is validated. If validation fails, the item is logged and returned without being saved.
+   * If validation succeeds for a new item, it is added to the collection and marked for saving.
+   *
+   * If the item’s `init()` method is async, a promise is returned that resolves once init completes.
+   *
+   * @param {Object} [data={}] - Data for creating/updating an item.
+   * @returns {Promise<Item>|Item} The created or updated item. May return a promise if `init()` is async.
+   */
+  create_or_update(data = {}) {
+    const existing_item = this.find_by(data);
+    const item = existing_item ? existing_item : new this.item_type(this.env);
+    item._queue_save = !existing_item;
+    const data_changed = item.update_data(data);
+    if (!existing_item && !item.validate_save()) {
+      return item;
+    }
+    if (!existing_item) {
+      this.set(item);
+    }
+    if (existing_item && !data_changed) return existing_item;
+    if (item.init instanceof AsyncFunction3) {
+      return new Promise((resolve) => {
+        item.init(data).then(() => resolve(item));
+      });
+    }
+    item.init(data);
+    return item;
+  }
+  /**
+   * Finds an item by partial data match (first checks key). If `data.key` provided,
+   * returns the item with that key; otherwise attempts a match by merging data.
+   *
+   * @param {Object} data - Data to match against.
+   * @returns {Item|null}
+   */
+  find_by(data) {
+    if (data.key) return this.get(data.key);
+    const temp = new this.item_type(this.env);
+    const temp_data = JSON.parse(JSON.stringify(data, temp.sanitize_data(data)));
+    deep_merge5(temp.data, temp_data);
+    return temp.key ? this.get(temp.key) : null;
+  }
+  /**
+   * Filters items based on provided filter options or a custom function.
+   *
+   * @param {Object|Function} [filter_opts={}] - Filter options or a predicate function.
+   * @returns {Item[]} Array of filtered items.
+   */
+  filter(filter_opts = {}) {
+    if (typeof filter_opts === "function") {
+      return Object.values(this.items).filter(filter_opts);
+    }
+    filter_opts = this.prepare_filter(filter_opts);
+    const results = [];
+    const { first_n } = filter_opts;
+    for (const item of Object.values(this.items)) {
+      if (first_n && results.length >= first_n) break;
+      if (item.filter(filter_opts)) results.push(item);
+    }
+    return results;
+  }
+  /**
+   * Alias for `filter()`
+   * @param {Object|Function} filter_opts
+   * @returns {Item[]}
+   */
+  list(filter_opts) {
+    return this.filter(filter_opts);
+  }
+  /**
+   * Prepares filter options. Can be overridden by subclasses to normalize filter options.
+   *
+   * @param {Object} filter_opts
+   * @returns {Object} Prepared filter options.
+   */
+  prepare_filter(filter_opts) {
+    return filter_opts;
+  }
+  /**
+   * Retrieves an item by key.
+   * @param {string} key
+   * @returns {Item|undefined}
+   */
+  get(key) {
+    return this.items[key];
+  }
+  /**
+   * Retrieves multiple items by an array of keys.
+   * @param {string[]} keys
+   * @returns {Item[]}
+   */
+  get_many(keys = []) {
+    if (!Array.isArray(keys)) {
+      console.error("get_many called with non-array keys:", keys);
+      return [];
+    }
+    return keys.map((key) => this.get(key)).filter(Boolean);
+  }
+  /**
+   * Retrieves a random item from the collection, optionally filtered by options.
+   * @param {Object} [opts]
+   * @returns {Item|undefined}
+   */
+  get_rand(opts = null) {
+    if (opts) {
+      const filtered = this.filter(opts);
+      return filtered[Math.floor(Math.random() * filtered.length)];
+    }
+    const keys = this.keys;
+    return this.items[keys[Math.floor(Math.random() * keys.length)]];
+  }
+  /**
+   * Adds or updates an item in the collection.
+   * @param {Item} item
+   */
+  set(item) {
+    if (!item.key) throw new Error("Item must have a key property");
+    this.items[item.key] = item;
+  }
+  /**
+   * Updates multiple items by their keys.
+   * @param {string[]} keys
+   * @param {Object} data
+   */
+  update_many(keys = [], data = {}) {
+    this.get_many(keys).forEach((item) => item.update_data(data));
+  }
+  /**
+   * Clears all items from the collection.
+   */
+  clear() {
+    this.items = {};
+  }
+  /**
+   * @returns {string} The collection key, can be overridden by opts.collection_key
+   */
+  get collection_key() {
+    return this._collection_key ? this._collection_key : this.constructor.collection_key;
+  }
+  set collection_key(key) {
+    this._collection_key = key;
+  }
+  /**
+   * Lazily initializes and returns the data adapter instance for this collection.
+   * @returns {Object} The data adapter instance.
+   */
+  get data_adapter() {
+    if (!this._data_adapter) {
+      const AdapterClass = this.get_adapter_class("data");
+      this._data_adapter = new AdapterClass(this);
+    }
+    return this._data_adapter;
+  }
+  get_adapter_class(type) {
+    const config = this.env.opts.collections?.[this.collection_key];
+    const adapter_key = type + "_adapter";
+    const adapter_module = config?.[adapter_key] ?? this.env.opts.collections?.smart_collections?.[adapter_key];
+    if (typeof adapter_module === "function") return adapter_module;
+    if (typeof adapter_module?.collection === "function") return adapter_module.collection;
+    throw new Error(`No '${type}' adapter class found for ${this.collection_key} or smart_collections`);
+  }
+  /**
+   * Data directory strategy for this collection. Defaults to 'multi'.
+   * @returns {string}
+   */
+  get data_dir() {
+    return "multi";
+  }
+  /**
+   * File system adapter from the environment.
+   * @returns {Object}
+   */
+  get data_fs() {
+    return this.env.data_fs;
+  }
+  /**
+   * Derives the corresponding item class name based on this collection's class name.
+   * @returns {string}
+   */
+  get item_class_name() {
+    let name = this.constructor.name;
+    if (name.match(/\d$/)) name = name.slice(0, -1);
+    if (name.endsWith("ies")) return name.slice(0, -3) + "y";
+    else if (name.endsWith("s")) return name.slice(0, -1);
+    return name + "Item";
+  }
+  /**
+   * Derives a readable item name from the item class name.
+   * @returns {string}
+   */
+  get item_name() {
+    return this.item_class_name.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase();
+  }
+  /**
+   * Retrieves the item type (constructor) from the environment.
+   * @returns {Function} Item constructor.
+   */
+  get item_type() {
+    return this.env.item_types[this.item_class_name];
+  }
+  /**
+   * Returns an array of all keys in the collection.
+   * @returns {string[]}
+   */
+  get keys() {
+    return Object.keys(this.items);
+  }
+  /**
+   * @deprecated use data_adapter instead (2024-09-14)
+   */
+  get adapter() {
+    return this.data_adapter;
+  }
+  /**
+   * @method process_save_queue
+   * @description 
+   * Saves items flagged for saving (_queue_save) back to AJSON or SQLite. This ensures persistent storage 
+   * of any updates made since last load/import. This method also writes changes to disk (AJSON files or DB).
+   */
+  async process_save_queue(opts = {}) {
+    if (opts.force) {
+      Object.values(this.items).forEach((item) => item._queue_save = true);
+    }
+    await this.data_adapter.process_save_queue(opts);
+  }
+  /**
+   * @alias process_save_queue
+   * @returns {Promise<void>}
+   */
+  async save(opts = {}) {
+    await this.process_save_queue(opts);
+  }
+  /**
+   * @method process_load_queue
+   * @description 
+   * Loads items that have been flagged for loading (_queue_load). This may involve 
+   * reading from AJSON/SQLite or re-importing from markdown if needed. 
+   * Called once initial environment is ready and collections are known.
+   */
+  async process_load_queue() {
+    await this.data_adapter.process_load_queue();
+  }
+  /**
+   * Retrieves processed settings configuration.
+   * @returns {Object}
+   */
+  get settings_config() {
+    return this.process_settings_config({});
+  }
+  /**
+   * Processes given settings config, adding prefixes and handling conditionals.
+   *
+   * @private
+   * @param {Object} _settings_config
+   * @param {string} [prefix='']
+   * @returns {Object}
+   */
+  process_settings_config(_settings_config, prefix = "") {
+    const add_prefix = (key) => prefix && !key.includes(`${prefix}.`) ? `${prefix}.${key}` : key;
+    return Object.entries(_settings_config).reduce((acc, [key, val]) => {
+      let new_val = { ...val };
+      if (new_val.conditional) {
+        if (!new_val.conditional(this)) return acc;
+        delete new_val.conditional;
+      }
+      if (new_val.callback) new_val.callback = add_prefix(new_val.callback);
+      if (new_val.btn_callback) new_val.btn_callback = add_prefix(new_val.btn_callback);
+      if (new_val.options_callback) new_val.options_callback = add_prefix(new_val.options_callback);
+      const new_key = add_prefix(this.process_setting_key(key));
+      acc[new_key] = new_val;
+      return acc;
+    }, {});
+  }
+  /**
+   * Processes an individual setting key. Override if needed.
+   * @param {string} key
+   * @returns {string}
+   */
+  process_setting_key(key) {
+    return key;
+  }
+  /**
+   * Default settings for this collection. Override in subclasses as needed.
+   * @returns {Object}
+   */
+  get default_settings() {
+    return {};
+  }
+  /**
+   * Current settings for the collection.
+   * Initializes with default settings if none exist.
+   * @returns {Object}
+   */
+  get settings() {
+    if (!this.env.settings[this.collection_key]) {
+      this.env.settings[this.collection_key] = this.default_settings;
+    }
+    return this.env.settings[this.collection_key];
+  }
+  /**
+   * @deprecated use env.smart_view instead
+   * @returns {Object} smart_view instance
+   */
+  get smart_view() {
+    if (!this._smart_view) this._smart_view = this.env.init_module("smart_view");
+    return this._smart_view;
+  }
+  /**
+   * Renders the settings for the collection into a given container.
+   * @param {HTMLElement} [container=this.settings_container]
+   * @param {Object} opts
+   * @returns {Promise<HTMLElement>}
+   */
+  async render_settings(container = this.settings_container, opts = {}) {
+    return await this.render_collection_settings(container, opts);
+  }
+  /**
+   * Helper function to render collection settings.
+   * @param {HTMLElement} [container=this.settings_container]
+   * @param {Object} opts
+   * @returns {Promise<HTMLElement>}
+   */
+  async render_collection_settings(container = this.settings_container, opts = {}) {
+    if (container && (!this.settings_container || this.settings_container !== container)) {
+      this.settings_container = container;
+    } else if (!container) {
+      container = this.env.smart_view.create_doc_fragment("<div></div>");
+    }
+    container.innerHTML = `<div class="sc-loading">Loading ${this.collection_key} settings...</div>`;
+    const frag = await this.env.render_component("settings", this, opts);
+    container.innerHTML = "";
+    container.appendChild(frag);
+    return container;
+  }
+  /**
+   * Unloads collection data from memory.
+   */
+  unload() {
+    this.clear();
+    this.unloaded = true;
+  }
+  /**
+   * Runs load process for all items in the collection, triggering queue loads and rendering settings after done.
+   * @returns {Promise<void>}
+   */
+  async run_data_load() {
+    this.loaded = null;
+    this.load_time_ms = null;
+    Object.values(this.items).forEach((item) => item.queue_load());
+    this.notices?.show("loading_collection", { collection_key: this.collection_key });
+    await this.process_load_queue();
+    this.notices?.remove("loading_collection");
+    this.notices?.show("done_loading_collection", { collection_key: this.collection_key });
+    this.render_settings();
+  }
+  /**
+   * Helper function to render a component in the collection scope
+   * @param {*} component_key 
+   * @param {*} opts 
+   * @returns 
+   */
+  async render_component(component_key, opts = {}) {
+    return await this.env.render_component(component_key, this, opts);
+  }
+};
+
+// node_modules/smart-sources/node_modules/smart-entities/adapters/_adapter.js
+var EntitiesVectorAdapter3 = class {
+  /**
+   * @constructor
+   * @param {Object} collection - The collection (SmartEntities or derived class) instance.
+   */
+  constructor(collection) {
+    this.collection = collection;
+  }
+  /**
+   * Find the nearest entities to the given vector.
+   * @async
+   * @param {number[]} vec - The reference vector.
+   * @param {Object} [filter={}] - Optional filters (limit, exclude, etc.)
+   * @returns {Promise<Array<{item:Object, score:number}>>} Array of results sorted by score descending.
+   * @throws {Error} Not implemented by default.
+   */
+  async nearest(vec, filter = {}) {
+    throw new Error("EntitiesVectorAdapter.nearest() not implemented");
+  }
+  /**
+   * Find the furthest entities from the given vector.
+   * @async
+   * @param {number[]} vec - The reference vector.
+   * @param {Object} [filter={}] - Optional filters (limit, exclude, etc.)
+   * @returns {Promise<Array<{item:Object, score:number}>>} Array of results sorted by score ascending (furthest).
+   * @throws {Error} Not implemented by default.
+   */
+  async furthest(vec, filter = {}) {
+    throw new Error("EntitiesVectorAdapter.furthest() not implemented");
+  }
+  /**
+   * Embed a batch of entities.
+   * @async
+   * @param {Object[]} entities - Array of entity instances to embed.
+   * @returns {Promise<void>}
+   * @throws {Error} Not implemented by default.
+   */
+  async embed_batch(entities) {
+    throw new Error("EntitiesVectorAdapter.embed_batch() not implemented");
+  }
+  /**
+   * Process a queue of entities waiting to be embedded.
+   * Typically, this will call embed_batch in batches and update entities.
+   * @async
+   * @param {Object[]} embed_queue - Array of entities to embed.
+   * @returns {Promise<void>}
+   * @throws {Error} Not implemented by default.
+   */
+  async process_embed_queue(embed_queue) {
+    throw new Error("EntitiesVectorAdapter.process_embed_queue() not implemented");
+  }
+};
+var EntityVectorAdapter3 = class {
+  /**
+   * @constructor
+   * @param {Object} item - The SmartEntity instance that this adapter is associated with.
+   */
+  constructor(item) {
+    this.item = item;
+  }
+  /**
+   * Retrieve the current vector embedding for this entity.
+   * @async
+   * @returns {Promise<number[]|undefined>} The entity's vector or undefined if not set.
+   * @throws {Error} Not implemented by default.
+   */
+  async get_vec() {
+    throw new Error("EntityVectorAdapter.get_vec() not implemented");
+  }
+  /**
+   * Store/update the vector embedding for this entity.
+   * @async
+   * @param {number[]} vec - The vector to set.
+   * @returns {Promise<void>}
+   * @throws {Error} Not implemented by default.
+   */
+  async set_vec(vec) {
+    throw new Error("EntityVectorAdapter.set_vec() not implemented");
+  }
+  /**
+   * Delete/remove the vector embedding for this entity.
+   * @async
+   * @returns {Promise<void>}
+   * @throws {Error} Not implemented by default.
+   */
+  async delete_vec() {
+    throw new Error("EntityVectorAdapter.delete_vec() not implemented");
+  }
+};
+
+// node_modules/smart-sources/node_modules/smart-entities/utils/cos_sim.js
+function cos_sim3(vector1, vector2) {
+  if (vector1.length !== vector2.length) {
+    throw new Error("Vectors must have the same length");
+  }
+  let dot_product = 0;
+  let magnitude1 = 0;
+  let magnitude2 = 0;
+  const epsilon = 1e-8;
+  for (let i = 0; i < vector1.length; i++) {
+    dot_product += vector1[i] * vector2[i];
+    magnitude1 += vector1[i] * vector1[i];
+    magnitude2 += vector2[i] * vector2[i];
+  }
+  magnitude1 = Math.sqrt(magnitude1);
+  magnitude2 = Math.sqrt(magnitude2);
+  if (magnitude1 < epsilon || magnitude2 < epsilon) {
+    return 0;
+  }
+  return dot_product / (magnitude1 * magnitude2);
+}
+
+// node_modules/smart-sources/node_modules/smart-entities/utils/results_acc.js
+function results_acc3(_acc, result, ct = 10) {
+  if (_acc.results.size < ct) {
+    _acc.results.add(result);
+    if (_acc.results.size === ct && _acc.min === Number.POSITIVE_INFINITY) {
+      let { minScore, minObj } = find_min3(_acc.results);
+      _acc.min = minScore;
+      _acc.minResult = minObj;
+    }
+  } else if (result.score > _acc.min) {
+    _acc.results.add(result);
+    _acc.results.delete(_acc.minResult);
+    let { minScore, minObj } = find_min3(_acc.results);
+    _acc.min = minScore;
+    _acc.minResult = minObj;
+  }
+}
+function furthest_acc3(_acc, result, ct = 10) {
+  if (_acc.results.size < ct) {
+    _acc.results.add(result);
+    if (_acc.results.size === ct && _acc.max === Number.NEGATIVE_INFINITY) {
+      let { maxScore, maxObj } = find_max3(_acc.results);
+      _acc.max = maxScore;
+      _acc.maxResult = maxObj;
+    }
+  } else if (result.score < _acc.max) {
+    _acc.results.add(result);
+    _acc.results.delete(_acc.maxResult);
+    let { maxScore, maxObj } = find_max3(_acc.results);
+    _acc.max = maxScore;
+    _acc.maxResult = maxObj;
+  }
+}
+function find_min3(results) {
+  let minScore = Number.POSITIVE_INFINITY;
+  let minObj = null;
+  for (const obj of results) {
+    if (obj.score < minScore) {
+      minScore = obj.score;
+      minObj = obj;
+    }
+  }
+  return { minScore, minObj };
+}
+function find_max3(results) {
+  let maxScore = Number.NEGATIVE_INFINITY;
+  let maxObj = null;
+  for (const obj of results) {
+    if (obj.score > maxScore) {
+      maxScore = obj.score;
+      maxObj = obj;
+    }
+  }
+  return { maxScore, maxObj };
+}
+
+// node_modules/smart-sources/node_modules/smart-entities/utils/sort_by_score.js
+function sort_by_score3(a, b) {
+  const epsilon = 1e-9;
+  const score_diff = a.score - b.score;
+  if (Math.abs(score_diff) < epsilon) return 0;
+  return score_diff > 0 ? -1 : 1;
+}
+function sort_by_score_descending3(a, b) {
+  return sort_by_score3(a, b);
+}
+function sort_by_score_ascending3(a, b) {
+  return sort_by_score3(a, b) * -1;
+}
+
+// node_modules/smart-sources/node_modules/smart-entities/adapters/default.js
+var DefaultEntitiesVectorAdapter3 = class extends EntitiesVectorAdapter3 {
+  constructor(collection) {
+    super(collection);
+    this._is_processing_embed_queue = false;
+    this._reset_embed_queue_stats();
+  }
+  /**
+   * Find the nearest entities to the given vector.
+   * @async
+   * @param {number[]} vec - The reference vector.
+   * @param {Object} [filter={}] - Optional filters (limit, exclude, etc.)
+   * @returns {Promise<Array<{item:Object, score:number}>>} Array of results sorted by score descending.
+   */
+  async nearest(vec, filter = {}) {
+    if (!vec || !Array.isArray(vec)) {
+      throw new Error("Invalid vector input to nearest()");
+    }
+    const {
+      limit = 50
+      // TODO: default configured in settings
+    } = filter;
+    const nearest = this.collection.filter(filter).reduce((acc, item) => {
+      if (!item.vec) return acc;
+      const result = { item, score: cos_sim3(vec, item.vec) };
+      results_acc3(acc, result, limit);
+      return acc;
+    }, { min: 0, results: /* @__PURE__ */ new Set() });
+    return Array.from(nearest.results).sort(sort_by_score_descending3);
+  }
+  /**
+   * Find the furthest entities from the given vector.
+   * @async
+   * @param {number[]} vec - The reference vector.
+   * @param {Object} [filter={}] - Optional filters (limit, exclude, etc.)
+   * @returns {Promise<Array<{item:Object, score:number}>>} Array of results sorted by score ascending (furthest).
+   */
+  async furthest(vec, filter = {}) {
+    if (!vec || !Array.isArray(vec)) {
+      throw new Error("Invalid vector input to furthest()");
+    }
+    const {
+      limit = 50
+      // TODO: default configured in settings
+    } = filter;
+    const furthest = this.collection.filter(filter).reduce((acc, item) => {
+      if (!item.vec) return acc;
+      const result = { item, score: cos_sim3(vec, item.vec) };
+      furthest_acc3(acc, result, limit);
+      return acc;
+    }, { max: 0, results: /* @__PURE__ */ new Set() });
+    return Array.from(furthest.results).sort(sort_by_score_ascending3);
+  }
+  /**
+   * Embed a batch of entities.
+   * @async
+   * @param {Object[]} entities - Array of entity instances to embed.
+   * @returns {Promise<void>}
+   */
+  async embed_batch(entities) {
+    if (!this.collection.embed_model) {
+      throw new Error("No embed_model found in collection for embedding");
+    }
+    await Promise.all(entities.map((e) => e.get_embed_input()));
+    const embeddings = await this.collection.embed_model.embed_batch(entities);
+    embeddings.forEach((emb, i) => {
+      const entity = entities[i];
+      entity.vec = emb.vec;
+      if (emb.tokens !== void 0) entity.tokens = emb.tokens;
+    });
+  }
+  /**
+   * Process a queue of entities waiting to be embedded.
+   * Prevents multiple concurrent runs by using `_is_processing_embed_queue`.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async process_embed_queue() {
+    if (this._is_processing_embed_queue) {
+      console.log("process_embed_queue is already running, skipping concurrent call.");
+      return;
+    }
+    this._is_processing_embed_queue = true;
+    try {
+      const embed_queue = this.collection.embed_queue;
+      this._reset_embed_queue_stats();
+      if (this.collection.embed_model_key === "None") {
+        console.log(`Smart Connections: No active embedding model for ${this.collection.collection_key}, skipping embedding`);
+        return;
+      }
+      if (!this.collection.embed_model) {
+        console.log(`Smart Connections: No active embedding model for ${this.collection.collection_key}, skipping embedding`);
+        return;
+      }
+      const datetime_start = /* @__PURE__ */ new Date();
+      if (!embed_queue.length) {
+        console.log(`Smart Connections: No items in ${this.collection.collection_key} embed queue`);
+        return;
+      }
+      console.log(`Time spent getting embed queue: ${(/* @__PURE__ */ new Date()).getTime() - datetime_start.getTime()}ms`);
+      console.log(`Processing ${this.collection.collection_key} embed queue: ${embed_queue.length} items`);
+      for (let i = 0; i < embed_queue.length; i += this.collection.embed_model.batch_size) {
+        if (this.is_queue_halted) {
+          this.is_queue_halted = false;
+          break;
+        }
+        const batch = embed_queue.slice(i, i + this.collection.embed_model.batch_size);
+        await Promise.all(batch.map((item) => item.get_embed_input()));
+        try {
+          const start_time = Date.now();
+          await this.embed_batch(batch);
+          this.total_time += Date.now() - start_time;
+        } catch (e) {
+          if (e && e.message && e.message.includes("API key not set")) {
+            this.halt_embed_queue_processing(`API key not set for ${this.collection.embed_model_key}
+Please set the API key in the settings.`);
+          }
+          console.error(e);
+          console.error(`Error processing ${this.collection.collection_key} embed queue: ` + JSON.stringify(e || {}, null, 2));
+        }
+        batch.forEach((item) => {
+          item.embed_hash = item.read_hash;
+          item._queue_save = true;
+        });
+        this.embedded_total += batch.length;
+        this.total_tokens += batch.reduce((acc, item) => acc + (item.tokens || 0), 0);
+        this._show_embed_progress_notice(embed_queue.length);
+        if (this.embedded_total - this.last_save_total > 1e3) {
+          this.last_save_total = this.embedded_total;
+          await this.collection.process_save_queue();
+          if (this.collection.block_collection) {
+            console.log(`Saving ${this.collection.block_collection.collection_key} block collection`);
+            await this.collection.block_collection.process_save_queue();
+          }
+        }
+      }
+      this._show_embed_completion_notice(embed_queue.length);
+      await this.collection.process_save_queue();
+      if (this.collection.block_collection) {
+        await this.collection.block_collection.process_save_queue();
+      }
+    } finally {
+      this._is_processing_embed_queue = false;
+    }
+  }
+  /**
+   * Displays the embedding progress notice.
+   * @private
+   * @returns {void}
+   */
+  _show_embed_progress_notice(embed_queue_length) {
+    if (this.embedded_total - this.last_notice_embedded_total < 100) return;
+    this.last_notice_embedded_total = this.embedded_total;
+    this.notices?.show("embedding_progress", {
+      progress: this.embedded_total,
+      total: embed_queue_length,
+      tokens_per_second: this._calculate_embed_tokens_per_second(),
+      model_name: this.collection.embed_model_key
+    });
+  }
+  /**
+   * Displays the embedding completion notice.
+   * @private
+   * @returns {void}
+   */
+  _show_embed_completion_notice() {
+    this.notices?.remove("embedding_progress");
+    this.notices?.show("embedding_complete", {
+      total_embeddings: this.embedded_total,
+      tokens_per_second: this._calculate_embed_tokens_per_second(),
+      model_name: this.collection.embed_model_key
+    });
+  }
+  /**
+   * Halts the embed queue processing.
+   * @param {string|null} msg - Optional message.
+   */
+  halt_embed_queue_processing(msg = null) {
+    this.is_queue_halted = true;
+    console.log("Embed queue processing halted");
+    this.notices?.remove("embedding_progress");
+    this.notices?.show("embedding_paused", {
+      progress: this.embedded_total,
+      total: this.collection._embed_queue.length,
+      tokens_per_second: this._calculate_embed_tokens_per_second(),
+      model_name: this.collection.embed_model_key
+    });
+  }
+  /**
+   * Resumes the embed queue processing after a delay.
+   * @param {number} [delay=0] - The delay in milliseconds before resuming.
+   * @returns {void}
+   */
+  resume_embed_queue_processing(delay = 0) {
+    console.log("resume_embed_queue_processing");
+    this.notices?.remove("embedding_paused");
+    setTimeout(() => {
+      this.embedded_total = 0;
+      this.process_embed_queue();
+    }, delay);
+  }
+  /**
+   * Calculates the number of tokens processed per second.
+   * @private
+   * @returns {number} Tokens per second.
+   */
+  _calculate_embed_tokens_per_second() {
+    const elapsed_time = this.total_time / 1e3;
+    return Math.round(this.total_tokens / (elapsed_time || 1));
+  }
+  /**
+   * Resets the statistics related to embed queue processing.
+   * @private
+   * @returns {void}
+   */
+  _reset_embed_queue_stats() {
+    this.collection._embed_queue = [];
+    this.embedded_total = 0;
+    this.is_queue_halted = false;
+    this.last_save_total = 0;
+    this.last_notice_embedded_total = 0;
+    this.total_tokens = 0;
+    this.total_time = 0;
+  }
+  get notices() {
+    return this.collection.notices;
+  }
+};
+var DefaultEntityVectorAdapter3 = class extends EntityVectorAdapter3 {
+  get data() {
+    return this.item.data;
+  }
+  /**
+   * Retrieve the current vector embedding for this entity.
+   * @async
+   * @returns {Promise<number[]|undefined>} The entity's vector or undefined if not set.
+   */
+  async get_vec() {
+    return this.vec;
+  }
+  /**
+   * Store/update the vector embedding for this entity.
+   * @async
+   * @param {number[]} vec - The vector to set.
+   * @returns {Promise<void>}
+   */
+  async set_vec(vec) {
+    this.vec = vec;
+  }
+  /**
+   * Delete/remove the vector embedding for this entity.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async delete_vec() {
+    if (this.item.data?.embeddings?.[this.item.embed_model_key]) {
+      delete this.item.data.embeddings[this.item.embed_model_key].vec;
+    }
+  }
+  // adds synchronous get/set for vec
+  get vec() {
+    return this.item.data?.embeddings?.[this.item.embed_model_key]?.vec;
+  }
+  set vec(vec) {
+    if (!this.item.data.embeddings) {
+      this.item.data.embeddings = {};
+    }
+    if (!this.item.data.embeddings[this.item.embed_model_key]) {
+      this.item.data.embeddings[this.item.embed_model_key] = {};
+    }
+    this.item.data.embeddings[this.item.embed_model_key].vec = vec;
+  }
+};
+
+// node_modules/smart-sources/node_modules/smart-entities/components/entity.js
+async function render17(entity, opts = {}) {
+  let markdown;
+  if (should_render_embed3(entity)) markdown = entity.embed_link;
+  else markdown = process_for_rendering3(await entity.read());
+  let frag;
+  if (entity.env.settings.smart_view_filter.render_markdown) frag = await this.render_markdown(markdown, entity);
+  else frag = this.create_doc_fragment(markdown);
+  return await post_process12.call(this, entity, frag, opts);
+}
+function process_for_rendering3(content) {
+  if (content.includes("```dataview")) content = content.replace(/```dataview/g, "```\\dataview");
+  if (content.includes("![[")) content = content.replace(/\!\[\[/g, "! [[");
+  return content;
+}
+async function post_process12(scope, frag, opts = {}) {
+  return frag;
+}
+function should_render_embed3(entity) {
+  if (!entity) return false;
+  if (entity.is_canvas || entity.is_excalidraw) return true;
+  return false;
+}
+
+// node_modules/smart-sources/node_modules/smart-entities/actions/find_connections.js
+async function find_connections4(params = {}) {
+  const filter_opts = this.prepare_find_connections_filter_opts(params);
+  const limit = params.filter?.limit || params.limit || this.env.settings.smart_view_filter?.results_limit || 10;
+  const cache_key = this.key + JSON.stringify(params);
+  if (!this.env.connections_cache) this.env.connections_cache = {};
+  if (!this.env.connections_cache[cache_key]) {
+    const connections = (await this.nearest(filter_opts)).sort(sort_by_score3).slice(0, limit);
+    this.connections_to_cache(cache_key, connections);
+  }
+  return this.connections_from_cache(cache_key);
+}
+
+// node_modules/smart-sources/node_modules/smart-entities/smart_entity.js
+var SmartEntity3 = class extends CollectionItem3 {
+  /**
+   * Creates an instance of SmartEntity.
+   * @constructor
+   * @param {Object} env - The environment instance.
+   * @param {Object} [opts={}] - Configuration options.
+   */
+  constructor(env, opts = {}) {
+    super(env, opts);
+    this.entity_adapter = new DefaultEntityVectorAdapter3(this);
+  }
+  /**
+   * Provides default values for a SmartEntity instance.
+   * @static
+   * @readonly
+   * @returns {Object} The default values.
+   */
+  static get defaults() {
+    return {
+      data: {
+        path: null,
+        last_embed: {
+          hash: null
+        },
+        embeddings: {}
+      }
+    };
+  }
+  get vector_adapter() {
+    if (!this._vector_adapter) {
+      this._vector_adapter = new this.collection.opts.vector_adapter.item(this);
+    }
+    return this._vector_adapter;
+  }
+  /**
+   * Initializes the SmartEntity instance.
+   * Checks if the entity has a vector and if it matches the model dimensions.
+   * If not, it queues an embed.
+   * Removes embeddings for inactive models.
+   * @returns {void}
+   */
+  init() {
+    super.init();
+    if (!this.vec) {
+      this.queue_embed();
+    } else if (this.vec.length !== this.embed_model.model_config.dims) {
+      this.vec = null;
+      this.queue_embed();
+    }
+    Object.entries(this.data.embeddings || {}).forEach(([model, embedding]) => {
+      if (model !== this.embed_model_key) {
+        this.data.embeddings[model] = null;
+        delete this.data.embeddings[model];
+      }
+    });
+  }
+  /**
+   * Queues the entity for embedding.
+   * @returns {void}
+   */
+  queue_embed() {
+    this._queue_embed = true;
+  }
+  /**
+   * Finds the nearest entities to this entity.
+   * @param {Object} [filter={}] - Optional filters to apply.
+   * @returns {Array<{item:Object, score:number}>} An array of result objects with score and item.
+   */
+  async nearest(filter = {}) {
+    return await this.collection.nearest_to(this, filter);
+  }
+  /**
+   * Prepares the input for embedding.
+   * @async
+   * @param {string} [content=null] - Optional content to use instead of calling subsequent read()
+   * @returns {Promise<void>} Should be overridden in child classes.
+   */
+  async get_embed_input(content = null) {
+  }
+  // override in child class
+  /**
+   * Retrieves the embed input, either from cache or by generating it.
+   * @readonly
+   * @returns {string|Promise<string>} The embed input string or a promise resolving to it.
+   */
+  get embed_input() {
+    return this._embed_input ? this._embed_input : this.get_embed_input();
+  }
+  /**
+   * Prepares filter options for finding connections based on parameters.
+   * @param {Object} [params={}] - Parameters for finding connections.
+   * @returns {Object} The prepared filter options.
+   */
+  prepare_find_connections_filter_opts(params = {}) {
+    const opts = {
+      ...this.env.settings.smart_view_filter || {},
+      ...params,
+      entity: this
+    };
+    if (opts.filter?.limit) delete opts.filter.limit;
+    if (opts.limit) delete opts.limit;
+    return opts;
+  }
+  /**
+   * Finds connections relevant to this entity based on provided parameters.
+   * @async
+   * @param {Object} [params={}] - Parameters for finding connections.
+   * @returns {Array<{item:Object, score:number}>} An array of result objects with score and item.
+   */
+  async find_connections(params = {}) {
+    return await this.actions.find_connections(params);
+  }
+  /**
+   * Retrieves connections from the cache based on the cache key.
+   * @param {string} cache_key - The cache key.
+   * @returns {Array<{item:Object, score:number}>} The cached connections.
+   */
+  connections_from_cache(cache_key) {
+    return this.env.connections_cache[cache_key];
+  }
+  /**
+   * Stores connections in the cache with the provided cache key.
+   * @param {string} cache_key - The cache key.
+   * @param {Array<{item:Object, score:number}>} connections - The connections to cache.
+   * @returns {void}
+   */
+  connections_to_cache(cache_key, connections) {
+    this.env.connections_cache[cache_key] = connections;
+  }
+  get read_hash() {
+    return this.data.last_read?.hash;
+  }
+  set read_hash(hash) {
+    if (!this.data.last_read) this.data.last_read = {};
+    this.data.last_read.hash = hash;
+  }
+  get embedding_data() {
+    if (!this.data.embeddings[this.embed_model_key]) {
+      this.data.embeddings[this.embed_model_key] = {};
+    }
+    return this.data.embeddings[this.embed_model_key];
+  }
+  get last_embed() {
+    if (!this.embedding_data.last_embed) {
+      this.embedding_data.last_embed = {};
+      if (this.data.last_embed) {
+        this.embedding_data.last_embed = this.data.last_embed;
+        delete this.data.last_embed;
+        this.queue_save();
+      }
+    }
+    return this.embedding_data.last_embed;
+  }
+  get embed_hash() {
+    return this.last_embed?.hash;
+  }
+  set embed_hash(hash) {
+    if (!this.embedding_data.last_embed) this.embedding_data.last_embed = {};
+    this.embedding_data.last_embed.hash = hash;
+  }
+  /**
+   * Gets the embed link for the entity.
+   * @readonly
+   * @returns {string} The embed link.
+   */
+  get embed_link() {
+    return `![[${this.path}]]`;
+  }
+  /**
+   * Gets the key of the embedding model.
+   * @readonly
+   * @returns {string} The embedding model key.
+   */
+  get embed_model_key() {
+    return this.collection.embed_model_key;
+  }
+  /**
+   * Gets the name of the entity, formatted based on settings.
+   * @readonly
+   * @returns {string} The entity name.
+   */
+  get name() {
+    return (!this.should_show_full_path ? this.path.split("/").pop() : this.path.split("/").join(" > ")).split("#").join(" > ").replace(".md", "");
+  }
+  /**
+   * Determines whether to show the full path of the entity.
+   * @readonly
+   * @returns {boolean} True if the full path should be shown, false otherwise.
+   */
+  get should_show_full_path() {
+    return this.env.settings.smart_view_filter?.show_full_path;
+  }
+  /**
+   * @deprecated Use embed_model instead.
+   * @readonly
+   * @returns {Object} The smart embedding model.
+   */
+  get smart_embed() {
+    return this.embed_model;
+  }
+  /**
+   * Gets the embedding model instance from the collection.
+   * @readonly
+   * @returns {Object} The embedding model instance.
+   */
+  get embed_model() {
+    return this.collection.embed_model;
+  }
+  /**
+   * Determines if the entity should be embedded.
+   * @readonly
+   * @returns {boolean} True if no vector is set, false otherwise.
+   */
+  get should_embed() {
+    return !this.vec && this.size > (this.settings?.min_chars || 300);
+  }
+  /**
+   * Sets the error for the embedding model.
+   * @param {string} error - The error message.
+   */
+  set error(error) {
+    this.data.embeddings[this.embed_model_key].error = error;
+  }
+  /**
+   * Gets the number of tokens associated with the entity's embedding.
+   * @readonly
+   * @returns {number|undefined} The number of tokens, or undefined if not set.
+   */
+  get tokens() {
+    return this.last_embed?.tokens;
+  }
+  /**
+   * Sets the number of tokens for the embedding.
+   * @param {number} tokens - The number of tokens.
+   */
+  set tokens(tokens) {
+    this.last_embed.tokens = tokens;
+  }
+  /**
+   * Gets the vector representation from the entity adapter.
+   * @readonly
+   * @returns {Array<number>|undefined} The vector or undefined if not set.
+   */
+  get vec() {
+    return this.entity_adapter.vec;
+  }
+  /**
+   * Sets the vector representation in the entity adapter.
+   * @param {Array<number>} vec - The vector to set.
+   */
+  set vec(vec) {
+    this.entity_adapter.vec = vec;
+    this._queue_embed = false;
+    this._embed_input = null;
+    this.queue_save();
+  }
+  /**
+   * Removes all embeddings from the entity.
+   * @returns {void}
+   */
+  remove_embeddings() {
+    this.data.embeddings = null;
+    this.queue_save();
+  }
+  /**
+   * Retrieves the key of the entity.
+   * @returns {string} The entity key.
+   */
+  get_key() {
+    return this.data.key || this.data.path;
+  }
+  /**
+   * Retrieves the path of the entity.
+   * @readonly
+   * @returns {string|null} The entity path.
+   */
+  get path() {
+    return this.data.path;
+  }
+  /**
+   * Gets the component responsible for rendering the entity.
+   * @readonly
+   * @returns {Function} The render function for the entity component.
+   */
+  get component() {
+    return render17;
+  }
+  get is_unembedded() {
+    if (!this.vec) return true;
+    if (!this.embed_hash || this.embed_hash !== this.read_hash) return true;
+    return false;
+  }
+  // COMPONENTS 2024-11-27
+  get connections_component() {
+    if (!this._connections_component) this._connections_component = this.components?.connections?.bind(this.smart_view);
+    return this._connections_component;
+  }
+  async render_connections(container, opts = {}) {
+    if (container) container.innerHTML = "Loading connections...";
+    const frag = await this.env.render_component("connections", this, opts);
+    if (container) {
+      container.innerHTML = "";
+      container.appendChild(frag);
+    }
+    return frag;
+  }
+};
+
+// node_modules/smart-sources/node_modules/smart-entities/smart_entities.js
+var SmartEntities3 = class extends Collection3 {
+  /**
+   * Creates an instance of SmartEntities.
+   * @constructor
+   * @param {Object} env - The environment instance.
+   * @param {Object} opts - Configuration options.
+   */
+  constructor(env, opts) {
+    super(env, opts);
+    this.entities_vector_adapter = new DefaultEntitiesVectorAdapter3(this);
+    this.model_instance_id = null;
+    this._embed_queue = [];
+  }
+  /**
+   * Initializes the SmartEntities instance by loading embeddings.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async init() {
+    await super.init();
+    await this.load_smart_embed();
+    if (!this.embed_model) {
+      console.log(`SmartEmbed not loaded for **${this.collection_key}**. Continuing without embedding capabilities.`);
+    }
+  }
+  /**
+   * Loads the smart embedding model.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async load_smart_embed() {
+    if (this.embed_model_key === "None") return;
+    if (!this.embed_model) return;
+    if (this.embed_model.is_loading) return console.log(`SmartEmbedModel already loading for ${this.embed_model_key}`);
+    if (this.embed_model.is_loaded) return console.log(`SmartEmbedModel already loaded for ${this.embed_model_key}`);
+    try {
+      console.log(`Loading SmartEmbedModel in ${this.collection_key}, current state: ${this.embed_model.state}`);
+      await this.embed_model.load();
+    } catch (e) {
+      console.error(`Error loading SmartEmbedModel for ${this.embed_model.model_key}`);
+      console.error(e);
+    }
+  }
+  /**
+   * Unloads the smart embedding model.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async unload() {
+    if (typeof this.embed_model?.unload === "function") {
+      this.embed_model.unload();
+      this.embed_model = null;
+    }
+    super.unload();
+  }
+  /**
+   * Gets the key of the embedding model.
+   * @readonly
+   * @returns {string} The embedding model key.
+   */
+  get embed_model_key() {
+    return this.embed_model?.model_key;
+  }
+  /**
+   * Gets or creates the container for smart embeddings in the DOM.
+   * @readonly
+   * @returns {HTMLElement|undefined} The container element or undefined if not available.
+   */
+  get smart_embed_container() {
+    if (!this.model_instance_id) return console.log("model_key not set");
+    const id = this.model_instance_id.replace(/[^a-zA-Z0-9]/g, "_");
+    if (!window.document) return console.log("window.document not available");
+    if (window.document.querySelector(`#${id}`)) return window.document.querySelector(`#${id}`);
+    const container = window.document.createElement("div");
+    container.id = id;
+    window.document.body.appendChild(container);
+    return container;
+  }
+  /**
+   * @deprecated Use embed_model instead.
+   * @readonly
+   * @returns {Object} The smart embedding model.
+   */
+  get smart_embed() {
+    return this.embed_model;
+  }
+  /**
+   * Gets the embedding model instance.
+   * @readonly
+   * @returns {Object|null} The embedding model instance or null if none.
+   */
+  get embed_model() {
+    if (!this.env._embed_model && this.env.opts.modules.smart_embed_model?.class) this.env._embed_model = new this.env.opts.modules.smart_embed_model.class({
+      settings: this.settings.embed_model,
+      adapters: this.env.opts.modules.smart_embed_model?.adapters,
+      re_render_settings: this.re_render_settings.bind(this),
+      reload_model: this.reload_embed_model.bind(this)
+    });
+    return this.env._embed_model;
+  }
+  set embed_model(embed_model) {
+    this.env._embed_model = embed_model;
+  }
+  reload_embed_model() {
+    console.log("reload_embed_model");
+    this.embed_model.unload();
+    this.env._embed_model = null;
+  }
+  re_render_settings() {
+    this.settings_container.innerHTML = "";
+    this.render_settings();
+  }
+  /**
+   * Finds the nearest entities to a given entity.
+   * @async
+   * @param {Object} entity - The reference entity.
+   * @param {Object} [filter={}] - Optional filters to apply.
+   * @returns {Promise<Array<{item:Object, score:number}>>} An array of result objects with score and item.
+   */
+  async nearest_to(entity, filter = {}) {
+    return await this.nearest(entity.vec, filter);
+  }
+  /**
+   * Finds the nearest entities to a vector using the default adapter.
+   * @async
+   * @param {Array<number>} vec - The vector to compare against.
+   * @param {Object} [filter={}] - Optional filters to apply.
+   * @returns {Promise<Array<{item:Object, score:number}>>} An array of result objects with score and item.
+   */
+  async nearest(vec, filter = {}) {
+    if (!vec) {
+      console.warn("nearest: no vec");
+      return [];
+    }
+    return await this.entities_vector_adapter.nearest(vec, filter);
+  }
+  /**
+   * Finds the furthest entities from a vector using the default adapter.
+   * @async
+   * @param {Array<number>} vec - The vector to compare against.
+   * @param {Object} [filter={}] - Optional filters to apply.
+   * @returns {Promise<Array<{item:Object, score:number}>>} An array of result objects with score and item.
+   */
+  async furthest(vec, filter = {}) {
+    if (!vec) return console.warn("furthest: no vec");
+    return await this.entities_vector_adapter.furthest(vec, filter);
+  }
+  /**
+   * Gets the file name based on collection key and embedding model key.
+   * @readonly
+   * @returns {string} The constructed file name.
+   */
+  get file_name() {
+    return this.collection_key + "-" + this.embed_model_key.split("/").pop();
+  }
+  /**
+   * Calculates the relevance of an item based on the search filter.
+   * @param {Object} item - The item to calculate relevance for.
+   * @param {Object} search_filter - The search filter containing keywords.
+   * @returns {number} The relevance score:
+   *                   1 if any keyword is found in the item's path,
+   *                   0 otherwise (default relevance for keyword in content).
+   */
+  calculate_relevance(item, search_filter) {
+    if (search_filter.keywords.some((keyword) => item.path?.includes(keyword))) return 1;
+    return 0;
+  }
+  /**
+   * Prepares the filter options by incorporating entity-based filters.
+   * @param {Object} [opts={}] - The filter options.
+   * @param {Object} [opts.entity] - The entity to base the filters on.
+   * @param {string|string[]} [opts.exclude_filter] - Keys or prefixes to exclude.
+   * @param {string|string[]} [opts.include_filter] - Keys or prefixes to include.
+   * @param {boolean} [opts.exclude_inlinks] - Whether to exclude inlinks of the entity.
+   * @param {boolean} [opts.exclude_outlinks] - Whether to exclude outlinks of the entity.
+   * @returns {Object} The modified filter options.
+   */
+  prepare_filter(opts = {}) {
+    const {
+      entity,
+      exclude_filter,
+      include_filter,
+      exclude_inlinks,
+      exclude_outlinks
+    } = opts;
+    if (entity) {
+      if (typeof opts.exclude_key_starts_with_any === "undefined") opts.exclude_key_starts_with_any = [];
+      if (opts.exclude_key_starts_with) {
+        opts.exclude_key_starts_with_any = [
+          opts.exclude_key_starts_with
+        ];
+        delete opts.exclude_key_starts_with;
+      }
+      opts.exclude_key_starts_with_any.push(entity.source_key || entity.key);
+      if (exclude_filter) {
+        if (!Array.isArray(opts.exclude_key_includes_any)) opts.exclude_key_includes_any = [];
+        if (typeof exclude_filter === "string") opts.exclude_key_includes_any.push(exclude_filter);
+        else if (exclude_filter.includes(",")) opts.exclude_key_includes_any.push(...exclude_filter.split(","));
+      }
+      if (include_filter) {
+        if (!Array.isArray(opts.key_includes_any)) opts.key_includes_any = [];
+        if (typeof include_filter === "string") opts.key_includes_any.push(include_filter);
+        else if (include_filter.includes(",")) opts.key_includes_any.push(...include_filter.split(","));
+      }
+      if (exclude_inlinks && entity?.inlinks?.length) {
+        if (!Array.isArray(opts.exclude_key_starts_with_any)) opts.exclude_key_starts_with_any = [];
+        opts.exclude_key_starts_with_any.push(...entity.inlinks);
+      }
+      if (exclude_outlinks && entity?.outlinks?.length) {
+        if (!Array.isArray(opts.exclude_key_starts_with_any)) opts.exclude_key_starts_with_any = [];
+        opts.exclude_key_starts_with_any.push(...entity.outlinks);
+      }
+    }
+    return opts;
+  }
+  /**
+   * Looks up entities based on hypothetical content.
+   * @async
+   * @param {Object} [params={}] - The parameters for the lookup.
+   * @param {Array<string>} [params.hypotheticals=[]] - The hypothetical content to lookup.
+   * @param {Object} [params.filter] - The filter to use for the lookup.
+   * @param {number} [params.k] - Deprecated: Use `filter.limit` instead.
+   * @returns {Promise<Array<Result>|Object>} The lookup results or an error object.
+   */
+  async lookup(params = {}) {
+    const { hypotheticals = [] } = params;
+    if (!hypotheticals?.length) return { error: "hypotheticals is required" };
+    if (!this.embed_model) return { error: "Embedding search is not enabled." };
+    const hyp_vecs = await this.embed_model.embed_batch(hypotheticals.map((h) => ({ embed_input: h })));
+    const limit = params.filter?.limit || params.k || this.env.settings.lookup_k || 10;
+    if (params.filter?.limit) delete params.filter.limit;
+    const filter = {
+      ...this.env.chats?.current?.scope || {},
+      ...params.filter || {}
+    };
+    const results = await hyp_vecs.reduce(async (acc_promise, embedding, i) => {
+      const acc = await acc_promise;
+      const results2 = await this.nearest(embedding.vec, filter);
+      results2.forEach((result) => {
+        if (!acc[result.item.path] || result.score > acc[result.item.path].score) {
+          acc[result.item.path] = {
+            key: result.item.key,
+            score: result.score,
+            item: result.item,
+            hypothetical_i: i
+          };
+        } else {
+          result.score = acc[result.item.path].score;
+        }
+      });
+      return acc;
+    }, Promise.resolve({}));
+    console.log(results);
+    const top_k = Object.values(results).sort(sort_by_score3).slice(0, limit);
+    console.log(`Found and returned ${top_k.length} ${this.collection_key}.`);
+    return top_k;
+  }
+  /**
+   * Gets the configuration for settings.
+   * @readonly
+   * @returns {Object} The settings configuration.
+   */
+  get settings_config() {
+    return settings_config4;
+  }
+  async render_settings(container = this.settings_container, opts = {}) {
+    container = await this.render_collection_settings(container, opts);
+    const embed_model_settings_frag = await this.env.render_component("settings", this.embed_model, opts);
+    container.appendChild(embed_model_settings_frag);
+    return container;
+  }
+  /**
+   * Gets the notices from the environment.
+   * @readonly
+   * @returns {Object} The notices object.
+   */
+  get notices() {
+    return this.env.smart_connections_plugin?.notices || this.env.main?.notices;
+  }
+  /**
+   * Gets the embed queue containing items to be embedded.
+   * @readonly
+   * @returns {Array<Object>} The embed queue.
+   */
+  get embed_queue() {
+    if (!this._embed_queue?.length) this._embed_queue = Object.values(this.items).filter((item) => item._queue_embed && item.should_embed);
+    return this._embed_queue;
+  }
+  /**
+   * Processes the embed queue by delegating to the default vector adapter.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async process_embed_queue() {
+    await this.entities_vector_adapter.process_embed_queue();
+  }
+  /**
+   * Handles changes to the embedding model by reinitializing and processing the load queue.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async embed_model_changed() {
+    await this.unload();
+    await this.init();
+    this.render_settings();
+    await this.process_load_queue();
+  }
+  get connections_filter_config() {
+    return connections_filter_config3;
+  }
+};
+var settings_config4 = {
+  "min_chars": {
+    name: "Minimum length",
+    type: "number",
+    description: "Minimum length of entity to embed (in characters).",
+    placeholder: "Enter number ex. 300",
+    default: 300
+  }
+};
+var connections_filter_config3 = {
+  "smart_view_filter.show_full_path": {
+    "name": "Show Full Path",
+    "type": "toggle",
+    "description": "Show full path in view.",
+    "callback": "re_render"
+  },
+  "smart_view_filter.render_markdown": {
+    "name": "Render Markdown",
+    "type": "toggle",
+    "description": "Render markdown in results.",
+    "callback": "re_render"
+  },
+  "smart_view_filter.results_limit": {
+    "name": "Results Limit",
+    "type": "number",
+    "description": "Limit the number of results.",
+    "default": 20,
+    "callback": "re_render"
+  },
+  "smart_view_filter.exclude_inlinks": {
+    "name": "Exclude Inlinks",
+    "type": "toggle",
+    "description": "Exclude inlinks.",
+    "callback": "re_render_settings"
+  },
+  "smart_view_filter.exclude_outlinks": {
+    "name": "Exclude Outlinks",
+    "type": "toggle",
+    "description": "Exclude outlinks.",
+    "callback": "re_render_settings"
+  },
+  "smart_view_filter.include_filter": {
+    "name": "Include Filter",
+    "type": "text",
+    "description": "Require that results match this value.",
+    "callback": "re_render"
+  },
+  "smart_view_filter.exclude_filter": {
+    "name": "Exclude Filter",
+    "type": "text",
+    "description": "Exclude results that match this value.",
+    "callback": "re_render"
+  }
+};
+
+// node_modules/smart-sources/components/source.js
+async function render18(source, opts = {}) {
+  let markdown;
+  if (should_render_embed3(source)) markdown = source.embed_link;
+  else markdown = process_for_rendering3(await source.read());
+  let frag;
+  if (source.env.settings.smart_view_filter.render_markdown) frag = await this.render_markdown(markdown, source);
+  else frag = this.create_doc_fragment(`<span>${markdown}</span>`);
+  return await post_process12.call(this, source, frag, opts);
+}
+
+// node_modules/smart-sources/actions/find_connections.js
+async function find_connections5(params = {}) {
+  let connections;
+  if (this.block_collection.settings.embed_blocks && params.exclude_source_connections) connections = [];
+  else connections = await find_connections4.call(this, params);
+  const filter_opts = this.prepare_find_connections_filter_opts(params);
+  const limit = params.filter?.limit || params.limit || this.env.settings.smart_view_filter?.results_limit || 20;
+  if (params.filter?.limit) delete params.filter.limit;
+  if (params.limit) delete params.limit;
+  if (!params.exclude_blocks_from_source_connections) {
+    const cache_key = this.key + JSON.stringify(params) + "_blocks";
+    if (!this.env.connections_cache) this.env.connections_cache = {};
+    if (!this.env.connections_cache[cache_key]) {
+      const nearest = (await this.env.smart_blocks.nearest(this.vec, filter_opts)).sort(sort_by_score3).slice(0, limit);
+      this.connections_to_cache(cache_key, nearest);
+    }
+    connections = [
+      ...connections,
+      ...this.connections_from_cache(cache_key)
+    ].sort(sort_by_score3).slice(0, limit);
+  }
+  return connections;
+}
+
+// node_modules/smart-sources/smart_source.js
+var SmartSource2 = class extends SmartEntity3 {
+  /**
+   * Provides default values for a SmartSource instance.
+   * @static
+   * @readonly
+   * @returns {Object} The default values.
+   */
+  static get defaults() {
+    return {
+      data: {
+        last_read: {
+          hash: null,
+          mtime: 0
+        },
+        embeddings: {}
+      },
+      _embed_input: null,
+      // Stored temporarily
+      _queue_load: true
+    };
+  }
+  /**
+   * Initializes the SmartSource instance by queuing an import if blocks are missing.
+   * @returns {void}
+   */
+  init() {
+    super.init();
+    if (!this.data.blocks) this.queue_import();
+  }
+  /**
+   * Queues the SmartSource for import.
+   * @returns {void}
+   */
+  queue_import() {
+    this._queue_import = true;
+  }
+  /**
+   * Imports the SmartSource by checking for updates and parsing content.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async import() {
+    this._queue_import = false;
+    try {
+      await this.source_adapter.import();
+    } catch (err) {
+      if (err.code === "ENOENT") {
+        console.log(`Smart Connections: Deleting ${this.path} data because it no longer exists on disk`);
+        this.delete();
+      } else {
+        console.warn("Smart Connections: Error during import: re-queueing import", err);
+        this.queue_import();
+      }
+    }
+  }
+  async parse_content(content = null) {
+    if (this.block_collection && typeof this.block_collection.import_source === "function") {
+      await this.block_collection.import_source(this, content);
+    }
+    const parse_fns = this.env?.opts?.collections?.smart_sources?.content_parsers || [];
+    for (const fn of parse_fns) {
+      await fn(this, content);
+    }
+    if (this.data.last_import?.hash === this.data.last_read?.hash) {
+      if (this.data.blocks) return;
+    }
+  }
+  /**
+   * Finds connections relevant to this SmartSource based on provided parameters.
+   * @async
+   * @param {Object} [params={}] - Parameters for finding connections.
+   * @param {boolean} [params.exclude_source_connections=false] - Whether to exclude source connections.
+   * @param {boolean} [params.exclude_blocks_from_source_connections=false] - Whether to exclude block connections from source connections.
+   * @returns {Array<SmartSource>} An array of relevant SmartSource entities.
+   */
+  async find_connections(params = {}) {
+    return await this.actions.find_connections(params);
+  }
+  /**
+   * Prepares the embed input for the SmartSource by reading content and applying exclusions.
+   * @async
+   * @returns {Promise<string|false>} The embed input string or `false` if already embedded.
+   */
+  async get_embed_input(content = null) {
+    if (typeof this._embed_input === "string" && this._embed_input.length) return this._embed_input;
+    if (!content) content = await this.read();
+    if (this.excluded_lines.length) {
+      const content_lines = content.split("\n");
+      this.excluded_lines.forEach((lines) => {
+        const { start, end } = lines;
+        for (let i = start; i <= end; i++) {
+          content_lines[i] = "";
+        }
+      });
+      content = content_lines.filter((line) => line.length).join("\n");
+    }
+    const breadcrumbs = this.path.split("/").join(" > ").replace(".md", "");
+    const max_tokens = this.collection.embed_model.model_config.max_tokens || 500;
+    this._embed_input = `${breadcrumbs}:
+${content}`.substring(0, max_tokens * 4);
+    return this._embed_input;
+  }
+  /**
+   * Opens the SmartSource note in the SmartConnections plugin.
+   * @returns {void}
+   */
+  open() {
+    this.env.smart_connections_plugin.open_note(this.path);
+  }
+  /**
+   * Retrieves the block associated with a specific line number.
+   * @param {number} line - The line number to search for.
+   * @returns {SmartBlock|null} The corresponding SmartBlock or `null` if not found.
+   */
+  get_block_by_line(line) {
+    return Object.entries(this.data.blocks || {}).reduce((acc, [sub_key, range]) => {
+      if (acc) return acc;
+      if (range[0] <= line && range[1] >= line) {
+        const block = this.block_collection.get(this.key + sub_key);
+        if (block?.vec) return block;
+      }
+      return acc;
+    }, null);
+  }
+  /**
+   * Checks if the source file exists in the file system.
+   * @async
+   * @returns {Promise<boolean>} A promise that resolves to `true` if the file exists, `false` otherwise.
+   */
+  async has_source_file() {
+    return await this.fs.exists(this.path);
+  }
+  // CRUD
+  /**
+   * FILTER/SEARCH METHODS
+   */
+  /**
+   * Searches for keywords within the entity's data and content.
+   * @async
+   * @param {Object} search_filter - The search filter object.
+   * @param {string[]} search_filter.keywords - An array of keywords to search for.
+   * @param {string} [search_filter.type='any'] - The type of search to perform. 'any' counts all matching keywords, 'all' counts only if all keywords match.
+   * @returns {Promise<number>} A promise that resolves to the number of matching keywords.
+   */
+  async search(search_filter = {}) {
+    const { keywords, type = "any", limit } = search_filter;
+    if (!keywords || !Array.isArray(keywords)) {
+      console.warn("Entity.search: keywords not set or is not an array");
+      return 0;
+    }
+    if (limit && this.collection.search_results_ct >= limit) return 0;
+    const lowercased_keywords = keywords.map((keyword) => keyword.toLowerCase());
+    const content = await this.read();
+    const lowercased_content = content.toLowerCase();
+    const lowercased_path = this.path.toLowerCase();
+    const matching_keywords = lowercased_keywords.filter(
+      (keyword) => lowercased_path.includes(keyword) || lowercased_content.includes(keyword)
+    );
+    if (type === "all") {
+      return matching_keywords.length === lowercased_keywords.length ? matching_keywords.length : 0;
+    } else {
+      return matching_keywords.length;
+    }
+  }
+  /**
+   * ADAPTER METHODS
+   */
+  /**
+   * Appends content to the end of the source file.
+   * @async
+   * @param {string} content - The content to append to the file.
+   * @returns {Promise<void>} A promise that resolves when the operation is complete.
+   */
+  async append(content) {
+    await this.source_adapter.append(content);
+    await this.import();
+  }
+  /**
+   * Updates the entire content of the source file.
+   * @async
+   * @param {string} full_content - The new content to write to the file.
+   * @param {Object} [opts={}] - Additional options for the update.
+   * @returns {Promise<void>} A promise that resolves when the operation is complete.
+   */
+  async update(full_content, opts = {}) {
+    try {
+      await this.source_adapter.update(full_content, opts);
+      await this.import();
+    } catch (error) {
+      console.error("Error during update:", error);
+      throw error;
+    }
+  }
+  /**
+   * Reads the entire content of the source file.
+   * @async
+   * @param {Object} [opts={}] - Additional options for reading.
+   * @returns {Promise<string>} A promise that resolves with the content of the file.
+   */
+  async read(opts = {}) {
+    try {
+      const content = await this.source_adapter.read(opts);
+      return content;
+    } catch (error) {
+      console.error("Error during read:", error);
+      throw error;
+    }
+  }
+  /**
+   * Removes the source file from the file system and deletes the entity.
+   * This is different from `delete()` because it also removes the source file.
+   * @async
+   * @returns {Promise<void>} A promise that resolves when the operation is complete.
+   */
+  async remove() {
+    try {
+      await this.source_adapter.remove();
+    } catch (error) {
+      console.error("Error during remove:", error);
+      throw error;
+    }
+  }
+  /**
+   * Moves the current source to a new location.
+   * Handles the destination as a string (new path) or entity (block or source).
+   *
+   * @async
+   * @param {string|Object|SmartEntity} entity_ref - The destination path or entity to move to.
+   * @throws {Error} If the entity reference is invalid.
+   * @returns {Promise<void>} A promise that resolves when the move operation is complete.
+   */
+  async move_to(entity_ref) {
+    try {
+      await this.source_adapter.move_to(entity_ref);
+    } catch (error) {
+      console.error("error_during_move:", error);
+      throw error;
+    }
+  }
+  /**
+   * Merges the given content into the current source.
+   * Parses the content into blocks and either appends to existing blocks, replaces blocks, or replaces all content.
+   *
+   * @async
+   * @param {string} content - The content to merge into the current source.
+   * @param {Object} [opts={}] - Options object.
+   * @param {string} [opts.mode='append'] - The merge mode: 'append', 'replace_blocks', or 'replace_all'.
+   * @returns {Promise<void>}
+   */
+  async merge(content, opts = {}) {
+    try {
+      await this.source_adapter.merge(content, opts);
+      await this.import();
+    } catch (error) {
+      console.error("Error during merge:", error);
+      throw error;
+    }
+  }
+  /**
+   * Handles errors during the load process.
+   * @param {Error} err - The error encountered during load.
+   * @returns {void}
+   */
+  on_load_error(err) {
+    super.on_load_error(err);
+    if (err.code === "ENOENT") {
+      this._queue_load = false;
+      this.queue_import();
+    }
+  }
+  // GETTERS
+  /**
+   * Retrieves the block collection associated with SmartSources.
+   * @readonly
+   * @returns {SmartBlocks} The block collection instance.
+   */
+  get block_collection() {
+    return this.env.smart_blocks;
+  }
+  /**
+   * Retrieves the vector representations of all blocks within the SmartSource.
+   * @readonly
+   * @returns {Array<Array<number>>} An array of vectors.
+   */
+  get block_vecs() {
+    return this.blocks.map((block) => block.vec).filter((vec) => vec);
+  }
+  /**
+   * Retrieves all blocks associated with the SmartSource.
+   * @readonly
+   * @returns {Array<SmartBlock>} An array of SmartBlock instances.
+   * @description
+   * Uses block refs (Fastest) to get blocks without iterating over all blocks
+   */
+  get blocks() {
+    if (this.data.blocks) return this.block_collection.get_many(Object.keys(this.data.blocks).map((key) => this.key + key));
+    return [];
+  }
+  /**
+   * Determines if the SmartSource is excluded from processing.
+   * @readonly
+   * @returns {boolean} `true` if excluded, `false` otherwise.
+   */
+  get excluded() {
+    return this.fs.is_excluded(this.path);
+  }
+  /**
+   * Retrieves the lines excluded from embedding.
+   * @readonly
+   * @returns {Array<Object>} An array of objects with `start` and `end` line numbers.
+   */
+  get excluded_lines() {
+    return this.blocks.filter((block) => block.excluded).map((block) => block.lines);
+  }
+  /**
+   * Retrieves the file system instance from the SmartSource's collection.
+   * @readonly
+   * @returns {SmartFS} The file system instance.
+   */
+  get fs() {
+    return this.collection.fs;
+  }
+  /**
+   * Retrieves the file object associated with the SmartSource.
+   * @readonly
+   * @returns {Object} The file object.
+   */
+  get file() {
+    return this.fs.files[this.path];
+  }
+  /**
+   * Retrieves the file name of the SmartSource.
+   * @readonly
+   * @returns {string} The file name.
+   */
+  get file_name() {
+    return this.path.split("/").pop();
+  }
+  /**
+   * Retrieves the file path of the SmartSource.
+   * @readonly
+   * @returns {string} The file path.
+   */
+  get file_path() {
+    return this.path;
+  }
+  /**
+   * Retrieves the file type based on the file extension.
+   * @readonly
+   * @returns {string} The file type in lowercase.
+   */
+  get file_type() {
+    if (!this._ext) {
+      const pcs = this.data.path?.split(".");
+      pcs.shift();
+      while (pcs.length) {
+        const ext = pcs.join(".").toLowerCase();
+        if (this.source_adapters[ext]) return ext;
+        pcs.shift();
+      }
+      this._ext = this.data.path?.split(".").pop() || "md";
+    }
+    return this._ext;
+  }
+  /**
+   * Retrieves the modification time of the SmartSource.
+   * @readonly
+   * @returns {number} The modification time.
+   */
+  get mtime() {
+    return this.file?.stat?.mtime || 0;
+  }
+  /**
+   * Retrieves the size of the SmartSource.
+   * @readonly
+   * @returns {number} The size.
+   */
+  get size() {
+    return this.file?.stat?.size || 0;
+  }
+  /**
+   * Retrieves the last import stat of the SmartSource.
+   * @readonly
+   * @returns {Object} The last import stat.
+   */
+  get last_import() {
+    return this.data?.last_import;
+  }
+  /**
+   * Retrieves the last import modification time of the SmartSource.
+   * @readonly
+   * @returns {number} The last import modification time.
+   */
+  get last_import_mtime() {
+    return this.last_import?.mtime || 0;
+  }
+  /**
+   * Retrieves the last import size of the SmartSource.
+   * @readonly
+   * @returns {number} The last import size.
+   */
+  get last_import_size() {
+    return this.last_import?.size || 0;
+  }
+  /**
+   * Retrieves the paths of inlinks to this SmartSource.
+   * @readonly
+   * @returns {Array<string>} An array of inlink paths.
+   */
+  get inlinks() {
+    return Object.keys(this.collection.links?.[this.path] || {});
+  }
+  /**
+   * Determines if the SmartSource is a canvas file.
+   * @readonly
+   * @returns {boolean} `true` if the file is a canvas, `false` otherwise.
+   */
+  get is_canvas() {
+    return this.path.endsWith("canvas");
+  }
+  /**
+   * Determines if the SmartSource is an Excalidraw file.
+   * @readonly
+   * @returns {boolean} `true` if the file is Excalidraw, `false` otherwise.
+   */
+  get is_excalidraw() {
+    return this.path.endsWith("excalidraw.md");
+  }
+  /**
+   * Determines if the SmartSource is gone (i.e., the file no longer exists).
+   * @readonly
+   * @returns {boolean} `true` if gone, `false` otherwise.
+   */
+  get is_gone() {
+    return !this.file;
+  }
+  /**
+   * Retrieves the last read hash of the SmartSource.
+   * @readonly
+   * @returns {string|undefined} The last read hash or `undefined` if not set.
+   */
+  get last_read() {
+    return this.data.last_read;
+  }
+  get metadata() {
+    return this.data.metadata;
+  }
+  /**
+   * Retrieves the display name of the SmartSource.
+   * @readonly
+   * @returns {string} The display name.
+   */
+  get name() {
+    if (this.should_show_full_path) return this.path.split("/").join(" > ").replace(".md", "");
+    return this.path.split("/").pop().replace(".md", "");
+  }
+  get outdated() {
+    return this.source_adapter.outdated;
+  }
+  /**
+   * Retrieves the outlink paths from the SmartSource.
+   * @readonly
+   * @returns {Array<string>} An array of outlink paths.
+   */
+  get outlinks() {
+    return (this.data.outlinks || []).map((link) => {
+      const link_ref = link?.target || link;
+      if (link_ref.startsWith("http")) return null;
+      const link_path = this.fs.get_link_target_path(link_ref, this.file_path);
+      return link_path;
+    }).filter((link_path) => link_path);
+  }
+  get path() {
+    return this.data.path || this.data.key;
+  }
+  get should_embed() {
+    return !this.vec || !this.embed_hash || this.embed_hash !== this.read_hash;
+  }
+  get source_adapters() {
+    return this.collection.source_adapters;
+  }
+  get source_adapter() {
+    if (this._source_adapter) return this._source_adapter;
+    if (this.source_adapters[this.file_type]) this._source_adapter = new this.source_adapters[this.file_type](this);
+    else {
+      console.log("No source adapter found for", this.file_type, this);
+    }
+    return this._source_adapter;
+  }
+  // COMPONENTS
+  /**
+   * Retrieves the component responsible for rendering the SmartSource.
+   * @readonly
+   * @returns {Function} The render function for the source component.
+   */
+  get component() {
+    return render18;
+  }
+  // Currently unused, but useful for later
+  /**
+   * Calculates the mean vector of all blocks within the SmartSource.
+   * @readonly
+   * @returns {Array<number>|null} The mean vector or `null` if no vectors are present.
+   */
+  get mean_block_vec() {
+    return this._mean_block_vec ? this._mean_block_vec : this._mean_block_vec = this.block_vecs.reduce((acc, vec) => acc.map((val, i) => val + vec[i]), Array(384).fill(0)).map((val) => val / this.block_vecs.length);
+  }
+  /**
+   * Calculates the median vector of all blocks within the SmartSource.
+   * @readonly
+   * @returns {Array<number>|null} The median vector or `null` if no vectors are present.
+   */
+  get median_block_vec() {
+    if (this._median_block_vec) return this._median_block_vec;
+    if (!this.block_vecs.length) return null;
+    const vec_length = this.block_vecs[0].length;
+    this._median_block_vec = new Array(vec_length);
+    const mid = Math.floor(this.block_vecs.length / 2);
+    for (let i = 0; i < vec_length; i++) {
+      const values = this.block_vecs.map((vec) => vec[i]).sort((a, b) => a - b);
+      this._median_block_vec[i] = this.block_vecs.length % 2 !== 0 ? values[mid] : (values[mid - 1] + values[mid]) / 2;
+    }
+    return this._median_block_vec;
+  }
+  // DEPRECATED methods
+  /**
+   * @async
+   * @deprecated Use `read` instead.
+   * @returns {Promise<string>} A promise that resolves with the content of the file.
+   */
+  async _read() {
+    return await this.source_adapter._read();
+  }
+  /**
+   * @async
+   * @deprecated Use `remove` instead.
+   * @returns {Promise<void>} A promise that resolves when the entity is destroyed.
+   */
+  async destroy() {
+    await this.remove();
+  }
+  /**
+   * @async
+   * @deprecated Use `update` instead.
+   * @param {string} content - The content to update.
+   * @returns {Promise<void>}
+   */
+  async _update(content) {
+    await this.source_adapter.update(content);
+  }
+  /**
+   * @deprecated Use `source` instead.
+   * @readonly
+   * @returns {SmartSource} The associated SmartSource instance.
+   */
+  get t_file() {
+    return this.fs.files[this.path];
+  }
+};
+var smart_source_default2 = {
+  class: SmartSource2,
+  actions: {
+    find_connections: find_connections5
+  }
+};
+
+// node_modules/smart-sources/smart_sources.js
+var SmartSources2 = class extends SmartEntities3 {
+  /**
+   * Creates an instance of SmartSources.
+   * @constructor
+   * @param {Object} env - The environment instance.
+   * @param {Object} [opts={}] - Configuration options.
+   */
+  constructor(env, opts = {}) {
+    super(env, opts);
+    this.search_results_ct = 0;
+    this._excluded_headings = null;
+  }
+  /**
+   * Initializes the SmartSources instance by performing an initial scan of sources.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async init() {
+    await super.init();
+    this.notices?.show("initial_scan", { collection_key: this.collection_key });
+    await this.init_items();
+    this.notices?.remove("initial_scan");
+    this.notices?.show("done_initial_scan", { collection_key: this.collection_key });
+  }
+  /**
+   * Initializes items by setting up the file system and loading sources.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async init_items() {
+    this._fs = null;
+    await this.fs.init();
+    Object.values(this.fs.files).filter((file) => this.source_adapters[file.extension]).forEach((file) => this.init_file_path(file.path));
+    this.notices?.remove("initial_scan");
+    this.notices?.show("done_initial_scan", { collection_key: this.collection_key });
+  }
+  /**
+   * Initializes a file path by creating a new SmartSource instance.
+   * @param {string} file_path - The path of the file to initialize.
+   * @returns {SmartSource} The initialized SmartSource instance.
+   */
+  init_file_path(file_path) {
+    return this.items[file_path] = new this.item_type(this.env, { path: file_path });
+  }
+  /**
+   * Removes old data files by pruning sources and blocks.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async prune() {
+    await this.fs.refresh();
+    this.notices?.show("pruning_collection", { collection_key: this.collection_key });
+    const remove_sources = Object.values(this.items).filter((item) => {
+      if (item.is_gone) {
+        item.reason = "is_gone";
+        return true;
+      }
+      if (item.excluded) {
+        item.reason = "excluded";
+        return true;
+      }
+      if (!item.data.blocks) {
+        item.reason = "!data.blocks";
+        return true;
+      }
+      return false;
+    });
+    for (let i = 0; i < remove_sources.length; i++) {
+      const source = remove_sources[i];
+      console.log(source.reason);
+    }
+    this.notices?.remove("pruning sources");
+    this.notices?.show("done_pruning_collection", { collection_key: this.collection_key, count: remove_sources.length });
+    this.notices?.show("pruning_collection", { collection_key: this.block_collection.collection_key });
+    const remove_smart_blocks = Object.values(this.block_collection.items).filter((item) => {
+      if (!item.vec) return false;
+      if (item.is_gone) {
+        item.reason = "is_gone";
+        return true;
+      }
+      if (!item.should_embed) {
+        item.reason = "!should_embed";
+        return true;
+      }
+      return false;
+    });
+    for (let i = 0; i < remove_smart_blocks.length; i++) {
+      const item = remove_smart_blocks[i];
+      if (item.is_gone) item.delete();
+      else item.remove_embeddings();
+    }
+    this.notices?.remove("pruning_collection");
+    this.notices?.show("done_pruning_collection", { collection_key: this.block_collection.collection_key, count: remove_smart_blocks.length });
+    console.log(`Pruned ${remove_smart_blocks.length} blocks:
+${remove_smart_blocks.map((item) => `${item.reason} - ${item.key}`).join("\n")}`);
+    await this.process_save_queue(true);
+    const items_w_vec = Object.values(this.items).filter((item) => item.vec);
+    for (const item of items_w_vec) {
+      if (item.source_adapter.should_import) item.queue_import();
+      else if (item.should_embed) item.queue_embed();
+    }
+  }
+  /**
+   * Builds a map of links between sources.
+   * @returns {Object} An object mapping link paths to source keys.
+   */
+  build_links_map() {
+    const start_time = Date.now();
+    this.links = {};
+    for (const source of Object.values(this.items)) {
+      for (const link of source.outlinks) {
+        if (!this.links[link]) this.links[link] = {};
+        this.links[link][source.key] = true;
+      }
+    }
+    const end_time = Date.now();
+    console.log(`Time spent building links: ${end_time - start_time}ms`);
+    return this.links;
+  }
+  /**
+   * Creates a new source with the given key and content.
+   * @async
+   * @param {string} key - The key (path) of the new source.
+   * @param {string} content - The content to write to the new source.
+   * @returns {Promise<SmartSource>} The created SmartSource instance.
+   */
+  async create(key, content) {
+    await this.fs.write(key, content);
+    await this.fs.refresh();
+    const source = await this.create_or_update({ path: key });
+    await source.import();
+    return source;
+  }
+  /**
+   * Performs a lexical search for matching SmartSource content.
+   * @async
+   * @param {Object} search_filter - The filter criteria for the search.
+   * @param {string[]} search_filter.keywords - An array of keywords to search for.
+   * @param {number} [search_filter.limit] - The maximum number of results to return.
+   * @returns {Promise<Array<SmartSource>>} A promise that resolves to an array of matching SmartSource entities.
+   */
+  async search(search_filter = {}) {
+    const {
+      keywords,
+      limit,
+      ...filter_opts
+    } = search_filter;
+    if (!keywords) {
+      console.warn("search_filter.keywords not set");
+      return [];
+    }
+    this.search_results_ct = 0;
+    const initial_results = this.filter(filter_opts);
+    const search_results = [];
+    for (let i = 0; i < initial_results.length; i += 10) {
+      const batch = initial_results.slice(i, i + 10);
+      const batch_results = await Promise.all(
+        batch.map(async (item) => {
+          try {
+            const matches = await item.search(search_filter);
+            if (matches) {
+              this.search_results_ct++;
+              return { item, score: matches };
+            } else return null;
+          } catch (error) {
+            console.error(`Error searching item ${item.id || "unknown"}:`, error);
+            return null;
+          }
+        })
+      );
+      search_results.push(...batch_results.filter(Boolean));
+    }
+    return search_results.sort((a, b) => b.score - a.score).map((result) => result.item);
+  }
+  /**
+   * Looks up entities based on the provided parameters.
+   * @async
+   * @param {Object} [params={}] - Parameters for the lookup.
+   * @param {Object} [params.filter] - Filter options.
+   * @param {number} [params.k] - Deprecated. Use `params.filter.limit` instead.
+   * @returns {Promise<Array<SmartSource>>} A promise that resolves to an array of matching SmartSource entities.
+   */
+  async lookup(params = {}) {
+    const limit = params.filter?.limit || params.k || this.env.settings.lookup_k || 10;
+    if (params.filter?.limit) delete params.filter.limit;
+    let results = await super.lookup(params);
+    if (this.block_collection?.settings?.embed_blocks) {
+      console.log("lookup block_collection");
+      results = [
+        ...results,
+        ...await this.block_collection.lookup(params)
+      ].sort(sort_by_score3);
+    }
+    console.log(results);
+    return results.slice(0, limit);
+  }
+  /**
+   * Processes the load queue by loading items and optionally importing them.
+   * Called after a "re-load" from settings, or after environment init.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async process_load_queue() {
+    await super.process_load_queue();
+    if (this.collection_key === "smart_sources" && this.env.smart_blocks) {
+      Object.values(this.env.smart_blocks.items).forEach((item) => item.init());
+    }
+    if (this.block_collection) {
+      this.block_collection.loaded = Object.keys(this.block_collection.items).length;
+    }
+    if (!this.opts.prevent_import_on_load) {
+      await this.process_source_import_queue(this.opts);
+    }
+    this.build_links_map();
+  }
+  /**
+   * @method process_source_import_queue
+   * @description 
+   * Imports items (SmartSources or SmartBlocks) that have been flagged for import.
+   */
+  async process_source_import_queue(opts = {}) {
+    const { process_embed_queue = true, import_all = false } = opts;
+    if (import_all) {
+      Object.values(this.items).forEach((item) => {
+        item._queue_import = true;
+        if (item.data.last_import?.at) item.data.last_import.at = 0;
+        if (item.data.last_import?.hash) item.data.last_import.hash = null;
+      });
+    }
+    const import_queue = Object.values(this.items).filter((item) => item._queue_import);
+    console.log("import_queue " + import_queue.length);
+    if (import_queue.length) {
+      const time_start = Date.now();
+      for (let i = 0; i < import_queue.length; i += 100) {
+        this.notices?.show("import_progress", {
+          progress: i,
+          total: import_queue.length
+        });
+        await Promise.all(import_queue.slice(i, i + 100).map((item) => item.import()));
+      }
+      this.notices?.remove("import_progress");
+      this.notices?.show("done_import", {
+        count: import_queue.length,
+        time_in_seconds: (Date.now() - time_start) / 1e3
+      });
+    } else {
+      this.notices?.show("no_import_queue");
+    }
+    this.build_links_map();
+    if (process_embed_queue) await this.process_embed_queue();
+    else console.log("skipping process_embed_queue");
+    await this.process_save_queue();
+    await this.block_collection?.process_save_queue();
+  }
+  /**
+   * Retrieves the source adapters based on the collection configuration.
+   * @readonly
+   * @returns {Object} An object mapping file extensions to adapter constructors.
+   */
+  get source_adapters() {
+    if (!this._source_adapters) {
+      const source_adapters = Object.values(this.env.opts.collections?.[this.collection_key]?.source_adapters || {});
+      const _source_adapters = source_adapters.reduce((acc, adapter) => {
+        adapter.extensions?.forEach((ext) => acc[ext] = adapter);
+        return acc;
+      }, {});
+      if (Object.keys(_source_adapters).length) {
+        this._source_adapters = _source_adapters;
+      }
+    }
+    return this._source_adapters;
+  }
+  reset_source_adapters() {
+    this._source_adapters = null;
+    this.render_settings();
+  }
+  /**
+   * Retrieves the notices system from the environment.
+   * @readonly
+   * @returns {Object} The notices object.
+   */
+  get notices() {
+    return this.env.smart_connections_plugin?.notices || this.env.main?.notices;
+  }
+  /**
+   * Retrieves the currently active note.
+   * @readonly
+   * @returns {SmartSource|null} The current SmartSource instance or null if none.
+   */
+  get current_note() {
+    return this.get(this.env.smart_connections_plugin.app.workspace.getActiveFile().path);
+  }
+  /**
+   * Retrieves the file system instance, initializing it if necessary.
+   * @readonly
+   * @returns {SmartFS} The file system instance.
+   */
+  get fs() {
+    if (!this._fs) {
+      this._fs = new this.env.opts.modules.smart_fs.class(this.env, {
+        adapter: this.env.opts.modules.smart_fs.adapter,
+        fs_path: this.env.opts.env_path || "",
+        exclude_patterns: this.excluded_patterns || []
+      });
+    }
+    return this._fs;
+  }
+  /**
+   * Retrieves the settings configuration by combining superclass settings and adapter-specific settings.
+   * @readonly
+   * @returns {Object} The settings configuration object.
+   */
+  get settings_config() {
+    const _settings_config = {
+      "load": {
+        "name": "Load",
+        "description": "Load sources.",
+        "type": "button",
+        "callback": "run_load",
+        "conditional": () => !this.loaded && this.collection_key === "smart_sources"
+      },
+      "re_import": {
+        "name": "Re-Import",
+        "description": "Re-import all sources.",
+        "type": "button",
+        "callback": "run_re_import",
+        "conditional": () => this.loaded && this.collection_key === "smart_sources"
+      },
+      "prune": {
+        "name": "Prune",
+        "description": "Remove sources and blocks that are no longer needed.",
+        "type": "button",
+        "callback": "run_prune",
+        "conditional": () => this.loaded && this.collection_key === "smart_sources"
+      },
+      "clear_all": {
+        "name": "Clear All",
+        "description": "Clear all data and reimport sources.",
+        "type": "button_with_confirm",
+        "callback": "run_clear_all",
+        "confirm": "Are you sure you want to clear all data and re-import?",
+        "conditional": () => this.loaded && this.collection_key === "smart_sources"
+      },
+      ...super.settings_config,
+      "enable_image_adapter": {
+        "name": "Image Adapter",
+        "description": "Enable image processing.",
+        "type": "toggle",
+        "default": false,
+        "callback": "reset_source_adapters"
+      },
+      "enable_pdf_adapter": {
+        "name": "PDF Adapter",
+        "description": "Enable PDF processing.",
+        "type": "toggle",
+        "default": false,
+        "callback": "reset_source_adapters"
+      },
+      ...this.process_settings_config(settings_config5),
+      ...Object.entries(this.source_adapters).reduce((acc, [file_extension, adapter_constructor]) => {
+        if (acc[adapter_constructor]) return acc;
+        const item = this.items[Object.keys(this.items).find((i) => i.endsWith(file_extension))];
+        const adapter_instance = new adapter_constructor(item || new this.item_type(this.env, {}));
+        if (adapter_instance.settings_config) {
+          acc[adapter_constructor.name] = {
+            type: "html",
+            value: `<h4>${adapter_constructor.name} adapter</h4>`
+          };
+          acc = { ...acc, ...adapter_instance.settings_config };
+        }
+        return acc;
+      }, {})
+    };
+    if (!["png", "jpg", "jpeg"].some((ext) => this.env.opts.collections?.[this.collection_key]?.source_adapters?.[ext])) delete _settings_config.enable_image_adapter;
+    if (!this.env.opts.collections?.[this.collection_key]?.source_adapters?.["pdf"]) delete _settings_config.enable_pdf_adapter;
+    return _settings_config;
+  }
+  /**
+   * Retrieves the block collection associated with SmartSources.
+   * @readonly
+   * @returns {SmartBlocks} The block collection instance.
+   */
+  get block_collection() {
+    return this.env.smart_blocks;
+  }
+  /**
+   * Retrieves the embed queue containing items and their blocks to be embedded.
+   * @readonly
+   * @returns {Array<Object>} The embed queue.
+   */
+  get embed_queue() {
+    if (!this._embed_queue.length) {
+      try {
+        const embed_blocks = this.block_collection.settings.embed_blocks;
+        this._embed_queue = Object.values(this.items).reduce((acc, item) => {
+          if (item._queue_embed && item.should_embed && item.is_unembedded) acc.push(item);
+          if (embed_blocks) item.blocks.forEach((block) => {
+            if (block._queue_embed && block.should_embed && block.is_unembedded) acc.push(block);
+          });
+          return acc;
+        }, []);
+      } catch (e) {
+        console.error(`Error getting embed queue:`, e);
+      }
+    }
+    return this._embed_queue;
+  }
+  /**
+   * Runs the load process by invoking superclass methods and rendering settings.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async run_data_load() {
+    await super.run_data_load();
+    this.block_collection.render_settings();
+    this.render_settings();
+  }
+  /**
+   * Runs the import process by queuing imports for changed items and processing the import queue.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async run_re_import() {
+    const start_time = Date.now();
+    Object.values(this.items).forEach((item) => {
+      if (item.data.last_import?.at) item.data.last_import.at = 0;
+      item.queue_import();
+      item.queue_embed();
+      item.blocks.forEach((block) => block.queue_embed());
+    });
+    await this.process_source_import_queue();
+    const end_time = Date.now();
+    console.log(`Time spent importing: ${end_time - start_time}ms`);
+    this.render_settings();
+    this.block_collection.render_settings();
+  }
+  /**
+   * Runs the prune process to clean up sources and blocks.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async run_prune() {
+    await this.prune();
+    await this.process_save_queue();
+    this.render_settings();
+    this.block_collection.render_settings();
+  }
+  /**
+   * Clears all data by removing sources and blocks, reinitializing the file system, and reimporting items.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async run_clear_all() {
+    this.notices?.show("clearing_all");
+    await this.data_fs.remove_dir(this.data_dir, true);
+    this.clear();
+    this.block_collection.clear();
+    this._fs = null;
+    await this.fs.init();
+    await this.init_items();
+    this._excluded_headings = null;
+    Object.values(this.items).forEach((item) => {
+      item.queue_import();
+      item.queue_embed();
+      item.loaded_at = Date.now() + 9999999999;
+    });
+    this.notices?.remove("clearing_all");
+    this.notices?.show("done_clearing_all");
+    await this.process_source_import_queue();
+  }
+  /**
+   * Retrieves patterns for excluding files/folders from processing.
+   * @readonly
+   * @returns {Array<string>}
+   */
+  get excluded_patterns() {
+    return [
+      ...this.file_exclusions?.map((file) => `${file}**`) || [],
+      ...(this.folder_exclusions || []).map((folder) => `${folder}**`),
+      this.env.env_data_dir + "/**"
+    ];
+  }
+  /**
+   * Retrieves the file exclusion patterns from settings.
+   * @readonly
+   * @returns {Array<string>} An array of file exclusion patterns.
+   */
+  get file_exclusions() {
+    return this.env.settings?.file_exclusions?.length ? this.env.settings.file_exclusions.split(",").map((file) => file.trim()) : [];
+  }
+  /**
+   * Retrieves the folder exclusion patterns from settings.
+   * @readonly
+   * @returns {Array<string>} An array of folder exclusion patterns.
+   */
+  get folder_exclusions() {
+    return this.env.settings?.folder_exclusions?.length ? this.env.settings.folder_exclusions.split(",").map((folder) => {
+      folder = folder.trim();
+      if (folder.slice(-1) !== "/") return folder + "/";
+      return folder;
+    }) : [];
+  }
+  /**
+   * Retrieves the excluded headings from settings.
+   * @readonly
+   * @returns {Array<string>} An array of excluded headings.
+   */
+  get excluded_headings() {
+    if (!this._excluded_headings) {
+      this._excluded_headings = this.env.settings?.excluded_headings?.length ? this.env.settings.excluded_headings.split(",").map((heading) => heading.trim()) : [];
+    }
+    return this._excluded_headings;
+  }
+  /**
+   * Retrieves the count of included files that are not excluded.
+   * @readonly
+   * @returns {number} The number of included files.
+   */
+  get included_files() {
+    const extensions = Object.keys(this.source_adapters);
+    return this.fs.file_paths.filter((file_path) => extensions.some((ext) => file_path.endsWith(ext)) && !this.fs.is_excluded(file_path)).length;
+  }
+  /**
+   * Retrieves the total number of files, regardless of exclusion.
+   * @readonly
+   * @returns {number} The total number of files.
+   */
+  get total_files() {
+    return this.fs.file_paths.filter((file) => file.endsWith(".md") || file.endsWith(".canvas")).length;
+  }
+};
+var settings_config5 = {
+  "smart_change.active": {
+    "name": "Smart Change (change safety)",
+    "description": "Enable Smart Changes (prevents accidental deletions/overwrites).",
+    "type": "toggle",
+    "default": true
+  }
+};
+
 // node_modules/smart-chats/utils/ScTranslations.json
 var ScTranslations_default = {
   en: {
@@ -25172,7 +23526,7 @@ var SmartThreads = class extends SmartSources2 {
 };
 
 // node_modules/smart-chats/components/thread.js
-function build_html9(thread, opts = {}) {
+function build_html10(thread, opts = {}) {
   return `
     <div class="sc-thread" data-thread-key="${thread.key}">
       <div class="sc-message-container">
@@ -25208,7 +23562,7 @@ function build_html9(thread, opts = {}) {
   `;
 }
 async function render20(thread, opts = {}) {
-  const html = build_html9.call(this, thread, {
+  const html = build_html10.call(this, thread, {
     show_welcome: opts.show_welcome !== false
   });
   const frag = this.create_doc_fragment(html);
@@ -25353,7 +23707,7 @@ function extract_internal_embedded_links(user_input) {
 }
 
 // node_modules/smart-chats/components/error.js
-function build_html10(error, opts = {}) {
+function build_html11(error, opts = {}) {
   const error_message = error?.error?.message || error?.message || "An unknown error occurred";
   const error_code = error?.error?.code || error?.code;
   const error_type = error?.error?.type || error?.type || "Error";
@@ -25387,7 +23741,7 @@ function build_html10(error, opts = {}) {
   `;
 }
 async function render21(error, opts = {}) {
-  const html = build_html10.call(this, error, opts);
+  const html = build_html11.call(this, error, opts);
   const frag = this.create_doc_fragment(html);
   return await post_process14.call(this, error, frag, opts);
 }
@@ -26100,6 +24454,2536 @@ var SmartThread2 = class extends SmartThread {
   }
 };
 
+// node_modules/smart-blocks/node_modules/smart-collections/utils/collection_instance_name_from.js
+function collection_instance_name_from4(class_name) {
+  if (class_name.endsWith("Item")) {
+    return class_name.replace(/Item$/, "").toLowerCase();
+  }
+  return class_name.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase().replace(/y$/, "ie") + "s";
+}
+
+// node_modules/smart-blocks/node_modules/smart-collections/utils/helpers.js
+function create_uid4(data) {
+  const str = JSON.stringify(data);
+  let hash = 0;
+  if (str.length === 0) return hash;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash;
+    if (hash < 0) hash = hash * -1;
+  }
+  return hash.toString() + str.length;
+}
+function deep_merge6(target, source) {
+  for (const key in source) {
+    if (source.hasOwnProperty(key)) {
+      if (is_obj(source[key]) && is_obj(target[key])) deep_merge6(target[key], source[key]);
+      else target[key] = source[key];
+    }
+  }
+  return target;
+  function is_obj(item) {
+    return item && typeof item === "object" && !Array.isArray(item);
+  }
+}
+
+// node_modules/smart-blocks/node_modules/smart-collections/utils/deep_equal.js
+function deep_equal4(obj1, obj2, visited = /* @__PURE__ */ new WeakMap()) {
+  if (obj1 === obj2) return true;
+  if (obj1 === null || obj2 === null || obj1 === void 0 || obj2 === void 0) return false;
+  if (typeof obj1 !== typeof obj2 || Array.isArray(obj1) !== Array.isArray(obj2)) return false;
+  if (Array.isArray(obj1)) {
+    if (obj1.length !== obj2.length) return false;
+    return obj1.every((item, index) => deep_equal4(item, obj2[index], visited));
+  }
+  if (typeof obj1 === "object") {
+    if (visited.has(obj1)) return visited.get(obj1) === obj2;
+    visited.set(obj1, obj2);
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+    if (keys1.length !== keys2.length) return false;
+    return keys1.every((key) => deep_equal4(obj1[key], obj2[key], visited));
+  }
+  return obj1 === obj2;
+}
+
+// node_modules/smart-blocks/node_modules/smart-collections/item.js
+var CollectionItem4 = class _CollectionItem {
+  /**
+   * Default properties for an instance of CollectionItem.
+   * Override in subclasses to define different defaults.
+   * @returns {Object}
+   */
+  static get defaults() {
+    return {
+      data: {}
+    };
+  }
+  /**
+   * @param {Object} env - The environment/context.
+   * @param {Object|null} [data=null] - Initial data for the item.
+   */
+  constructor(env, data = null) {
+    this.env = env;
+    this.config = this.env?.config;
+    this.merge_defaults();
+    if (data) deep_merge6(this.data, data);
+    if (!this.data.class_name) this.data.class_name = this.constructor.name;
+  }
+  /**
+   * Loads an item from data and initializes it.
+   * @param {Object} env
+   * @param {Object} data
+   * @returns {CollectionItem}
+   */
+  static load(env, data) {
+    const item = new this(env, data);
+    item.init();
+    return item;
+  }
+  /**
+   * Merge default properties from the entire inheritance chain.
+   * @private
+   */
+  merge_defaults() {
+    let current_class = this.constructor;
+    while (current_class) {
+      for (let key in current_class.defaults) {
+        const default_val = current_class.defaults[key];
+        if (typeof default_val === "object") {
+          this[key] = { ...default_val, ...this[key] };
+        } else {
+          this[key] = this[key] === void 0 ? default_val : this[key];
+        }
+      }
+      current_class = Object.getPrototypeOf(current_class);
+    }
+  }
+  /**
+   * Generates or retrieves a unique key for the item.
+   * Key syntax supports:
+   * - `[i]` for sequences
+   * - `/` for super-sources (groups, directories, clusters)
+   * - `#` for sub-sources (blocks)
+   * @returns {string} The unique key
+   */
+  get_key() {
+    return create_uid4(this.data);
+  }
+  /**
+   * Updates the item data and returns true if changed.
+   * @param {Object} data
+   * @returns {boolean} True if data changed.
+   */
+  update_data(data) {
+    const sanitized_data = this.sanitize_data(data);
+    const current_data = { ...this.data };
+    deep_merge6(current_data, sanitized_data);
+    const changed = !deep_equal4(this.data, current_data);
+    if (!changed) return false;
+    this.data = current_data;
+    return true;
+  }
+  /**
+   * Sanitizes data for saving. Ensures no circular references.
+   * @param {*} data
+   * @returns {*} Sanitized data.
+   */
+  sanitize_data(data) {
+    if (data instanceof _CollectionItem) return data.ref;
+    if (Array.isArray(data)) return data.map((val) => this.sanitize_data(val));
+    if (typeof data === "object" && data !== null) {
+      return Object.keys(data).reduce((acc, key) => {
+        acc[key] = this.sanitize_data(data[key]);
+        return acc;
+      }, {});
+    }
+    return data;
+  }
+  /**
+   * Initializes the item. Override as needed.
+   * @param {Object} [input_data] - Additional data that might be provided on creation.
+   */
+  init(input_data) {
+  }
+  /**
+   * Queues this item for saving.
+   */
+  queue_save() {
+    this._queue_save = true;
+  }
+  /**
+   * Saves this item using its data adapter.
+   * @returns {Promise<void>}
+   */
+  async save() {
+    try {
+      await this.data_adapter.save_item(this);
+      this.init();
+    } catch (err) {
+      this._queue_save = true;
+      console.error(err, err.stack);
+    }
+  }
+  /**
+   * Queues this item for loading.
+   */
+  queue_load() {
+    this._queue_load = true;
+  }
+  /**
+   * Loads this item using its data adapter.
+   * @returns {Promise<void>}
+   */
+  async load() {
+    try {
+      await this.data_adapter.load_item(this);
+      this.init();
+    } catch (err) {
+      this._load_error = err;
+      this.on_load_error(err);
+    }
+  }
+  /**
+   * Handles load errors by re-queuing for load.
+   * Override if needed.
+   * @param {Error} err
+   */
+  on_load_error(err) {
+    this.queue_load();
+  }
+  /**
+   * Validates the item before saving. Checks for presence and validity of key.
+   * @returns {boolean}
+   */
+  validate_save() {
+    if (!this.key) return false;
+    if (this.key.trim() === "") return false;
+    if (this.key === "undefined") return false;
+    return true;
+  }
+  /**
+   * Marks this item as deleted. This does not immediately remove it from memory,
+   * but queues a save that will result in the item being removed from persistent storage.
+   */
+  delete() {
+    this.deleted = true;
+    this.queue_save();
+  }
+  /**
+   * Filters items in the collection based on provided options.
+   * functional filter (returns true or false) for filtering items in collection; called by collection class
+   * @param {Object} filter_opts - Filtering options.
+   * @param {string} [filter_opts.exclude_key] - A single key to exclude.
+   * @param {string[]} [filter_opts.exclude_keys] - An array of keys to exclude. If exclude_key is provided, it's added to this array.
+   * @param {string} [filter_opts.exclude_key_starts_with] - Exclude keys starting with this string.
+   * @param {string[]} [filter_opts.exclude_key_starts_with_any] - Exclude keys starting with any of these strings.
+   * @param {string} [filter_opts.exclude_key_includes] - Exclude keys that include this string.
+   * @param {string} [filter_opts.key_ends_with] - Include only keys ending with this string.
+   * @param {string} [filter_opts.key_starts_with] - Include only keys starting with this string.
+   * @param {string[]} [filter_opts.key_starts_with_any] - Include only keys starting with any of these strings.
+   * @param {string} [filter_opts.key_includes] - Include only keys that include this string.
+   * @returns {boolean} True if the item passes the filter, false otherwise.
+   */
+  filter(filter_opts = {}) {
+    const {
+      exclude_key,
+      exclude_keys = exclude_key ? [exclude_key] : [],
+      exclude_key_starts_with,
+      exclude_key_starts_with_any,
+      exclude_key_includes,
+      exclude_key_includes_any,
+      key_ends_with,
+      key_starts_with,
+      key_starts_with_any,
+      key_includes,
+      key_includes_any
+    } = filter_opts;
+    if (exclude_keys?.includes(this.key)) return false;
+    if (exclude_key_starts_with && this.key.startsWith(exclude_key_starts_with)) return false;
+    if (exclude_key_starts_with_any && exclude_key_starts_with_any.some((prefix) => this.key.startsWith(prefix))) return false;
+    if (exclude_key_includes && this.key.includes(exclude_key_includes)) return false;
+    if (exclude_key_includes_any && exclude_key_includes_any.some((include) => this.key.includes(include))) return false;
+    if (key_ends_with && !this.key.endsWith(key_ends_with)) return false;
+    if (key_starts_with && !this.key.startsWith(key_starts_with)) return false;
+    if (key_starts_with_any && !key_starts_with_any.some((prefix) => this.key.startsWith(prefix))) return false;
+    if (key_includes && !this.key.includes(key_includes)) return false;
+    if (key_includes_any && !key_includes_any.some((include) => this.key.includes(include))) return false;
+    return true;
+  }
+  /**
+   * Parses item data for additional processing. Override as needed.
+   */
+  parse() {
+  }
+  /**
+   * Helper function to render a component in the item scope
+   * @param {*} component_key 
+   * @param {*} opts 
+   * @returns 
+   */
+  async render_component(component_key, opts = {}) {
+    return await this.env.render_component(component_key, this, opts);
+  }
+  get actions() {
+    if (!this._actions) {
+      this._actions = Object.entries(this.env.opts.items[this.item_type_key].actions || {}).reduce((acc, [k, v]) => {
+        acc[k] = v.bind(this);
+        return acc;
+      }, {});
+    }
+    return this._actions;
+  }
+  /**
+   * Derives the collection key from the class name.
+   * @returns {string}
+   */
+  static get collection_key() {
+    let name = this.name;
+    if (name.match(/\d$/)) name = name.slice(0, -1);
+    return collection_instance_name_from4(name);
+  }
+  /**
+   * @returns {string} The collection key for this item.
+   */
+  get collection_key() {
+    let name = this.constructor.name;
+    if (name.match(/\d$/)) name = name.slice(0, -1);
+    return collection_instance_name_from4(name);
+  }
+  /**
+   * Retrieves the parent collection from the environment.
+   * @returns {Collection}
+   */
+  get collection() {
+    return this.env[this.collection_key];
+  }
+  /**
+   * @returns {string} The item's key.
+   */
+  get key() {
+    return this.data?.key || this.get_key();
+  }
+  get item_type_key() {
+    let name = this.constructor.name;
+    if (name.match(/\d$/)) name = name.slice(0, -1);
+    return camel_case_to_snake_case6(name);
+  }
+  /**
+   * A simple reference object for this item.
+   * @returns {{collection_key: string, key: string}}
+   */
+  get ref() {
+    return { collection_key: this.collection_key, key: this.key };
+  }
+  /**
+   * @returns {Object} The data adapter for this item's collection.
+   */
+  get data_adapter() {
+    return this.collection.data_adapter;
+  }
+  /**
+   * @returns {Object} The filesystem adapter.
+   */
+  get data_fs() {
+    return this.collection.data_fs;
+  }
+  /**
+   * Access to collection-level settings.
+   * @returns {Object}
+   */
+  get settings() {
+    if (!this.env.settings[this.collection_key]) this.env.settings[this.collection_key] = {};
+    return this.env.settings[this.collection_key];
+  }
+  set settings(settings) {
+    this.env.settings[this.collection_key] = settings;
+    this.env.smart_settings.save();
+  }
+  /**
+   * Render this item into a container using the item's component.
+   * @deprecated 2024-12-02 Use explicit component pattern from environment
+   * @param {HTMLElement} container
+   * @param {Object} opts
+   * @returns {Promise<HTMLElement>}
+   */
+  async render_item(container, opts = {}) {
+    const frag = await this.component.call(this.smart_view, this, opts);
+    container.innerHTML = "";
+    container.appendChild(frag);
+    return container;
+  }
+  /**
+   * @deprecated use env.smart_view
+   * @returns {Object}
+   */
+  get smart_view() {
+    if (!this._smart_view) this._smart_view = this.env.init_module("smart_view");
+    return this._smart_view;
+  }
+  /**
+   * Override in child classes to set the component for this item
+   * @deprecated 2024-12-02
+   * @returns {Function} The render function for this component
+   */
+  get component() {
+    return item_component;
+  }
+};
+function camel_case_to_snake_case6(str) {
+  const result = str.replace(/([A-Z])/g, (match) => `_${match.toLowerCase()}`).replace(/^_/, "").replace(/2$/, "");
+  return result;
+}
+
+// node_modules/smart-blocks/node_modules/smart-collections/collection.js
+var AsyncFunction4 = Object.getPrototypeOf(async function() {
+}).constructor;
+var Collection4 = class {
+  /**
+   * Constructs a new Collection instance.
+   *
+   * @param {Object} env - The environment context containing configurations and adapters.
+   * @param {Object} [opts={}] - Optional configuration.
+   * @param {string} [opts.collection_key] - Custom key to override default collection name.
+   * @param {string} [opts.data_dir] - Custom data directory path.
+   * @param {boolean} [opts.prevent_load_on_init] - Whether to prevent loading items on initialization.
+   */
+  constructor(env, opts = {}) {
+    this.env = env;
+    this.opts = opts;
+    if (opts.collection_key) this.collection_key = opts.collection_key;
+    this.env[this.collection_key] = this;
+    this.config = this.env.config;
+    this.items = {};
+    this.loaded = null;
+    this._loading = false;
+    this.load_time_ms = null;
+    this.settings_container = null;
+  }
+  /**
+   * Initializes a new collection in the environment. Override in subclass if needed.
+   *
+   * @param {Object} env
+   * @param {Object} [opts={}]
+   * @returns {Promise<void>}
+   */
+  static async init(env, opts = {}) {
+    env[this.collection_key] = new this(env, opts);
+    await env[this.collection_key].init();
+    env.collections[this.collection_key] = "init";
+  }
+  /**
+   * The unique collection key derived from the class name.
+   * @returns {string}
+   */
+  static get collection_key() {
+    let name = this.name;
+    if (name.match(/\d$/)) name = name.slice(0, -1);
+    return name.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase();
+  }
+  /**
+   * Instance-level init. Override in subclasses if necessary.
+   * @returns {Promise<void>}
+   */
+  async init() {
+  }
+  /**
+   * Creates or updates an item in the collection.
+   * - If `data` includes a key that matches an existing item, that item is updated.
+   * - Otherwise, a new item is created.
+   * After updating or creating, the item is validated. If validation fails, the item is logged and returned without being saved.
+   * If validation succeeds for a new item, it is added to the collection and marked for saving.
+   *
+   * If the item’s `init()` method is async, a promise is returned that resolves once init completes.
+   *
+   * @param {Object} [data={}] - Data for creating/updating an item.
+   * @returns {Promise<Item>|Item} The created or updated item. May return a promise if `init()` is async.
+   */
+  create_or_update(data = {}) {
+    const existing_item = this.find_by(data);
+    const item = existing_item ? existing_item : new this.item_type(this.env);
+    item._queue_save = !existing_item;
+    const data_changed = item.update_data(data);
+    if (!existing_item && !item.validate_save()) {
+      return item;
+    }
+    if (!existing_item) {
+      this.set(item);
+    }
+    if (existing_item && !data_changed) return existing_item;
+    if (item.init instanceof AsyncFunction4) {
+      return new Promise((resolve) => {
+        item.init(data).then(() => resolve(item));
+      });
+    }
+    item.init(data);
+    return item;
+  }
+  /**
+   * Finds an item by partial data match (first checks key). If `data.key` provided,
+   * returns the item with that key; otherwise attempts a match by merging data.
+   *
+   * @param {Object} data - Data to match against.
+   * @returns {Item|null}
+   */
+  find_by(data) {
+    if (data.key) return this.get(data.key);
+    const temp = new this.item_type(this.env);
+    const temp_data = JSON.parse(JSON.stringify(data, temp.sanitize_data(data)));
+    deep_merge6(temp.data, temp_data);
+    return temp.key ? this.get(temp.key) : null;
+  }
+  /**
+   * Filters items based on provided filter options or a custom function.
+   *
+   * @param {Object|Function} [filter_opts={}] - Filter options or a predicate function.
+   * @returns {Item[]} Array of filtered items.
+   */
+  filter(filter_opts = {}) {
+    if (typeof filter_opts === "function") {
+      return Object.values(this.items).filter(filter_opts);
+    }
+    filter_opts = this.prepare_filter(filter_opts);
+    const results = [];
+    const { first_n } = filter_opts;
+    for (const item of Object.values(this.items)) {
+      if (first_n && results.length >= first_n) break;
+      if (item.filter(filter_opts)) results.push(item);
+    }
+    return results;
+  }
+  /**
+   * Alias for `filter()`
+   * @param {Object|Function} filter_opts
+   * @returns {Item[]}
+   */
+  list(filter_opts) {
+    return this.filter(filter_opts);
+  }
+  /**
+   * Prepares filter options. Can be overridden by subclasses to normalize filter options.
+   *
+   * @param {Object} filter_opts
+   * @returns {Object} Prepared filter options.
+   */
+  prepare_filter(filter_opts) {
+    return filter_opts;
+  }
+  /**
+   * Retrieves an item by key.
+   * @param {string} key
+   * @returns {Item|undefined}
+   */
+  get(key) {
+    return this.items[key];
+  }
+  /**
+   * Retrieves multiple items by an array of keys.
+   * @param {string[]} keys
+   * @returns {Item[]}
+   */
+  get_many(keys = []) {
+    if (!Array.isArray(keys)) {
+      console.error("get_many called with non-array keys:", keys);
+      return [];
+    }
+    return keys.map((key) => this.get(key)).filter(Boolean);
+  }
+  /**
+   * Retrieves a random item from the collection, optionally filtered by options.
+   * @param {Object} [opts]
+   * @returns {Item|undefined}
+   */
+  get_rand(opts = null) {
+    if (opts) {
+      const filtered = this.filter(opts);
+      return filtered[Math.floor(Math.random() * filtered.length)];
+    }
+    const keys = this.keys;
+    return this.items[keys[Math.floor(Math.random() * keys.length)]];
+  }
+  /**
+   * Adds or updates an item in the collection.
+   * @param {Item} item
+   */
+  set(item) {
+    if (!item.key) throw new Error("Item must have a key property");
+    this.items[item.key] = item;
+  }
+  /**
+   * Updates multiple items by their keys.
+   * @param {string[]} keys
+   * @param {Object} data
+   */
+  update_many(keys = [], data = {}) {
+    this.get_many(keys).forEach((item) => item.update_data(data));
+  }
+  /**
+   * Clears all items from the collection.
+   */
+  clear() {
+    this.items = {};
+  }
+  /**
+   * @returns {string} The collection key, can be overridden by opts.collection_key
+   */
+  get collection_key() {
+    return this._collection_key ? this._collection_key : this.constructor.collection_key;
+  }
+  set collection_key(key) {
+    this._collection_key = key;
+  }
+  /**
+   * Lazily initializes and returns the data adapter instance for this collection.
+   * @returns {Object} The data adapter instance.
+   */
+  get data_adapter() {
+    if (!this._data_adapter) {
+      const AdapterClass = this.get_adapter_class("data");
+      this._data_adapter = new AdapterClass(this);
+    }
+    return this._data_adapter;
+  }
+  get_adapter_class(type) {
+    const config = this.env.opts.collections?.[this.collection_key];
+    const adapter_key = type + "_adapter";
+    const adapter_module = config?.[adapter_key] ?? this.env.opts.collections?.smart_collections?.[adapter_key];
+    if (typeof adapter_module === "function") return adapter_module;
+    if (typeof adapter_module?.collection === "function") return adapter_module.collection;
+    throw new Error(`No '${type}' adapter class found for ${this.collection_key} or smart_collections`);
+  }
+  /**
+   * Data directory strategy for this collection. Defaults to 'multi'.
+   * @returns {string}
+   */
+  get data_dir() {
+    return "multi";
+  }
+  /**
+   * File system adapter from the environment.
+   * @returns {Object}
+   */
+  get data_fs() {
+    return this.env.data_fs;
+  }
+  /**
+   * Derives the corresponding item class name based on this collection's class name.
+   * @returns {string}
+   */
+  get item_class_name() {
+    let name = this.constructor.name;
+    if (name.match(/\d$/)) name = name.slice(0, -1);
+    if (name.endsWith("ies")) return name.slice(0, -3) + "y";
+    else if (name.endsWith("s")) return name.slice(0, -1);
+    return name + "Item";
+  }
+  /**
+   * Derives a readable item name from the item class name.
+   * @returns {string}
+   */
+  get item_name() {
+    return this.item_class_name.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase();
+  }
+  /**
+   * Retrieves the item type (constructor) from the environment.
+   * @returns {Function} Item constructor.
+   */
+  get item_type() {
+    return this.env.item_types[this.item_class_name];
+  }
+  /**
+   * Returns an array of all keys in the collection.
+   * @returns {string[]}
+   */
+  get keys() {
+    return Object.keys(this.items);
+  }
+  /**
+   * @deprecated use data_adapter instead (2024-09-14)
+   */
+  get adapter() {
+    return this.data_adapter;
+  }
+  /**
+   * @method process_save_queue
+   * @description 
+   * Saves items flagged for saving (_queue_save) back to AJSON or SQLite. This ensures persistent storage 
+   * of any updates made since last load/import. This method also writes changes to disk (AJSON files or DB).
+   */
+  async process_save_queue(opts = {}) {
+    if (opts.force) {
+      Object.values(this.items).forEach((item) => item._queue_save = true);
+    }
+    await this.data_adapter.process_save_queue(opts);
+  }
+  /**
+   * @alias process_save_queue
+   * @returns {Promise<void>}
+   */
+  async save(opts = {}) {
+    await this.process_save_queue(opts);
+  }
+  /**
+   * @method process_load_queue
+   * @description 
+   * Loads items that have been flagged for loading (_queue_load). This may involve 
+   * reading from AJSON/SQLite or re-importing from markdown if needed. 
+   * Called once initial environment is ready and collections are known.
+   */
+  async process_load_queue() {
+    await this.data_adapter.process_load_queue();
+  }
+  /**
+   * Retrieves processed settings configuration.
+   * @returns {Object}
+   */
+  get settings_config() {
+    return this.process_settings_config({});
+  }
+  /**
+   * Processes given settings config, adding prefixes and handling conditionals.
+   *
+   * @private
+   * @param {Object} _settings_config
+   * @param {string} [prefix='']
+   * @returns {Object}
+   */
+  process_settings_config(_settings_config, prefix = "") {
+    const add_prefix = (key) => prefix && !key.includes(`${prefix}.`) ? `${prefix}.${key}` : key;
+    return Object.entries(_settings_config).reduce((acc, [key, val]) => {
+      let new_val = { ...val };
+      if (new_val.conditional) {
+        if (!new_val.conditional(this)) return acc;
+        delete new_val.conditional;
+      }
+      if (new_val.callback) new_val.callback = add_prefix(new_val.callback);
+      if (new_val.btn_callback) new_val.btn_callback = add_prefix(new_val.btn_callback);
+      if (new_val.options_callback) new_val.options_callback = add_prefix(new_val.options_callback);
+      const new_key = add_prefix(this.process_setting_key(key));
+      acc[new_key] = new_val;
+      return acc;
+    }, {});
+  }
+  /**
+   * Processes an individual setting key. Override if needed.
+   * @param {string} key
+   * @returns {string}
+   */
+  process_setting_key(key) {
+    return key;
+  }
+  /**
+   * Default settings for this collection. Override in subclasses as needed.
+   * @returns {Object}
+   */
+  get default_settings() {
+    return {};
+  }
+  /**
+   * Current settings for the collection.
+   * Initializes with default settings if none exist.
+   * @returns {Object}
+   */
+  get settings() {
+    if (!this.env.settings[this.collection_key]) {
+      this.env.settings[this.collection_key] = this.default_settings;
+    }
+    return this.env.settings[this.collection_key];
+  }
+  /**
+   * @deprecated use env.smart_view instead
+   * @returns {Object} smart_view instance
+   */
+  get smart_view() {
+    if (!this._smart_view) this._smart_view = this.env.init_module("smart_view");
+    return this._smart_view;
+  }
+  /**
+   * Renders the settings for the collection into a given container.
+   * @param {HTMLElement} [container=this.settings_container]
+   * @param {Object} opts
+   * @returns {Promise<HTMLElement>}
+   */
+  async render_settings(container = this.settings_container, opts = {}) {
+    return await this.render_collection_settings(container, opts);
+  }
+  /**
+   * Helper function to render collection settings.
+   * @param {HTMLElement} [container=this.settings_container]
+   * @param {Object} opts
+   * @returns {Promise<HTMLElement>}
+   */
+  async render_collection_settings(container = this.settings_container, opts = {}) {
+    if (container && (!this.settings_container || this.settings_container !== container)) {
+      this.settings_container = container;
+    } else if (!container) {
+      container = this.env.smart_view.create_doc_fragment("<div></div>");
+    }
+    container.innerHTML = `<div class="sc-loading">Loading ${this.collection_key} settings...</div>`;
+    const frag = await this.env.render_component("settings", this, opts);
+    container.innerHTML = "";
+    container.appendChild(frag);
+    return container;
+  }
+  /**
+   * Unloads collection data from memory.
+   */
+  unload() {
+    this.clear();
+    this.unloaded = true;
+  }
+  /**
+   * Runs load process for all items in the collection, triggering queue loads and rendering settings after done.
+   * @returns {Promise<void>}
+   */
+  async run_data_load() {
+    this.loaded = null;
+    this.load_time_ms = null;
+    Object.values(this.items).forEach((item) => item.queue_load());
+    this.notices?.show("loading_collection", { collection_key: this.collection_key });
+    await this.process_load_queue();
+    this.notices?.remove("loading_collection");
+    this.notices?.show("done_loading_collection", { collection_key: this.collection_key });
+    this.render_settings();
+  }
+  /**
+   * Helper function to render a component in the collection scope
+   * @param {*} component_key 
+   * @param {*} opts 
+   * @returns 
+   */
+  async render_component(component_key, opts = {}) {
+    return await this.env.render_component(component_key, this, opts);
+  }
+};
+
+// node_modules/smart-blocks/node_modules/smart-entities/adapters/_adapter.js
+var EntitiesVectorAdapter4 = class {
+  /**
+   * @constructor
+   * @param {Object} collection - The collection (SmartEntities or derived class) instance.
+   */
+  constructor(collection) {
+    this.collection = collection;
+  }
+  /**
+   * Find the nearest entities to the given vector.
+   * @async
+   * @param {number[]} vec - The reference vector.
+   * @param {Object} [filter={}] - Optional filters (limit, exclude, etc.)
+   * @returns {Promise<Array<{item:Object, score:number}>>} Array of results sorted by score descending.
+   * @throws {Error} Not implemented by default.
+   */
+  async nearest(vec, filter = {}) {
+    throw new Error("EntitiesVectorAdapter.nearest() not implemented");
+  }
+  /**
+   * Find the furthest entities from the given vector.
+   * @async
+   * @param {number[]} vec - The reference vector.
+   * @param {Object} [filter={}] - Optional filters (limit, exclude, etc.)
+   * @returns {Promise<Array<{item:Object, score:number}>>} Array of results sorted by score ascending (furthest).
+   * @throws {Error} Not implemented by default.
+   */
+  async furthest(vec, filter = {}) {
+    throw new Error("EntitiesVectorAdapter.furthest() not implemented");
+  }
+  /**
+   * Embed a batch of entities.
+   * @async
+   * @param {Object[]} entities - Array of entity instances to embed.
+   * @returns {Promise<void>}
+   * @throws {Error} Not implemented by default.
+   */
+  async embed_batch(entities) {
+    throw new Error("EntitiesVectorAdapter.embed_batch() not implemented");
+  }
+  /**
+   * Process a queue of entities waiting to be embedded.
+   * Typically, this will call embed_batch in batches and update entities.
+   * @async
+   * @param {Object[]} embed_queue - Array of entities to embed.
+   * @returns {Promise<void>}
+   * @throws {Error} Not implemented by default.
+   */
+  async process_embed_queue(embed_queue) {
+    throw new Error("EntitiesVectorAdapter.process_embed_queue() not implemented");
+  }
+};
+var EntityVectorAdapter4 = class {
+  /**
+   * @constructor
+   * @param {Object} item - The SmartEntity instance that this adapter is associated with.
+   */
+  constructor(item) {
+    this.item = item;
+  }
+  /**
+   * Retrieve the current vector embedding for this entity.
+   * @async
+   * @returns {Promise<number[]|undefined>} The entity's vector or undefined if not set.
+   * @throws {Error} Not implemented by default.
+   */
+  async get_vec() {
+    throw new Error("EntityVectorAdapter.get_vec() not implemented");
+  }
+  /**
+   * Store/update the vector embedding for this entity.
+   * @async
+   * @param {number[]} vec - The vector to set.
+   * @returns {Promise<void>}
+   * @throws {Error} Not implemented by default.
+   */
+  async set_vec(vec) {
+    throw new Error("EntityVectorAdapter.set_vec() not implemented");
+  }
+  /**
+   * Delete/remove the vector embedding for this entity.
+   * @async
+   * @returns {Promise<void>}
+   * @throws {Error} Not implemented by default.
+   */
+  async delete_vec() {
+    throw new Error("EntityVectorAdapter.delete_vec() not implemented");
+  }
+};
+
+// node_modules/smart-blocks/node_modules/smart-entities/utils/cos_sim.js
+function cos_sim4(vector1, vector2) {
+  if (vector1.length !== vector2.length) {
+    throw new Error("Vectors must have the same length");
+  }
+  let dot_product = 0;
+  let magnitude1 = 0;
+  let magnitude2 = 0;
+  const epsilon = 1e-8;
+  for (let i = 0; i < vector1.length; i++) {
+    dot_product += vector1[i] * vector2[i];
+    magnitude1 += vector1[i] * vector1[i];
+    magnitude2 += vector2[i] * vector2[i];
+  }
+  magnitude1 = Math.sqrt(magnitude1);
+  magnitude2 = Math.sqrt(magnitude2);
+  if (magnitude1 < epsilon || magnitude2 < epsilon) {
+    return 0;
+  }
+  return dot_product / (magnitude1 * magnitude2);
+}
+
+// node_modules/smart-blocks/node_modules/smart-entities/utils/results_acc.js
+function results_acc4(_acc, result, ct = 10) {
+  if (_acc.results.size < ct) {
+    _acc.results.add(result);
+    if (_acc.results.size === ct && _acc.min === Number.POSITIVE_INFINITY) {
+      let { minScore, minObj } = find_min4(_acc.results);
+      _acc.min = minScore;
+      _acc.minResult = minObj;
+    }
+  } else if (result.score > _acc.min) {
+    _acc.results.add(result);
+    _acc.results.delete(_acc.minResult);
+    let { minScore, minObj } = find_min4(_acc.results);
+    _acc.min = minScore;
+    _acc.minResult = minObj;
+  }
+}
+function furthest_acc4(_acc, result, ct = 10) {
+  if (_acc.results.size < ct) {
+    _acc.results.add(result);
+    if (_acc.results.size === ct && _acc.max === Number.NEGATIVE_INFINITY) {
+      let { maxScore, maxObj } = find_max4(_acc.results);
+      _acc.max = maxScore;
+      _acc.maxResult = maxObj;
+    }
+  } else if (result.score < _acc.max) {
+    _acc.results.add(result);
+    _acc.results.delete(_acc.maxResult);
+    let { maxScore, maxObj } = find_max4(_acc.results);
+    _acc.max = maxScore;
+    _acc.maxResult = maxObj;
+  }
+}
+function find_min4(results) {
+  let minScore = Number.POSITIVE_INFINITY;
+  let minObj = null;
+  for (const obj of results) {
+    if (obj.score < minScore) {
+      minScore = obj.score;
+      minObj = obj;
+    }
+  }
+  return { minScore, minObj };
+}
+function find_max4(results) {
+  let maxScore = Number.NEGATIVE_INFINITY;
+  let maxObj = null;
+  for (const obj of results) {
+    if (obj.score > maxScore) {
+      maxScore = obj.score;
+      maxObj = obj;
+    }
+  }
+  return { maxScore, maxObj };
+}
+
+// node_modules/smart-blocks/node_modules/smart-entities/utils/sort_by_score.js
+function sort_by_score4(a, b) {
+  const epsilon = 1e-9;
+  const score_diff = a.score - b.score;
+  if (Math.abs(score_diff) < epsilon) return 0;
+  return score_diff > 0 ? -1 : 1;
+}
+function sort_by_score_descending4(a, b) {
+  return sort_by_score4(a, b);
+}
+function sort_by_score_ascending4(a, b) {
+  return sort_by_score4(a, b) * -1;
+}
+
+// node_modules/smart-blocks/node_modules/smart-entities/adapters/default.js
+var DefaultEntitiesVectorAdapter4 = class extends EntitiesVectorAdapter4 {
+  constructor(collection) {
+    super(collection);
+    this._is_processing_embed_queue = false;
+    this._reset_embed_queue_stats();
+  }
+  /**
+   * Find the nearest entities to the given vector.
+   * @async
+   * @param {number[]} vec - The reference vector.
+   * @param {Object} [filter={}] - Optional filters (limit, exclude, etc.)
+   * @returns {Promise<Array<{item:Object, score:number}>>} Array of results sorted by score descending.
+   */
+  async nearest(vec, filter = {}) {
+    if (!vec || !Array.isArray(vec)) {
+      throw new Error("Invalid vector input to nearest()");
+    }
+    const {
+      limit = 50
+      // TODO: default configured in settings
+    } = filter;
+    const nearest = this.collection.filter(filter).reduce((acc, item) => {
+      if (!item.vec) return acc;
+      const result = { item, score: cos_sim4(vec, item.vec) };
+      results_acc4(acc, result, limit);
+      return acc;
+    }, { min: 0, results: /* @__PURE__ */ new Set() });
+    return Array.from(nearest.results).sort(sort_by_score_descending4);
+  }
+  /**
+   * Find the furthest entities from the given vector.
+   * @async
+   * @param {number[]} vec - The reference vector.
+   * @param {Object} [filter={}] - Optional filters (limit, exclude, etc.)
+   * @returns {Promise<Array<{item:Object, score:number}>>} Array of results sorted by score ascending (furthest).
+   */
+  async furthest(vec, filter = {}) {
+    if (!vec || !Array.isArray(vec)) {
+      throw new Error("Invalid vector input to furthest()");
+    }
+    const {
+      limit = 50
+      // TODO: default configured in settings
+    } = filter;
+    const furthest = this.collection.filter(filter).reduce((acc, item) => {
+      if (!item.vec) return acc;
+      const result = { item, score: cos_sim4(vec, item.vec) };
+      furthest_acc4(acc, result, limit);
+      return acc;
+    }, { max: 0, results: /* @__PURE__ */ new Set() });
+    return Array.from(furthest.results).sort(sort_by_score_ascending4);
+  }
+  /**
+   * Embed a batch of entities.
+   * @async
+   * @param {Object[]} entities - Array of entity instances to embed.
+   * @returns {Promise<void>}
+   */
+  async embed_batch(entities) {
+    if (!this.collection.embed_model) {
+      throw new Error("No embed_model found in collection for embedding");
+    }
+    await Promise.all(entities.map((e) => e.get_embed_input()));
+    const embeddings = await this.collection.embed_model.embed_batch(entities);
+    embeddings.forEach((emb, i) => {
+      const entity = entities[i];
+      entity.vec = emb.vec;
+      if (emb.tokens !== void 0) entity.tokens = emb.tokens;
+    });
+  }
+  /**
+   * Process a queue of entities waiting to be embedded.
+   * Prevents multiple concurrent runs by using `_is_processing_embed_queue`.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async process_embed_queue() {
+    if (this._is_processing_embed_queue) {
+      console.log("process_embed_queue is already running, skipping concurrent call.");
+      return;
+    }
+    this._is_processing_embed_queue = true;
+    try {
+      const embed_queue = this.collection.embed_queue;
+      this._reset_embed_queue_stats();
+      if (this.collection.embed_model_key === "None") {
+        console.log(`Smart Connections: No active embedding model for ${this.collection.collection_key}, skipping embedding`);
+        return;
+      }
+      if (!this.collection.embed_model) {
+        console.log(`Smart Connections: No active embedding model for ${this.collection.collection_key}, skipping embedding`);
+        return;
+      }
+      const datetime_start = /* @__PURE__ */ new Date();
+      if (!embed_queue.length) {
+        console.log(`Smart Connections: No items in ${this.collection.collection_key} embed queue`);
+        return;
+      }
+      console.log(`Time spent getting embed queue: ${(/* @__PURE__ */ new Date()).getTime() - datetime_start.getTime()}ms`);
+      console.log(`Processing ${this.collection.collection_key} embed queue: ${embed_queue.length} items`);
+      for (let i = 0; i < embed_queue.length; i += this.collection.embed_model.batch_size) {
+        if (this.is_queue_halted) {
+          this.is_queue_halted = false;
+          break;
+        }
+        const batch = embed_queue.slice(i, i + this.collection.embed_model.batch_size);
+        await Promise.all(batch.map((item) => item.get_embed_input()));
+        try {
+          const start_time = Date.now();
+          await this.embed_batch(batch);
+          this.total_time += Date.now() - start_time;
+        } catch (e) {
+          if (e && e.message && e.message.includes("API key not set")) {
+            this.halt_embed_queue_processing(`API key not set for ${this.collection.embed_model_key}
+Please set the API key in the settings.`);
+          }
+          console.error(e);
+          console.error(`Error processing ${this.collection.collection_key} embed queue: ` + JSON.stringify(e || {}, null, 2));
+        }
+        batch.forEach((item) => {
+          item.embed_hash = item.read_hash;
+          item._queue_save = true;
+        });
+        this.embedded_total += batch.length;
+        this.total_tokens += batch.reduce((acc, item) => acc + (item.tokens || 0), 0);
+        this._show_embed_progress_notice(embed_queue.length);
+        if (this.embedded_total - this.last_save_total > 1e3) {
+          this.last_save_total = this.embedded_total;
+          await this.collection.process_save_queue();
+          if (this.collection.block_collection) {
+            console.log(`Saving ${this.collection.block_collection.collection_key} block collection`);
+            await this.collection.block_collection.process_save_queue();
+          }
+        }
+      }
+      this._show_embed_completion_notice(embed_queue.length);
+      await this.collection.process_save_queue();
+      if (this.collection.block_collection) {
+        await this.collection.block_collection.process_save_queue();
+      }
+    } finally {
+      this._is_processing_embed_queue = false;
+    }
+  }
+  /**
+   * Displays the embedding progress notice.
+   * @private
+   * @returns {void}
+   */
+  _show_embed_progress_notice(embed_queue_length) {
+    if (this.embedded_total - this.last_notice_embedded_total < 100) return;
+    this.last_notice_embedded_total = this.embedded_total;
+    this.notices?.show("embedding_progress", {
+      progress: this.embedded_total,
+      total: embed_queue_length,
+      tokens_per_second: this._calculate_embed_tokens_per_second(),
+      model_name: this.collection.embed_model_key
+    });
+  }
+  /**
+   * Displays the embedding completion notice.
+   * @private
+   * @returns {void}
+   */
+  _show_embed_completion_notice() {
+    this.notices?.remove("embedding_progress");
+    this.notices?.show("embedding_complete", {
+      total_embeddings: this.embedded_total,
+      tokens_per_second: this._calculate_embed_tokens_per_second(),
+      model_name: this.collection.embed_model_key
+    });
+  }
+  /**
+   * Halts the embed queue processing.
+   * @param {string|null} msg - Optional message.
+   */
+  halt_embed_queue_processing(msg = null) {
+    this.is_queue_halted = true;
+    console.log("Embed queue processing halted");
+    this.notices?.remove("embedding_progress");
+    this.notices?.show("embedding_paused", {
+      progress: this.embedded_total,
+      total: this.collection._embed_queue.length,
+      tokens_per_second: this._calculate_embed_tokens_per_second(),
+      model_name: this.collection.embed_model_key
+    });
+  }
+  /**
+   * Resumes the embed queue processing after a delay.
+   * @param {number} [delay=0] - The delay in milliseconds before resuming.
+   * @returns {void}
+   */
+  resume_embed_queue_processing(delay = 0) {
+    console.log("resume_embed_queue_processing");
+    this.notices?.remove("embedding_paused");
+    setTimeout(() => {
+      this.embedded_total = 0;
+      this.process_embed_queue();
+    }, delay);
+  }
+  /**
+   * Calculates the number of tokens processed per second.
+   * @private
+   * @returns {number} Tokens per second.
+   */
+  _calculate_embed_tokens_per_second() {
+    const elapsed_time = this.total_time / 1e3;
+    return Math.round(this.total_tokens / (elapsed_time || 1));
+  }
+  /**
+   * Resets the statistics related to embed queue processing.
+   * @private
+   * @returns {void}
+   */
+  _reset_embed_queue_stats() {
+    this.collection._embed_queue = [];
+    this.embedded_total = 0;
+    this.is_queue_halted = false;
+    this.last_save_total = 0;
+    this.last_notice_embedded_total = 0;
+    this.total_tokens = 0;
+    this.total_time = 0;
+  }
+  get notices() {
+    return this.collection.notices;
+  }
+};
+var DefaultEntityVectorAdapter4 = class extends EntityVectorAdapter4 {
+  get data() {
+    return this.item.data;
+  }
+  /**
+   * Retrieve the current vector embedding for this entity.
+   * @async
+   * @returns {Promise<number[]|undefined>} The entity's vector or undefined if not set.
+   */
+  async get_vec() {
+    return this.vec;
+  }
+  /**
+   * Store/update the vector embedding for this entity.
+   * @async
+   * @param {number[]} vec - The vector to set.
+   * @returns {Promise<void>}
+   */
+  async set_vec(vec) {
+    this.vec = vec;
+  }
+  /**
+   * Delete/remove the vector embedding for this entity.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async delete_vec() {
+    if (this.item.data?.embeddings?.[this.item.embed_model_key]) {
+      delete this.item.data.embeddings[this.item.embed_model_key].vec;
+    }
+  }
+  // adds synchronous get/set for vec
+  get vec() {
+    return this.item.data?.embeddings?.[this.item.embed_model_key]?.vec;
+  }
+  set vec(vec) {
+    if (!this.item.data.embeddings) {
+      this.item.data.embeddings = {};
+    }
+    if (!this.item.data.embeddings[this.item.embed_model_key]) {
+      this.item.data.embeddings[this.item.embed_model_key] = {};
+    }
+    this.item.data.embeddings[this.item.embed_model_key].vec = vec;
+  }
+};
+
+// node_modules/smart-blocks/node_modules/smart-entities/components/entity.js
+async function render22(entity, opts = {}) {
+  let markdown;
+  if (should_render_embed4(entity)) markdown = entity.embed_link;
+  else markdown = process_for_rendering4(await entity.read());
+  let frag;
+  if (entity.env.settings.smart_view_filter.render_markdown) frag = await this.render_markdown(markdown, entity);
+  else frag = this.create_doc_fragment(markdown);
+  return await post_process15.call(this, entity, frag, opts);
+}
+function process_for_rendering4(content) {
+  if (content.includes("```dataview")) content = content.replace(/```dataview/g, "```\\dataview");
+  if (content.includes("![[")) content = content.replace(/\!\[\[/g, "! [[");
+  return content;
+}
+async function post_process15(scope, frag, opts = {}) {
+  return frag;
+}
+function should_render_embed4(entity) {
+  if (!entity) return false;
+  if (entity.is_canvas || entity.is_excalidraw) return true;
+  return false;
+}
+
+// node_modules/smart-blocks/node_modules/smart-entities/actions/find_connections.js
+async function find_connections6(params = {}) {
+  const filter_opts = this.prepare_find_connections_filter_opts(params);
+  const limit = params.filter?.limit || params.limit || this.env.settings.smart_view_filter?.results_limit || 10;
+  const cache_key = this.key + JSON.stringify(params);
+  if (!this.env.connections_cache) this.env.connections_cache = {};
+  if (!this.env.connections_cache[cache_key]) {
+    const connections = (await this.nearest(filter_opts)).sort(sort_by_score4).slice(0, limit);
+    this.connections_to_cache(cache_key, connections);
+  }
+  return this.connections_from_cache(cache_key);
+}
+
+// node_modules/smart-blocks/node_modules/smart-entities/smart_entity.js
+var SmartEntity4 = class extends CollectionItem4 {
+  /**
+   * Creates an instance of SmartEntity.
+   * @constructor
+   * @param {Object} env - The environment instance.
+   * @param {Object} [opts={}] - Configuration options.
+   */
+  constructor(env, opts = {}) {
+    super(env, opts);
+    this.entity_adapter = new DefaultEntityVectorAdapter4(this);
+  }
+  /**
+   * Provides default values for a SmartEntity instance.
+   * @static
+   * @readonly
+   * @returns {Object} The default values.
+   */
+  static get defaults() {
+    return {
+      data: {
+        path: null,
+        last_embed: {
+          hash: null
+        },
+        embeddings: {}
+      }
+    };
+  }
+  get vector_adapter() {
+    if (!this._vector_adapter) {
+      this._vector_adapter = new this.collection.opts.vector_adapter.item(this);
+    }
+    return this._vector_adapter;
+  }
+  /**
+   * Initializes the SmartEntity instance.
+   * Checks if the entity has a vector and if it matches the model dimensions.
+   * If not, it queues an embed.
+   * Removes embeddings for inactive models.
+   * @returns {void}
+   */
+  init() {
+    super.init();
+    if (!this.vec) {
+      this.queue_embed();
+    } else if (this.vec.length !== this.embed_model.model_config.dims) {
+      this.vec = null;
+      this.queue_embed();
+    }
+    Object.entries(this.data.embeddings || {}).forEach(([model, embedding]) => {
+      if (model !== this.embed_model_key) {
+        this.data.embeddings[model] = null;
+        delete this.data.embeddings[model];
+      }
+    });
+  }
+  /**
+   * Queues the entity for embedding.
+   * @returns {void}
+   */
+  queue_embed() {
+    this._queue_embed = true;
+  }
+  /**
+   * Finds the nearest entities to this entity.
+   * @param {Object} [filter={}] - Optional filters to apply.
+   * @returns {Array<{item:Object, score:number}>} An array of result objects with score and item.
+   */
+  async nearest(filter = {}) {
+    return await this.collection.nearest_to(this, filter);
+  }
+  /**
+   * Prepares the input for embedding.
+   * @async
+   * @param {string} [content=null] - Optional content to use instead of calling subsequent read()
+   * @returns {Promise<void>} Should be overridden in child classes.
+   */
+  async get_embed_input(content = null) {
+  }
+  // override in child class
+  /**
+   * Retrieves the embed input, either from cache or by generating it.
+   * @readonly
+   * @returns {string|Promise<string>} The embed input string or a promise resolving to it.
+   */
+  get embed_input() {
+    return this._embed_input ? this._embed_input : this.get_embed_input();
+  }
+  /**
+   * Prepares filter options for finding connections based on parameters.
+   * @param {Object} [params={}] - Parameters for finding connections.
+   * @returns {Object} The prepared filter options.
+   */
+  prepare_find_connections_filter_opts(params = {}) {
+    const opts = {
+      ...this.env.settings.smart_view_filter || {},
+      ...params,
+      entity: this
+    };
+    if (opts.filter?.limit) delete opts.filter.limit;
+    if (opts.limit) delete opts.limit;
+    return opts;
+  }
+  /**
+   * Finds connections relevant to this entity based on provided parameters.
+   * @async
+   * @param {Object} [params={}] - Parameters for finding connections.
+   * @returns {Array<{item:Object, score:number}>} An array of result objects with score and item.
+   */
+  async find_connections(params = {}) {
+    return await this.actions.find_connections(params);
+  }
+  /**
+   * Retrieves connections from the cache based on the cache key.
+   * @param {string} cache_key - The cache key.
+   * @returns {Array<{item:Object, score:number}>} The cached connections.
+   */
+  connections_from_cache(cache_key) {
+    return this.env.connections_cache[cache_key];
+  }
+  /**
+   * Stores connections in the cache with the provided cache key.
+   * @param {string} cache_key - The cache key.
+   * @param {Array<{item:Object, score:number}>} connections - The connections to cache.
+   * @returns {void}
+   */
+  connections_to_cache(cache_key, connections) {
+    this.env.connections_cache[cache_key] = connections;
+  }
+  get read_hash() {
+    return this.data.last_read?.hash;
+  }
+  set read_hash(hash) {
+    if (!this.data.last_read) this.data.last_read = {};
+    this.data.last_read.hash = hash;
+  }
+  get embedding_data() {
+    if (!this.data.embeddings[this.embed_model_key]) {
+      this.data.embeddings[this.embed_model_key] = {};
+    }
+    return this.data.embeddings[this.embed_model_key];
+  }
+  get last_embed() {
+    if (!this.embedding_data.last_embed) {
+      this.embedding_data.last_embed = {};
+      if (this.data.last_embed) {
+        this.embedding_data.last_embed = this.data.last_embed;
+        delete this.data.last_embed;
+        this.queue_save();
+      }
+    }
+    return this.embedding_data.last_embed;
+  }
+  get embed_hash() {
+    return this.last_embed?.hash;
+  }
+  set embed_hash(hash) {
+    if (!this.embedding_data.last_embed) this.embedding_data.last_embed = {};
+    this.embedding_data.last_embed.hash = hash;
+  }
+  /**
+   * Gets the embed link for the entity.
+   * @readonly
+   * @returns {string} The embed link.
+   */
+  get embed_link() {
+    return `![[${this.path}]]`;
+  }
+  /**
+   * Gets the key of the embedding model.
+   * @readonly
+   * @returns {string} The embedding model key.
+   */
+  get embed_model_key() {
+    return this.collection.embed_model_key;
+  }
+  /**
+   * Gets the name of the entity, formatted based on settings.
+   * @readonly
+   * @returns {string} The entity name.
+   */
+  get name() {
+    return (!this.should_show_full_path ? this.path.split("/").pop() : this.path.split("/").join(" > ")).split("#").join(" > ").replace(".md", "");
+  }
+  /**
+   * Determines whether to show the full path of the entity.
+   * @readonly
+   * @returns {boolean} True if the full path should be shown, false otherwise.
+   */
+  get should_show_full_path() {
+    return this.env.settings.smart_view_filter?.show_full_path;
+  }
+  /**
+   * @deprecated Use embed_model instead.
+   * @readonly
+   * @returns {Object} The smart embedding model.
+   */
+  get smart_embed() {
+    return this.embed_model;
+  }
+  /**
+   * Gets the embedding model instance from the collection.
+   * @readonly
+   * @returns {Object} The embedding model instance.
+   */
+  get embed_model() {
+    return this.collection.embed_model;
+  }
+  /**
+   * Determines if the entity should be embedded.
+   * @readonly
+   * @returns {boolean} True if no vector is set, false otherwise.
+   */
+  get should_embed() {
+    return !this.vec && this.size > (this.settings?.min_chars || 300);
+  }
+  /**
+   * Sets the error for the embedding model.
+   * @param {string} error - The error message.
+   */
+  set error(error) {
+    this.data.embeddings[this.embed_model_key].error = error;
+  }
+  /**
+   * Gets the number of tokens associated with the entity's embedding.
+   * @readonly
+   * @returns {number|undefined} The number of tokens, or undefined if not set.
+   */
+  get tokens() {
+    return this.last_embed?.tokens;
+  }
+  /**
+   * Sets the number of tokens for the embedding.
+   * @param {number} tokens - The number of tokens.
+   */
+  set tokens(tokens) {
+    this.last_embed.tokens = tokens;
+  }
+  /**
+   * Gets the vector representation from the entity adapter.
+   * @readonly
+   * @returns {Array<number>|undefined} The vector or undefined if not set.
+   */
+  get vec() {
+    return this.entity_adapter.vec;
+  }
+  /**
+   * Sets the vector representation in the entity adapter.
+   * @param {Array<number>} vec - The vector to set.
+   */
+  set vec(vec) {
+    this.entity_adapter.vec = vec;
+    this._queue_embed = false;
+    this._embed_input = null;
+    this.queue_save();
+  }
+  /**
+   * Removes all embeddings from the entity.
+   * @returns {void}
+   */
+  remove_embeddings() {
+    this.data.embeddings = null;
+    this.queue_save();
+  }
+  /**
+   * Retrieves the key of the entity.
+   * @returns {string} The entity key.
+   */
+  get_key() {
+    return this.data.key || this.data.path;
+  }
+  /**
+   * Retrieves the path of the entity.
+   * @readonly
+   * @returns {string|null} The entity path.
+   */
+  get path() {
+    return this.data.path;
+  }
+  /**
+   * Gets the component responsible for rendering the entity.
+   * @readonly
+   * @returns {Function} The render function for the entity component.
+   */
+  get component() {
+    return render22;
+  }
+  get is_unembedded() {
+    if (!this.vec) return true;
+    if (!this.embed_hash || this.embed_hash !== this.read_hash) return true;
+    return false;
+  }
+  // COMPONENTS 2024-11-27
+  get connections_component() {
+    if (!this._connections_component) this._connections_component = this.components?.connections?.bind(this.smart_view);
+    return this._connections_component;
+  }
+  async render_connections(container, opts = {}) {
+    if (container) container.innerHTML = "Loading connections...";
+    const frag = await this.env.render_component("connections", this, opts);
+    if (container) {
+      container.innerHTML = "";
+      container.appendChild(frag);
+    }
+    return frag;
+  }
+};
+
+// node_modules/smart-blocks/node_modules/smart-entities/smart_entities.js
+var SmartEntities4 = class extends Collection4 {
+  /**
+   * Creates an instance of SmartEntities.
+   * @constructor
+   * @param {Object} env - The environment instance.
+   * @param {Object} opts - Configuration options.
+   */
+  constructor(env, opts) {
+    super(env, opts);
+    this.entities_vector_adapter = new DefaultEntitiesVectorAdapter4(this);
+    this.model_instance_id = null;
+    this._embed_queue = [];
+  }
+  /**
+   * Initializes the SmartEntities instance by loading embeddings.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async init() {
+    await super.init();
+    await this.load_smart_embed();
+    if (!this.embed_model) {
+      console.log(`SmartEmbed not loaded for **${this.collection_key}**. Continuing without embedding capabilities.`);
+    }
+  }
+  /**
+   * Loads the smart embedding model.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async load_smart_embed() {
+    if (this.embed_model_key === "None") return;
+    if (!this.embed_model) return;
+    if (this.embed_model.is_loading) return console.log(`SmartEmbedModel already loading for ${this.embed_model_key}`);
+    if (this.embed_model.is_loaded) return console.log(`SmartEmbedModel already loaded for ${this.embed_model_key}`);
+    try {
+      console.log(`Loading SmartEmbedModel in ${this.collection_key}, current state: ${this.embed_model.state}`);
+      await this.embed_model.load();
+    } catch (e) {
+      console.error(`Error loading SmartEmbedModel for ${this.embed_model.model_key}`);
+      console.error(e);
+    }
+  }
+  /**
+   * Unloads the smart embedding model.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async unload() {
+    if (typeof this.embed_model?.unload === "function") {
+      this.embed_model.unload();
+      this.embed_model = null;
+    }
+    super.unload();
+  }
+  /**
+   * Gets the key of the embedding model.
+   * @readonly
+   * @returns {string} The embedding model key.
+   */
+  get embed_model_key() {
+    return this.embed_model?.model_key;
+  }
+  /**
+   * Gets or creates the container for smart embeddings in the DOM.
+   * @readonly
+   * @returns {HTMLElement|undefined} The container element or undefined if not available.
+   */
+  get smart_embed_container() {
+    if (!this.model_instance_id) return console.log("model_key not set");
+    const id = this.model_instance_id.replace(/[^a-zA-Z0-9]/g, "_");
+    if (!window.document) return console.log("window.document not available");
+    if (window.document.querySelector(`#${id}`)) return window.document.querySelector(`#${id}`);
+    const container = window.document.createElement("div");
+    container.id = id;
+    window.document.body.appendChild(container);
+    return container;
+  }
+  /**
+   * @deprecated Use embed_model instead.
+   * @readonly
+   * @returns {Object} The smart embedding model.
+   */
+  get smart_embed() {
+    return this.embed_model;
+  }
+  /**
+   * Gets the embedding model instance.
+   * @readonly
+   * @returns {Object|null} The embedding model instance or null if none.
+   */
+  get embed_model() {
+    if (!this.env._embed_model && this.env.opts.modules.smart_embed_model?.class) this.env._embed_model = new this.env.opts.modules.smart_embed_model.class({
+      settings: this.settings.embed_model,
+      adapters: this.env.opts.modules.smart_embed_model?.adapters,
+      re_render_settings: this.re_render_settings.bind(this),
+      reload_model: this.reload_embed_model.bind(this)
+    });
+    return this.env._embed_model;
+  }
+  set embed_model(embed_model) {
+    this.env._embed_model = embed_model;
+  }
+  reload_embed_model() {
+    console.log("reload_embed_model");
+    this.embed_model.unload();
+    this.env._embed_model = null;
+  }
+  re_render_settings() {
+    this.settings_container.innerHTML = "";
+    this.render_settings();
+  }
+  /**
+   * Finds the nearest entities to a given entity.
+   * @async
+   * @param {Object} entity - The reference entity.
+   * @param {Object} [filter={}] - Optional filters to apply.
+   * @returns {Promise<Array<{item:Object, score:number}>>} An array of result objects with score and item.
+   */
+  async nearest_to(entity, filter = {}) {
+    return await this.nearest(entity.vec, filter);
+  }
+  /**
+   * Finds the nearest entities to a vector using the default adapter.
+   * @async
+   * @param {Array<number>} vec - The vector to compare against.
+   * @param {Object} [filter={}] - Optional filters to apply.
+   * @returns {Promise<Array<{item:Object, score:number}>>} An array of result objects with score and item.
+   */
+  async nearest(vec, filter = {}) {
+    if (!vec) {
+      console.warn("nearest: no vec");
+      return [];
+    }
+    return await this.entities_vector_adapter.nearest(vec, filter);
+  }
+  /**
+   * Finds the furthest entities from a vector using the default adapter.
+   * @async
+   * @param {Array<number>} vec - The vector to compare against.
+   * @param {Object} [filter={}] - Optional filters to apply.
+   * @returns {Promise<Array<{item:Object, score:number}>>} An array of result objects with score and item.
+   */
+  async furthest(vec, filter = {}) {
+    if (!vec) return console.warn("furthest: no vec");
+    return await this.entities_vector_adapter.furthest(vec, filter);
+  }
+  /**
+   * Gets the file name based on collection key and embedding model key.
+   * @readonly
+   * @returns {string} The constructed file name.
+   */
+  get file_name() {
+    return this.collection_key + "-" + this.embed_model_key.split("/").pop();
+  }
+  /**
+   * Calculates the relevance of an item based on the search filter.
+   * @param {Object} item - The item to calculate relevance for.
+   * @param {Object} search_filter - The search filter containing keywords.
+   * @returns {number} The relevance score:
+   *                   1 if any keyword is found in the item's path,
+   *                   0 otherwise (default relevance for keyword in content).
+   */
+  calculate_relevance(item, search_filter) {
+    if (search_filter.keywords.some((keyword) => item.path?.includes(keyword))) return 1;
+    return 0;
+  }
+  /**
+   * Prepares the filter options by incorporating entity-based filters.
+   * @param {Object} [opts={}] - The filter options.
+   * @param {Object} [opts.entity] - The entity to base the filters on.
+   * @param {string|string[]} [opts.exclude_filter] - Keys or prefixes to exclude.
+   * @param {string|string[]} [opts.include_filter] - Keys or prefixes to include.
+   * @param {boolean} [opts.exclude_inlinks] - Whether to exclude inlinks of the entity.
+   * @param {boolean} [opts.exclude_outlinks] - Whether to exclude outlinks of the entity.
+   * @returns {Object} The modified filter options.
+   */
+  prepare_filter(opts = {}) {
+    const {
+      entity,
+      exclude_filter,
+      include_filter,
+      exclude_inlinks,
+      exclude_outlinks
+    } = opts;
+    if (entity) {
+      if (typeof opts.exclude_key_starts_with_any === "undefined") opts.exclude_key_starts_with_any = [];
+      if (opts.exclude_key_starts_with) {
+        opts.exclude_key_starts_with_any = [
+          opts.exclude_key_starts_with
+        ];
+        delete opts.exclude_key_starts_with;
+      }
+      opts.exclude_key_starts_with_any.push(entity.source_key || entity.key);
+      if (exclude_filter) {
+        if (!Array.isArray(opts.exclude_key_includes_any)) opts.exclude_key_includes_any = [];
+        if (typeof exclude_filter === "string") opts.exclude_key_includes_any.push(exclude_filter);
+        else if (exclude_filter.includes(",")) opts.exclude_key_includes_any.push(...exclude_filter.split(","));
+      }
+      if (include_filter) {
+        if (!Array.isArray(opts.key_includes_any)) opts.key_includes_any = [];
+        if (typeof include_filter === "string") opts.key_includes_any.push(include_filter);
+        else if (include_filter.includes(",")) opts.key_includes_any.push(...include_filter.split(","));
+      }
+      if (exclude_inlinks && entity?.inlinks?.length) {
+        if (!Array.isArray(opts.exclude_key_starts_with_any)) opts.exclude_key_starts_with_any = [];
+        opts.exclude_key_starts_with_any.push(...entity.inlinks);
+      }
+      if (exclude_outlinks && entity?.outlinks?.length) {
+        if (!Array.isArray(opts.exclude_key_starts_with_any)) opts.exclude_key_starts_with_any = [];
+        opts.exclude_key_starts_with_any.push(...entity.outlinks);
+      }
+    }
+    return opts;
+  }
+  /**
+   * Looks up entities based on hypothetical content.
+   * @async
+   * @param {Object} [params={}] - The parameters for the lookup.
+   * @param {Array<string>} [params.hypotheticals=[]] - The hypothetical content to lookup.
+   * @param {Object} [params.filter] - The filter to use for the lookup.
+   * @param {number} [params.k] - Deprecated: Use `filter.limit` instead.
+   * @returns {Promise<Array<Result>|Object>} The lookup results or an error object.
+   */
+  async lookup(params = {}) {
+    const { hypotheticals = [] } = params;
+    if (!hypotheticals?.length) return { error: "hypotheticals is required" };
+    if (!this.embed_model) return { error: "Embedding search is not enabled." };
+    const hyp_vecs = await this.embed_model.embed_batch(hypotheticals.map((h) => ({ embed_input: h })));
+    const limit = params.filter?.limit || params.k || this.env.settings.lookup_k || 10;
+    if (params.filter?.limit) delete params.filter.limit;
+    const filter = {
+      ...this.env.chats?.current?.scope || {},
+      ...params.filter || {}
+    };
+    const results = await hyp_vecs.reduce(async (acc_promise, embedding, i) => {
+      const acc = await acc_promise;
+      const results2 = await this.nearest(embedding.vec, filter);
+      results2.forEach((result) => {
+        if (!acc[result.item.path] || result.score > acc[result.item.path].score) {
+          acc[result.item.path] = {
+            key: result.item.key,
+            score: result.score,
+            item: result.item,
+            hypothetical_i: i
+          };
+        } else {
+          result.score = acc[result.item.path].score;
+        }
+      });
+      return acc;
+    }, Promise.resolve({}));
+    console.log(results);
+    const top_k = Object.values(results).sort(sort_by_score4).slice(0, limit);
+    console.log(`Found and returned ${top_k.length} ${this.collection_key}.`);
+    return top_k;
+  }
+  /**
+   * Gets the configuration for settings.
+   * @readonly
+   * @returns {Object} The settings configuration.
+   */
+  get settings_config() {
+    return settings_config6;
+  }
+  async render_settings(container = this.settings_container, opts = {}) {
+    container = await this.render_collection_settings(container, opts);
+    const embed_model_settings_frag = await this.env.render_component("settings", this.embed_model, opts);
+    container.appendChild(embed_model_settings_frag);
+    return container;
+  }
+  /**
+   * Gets the notices from the environment.
+   * @readonly
+   * @returns {Object} The notices object.
+   */
+  get notices() {
+    return this.env.smart_connections_plugin?.notices || this.env.main?.notices;
+  }
+  /**
+   * Gets the embed queue containing items to be embedded.
+   * @readonly
+   * @returns {Array<Object>} The embed queue.
+   */
+  get embed_queue() {
+    if (!this._embed_queue?.length) this._embed_queue = Object.values(this.items).filter((item) => item._queue_embed && item.should_embed);
+    return this._embed_queue;
+  }
+  /**
+   * Processes the embed queue by delegating to the default vector adapter.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async process_embed_queue() {
+    await this.entities_vector_adapter.process_embed_queue();
+  }
+  /**
+   * Handles changes to the embedding model by reinitializing and processing the load queue.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async embed_model_changed() {
+    await this.unload();
+    await this.init();
+    this.render_settings();
+    await this.process_load_queue();
+  }
+  get connections_filter_config() {
+    return connections_filter_config4;
+  }
+};
+var settings_config6 = {
+  "min_chars": {
+    name: "Minimum length",
+    type: "number",
+    description: "Minimum length of entity to embed (in characters).",
+    placeholder: "Enter number ex. 300",
+    default: 300
+  }
+};
+var connections_filter_config4 = {
+  "smart_view_filter.show_full_path": {
+    "name": "Show Full Path",
+    "type": "toggle",
+    "description": "Show full path in view.",
+    "callback": "re_render"
+  },
+  "smart_view_filter.render_markdown": {
+    "name": "Render Markdown",
+    "type": "toggle",
+    "description": "Render markdown in results.",
+    "callback": "re_render"
+  },
+  "smart_view_filter.results_limit": {
+    "name": "Results Limit",
+    "type": "number",
+    "description": "Limit the number of results.",
+    "default": 20,
+    "callback": "re_render"
+  },
+  "smart_view_filter.exclude_inlinks": {
+    "name": "Exclude Inlinks",
+    "type": "toggle",
+    "description": "Exclude inlinks.",
+    "callback": "re_render_settings"
+  },
+  "smart_view_filter.exclude_outlinks": {
+    "name": "Exclude Outlinks",
+    "type": "toggle",
+    "description": "Exclude outlinks.",
+    "callback": "re_render_settings"
+  },
+  "smart_view_filter.include_filter": {
+    "name": "Include Filter",
+    "type": "text",
+    "description": "Require that results match this value.",
+    "callback": "re_render"
+  },
+  "smart_view_filter.exclude_filter": {
+    "name": "Exclude Filter",
+    "type": "text",
+    "description": "Exclude results that match this value.",
+    "callback": "re_render"
+  }
+};
+
+// node_modules/smart-blocks/smart_block.js
+var SmartBlock2 = class extends SmartEntity4 {
+  /**
+   * Provides default values for a SmartBlock instance.
+   * @static
+   * @readonly
+   * @returns {Object} The default values.
+   */
+  static get defaults() {
+    return {
+      data: {
+        text: null,
+        length: 0,
+        last_read: {
+          hash: null,
+          at: 0
+        }
+      },
+      _embed_input: ""
+      // Stored temporarily
+    };
+  }
+  get block_adapter() {
+    if (!this._block_adapter) {
+      this._block_adapter = new this.collection.opts.block_adapters[this.file_type](this);
+    }
+    return this._block_adapter;
+  }
+  /**
+   * Initializes the SmartBlock instance by queuing an embed if embedding is enabled.
+   * @returns {void}
+   */
+  init() {
+    if (this.settings.embed_blocks) super.init();
+  }
+  /**
+   * Queues the entity for embedding.
+   * @returns {void}
+   */
+  queue_embed() {
+    this._queue_embed = true;
+    this.source?.queue_embed();
+  }
+  /**
+   * Queues the block for import via the source.
+   * @returns {void}
+   */
+  queue_import() {
+    this.source?.queue_import();
+  }
+  /**
+   * Updates the block's data, clearing embeddings if necessary and preparing embed input.
+   * @param {Object} data - The new data to merge into the block.
+   * @returns {boolean} `true` if data was updated successfully.
+   */
+  update_data(data) {
+    if (this.should_clear_embeddings(data)) {
+      this.data.embeddings = {};
+    }
+    super.update_data(data);
+    return true;
+  }
+  /**
+   * Determines whether to clear embeddings based on the new data.
+   * @param {Object} data - The new data to evaluate.
+   * @returns {boolean} `true` if embeddings should be cleared, `false` otherwise.
+   */
+  should_clear_embeddings(data) {
+    if (this.is_new) return true;
+    if (this.embed_model && this.vec?.length !== this.embed_model.model_config.dims) return true;
+    return false;
+  }
+  /**
+   * Prepares the embed input for the SmartBlock by reading content and generating a hash.
+   * @async
+   * @returns {Promise<string|false>} The embed input string or `false` if already embedded.
+   */
+  async get_embed_input(content = null) {
+    if (typeof this._embed_input !== "string" || !this._embed_input.length) {
+      if (!content) content = await this.read();
+      this._embed_input = this.breadcrumbs + "\n" + content;
+    }
+    return this._embed_input;
+  }
+  // CRUD
+  /**
+   * @method read
+   * @description Reads the block content by delegating to the block adapter.
+   * @async
+   * @returns {Promise<string>} The block content.
+   */
+  async read() {
+    try {
+      return await this.block_adapter.read();
+    } catch (e) {
+      if (e.message.includes("BLOCK NOT FOUND")) {
+        return 'BLOCK NOT FOUND (run "Prune" to remove)';
+      } else {
+        throw e;
+      }
+    }
+  }
+  /**
+   * @method append
+   * @description Appends content to this block by delegating to the block adapter.
+   * @async
+   * @param {string} content
+   * @returns {Promise<void>}
+   */
+  async append(content) {
+    await this.block_adapter.append(content);
+    this.queue_save();
+  }
+  /**
+   * @method update
+   * @description Updates the block content by delegating to the block adapter.
+   * @async
+   * @param {string} new_block_content
+   * @param {Object} [opts={}]
+   * @returns {Promise<void>}
+   */
+  async update(new_block_content, opts = {}) {
+    await this.block_adapter.update(new_block_content, opts);
+    this.queue_save();
+  }
+  /**
+   * @method remove
+   * @description Removes the block by delegating to the block adapter.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async remove() {
+    await this.block_adapter.remove();
+    this.queue_save();
+  }
+  /**
+   * @method move_to
+   * @description Moves the block to another location by delegating to the block adapter.
+   * @async
+   * @param {string} to_key
+   * @returns {Promise<void>}
+   */
+  async move_to(to_key) {
+    await this.block_adapter.move_to(to_key);
+    this.queue_save();
+  }
+  // Getters
+  /**
+   * Retrieves the breadcrumbs representing the block's path within the source.
+   * @readonly
+   * @returns {string} The breadcrumbs string.
+   */
+  get breadcrumbs() {
+    return this.key.split("/").join(" > ").split("#").slice(0, -1).join(" > ").replace(".md", "");
+  }
+  /**
+   * Determines if the block is excluded from embedding based on headings.
+   * @readonly
+   * @returns {boolean} `true` if excluded, `false` otherwise.
+   */
+  get excluded() {
+    const block_headings = this.path.split("#").slice(1);
+    if (this.source_collection.excluded_headings.some((heading) => block_headings.includes(heading))) return true;
+    return this.source.excluded;
+  }
+  /**
+   * Retrieves the file path of the SmartSource associated with the block.
+   * @readonly
+   * @returns {string} The file path.
+   */
+  get file_path() {
+    return this.source?.file_path;
+  }
+  /**
+   * Retrieves the file type of the SmartSource associated with the block.
+   * @readonly
+   * @returns {string} The file type.
+   */
+  get file_type() {
+    return this.source.file_type;
+  }
+  /**
+   * Retrieves the folder path of the block.
+   * @readonly
+   * @returns {string} The folder path.
+   */
+  get folder() {
+    return this.path.split("/").slice(0, -1).join("/");
+  }
+  /**
+   * Retrieves the embed link for the block.
+   * @readonly
+   * @returns {string} The embed link.
+   */
+  get embed_link() {
+    return `![[${this.link}]]`;
+  }
+  /**
+   * Determines if the block has valid line range information.
+   * @readonly
+   * @returns {boolean} `true` if the block has both start and end lines, `false` otherwise.
+   */
+  get has_lines() {
+    return this.lines && this.lines.length === 2;
+  }
+  /**
+   * Determines if the entity is a block based on its key.
+   * @readonly
+   * @returns {boolean} `true` if it's a block, `false` otherwise.
+   */
+  get is_block() {
+    return this.key.includes("#");
+  }
+  /**
+   * Determines if the block is gone (i.e., the source file or block data no longer exists).
+   * @readonly
+   * @returns {boolean} `true` if gone, `false` otherwise.
+   */
+  get is_gone() {
+    if (!this.source?.file) return true;
+    if (!this.source?.data?.blocks?.[this.sub_key]) return true;
+    return false;
+  }
+  get last_read() {
+    return this.data.last_read;
+  }
+  /**
+   * Retrieves the sub-key of the block.
+   * @readonly
+   * @returns {string} The sub-key.
+   */
+  get sub_key() {
+    return "#" + this.key.split("#").slice(1).join("#");
+  }
+  /**
+   * Retrieves the lines range of the block.
+   * @readonly
+   * @returns {Array<number>|undefined} An array containing the start and end lines or `undefined` if not set.
+   */
+  // get lines() { return this.source?.data?.blocks?.[this.sub_key]; }
+  get lines() {
+    return this.data.lines;
+  }
+  /**
+   * Retrieves the starting line number of the block.
+   * @readonly
+   * @returns {number|undefined} The starting line number or `undefined` if not set.
+   */
+  get line_start() {
+    return this.lines?.[0];
+  }
+  /**
+   * Retrieves the ending line number of the block.
+   * @readonly
+   * @returns {number|undefined} The ending line number or `undefined` if not set.
+   */
+  get line_end() {
+    return this.lines?.[1];
+  }
+  /**
+   * Retrieves the link associated with the block, handling page numbers if present.
+   * @readonly
+   * @returns {string} The block link.
+   */
+  get link() {
+    if (/^.*page\s*(\d+).*$/i.test(this.sub_key)) {
+      const number = this.sub_key.match(/^.*page\s*(\d+).*$/i)[1];
+      return `${this.source.path}#page=${number}`;
+    } else {
+      return this.source.path;
+    }
+  }
+  /**
+   * Retrieves the display name of the block.
+   * @readonly
+   * @returns {string} The display name.
+   */
+  get name() {
+    const source_name = this.source.name;
+    const block_path_parts = this.key.split("#").slice(1);
+    if (this.should_show_full_path) return [source_name, ...block_path_parts].join(" > ");
+    if (block_path_parts[block_path_parts.length - 1][0] === "{") block_path_parts.pop();
+    return [source_name, block_path_parts.pop()].join(" > ");
+  }
+  // uses data.lines to get next block
+  get next_block() {
+    if (!this.data.lines) return null;
+    const next_line = this.data.lines[1] + 1;
+    return this.source.blocks?.find((block) => next_line === block.data?.lines?.[0]);
+  }
+  /**
+   * Retrieves the paths of outlinks from the block.
+   * @readonly
+   * @returns {Array<string>} An array of outlink paths.
+   */
+  get outlinks() {
+    return this.source.outlinks;
+  }
+  /**
+   * Retrieves the path of the SmartBlock.
+   * @readonly
+   * @returns {string} The path of the SmartBlock.
+   */
+  get path() {
+    return this.key;
+  }
+  /**
+   * Determines if the block should be embedded based on its coverage and size.
+   * @readonly
+   * @returns {boolean} `true` if it should be embedded, `false` otherwise.
+   */
+  get should_embed() {
+    try {
+      if (this.settings?.min_chars && this.size < this.settings.min_chars) return false;
+      const match_line_start = this.line_start + 1;
+      const match_line_end = this.line_end;
+      const { has_line_start, has_line_end } = Object.entries(this.source?.data?.blocks || {}).reduce((acc, [key, range]) => {
+        if (!key.startsWith(this.sub_key + "#")) return acc;
+        if (range[0] === match_line_start) acc.has_line_start = key;
+        if (range[1] === match_line_end) acc.has_line_end = key;
+        return acc;
+      }, { has_line_start: null, has_line_end: null });
+      if (has_line_start && has_line_end) {
+        const start_block = this.collection.get(this.source_key + has_line_start);
+        if (start_block?.should_embed) {
+          const end_block = this.collection.get(this.source_key + has_line_end);
+          if (end_block?.should_embed) return false;
+        }
+      }
+      return true;
+    } catch (e) {
+      console.error(e, e.stack);
+      console.error(`Error getting should_embed for ${this.key}: ` + JSON.stringify(e || {}, null, 2));
+    }
+  }
+  /**
+   * Retrieves the size of the SmartBlock.
+   * @readonly
+   * @returns {number} The size of the SmartBlock.
+   */
+  get size() {
+    return this.data.size;
+  }
+  /**
+   * Retrieves the SmartSource associated with the block.
+   * @readonly
+   * @returns {SmartSource} The associated SmartSource instance.
+   */
+  get source() {
+    return this.source_collection.get(this.source_key);
+  }
+  /**
+   * Retrieves the SmartSources collection instance.
+   * @readonly
+   * @returns {SmartSources} The SmartSources collection.
+   */
+  get source_collection() {
+    return this.env.smart_sources;
+  }
+  get source_key() {
+    return this.key.split("#")[0];
+  }
+  get sub_blocks() {
+    return this.source?.blocks?.filter((block) => block.key.startsWith(this.key + "#") && block.line_start > this.line_start && block.line_end <= this.line_end) || [];
+  }
+  // source dependent
+  get excluded_lines() {
+    return this.source.excluded_lines;
+  }
+  get file() {
+    return this.source.file;
+  }
+  get is_canvas() {
+    return this.source.is_canvas;
+  }
+  get is_excalidraw() {
+    return this.source.is_excalidraw;
+  }
+  get mtime() {
+    return this.source.mtime;
+  }
+  // DEPRECATED
+  /**
+   * @deprecated Use `source` instead.
+   * @readonly
+   * @returns {SmartSource} The associated SmartSource instance.
+   */
+  get note() {
+    return this.source;
+  }
+  /**
+   * @deprecated Use `source.key` instead.
+   * @readonly
+   * @returns {string} The source key.
+   */
+  get note_key() {
+    return this.key.split("#")[0];
+  }
+};
+var smart_block_default2 = {
+  class: SmartBlock2,
+  actions: {
+    find_connections: find_connections6
+  }
+};
+
+// node_modules/smart-blocks/smart_blocks.js
+var SmartBlocks2 = class extends SmartEntities4 {
+  /**
+   * Initializes the SmartBlocks instance. Currently muted as processing is handled by SmartSources.
+   * @returns {void}
+   */
+  init() {
+  }
+  get fs() {
+    return this.env.smart_sources.fs;
+  }
+  /**
+   * Retrieves the embedding model associated with the SmartSources collection.
+   * @readonly
+   * @returns {Object|undefined} The embedding model instance or `undefined` if not set.
+   */
+  get embed_model() {
+    return this.source_collection?.embed_model;
+  }
+  /**
+   * Retrieves the embedding model key from the SmartSources collection.
+   * @readonly
+   * @returns {string|undefined} The embedding model key or `undefined` if not set.
+   */
+  get embed_model_key() {
+    return this.source_collection?.embed_model_key;
+  }
+  /**
+   * Calculates the expected number of blocks based on the SmartSources collection.
+   * @readonly
+   * @returns {number} The expected count of blocks.
+   */
+  get expected_blocks_ct() {
+    return Object.values(this.source_collection.items).reduce((acc, item) => acc += Object.keys(item.data.blocks || {}).length, 0);
+  }
+  /**
+   * Retrieves the notices system from the environment.
+   * @readonly
+   * @returns {Object} The notices object.
+   */
+  get notices() {
+    return this.env.smart_connections_plugin?.notices || this.env.main?.notices;
+  }
+  /**
+   * Retrieves the settings configuration for SmartBlocks.
+   * @readonly
+   * @returns {Object} The settings configuration object.
+   */
+  get settings_config() {
+    return this.process_settings_config({
+      "embed_blocks": {
+        name: "Embed Blocks",
+        type: "toggle",
+        description: "Embed blocks using the embedding model.",
+        default: true
+      },
+      ...super.settings_config
+    });
+  }
+  render_settings(container, opts = {}) {
+    return this.render_collection_settings(container, opts);
+  }
+  /**
+   * Retrieves the SmartSources collection instance.
+   * @readonly
+   * @returns {SmartSources} The SmartSources collection.
+   */
+  get source_collection() {
+    return this.env.smart_sources;
+  }
+  /**
+   * Processes the embed queue. Currently handled by SmartSources, so this method is muted.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async process_embed_queue() {
+  }
+  /**
+   * Processes the load queue. Currently muted as processing is handled by SmartSources.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async process_load_queue() {
+  }
+  // TEMP: Methods in sources not implemented in blocks
+  /**
+   * @async
+   * @throws {Error} Throws an error indicating the method is not implemented.
+   * @returns {Promise<void>}
+   */
+  async prune() {
+    throw "Not implemented: prune";
+  }
+  /**
+   * @throws {Error} Throws an error indicating the method is not implemented.
+   * @returns {void}
+   */
+  build_links_map() {
+    throw "Not implemented: build_links_map";
+  }
+  /**
+   * @async
+   * @throws {Error} Throws an error indicating the method is not implemented.
+   * @returns {Promise<void>}
+   */
+  async refresh() {
+    throw "Not implemented: refresh";
+  }
+  /**
+   * @async
+   * @throws {Error} Throws an error indicating the method is not implemented.
+   * @returns {Promise<void>}
+   */
+  async search() {
+    throw "Not implemented: search";
+  }
+  /**
+   * @async
+   * @throws {Error} Throws an error indicating the method is not implemented.
+   * @returns {Promise<void>}
+   */
+  async run_data_load() {
+    throw "Not implemented: run_data_load";
+  }
+  /**
+   * @async
+   * @throws {Error} Throws an error indicating the method is not implemented.
+   * @returns {Promise<void>}
+   */
+  async run_re_import() {
+    throw "Not implemented: run_re_import";
+  }
+  /**
+   * @async
+   * @throws {Error} Throws an error indicating the method is not implemented.
+   * @returns {Promise<void>}
+   */
+  async run_refresh() {
+    throw "Not implemented: run_refresh";
+  }
+  /**
+   * @async
+   * @throws {Error} Throws an error indicating the method is not implemented.
+   * @returns {Promise<void>}
+   */
+  async run_force_refresh() {
+    throw "Not implemented: run_force_refresh";
+  }
+};
+
 // node_modules/smart-chats/smart_messages.js
 var SmartMessages = class extends SmartBlocks2 {
   /**
@@ -26137,7 +27021,7 @@ var SmartMessages = class extends SmartBlocks2 {
 };
 
 // node_modules/smart-chats/components/message.js
-function build_html11(message, opts = {}) {
+function build_html12(message, opts = {}) {
   const content = Array.isArray(message.content) ? message.content.map((part) => {
     if (part.type === "image_url") {
       return " ![[" + part.input.image_path + "]] ";
@@ -26175,12 +27059,12 @@ function build_html11(message, opts = {}) {
   }
   return html;
 }
-async function render22(message, opts = {}) {
-  const html = build_html11.call(this, message, opts);
+async function render23(message, opts = {}) {
+  const html = build_html12.call(this, message, opts);
   const frag = this.create_doc_fragment(html);
-  return await post_process15.call(this, message, frag, opts);
+  return await post_process16.call(this, message, frag, opts);
 }
-async function post_process15(message, frag, opts) {
+async function post_process16(message, frag, opts) {
   const copy_button = frag.querySelector(".sc-msg-button:not(.regenerate)");
   if (copy_button) {
     copy_button.addEventListener("click", () => {
@@ -26263,7 +27147,7 @@ async function post_process15(message, frag, opts) {
 }
 
 // node_modules/smart-chats/components/context.js
-function build_html12(message, opts = {}) {
+function build_html13(message, opts = {}) {
   const lookup_results = message.tool_call_output || [];
   if (lookup_results.length === 0) {
     return "";
@@ -26292,13 +27176,13 @@ function build_html12(message, opts = {}) {
     </div>
   `;
 }
-async function render23(message, opts = {}) {
-  const html = build_html12.call(this, message, opts);
+async function render24(message, opts = {}) {
+  const html = build_html13.call(this, message, opts);
   if (!html) return document.createDocumentFragment();
   const frag = this.create_doc_fragment(html);
-  return await post_process16.call(this, message, frag, opts);
+  return await post_process17.call(this, message, frag, opts);
 }
-async function post_process16(message, frag, opts) {
+async function post_process17(message, frag, opts) {
   const header = frag.querySelector(".sc-context-header");
   const list = frag.querySelector(".sc-context-list");
   const toggle_icon = frag.querySelector(".sc-context-toggle-icon");
@@ -26345,7 +27229,7 @@ async function post_process16(message, frag, opts) {
 }
 
 // node_modules/smart-chats/components/tool_calls.js
-function build_html13(message, opts = {}) {
+function build_html14(message, opts = {}) {
   const tool_calls = message.tool_calls || [];
   if (tool_calls.length === 0) {
     return "";
@@ -26366,13 +27250,13 @@ function build_html13(message, opts = {}) {
     </div>
   `;
 }
-async function render24(message, opts = {}) {
-  const html = build_html13.call(this, message, opts);
+async function render25(message, opts = {}) {
+  const html = build_html14.call(this, message, opts);
   if (!html) return document.createDocumentFragment();
   const frag = this.create_doc_fragment(html);
-  return await post_process17.call(this, message, frag, opts);
+  return await post_process18.call(this, message, frag, opts);
 }
-async function post_process17(message, frag, opts) {
+async function post_process18(message, frag, opts) {
   const tool_call_headers = frag.querySelectorAll(".sc-tool-call-header");
   tool_call_headers.forEach((header) => {
     const content = header.nextElementSibling;
@@ -26398,7 +27282,7 @@ async function post_process17(message, frag, opts) {
 }
 
 // node_modules/smart-chats/components/system_message.js
-function build_html14(message, opts = {}) {
+function build_html15(message, opts = {}) {
   return `
     <div class="sc-system-message-container" id="${message.data.id}">
       <div class="sc-system-message-header" tabindex="0" role="button" aria-expanded="false" aria-controls="${message.data.id}-content">
@@ -26416,12 +27300,12 @@ function build_html14(message, opts = {}) {
     </div>
   `;
 }
-async function render25(message, opts = {}) {
-  const html = build_html14.call(this, message, opts);
+async function render26(message, opts = {}) {
+  const html = build_html15.call(this, message, opts);
   const frag = this.create_doc_fragment(html);
-  return await post_process18.call(this, message, frag, opts);
+  return await post_process19.call(this, message, frag, opts);
 }
-async function post_process18(message, frag, opts) {
+async function post_process19(message, frag, opts) {
   const header = frag.querySelector(".sc-system-message-header");
   const content = frag.querySelector(".sc-system-message-content");
   const toggle_icon = frag.querySelector(".sc-system-message-toggle-icon");
@@ -26542,13 +27426,13 @@ var SmartMessage = class extends SmartBlock2 {
   async render(container = this.thread.messages_container) {
     let frag;
     if (this.role === "system") {
-      frag = await render25.call(this.smart_view, this);
+      frag = await render26.call(this.smart_view, this);
     } else if (this.tool_calls?.length > 0) {
-      frag = await render24.call(this.smart_view, this);
+      frag = await render25.call(this.smart_view, this);
     } else if (this.role === "tool") {
       frag = await this.context_template.call(this.smart_view, this);
     } else {
-      frag = await render22.call(this.smart_view, this);
+      frag = await render23.call(this.smart_view, this);
     }
     if (container) {
       this.elm = container.querySelector(`#${this.data.id}`);
@@ -26562,7 +27446,7 @@ var SmartMessage = class extends SmartBlock2 {
     return frag;
   }
   get context_template() {
-    return this.env.opts.components.lookup_context || render23;
+    return this.env.opts.components.lookup_context || render24;
   }
   /**
    * Converts the message into a request payload that can be sent to the AI model.
@@ -27027,11 +27911,11 @@ var smart_env_config = {
   // env_data_dir: '.smart-env', // added in Plugin class
   collections: {
     smart_collections: {
-      data_adapter: AjsonMultiFileCollectionDataAdapter4
+      data_adapter: AjsonMultiFileCollectionDataAdapter3
     },
     smart_threads: {
       class: SmartThreads,
-      data_adapter: AjsonMultiFileCollectionDataAdapter4,
+      data_adapter: AjsonMultiFileCollectionDataAdapter3,
       // data_adapter: CollectionDataAdapter,
       source_adapters: {
         "json": EnvJsonThreadSourceAdapter,
@@ -27043,8 +27927,6 @@ var smart_env_config = {
     }
   },
   item_types: {
-    SmartSource: SmartSource2,
-    SmartBlock: SmartBlock2,
     SmartThread: SmartThread2,
     SmartMessage
   },
@@ -27086,37 +27968,33 @@ var smart_env_config = {
     smart_view: {
       class: SmartView2,
       adapter: SmartViewObsidianAdapter2
-    },
-    smart_notices: {
-      class: SmartNotices,
-      adapter: import_obsidian13.Notice
     }
   },
   components: {
-    lookup: render15,
-    connections_results: render17,
-    smart_chat: render18,
-    connections: render12,
+    lookup: render13,
+    connections_results: render15,
+    smart_chat: render16,
+    connections: render10,
     smart_env: {
-      settings: render11
+      settings: render9
     },
     smart_sources: {
-      settings: render8,
-      connections: render12
+      settings: render6,
+      connections: render10
     },
     smart_blocks: {
-      settings: render8,
-      connections: render12
+      settings: render6,
+      connections: render10
     },
     smart_threads: {
-      settings: render9,
+      settings: render7,
       thread: render20
     },
     smart_chat_model: {
-      settings: render10
+      settings: render8
     },
     smart_embed_model: {
-      settings: render10
+      settings: render8
     }
   },
   default_settings: {
@@ -28024,7 +28902,7 @@ var SmartSearch = class {
 var import_obsidian19 = require("obsidian");
 
 // src/components/main_settings.js
-async function render26(scope) {
+async function render27(scope) {
   if (!scope.env) {
     const load_frag = this.create_doc_fragment(`
       <div><button>Load Smart Environment</button></div>
@@ -28055,9 +28933,9 @@ async function render26(scope) {
     </div>
   `;
   const frag = this.create_doc_fragment(html);
-  return await post_process19.call(this, scope, frag);
+  return await post_process20.call(this, scope, frag);
 }
-async function post_process19(scope, frag) {
+async function post_process20(scope, frag) {
   await this.render_setting_components(frag, { scope });
   const smart_settings_containers = frag.querySelectorAll("[data-smart-settings]");
   for (const container of smart_settings_containers) {
@@ -28296,7 +29174,7 @@ var ScSettingsTab = class extends import_obsidian19.PluginSettingTab {
     }
     if (!container) throw new Error("Container is required");
     container.innerHTML = '<div class="sc-loading">Loading main settings...</div>';
-    const frag = await render26.call(this.smart_view, this.plugin, opts);
+    const frag = await render27.call(this.smart_view, this.plugin, opts);
     container.innerHTML = "";
     container.appendChild(frag);
     return container;
@@ -28503,7 +29381,7 @@ var ScAppConnector = class _ScAppConnector {
 };
 
 // node_modules/smart-settings/smart_settings.js
-var SmartSettings2 = class {
+var SmartSettings3 = class {
   /**
    * Creates an instance of SmartEnvSettings.
    * @param {Object} main - The main object to contain the instance (smart_settings) and getter (settings)
@@ -28550,7 +29428,7 @@ var SmartSettings2 = class {
    * @returns {Proxy} A proxy object that observes changes to the settings.
    */
   get settings() {
-    return observe_object2(this._settings, (property, value, target) => {
+    return observe_object3(this._settings, (property, value, target) => {
       if (this.save_timeout) clearTimeout(this.save_timeout);
       this.save_timeout = setTimeout(() => {
         this.save(this._settings);
@@ -28578,7 +29456,7 @@ var SmartSettings2 = class {
     else this._settings = this.main.load_settings();
   }
 };
-function observe_object2(obj, on_change) {
+function observe_object3(obj, on_change) {
   function create_proxy(target) {
     return new Proxy(target, {
       set(target2, property, value) {
@@ -28830,12 +29708,1110 @@ async function installSmartPlugins(plugin) {
   }
 }
 
+// node_modules/smart-notices/smart_notices.js
+var import_obsidian22 = require("obsidian");
+
+// node_modules/smart-notices/notices.js
+var NOTICES2 = {
+  item_excluded: {
+    en: "Cannot show Smart Connections for excluded entity: {{entity_key}}"
+  },
+  load_env: {
+    en: "Mobile detected: to prevent performance issues, click to load Smart Environment when ready.",
+    button: {
+      en: `Load Smart Env`,
+      callback: (scope) => {
+        scope.load_env();
+      }
+    },
+    timeout: 0
+  },
+  missing_entity: {
+    en: "No entity found for key: {{key}}"
+  },
+  notice_muted: {
+    en: "Notice muted"
+  },
+  new_version_available: {
+    en: "A new version is available! (v{{version}})",
+    timeout: 15e3,
+    button: {
+      en: "Release notes",
+      callback: (scope) => {
+        window.open("https://github.com/brianpetro/obsidian-smart-connections/releases", "_blank");
+      }
+    }
+  },
+  new_early_access_version_available: {
+    en: "A new early access version is available! (v{{version}})"
+  },
+  supporter_key_required: {
+    en: "Supporter license key required for early access update"
+  },
+  revert_to_stable_release: {
+    en: 'Click "Check for Updates" in the community plugins tab and complete the update for Smart Connections to finish reverting to the stable release.',
+    timeout: 0
+  },
+  action_installed: {
+    en: 'Installed action "{{name}}"'
+  },
+  action_install_error: {
+    en: 'Error installing action "{{name}}": {{error}}',
+    timeout: 0
+  },
+  embed_model_not_loaded: {
+    en: "Embed model not loaded. Please wait for the model to load and try again."
+  },
+  embed_search_text_failed: {
+    en: "Failed to embed search text."
+  },
+  error_in_embedding_search: {
+    en: "Error in embedding search. See console for details."
+  },
+  copied_to_clipboard: {
+    en: "Message: {{content}} copied successfully."
+  },
+  copy_failed: {
+    en: "Unable to copy message to clipboard."
+  },
+  copied_chatgpt_url_to_clipboard: {
+    en: "ChatGPT URL copied to clipboard."
+  },
+  loading_collection: {
+    en: "Loading {{collection_key}}..."
+  },
+  done_loading_collection: {
+    en: "{{collection_key}} loaded."
+  },
+  saving_collection: {
+    en: "Saving {{collection_key}}..."
+  },
+  initial_scan: {
+    en: "[{{collection_key}}] Starting initial scan...",
+    timeout: 0
+  },
+  done_initial_scan: {
+    en: "[{{collection_key}}] Initial scan complete.",
+    timeout: 3e3
+  },
+  pruning_collection: {
+    en: "Pruning {{collection_key}}..."
+  },
+  done_pruning_collection: {
+    en: "Pruned {{count}} items from {{collection_key}}."
+  },
+  embedding_progress: {
+    en: "Embedding progress: {{progress}} / {{total}}\n{{tokens_per_second}} tokens/sec using {{model_name}}",
+    button: {
+      en: "Pause",
+      callback: (scope) => {
+        console.log("pausing");
+        scope.env.smart_sources.entities_vector_adapter.halt_embed_queue_processing();
+      }
+    },
+    timeout: 0
+  },
+  embedding_complete: {
+    en: "Embedding complete. {{total_embeddings}} embeddings created. {{tokens_per_second}} tokens/sec using {{model_name}}",
+    timeout: 0
+  },
+  embedding_paused: {
+    en: "Embedding paused. Progress: {{progress}} / {{total}}\n{{tokens_per_second}} tokens/sec using {{model_name}}",
+    button: {
+      en: "Resume",
+      callback: (scope) => {
+        scope.env.smart_sources.entities_vector_adapter.resume_embed_queue_processing(100);
+      }
+    },
+    timeout: 0
+  },
+  import_progress: {
+    en: "Importing... {{progress}} / {{total}} sources",
+    timeout: 0
+  },
+  done_import: {
+    en: "Import complete. {{count}} sources imported in {{time_in_seconds}}s",
+    timeout: 0
+  },
+  no_import_queue: {
+    en: "No items in import queue"
+  },
+  clearing_all: {
+    en: "Clearing all data...",
+    timeout: 0
+  },
+  done_clearing_all: {
+    en: "All data cleared and reimported",
+    timeout: 3e3
+  },
+  image_extracting: {
+    en: "Extracting text from Image(s)",
+    timeout: 0
+  },
+  pdf_extracting: {
+    en: "Extracting text from PDF(s)",
+    timeout: 0
+  },
+  insufficient_settings: {
+    en: "Insufficient settings for {{key}}, missing: {{missing}}",
+    timeout: 0
+  }
+};
+
+// node_modules/smart-notices/node_modules/smart-environment/components/settings.js
+async function build_html16(scope, opts = {}) {
+  const env_settings_html = Object.entries(scope.settings_config).map(([setting_key, setting_config]) => {
+    if (!setting_config.setting) setting_config.setting = setting_key;
+    return this.render_setting_html(setting_config);
+  }).join("\n");
+  const env_collections_containers_html = Object.entries(scope.collections).map(([collection_key, collection]) => {
+    return `<div data-smart-settings="${collection_key}"></div>`;
+  }).join("\n");
+  const html = `
+    <div class="">
+      ${env_settings_html}
+      ${env_collections_containers_html}
+    </div>
+  `;
+  return html;
+}
+async function render28(scope, opts = {}) {
+  const html = await build_html16.call(this, scope, opts);
+  const frag = this.create_doc_fragment(html);
+  return await post_process21.call(this, scope, frag, opts);
+}
+async function post_process21(scope, frag, opts = {}) {
+  await this.render_setting_components(frag, { scope });
+  const env_collections_containers = frag.querySelectorAll("[data-smart-settings]");
+  for (const env_collections_container of env_collections_containers) {
+    const collection_key = env_collections_container.dataset.smartSettings;
+    const collection = scope[collection_key];
+    await collection.render_settings(env_collections_container);
+  }
+  return frag;
+}
+
+// node_modules/smart-notices/node_modules/smart-environment/node_modules/smart-settings/smart_settings.js
+var SmartSettings4 = class {
+  /**
+   * Creates an instance of SmartEnvSettings.
+   * @param {Object} main - The main object to contain the instance (smart_settings) and getter (settings)
+   * @param {Object} [opts={}] - Configuration options.
+   */
+  constructor(main, opts = {}) {
+    this.main = main;
+    this.opts = opts;
+    this._fs = null;
+    this._settings = {};
+    this._saved = false;
+    this.save_timeout = null;
+  }
+  static async create(main, opts = {}) {
+    const smart_settings = new this(main, opts);
+    await smart_settings.load();
+    main.smart_settings = smart_settings;
+    Object.defineProperty(main, "settings", {
+      get() {
+        return smart_settings.settings;
+      },
+      set(settings) {
+        smart_settings.settings = settings;
+      }
+    });
+    return smart_settings;
+  }
+  static create_sync(main, opts = {}) {
+    const smart_settings = new this(main, opts);
+    smart_settings.load_sync();
+    main.smart_settings = smart_settings;
+    Object.defineProperty(main, "settings", {
+      get() {
+        return smart_settings.settings;
+      },
+      set(settings) {
+        smart_settings.settings = settings;
+      }
+    });
+    return smart_settings;
+  }
+  /**
+   * Gets the current settings, wrapped with an observer to handle changes.
+   * @returns {Proxy} A proxy object that observes changes to the settings.
+   */
+  get settings() {
+    return observe_object4(this._settings, (property, value, target) => {
+      if (this.save_timeout) clearTimeout(this.save_timeout);
+      this.save_timeout = setTimeout(() => {
+        this.save(this._settings);
+        this.save_timeout = null;
+      }, 1e3);
+    });
+  }
+  /**
+   * Sets the current settings.
+   * @param {Object} settings - The new settings to apply.
+   */
+  set settings(settings) {
+    this._settings = settings;
+  }
+  async save(settings = this._settings) {
+    if (typeof this.opts.save === "function") await this.opts.save(settings);
+    else await this.main.save_settings(settings);
+  }
+  async load() {
+    if (typeof this.opts.load === "function") this._settings = await this.opts.load();
+    else this._settings = await this.main.load_settings();
+  }
+  load_sync() {
+    if (typeof this.opts.load === "function") this._settings = this.opts.load();
+    else this._settings = this.main.load_settings();
+  }
+};
+function observe_object4(obj, on_change) {
+  function create_proxy(target) {
+    return new Proxy(target, {
+      set(target2, property, value) {
+        if (target2[property] !== value) {
+          target2[property] = value;
+          on_change(property, value, target2);
+        }
+        if (typeof value === "object" && value !== null) {
+          target2[property] = create_proxy(value);
+        }
+        return true;
+      },
+      get(target2, property) {
+        const result = target2[property];
+        if (typeof result === "object" && result !== null) {
+          return create_proxy(result);
+        }
+        return result;
+      },
+      deleteProperty(target2, property) {
+        if (property in target2) {
+          delete target2[property];
+          on_change(property, void 0, target2);
+        }
+        return true;
+      }
+    });
+  }
+  return create_proxy(obj);
+}
+
+// node_modules/smart-notices/node_modules/smart-environment/utils/is_plain_object.js
+function is_plain_object5(o) {
+  if (o === null) return false;
+  if (typeof o !== "object") return false;
+  if (Array.isArray(o)) return false;
+  if (o instanceof Function) return false;
+  if (o instanceof Date) return false;
+  return Object.getPrototypeOf(o) === Object.prototype;
+}
+
+// node_modules/smart-notices/node_modules/smart-environment/utils/deep_merge.js
+function deep_merge7(target, source) {
+  for (const key in source) {
+    if (!Object.prototype.hasOwnProperty.call(source, key)) continue;
+    if (is_plain_object5(source[key]) && is_plain_object5(target[key])) {
+      deep_merge7(target[key], source[key]);
+    } else {
+      target[key] = source[key];
+    }
+  }
+  return target;
+}
+
+// node_modules/smart-notices/node_modules/smart-environment/utils/camel_case_to_snake_case.js
+function camel_case_to_snake_case7(str) {
+  const result = str.replace(/([A-Z])/g, (match) => `_${match.toLowerCase()}`).replace(/^_/, "").replace(/2$/, "");
+  return result;
+}
+
+// node_modules/smart-notices/node_modules/smart-environment/utils/normalize_opts.js
+function normalize_opts3(opts) {
+  if (!opts.collections) opts.collections = {};
+  if (!opts.modules) opts.modules = {};
+  Object.entries(opts.collections).forEach(([key, val]) => {
+    if (typeof val === "function") {
+      opts.collections[key] = { class: val };
+    }
+    const new_key = camel_case_to_snake_case7(key);
+    if (new_key !== key) {
+      opts.collections[new_key] = opts.collections[key];
+      delete opts.collections[key];
+    }
+    if (!opts.collections[new_key].collection_key) opts.collections[new_key].collection_key = new_key;
+  });
+  Object.entries(opts.modules).forEach(([key, val]) => {
+    if (typeof val === "function") {
+      opts.modules[key] = { class: val };
+    }
+    const new_key = camel_case_to_snake_case7(key);
+    if (new_key !== key) {
+      opts.modules[new_key] = opts.modules[key];
+      delete opts.modules[key];
+    }
+  });
+  if (!opts.item_types) opts.item_types = {};
+  if (!opts.items) opts.items = {};
+  Object.entries(opts.item_types).forEach(([key, val]) => {
+    if (typeof val === "function") {
+      const new_key = camel_case_to_snake_case7(key);
+      opts.items[new_key] = {
+        class: val,
+        actions: {},
+        ...opts.items[new_key] || {}
+      };
+    }
+  });
+  return opts;
+}
+
+// node_modules/smart-notices/node_modules/smart-environment/utils/deep_clone_config.js
+function is_plain_object6(value) {
+  if (!value || typeof value !== "object") return false;
+  const proto = Object.getPrototypeOf(value);
+  return proto === Object.prototype || proto === null;
+}
+function deep_clone_config3(input) {
+  if (Array.isArray(input)) {
+    return input.map((item) => deep_clone_config3(item));
+  }
+  if (is_plain_object6(input)) {
+    const output = {};
+    for (const [k, v] of Object.entries(input)) {
+      output[k] = deep_clone_config3(v);
+    }
+    return output;
+  }
+  return input;
+}
+
+// node_modules/smart-notices/node_modules/smart-environment/utils/deep_merge_no_overwrite.js
+function deep_merge_no_overwrite3(target, source, path = []) {
+  if (!is_plain_object5(target) || !is_plain_object5(source)) {
+    return target;
+  }
+  if (path.includes(source)) {
+    return target;
+  }
+  path.push(source);
+  for (const key of Object.keys(source)) {
+    if (!Object.prototype.hasOwnProperty.call(source, key)) {
+      continue;
+    }
+    const val = source[key];
+    if (Array.isArray(target[key]) && Array.isArray(val)) {
+      target[key].push(...val);
+    } else if (is_plain_object5(val)) {
+      if (!is_plain_object5(target[key])) {
+        target[key] = {};
+      }
+      deep_merge_no_overwrite3(target[key], val, [...path]);
+    } else if (!Object.prototype.hasOwnProperty.call(target, key)) {
+      target[key] = val;
+    }
+  }
+  return target;
+}
+
+// node_modules/smart-notices/node_modules/smart-environment/utils/merge_env_config.js
+function merge_env_config3(target, incoming) {
+  for (const [key, value] of Object.entries(incoming)) {
+    if (typeof value === "object" && value !== null) {
+      if (Array.isArray(value)) {
+        target[key] = [...target[key] || [], ...value];
+      } else {
+        if (!target[key]) target[key] = {};
+        deep_merge_no_overwrite3(target[key], value);
+      }
+    } else {
+      if (target[key] !== void 0) {
+        console.warn(
+          `SmartEnv: Overwriting existing property ${key} in smart_env_config`,
+          { old: target[key], new: value }
+        );
+      }
+      target[key] = value;
+    }
+  }
+  return target;
+}
+
+// node_modules/smart-notices/node_modules/smart-environment/smart_env.js
+var SmartEnv4 = class {
+  /**
+   * @type {number} version - Bump this number when shipping a new version of SmartEnv.
+   * If a newer version is loaded into a runtime that already has an older environment,
+   * an automatic reload of all existing mains will occur.
+   */
+  static version = 2.11;
+  scope_name = "smart_env";
+  static global_ref = typeof window !== "undefined" ? window : global;
+  global_ref = typeof window !== "undefined" ? window : global;
+  constructor(opts = {}) {
+    this.state = "init";
+    this._components = {};
+    this.collections = {};
+    this.load_timeout = null;
+  }
+  /**
+   * Returns the config object for the SmartEnv instance.
+   * @returns {Object} The config object.
+   */
+  get config() {
+    if (!this._config) {
+      this._config = {};
+      for (const [main_key, { main, opts }] of Object.entries(this.smart_env_configs)) {
+        if (!main) {
+          console.warn(`SmartEnv: '${main_key}' has been unloaded, skipping inclusion in smart_env`);
+          delete this.smart_env_configs[main_key];
+          continue;
+        }
+        merge_env_config3(
+          this._config,
+          deep_clone_config3(
+            normalize_opts3(opts)
+          )
+        );
+      }
+    }
+    return this._config;
+  }
+  get env_start_wait_time() {
+    if (typeof this.config.env_start_wait_time === "number") return this.config.env_start_wait_time;
+    return 5e3;
+  }
+  static get global_env() {
+    return this.global_ref.smart_env;
+  }
+  static set global_env(env) {
+    this.global_ref.smart_env = env;
+  }
+  static get mains() {
+    return Object.keys(this.global_ref.smart_env_configs || {});
+  }
+  get mains() {
+    return Object.keys(this.global_ref.smart_env_configs || {});
+  }
+  static get should_reload() {
+    if (!this.global_env) return true;
+    if (this.global_env.state === "loaded") return true;
+    if (this.global_env.constructor.version < this.version) {
+      console.warn("SmartEnv: Reloading environment because of version mismatch", `${this.version} > ${this.global_env.constructor.version}`);
+      return true;
+    }
+    return false;
+  }
+  static get smart_env_configs() {
+    if (!this.global_ref.smart_env_configs) this.global_ref.smart_env_configs = {};
+    return this.global_ref.smart_env_configs;
+  }
+  get smart_env_configs() {
+    if (!this.global_ref.smart_env_configs) this.global_ref.smart_env_configs = {};
+    return this.global_ref.smart_env_configs;
+  }
+  /**
+   * Waits for either a specific main to be registered in the environment,
+   * or (if `opts.main` is not specified) waits for environment collections to load.
+   * @param {object} opts
+   * @param {object} [opts.main] - if set, the function waits until that main is found.
+   * @returns {Promise<SmartEnv>} Resolves with the environment instance
+   */
+  static wait_for(opts = {}) {
+    return new Promise((resolve) => {
+      if (opts.main) {
+        const interval = setInterval(() => {
+          if (this.global_env && this.global_env.mains.includes(opts.main)) {
+            clearInterval(interval);
+            resolve(this.global_env);
+          }
+        }, 1e3);
+      } else {
+        const interval = setInterval(() => {
+          if (this.global_env && this.global_env.state === "loaded") {
+            clearInterval(interval);
+            resolve(this.global_env);
+          }
+        }, 100);
+      }
+    });
+  }
+  /**
+   * Creates or updates a SmartEnv instance.
+   * - If a global environment exists and is an older version, it is unloaded and replaced.
+   * - If the environment is the same version or newer, it reuses the existing environment.
+   * @param {Object} main - The main object to be added to the SmartEnv instance.
+   * @param {Object} [main_env_opts={}] - Options for configuring the SmartEnv instance.
+   * @returns {SmartEnv} The SmartEnv instance.
+   * @throws {TypeError} If an invalid main object is provided.
+   * @throws {Error} If there's an error creating or updating the SmartEnv instance.
+   */
+  static async create(main, main_env_opts = null) {
+    if (!main || typeof main !== "object") {
+      throw new TypeError("SmartEnv: Invalid main object provided");
+    }
+    if (!main_env_opts) {
+      if (!main.smart_env_config) {
+        throw new Error("SmartEnv: No main_env_opts or main.smart_env_config provided");
+      }
+      main_env_opts = main.smart_env_config;
+    }
+    this.add_main(main, main_env_opts);
+    if (this.should_reload) {
+      this.global_env = new this();
+      await this.global_env.fs.load_files();
+      await SmartSettings4.create(this.global_env);
+    }
+    clearTimeout(this.global_env.load_timeout);
+    this.global_env.load_timeout = setTimeout(async () => {
+      await this.global_env.load();
+    }, this.global_env.env_start_wait_time);
+    return this.global_env;
+  }
+  static add_main(main, main_env_opts = null) {
+    if (this.global_env?._config) this.global_env._config = null;
+    const main_key = camel_case_to_snake_case7(main.constructor.name);
+    this.smart_env_configs[main_key] = { main, opts: main_env_opts };
+    this.create_env_getter(main);
+  }
+  /**
+   * Creates a dynamic environment getter on any instance object.
+   * The returned 'env' property will yield the global `smart_env`.
+   * @param {Object} instance_to_receive_getter
+   */
+  static create_env_getter(instance_to_receive_getter) {
+    Object.defineProperty(instance_to_receive_getter, "env", {
+      get: function() {
+        return (typeof window !== "undefined" ? window : global).smart_env;
+      }
+      // configurable: true
+    });
+  }
+  create_env_getter(instance_to_receive_getter) {
+    this.constructor.create_env_getter(instance_to_receive_getter);
+  }
+  async load() {
+    await this.init_collections();
+    for (const [main_key, { main, opts }] of Object.entries(this.smart_env_configs)) {
+      this[main_key] = main;
+      await this.ready_to_load_collections(main);
+    }
+    await this.load_collections();
+    this.state = "loaded";
+  }
+  /**
+   * Initializes collection classes if they have an 'init' function.
+   * @param {Object} [config=this.opts]
+   */
+  async init_collections(config = this.config) {
+    for (const key of Object.keys(config.collections || {})) {
+      const _class = config.collections[key]?.class;
+      if (typeof _class?.init !== "function") continue;
+      await _class.init(this, { ...config.collections[key] });
+      this.collections[key] = "init";
+    }
+  }
+  /**
+   * Hook for main classes that optionally implement `ready_to_load_collections()`.
+   * @param {Object} main
+   */
+  async ready_to_load_collections(main) {
+    if (typeof main?.ready_to_load_collections === "function") {
+      await main.ready_to_load_collections();
+    }
+    return true;
+  }
+  /**
+   * Loads any available collections, processing their load queues.
+   * @param {Object} [collections=this.collections] - Key-value map of collection instances.
+   */
+  async load_collections(collections = this.collections) {
+    for (const key of Object.keys(collections || {})) {
+      if (typeof this[key]?.process_load_queue === "function") {
+        if (this.state === "init" && this[key].opts.prevent_load_on_init === true) continue;
+        await this[key].process_load_queue();
+      }
+      this.collections[key] = "loaded";
+    }
+  }
+  /**
+   * Removes a main from the window.smart_env_configs to exclude it on reload
+   * @param {Class} main_class
+   * @param {Object|null} [unload_config=null]
+   */
+  static unload_main(main) {
+    const main_key = camel_case_to_snake_case7(main.constructor.name);
+    this.smart_env_configs[main_key] = null;
+    delete this.smart_env_configs[main_key];
+  }
+  unload_main(main) {
+    this.constructor.unload_main(main);
+  }
+  /**
+   * Triggers a save event in all known collections.
+   */
+  save() {
+    for (const key of Object.keys(this.collections)) {
+      this[key].process_save_queue?.();
+    }
+  }
+  /**
+   * Initialize a module from the configured `this.opts.modules`.
+   * @param {string} module_key
+   * @param {object} opts
+   * @returns {object|null} instance of the requested module or null if not found
+   */
+  init_module(module_key, opts = {}) {
+    const module_config = this.opts.modules[module_key];
+    if (!module_config) {
+      return console.warn(`SmartEnv: module ${module_key} not found`);
+    }
+    opts = {
+      ...{ ...module_config, class: null },
+      ...opts
+    };
+    return new module_config.class(opts);
+  }
+  /**
+   * Exposes a settings template function from environment opts or defaults.
+   * @returns {Function}
+   */
+  get settings_template() {
+    return this.opts.components?.smart_env?.settings || render28;
+  }
+  /**
+   * Renders settings UI into a container, using the environment's `settings_template`.
+   * @param {HTMLElement} [container=this.settings_container]
+   */
+  async render_settings(container = this.settings_container) {
+    if (!this.settings_container || container !== this.settings_container) {
+      this.settings_container = container;
+    }
+    if (!container) {
+      throw new Error("Container is required");
+    }
+    const frag = await this.render_component("settings", this, {});
+    container.innerHTML = "";
+    container.appendChild(frag);
+    return frag;
+  }
+  /**
+   * Renders a named component using an optional scope and options.
+   * @param {string} component_key
+   * @param {Object} scope
+   * @param {Object} [opts]
+   * @returns {Promise<HTMLElement>}
+   */
+  async render_component(component_key, scope, opts = {}) {
+    const component_renderer = this.get_component(component_key, scope);
+    const frag = await component_renderer(scope, opts);
+    return frag;
+  }
+  /**
+   * Retrieves or creates a memoized component renderer function.
+   * @param {string} component_key
+   * @param {Object} scope
+   * @returns {Function|undefined}
+   */
+  get_component(component_key, scope) {
+    const scope_name = scope.collection_key ?? scope.scope_name;
+    const _cache_key = scope_name ? `${scope_name}-${component_key}` : component_key;
+    if (!this._components[_cache_key]) {
+      try {
+        if (this.opts.components[scope_name]?.[component_key]) {
+          this._components[_cache_key] = this.opts.components[scope_name][component_key].bind(
+            this.init_module("smart_view")
+          );
+        } else if (this.opts.components[component_key]) {
+          this._components[_cache_key] = this.opts.components[component_key].bind(
+            this.init_module("smart_view")
+          );
+        } else {
+          console.warn(
+            `SmartEnv: component ${component_key} not found for scope ${scope_name}`
+          );
+        }
+      } catch (e) {
+        console.error("Error getting component", e);
+        console.log(
+          `scope_name: ${scope_name}; component_key: ${component_key}; this.opts.components: ${Object.keys(
+            this.opts.components || {}
+          ).join(", ")}; this.opts.components[scope_name]: ${Object.keys(
+            this.opts.components[scope_name] || {}
+          ).join(", ")}`
+        );
+      }
+    }
+    return this._components[_cache_key];
+  }
+  /**
+   * Lazily instantiate the module 'smart_view'.
+   * @returns {object}
+   */
+  get smart_view() {
+    if (!this._smart_view) {
+      this._smart_view = this.init_module("smart_view");
+    }
+    return this._smart_view;
+  }
+  /**
+   * A built-in settings schema for this environment.
+   * @returns {Object}
+   */
+  get settings_config() {
+    return {
+      is_obsidian_vault: {
+        name: "Obsidian Vault",
+        description: "Toggle on if this is an Obsidian vault.",
+        type: "toggle",
+        default: false
+      },
+      file_exclusions: {
+        name: "File Exclusions",
+        description: "Comma-separated list of files to exclude.",
+        type: "text",
+        default: "",
+        callback: "update_exclusions"
+      },
+      folder_exclusions: {
+        name: "Folder Exclusions",
+        description: "Comma-separated list of folders to exclude.",
+        type: "text",
+        default: "",
+        callback: "update_exclusions"
+      },
+      excluded_headings: {
+        name: "Excluded Headings",
+        description: "Comma-separated list of headings to exclude.",
+        type: "text",
+        default: ""
+      }
+    };
+  }
+  get global_prop() {
+    return this.opts.global_prop ?? "smart_env";
+  }
+  get global_ref() {
+    return this.opts.global_ref ?? (typeof window !== "undefined" ? window : global) ?? {};
+  }
+  get item_types() {
+    return this.opts.item_types;
+  }
+  get fs_module_config() {
+    return this.opts.modules.smart_fs;
+  }
+  get fs() {
+    if (!this.smart_fs) {
+      this.smart_fs = new this.fs_module_config.class(this, {
+        adapter: this.fs_module_config.adapter,
+        fs_path: this.opts.env_path || ""
+      });
+    }
+    return this.smart_fs;
+  }
+  get env_data_dir() {
+    const env_settings_files = this.fs.file_paths?.filter((path) => path.endsWith("smart_env.json")) || [];
+    let env_data_dir = ".smart-env";
+    if (env_settings_files.length > 0) {
+      if (env_settings_files.length > 1) {
+        const env_data_dir_counts = env_settings_files.map((path) => {
+          const dir = path.split("/").slice(-2, -1)[0];
+          return {
+            dir,
+            count: this.fs.file_paths.filter((p) => p.includes(dir)).length
+          };
+        });
+        env_data_dir = env_data_dir_counts.reduce(
+          (max, dirObj) => dirObj.count > max.count ? dirObj : max,
+          env_data_dir_counts[0]
+        ).dir;
+      } else {
+        env_data_dir = env_settings_files[0].split("/").slice(-2, -1)[0];
+      }
+    }
+    return env_data_dir;
+  }
+  get data_fs() {
+    if (!this._fs) {
+      this._fs = new this.fs_module_config.class(this, {
+        adapter: this.fs_module_config.adapter,
+        fs_path: this.data_fs_path
+      });
+    }
+    return this._fs;
+  }
+  get data_fs_path() {
+    if (!this._data_fs_path) {
+      this._data_fs_path = (this.opts.env_path + (this.opts.env_path ? this.opts.env_path.includes("\\") ? "\\" : "/" : "") + this.env_data_dir).replace(/\\\\/g, "\\").replace(/\/\//g, "/");
+    }
+    return this._data_fs_path;
+  }
+  /**
+   * Saves the current settings to the file system.
+   * @param {Object|null} [settings=null] - Optional settings to override the current settings before saving.
+   * @returns {Promise<void>}
+   */
+  async save_settings(settings) {
+    this._saved = false;
+    if (!await this.data_fs.exists("")) {
+      await this.data_fs.mkdir("");
+    }
+    await this.data_fs.write("smart_env.json", JSON.stringify(settings, null, 2));
+    this._saved = true;
+  }
+  /**
+   * Loads settings from the file system, merging with any `default_settings` or `smart_env_settings`.
+   * @returns {Promise<Object>} the loaded settings
+   */
+  async load_settings() {
+    if (!await this.data_fs.exists("smart_env.json")) await this.save_settings({});
+    let settings = JSON.parse(JSON.stringify(this.opts.default_settings || {}));
+    deep_merge7(settings, JSON.parse(await this.data_fs.read("smart_env.json")));
+    deep_merge7(settings, this.opts?.smart_env_settings || {});
+    this._saved = true;
+    return settings;
+  }
+  /**
+   * Refreshes file-system state if exclusions changed,
+   * then re-renders relevant settings UI
+   */
+  async update_exclusions() {
+    this.smart_sources._fs = null;
+    await this.smart_sources.fs.init();
+    this.smart_sources.render_settings();
+  }
+  // DEPRECATED
+  /** @deprecated access `this.state` and `collection.state` directly instead */
+  get collections_loaded() {
+    return this.state === "loaded";
+  }
+  /** @deprecated Use this['main_class_name'] instead of this.main/this.plugin */
+  get main() {
+    return this.smart_env_configs[this.mains[0]].main;
+  }
+  /**
+   * @deprecated use component pattern instead
+   */
+  get ejs() {
+    return this.opts.ejs;
+  }
+  /**
+   * @deprecated use component pattern instead
+   */
+  get templates() {
+    return this.opts.templates;
+  }
+  /**
+   * @deprecated use component pattern instead
+   */
+  get views() {
+    return this.opts.views;
+  }
+  /**
+   * @deprecated use this.config instead
+   */
+  get opts() {
+    return this.config;
+  }
+  /**
+   * @deprecated Use this.main_class_name instead of this.plugin
+   */
+  get plugin() {
+    return this.main;
+  }
+};
+
+// node_modules/smart-notices/smart_notices.js
+function define_default_create_methods2(notices, scope = null) {
+  for (const key of Object.keys(notices)) {
+    const notice_obj = notices[key];
+    if (typeof notice_obj.create !== "function") {
+      notice_obj.create = function(opts = {}) {
+        let text = this.en ?? key;
+        for (const [k, v] of Object.entries(opts)) {
+          text = text.replace(new RegExp(`{{${k}}}`, "g"), String(v));
+        }
+        let button;
+        if (!opts.button && this.button) {
+          const btn_label = typeof this.button.en === "string" ? this.button.en : "OK";
+          button = {
+            text: btn_label,
+            callback: typeof this.button.callback === "function" ? this.button.callback : () => {
+            }
+            // no-op
+          };
+        } else {
+          button = opts.button;
+        }
+        let final_timeout = opts.timeout ?? this.timeout ?? 5e3;
+        return {
+          text,
+          button,
+          timeout: final_timeout,
+          confirm: opts.confirm,
+          // pass any user-provided confirm
+          immutable: opts.immutable
+          // pass any user-provided immutable
+        };
+      };
+    }
+  }
+  return notices;
+}
+var SmartNotices2 = class {
+  /**
+   * @param {Object} scope - The main plugin instance
+   */
+  constructor(scope, adapter = null) {
+    this.scope = scope;
+    this.main = scope;
+    SmartEnv4.create_env_getter(this);
+    this.active = {};
+    this.adapter = adapter || this.env.config.modules.smart_notices.adapter;
+    define_default_create_methods2(NOTICES2, scope);
+  }
+  /** plugin settings for notices (muted, etc.) */
+  get settings() {
+    return this.env?.settings?.smart_notices || {};
+  }
+  /**
+   * Displays a notice by key or custom message.
+   * Usage:
+   *   notices.show('load_env', { scope: this });
+   *
+   * @param {string} id - The notice key or custom ID
+   * @param {object} opts - Additional user opts
+   */
+  show(id, opts = {}) {
+    let message = null;
+    if (typeof opts === "string") {
+      message = opts;
+    } else {
+      opts = opts || {};
+    }
+    if (!opts.scope) {
+      opts.scope = this.main;
+    }
+    const normalized_id = this._normalize_notice_key(id);
+    if (this.settings?.muted?.[normalized_id]) {
+      if (opts.confirm?.callback) {
+        opts.confirm.callback();
+      }
+      return;
+    }
+    const notice_entry = NOTICES2[id];
+    let derived = {
+      text: message || id,
+      timeout: opts.timeout ?? 5e3,
+      button: opts.button,
+      immutable: opts.immutable,
+      confirm: opts.confirm
+    };
+    if (notice_entry?.create) {
+      const result = notice_entry.create({ ...opts, scope: this.main });
+      derived.text = message || result.text;
+      derived.timeout = result.timeout;
+      derived.button = result.button;
+      derived.immutable = result.immutable;
+      derived.confirm = result.confirm;
+    }
+    const content_fragment = this._build_fragment(normalized_id, derived.text, derived);
+    if (this.active[normalized_id]?.noticeEl?.parentElement) {
+      return this.active[normalized_id].setMessage(content_fragment, derived.timeout);
+    }
+    return this._render_notice(normalized_id, content_fragment, derived);
+  }
+  /**
+   * Normalizes the notice key to a safe string.
+   */
+  _normalize_notice_key(key) {
+    return key.replace(/[^a-zA-Z0-9_-]/g, "_");
+  }
+  /**
+   * Creates and tracks the notice instance
+   */
+  _render_notice(normalized_id, content_fragment, { timeout }) {
+    this.active[normalized_id] = new this.adapter(content_fragment, timeout);
+    return this.active[normalized_id];
+  }
+  /**
+   * Builds a DocumentFragment with notice text & possible buttons
+   */
+  _build_fragment(id, text, { button, confirm: confirm2, immutable }) {
+    const frag = document.createDocumentFragment();
+    frag.createEl("p", {
+      cls: "sc-notice-head",
+      text: `[Smart Connections v${this.main.manifest.version}]`
+    });
+    const content = frag.createEl("p", { cls: "sc-notice-content", text });
+    const actions = frag.createEl("div", { cls: "sc-notice-actions" });
+    if (confirm2?.text && typeof confirm2.callback === "function") {
+      this._add_button(confirm2, actions);
+    }
+    if (button?.text && typeof button.callback === "function") {
+      this._add_button(button, actions);
+    }
+    if (!immutable) {
+      this._add_mute_button(id, actions);
+    }
+    return frag;
+  }
+  /**
+   * Creates a <button> appended to the container
+   */
+  _add_button(btnConfig, container) {
+    const btn = document.createElement("button");
+    btn.innerHTML = btnConfig.text;
+    btn.addEventListener("click", (e) => {
+      if (btnConfig.stay_open) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      btnConfig.callback?.(this.main);
+    });
+    container.appendChild(btn);
+  }
+  /**
+   * Mute button
+   */
+  _add_mute_button(id, container) {
+    const btn = document.createElement("button");
+    (0, import_obsidian22.setIcon)(btn, "bell-off");
+    btn.addEventListener("click", () => {
+      if (!this.settings.muted) this.settings.muted = {};
+      this.settings.muted[id] = true;
+      if (NOTICES2["notice muted"]) {
+        this.show("notice muted", null, { timeout: 2e3 });
+      }
+    });
+    container.appendChild(btn);
+  }
+  /**
+   * Hides & clears all active notices
+   */
+  unload() {
+    for (const id in this.active) {
+      this.remove(id);
+    }
+  }
+  /**
+   * Removes an active notice by key
+   */
+  remove(id) {
+    const normalized_id = this._normalize_notice_key(id);
+    this.active[normalized_id]?.hide();
+    delete this.active[normalized_id];
+  }
+};
+
 // src/index.js
 var {
   Notice: Notice2,
   Plugin,
   requestUrl: requestUrl4
-} = import_obsidian22.default;
+} = import_obsidian23.default;
 var SmartConnectionsPlugin = class extends Plugin {
   static get defaults() {
     return default_settings();
@@ -28851,7 +30827,7 @@ var SmartConnectionsPlugin = class extends Plugin {
   }
   // GETTERS
   get smart_env_class() {
-    return SmartEnv2;
+    return SmartEnv3;
   }
   get smart_env_config() {
     if (!this._smart_env_config) {
@@ -28888,9 +30864,9 @@ var SmartConnectionsPlugin = class extends Plugin {
     this.notices?.unload();
   }
   async initialize() {
-    this.obsidian = import_obsidian22.default;
-    await SmartSettings2.create(this);
-    this.notices = new this.smart_env_config.modules.smart_notices.class(this);
+    this.obsidian = import_obsidian23.default;
+    await SmartSettings3.create(this);
+    this.notices = new SmartNotices2(this, Notice2);
     this.smart_connections_view = null;
     this.add_commands();
     this.register_views();
