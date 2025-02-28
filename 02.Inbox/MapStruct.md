@@ -1,12 +1,10 @@
 ---
-update_time: 2025/02/28 18:46
+update_time: 2025/02/28 21:44
 create_time: 2025-02-28T18:46:00
 tags:
   - DevKit
   - Java
 ---
-
-# MapStruct
 
 > [!quote]
 > 官方文档地址：[MapStruct – Java bean mappings, the easy way!](https://mapstruct.org/)
@@ -149,11 +147,14 @@ MapStruct 代码生成器可以使用注解处理器选项进行配置。
 
 > [IDE Support – MapStruct](https://mapstruct.org/documentation/ide-support/)
 
-以 IntelliJ IDEA 为例，安装 [MapStruct Support - IntelliJ IDEs Plugin | Marketplace (jetbrains.com)](https://plugins.jetbrains.com/plugin/10036-mapstruct-support) 插件，该插件具备如下 [特性](https://github.com/mapstruct/mapstruct-idea#features)：
+以 IntelliJ IDEA 为例，安装 [MapStruct Support - IntelliJ IDEs Plugin | Marketplace (jetbrains.com)](https://plugins.jetbrains.com/plugin/10036-mapstruct-support) 插件，该插件具备如下[特性](https://github.com/mapstruct/mapstruct-idea#features)：
 
-- 代码补全 <br />![Code completion for source](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310170238644.gif)
-- 转到声明 <br />![Go To Declaration](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310170238809.gif)
-- 查找用法 <br />![Find usages from Source methods](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310170238914.png)
+- 代码补全
+  ![](https://img.xiaorang.fun/202502281859583.gif)
+- 转到声明
+  ![](https://img.xiaorang.fun/202502281900241.gif)
+- 查找用法
+  ![](https://img.xiaorang.fun/202502281900562.png)
 - 高亮显示
 - 快速修复
 
@@ -161,7 +162,7 @@ MapStruct 代码生成器可以使用注解处理器选项进行配置。
 
 下面演示如何使用 MapStruct 映射两个对象。
 
-### 实体类和DTO
+### 实体类和 DTO
 
 假设咱们有一个代表汽车的类（例如，JPA 实体）和一个附带的数据传输对象（DTO）。
 
@@ -332,11 +333,11 @@ MapStruct 将生成一个 `CarMapper` 的子类，并且该子类重写了 `carT
 
 ### 多来源参数的映射方法
 
-<span style="background-color: rgb(251, 228, 231);">TODO</span>
+<mark style="background: #FFB8EBA6;">TODO</mark>
 
 ## 与 Lombok 一起使用
 
-MapStruct 从 1.2.0.Beta1 版本开始可以与 Lombok 1.16.14 及更高版本一起使用。MapStruct 会自动利用 Lombok 生成的 getter、setter 方法和构造函数，并在生成映射器时使用它们，从而减少手动编写代码的工作，让你的代码更简洁和易于维护，这两个工具的组合可以极大地提高开发效率。
+MapStruct 从 1.2.0. Beta1 版本开始可以与 Lombok 1.16.14 及更高版本一起使用。MapStruct 会自动利用 Lombok 生成的 getter、setter 方法和构造函数，并在生成映射器时使用它们，从而减少手动编写代码的工作，让你的代码更简洁和易于维护，这两个工具的组合可以极大地提高开发效率。
 
 Lombok 在 1.18.16 版本中引入了一个重大变化，需要添加一个额外的注解处理器 `lombok-mapstruct-binding`（适用于 Maven 项目），否则的话 MapStruct 将无法与 Lombok 一起正常工作。这个注解处理器的作用是用来解决 Lombok 和 MapStruct 模块之间的编译问题。通过添加它，可以确保 Lombok 和 MapStruct 在项目中协同工作，并避免潜在的编译问题。
 

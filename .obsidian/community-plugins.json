@@ -38,5 +38,6 @@
   "obsidian-tasks-plugin",
   "obsidian-reminder-plugin",
   "obsidian-image-auto-upload-plugin",
-  "obsidian-auto-link-title"
+  "obsidian-auto-link-title",
+  "highlightr-plugin"
 ]
