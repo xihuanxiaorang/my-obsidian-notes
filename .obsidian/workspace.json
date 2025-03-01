@@ -105,7 +105,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "正则表达式",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -270,14 +270,15 @@
       "daily-notes:打开/创建今天的日记": false
     }
   },
-  "active": "9bbed510414b75b1",
+  "active": "0948d0fbdadd2109",
   "lastOpenFiles": [
+    "02.Inbox/MapStruct.md",
+    "02.Inbox/ApiFox.md",
     "01.Articles/Tools/Auto Dark Mode.md",
     "Zttachments/Pasted image 20250301131956.png",
     "Zttachments/Pasted image 20250301131759.png",
     "Zttachments/Pasted image 20250301131516.png",
     "Zttachments/PixPin_2025-03-01_13-06-58.png",
-    "02.Inbox/MapStruct.md",
     "02.Inbox/反射.md",
     "00.Overview/01 - 任务清单.md",
     "00.Overview/02 - 参考资料.md",

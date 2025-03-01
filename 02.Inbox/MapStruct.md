@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/01 12:46
+update_time: 2025/03/01 22:35
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -43,7 +43,198 @@ MapStruct 是一个 **Java 注解处理器，用于为 Java Bean 类生成类型
   - 映射不完整 (未映射所有目标属性)；
   - 映射不正确 (找不到正确的映射方法或类型转换)；
 
-## 入门案例
+## 设置
+
+MapStruct 是基于 JSR269 规范的 Java 注解处理器，因此可以在命令行构建（javac，Ant，Maven 等）以及 IDE 中使用。
+
+它包含以下组件:
+
+- `org.mapstruct`: 包含所需的注解，如 `@Mapping`；
+- `org.mapstruct:mapstruct-processor`: 包含生成映射器实现的注解处理器；
+
+### 安装
+
+对于 Maven 项目，如果想使用 MapStruct 的话，需要添加如下内容至 `pom.xml` 配置文件中：
+
+```xml hl:2,6-11,23-30
+<properties>
+  <org.mapstruct.version>1.6.3</org.mapstruct.version>
+</properties>
+...
+<dependencies>
+  <dependency>
+    <groupId>org.mapstruct</groupId>
+    <artifactId>mapstruct</artifactId>
+    <version>${org.mapstruct.version}</version>
+    <scope>provided</scope>
+  </dependency>
+</dependencies>
+...
+<build>
+  <plugins>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-compiler-plugin</artifactId>
+      <version>3.8.1</version>
+      <configuration>
+        <source>1.8</source> <!-- depending on your project -->
+        <target>1.8</target> <!-- depending on your project -->
+        <annotationProcessorPaths>
+          <path>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${org.mapstruct.version}</version>
+          </path>
+          <!-- other annotation processors -->
+        </annotationProcessorPaths>
+      </configuration>
+    </plugin>
+  </plugins>
+</build>
+```
+
+### 配置选项
+
+MapStruct 代码生成器可以使用注解处理器选项进行配置。
+
+当直接调用 javac 时，这些选项以 `-Akey=value` 的形式传递给编译器。当通过 Maven 使用 MapStruct 时，任何处理器选项都可以通过在 Maven 处理器插件的配置中使用 `compilerArgs` 进行传递，如下所示：
+
+```xml hl:18-28
+...
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-compiler-plugin</artifactId>
+  <version>3.8.1</version>
+  <configuration>
+    <source>1.8</source> <!-- depending on your project -->
+    <target>1.8</target> <!-- depending on your project -->
+    <annotationProcessorPaths>
+      <path>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct-processor</artifactId>
+        <version>${org.mapstruct.version}</version>
+      </path>
+    </annotationProcessorPaths>
+    <!-- due to problem in maven-compiler-plugin, for verbose mode add showWarnings -->
+    <showWarnings>true</showWarnings>
+    <compilerArgs>
+      <arg>
+        -Amapstruct.suppressGeneratorTimestamp=true
+      </arg>
+      <arg>
+        -Amapstruct.suppressGeneratorVersionInfoComment=true
+      </arg>
+      <arg>
+        -Amapstruct.verbose=true
+      </arg>
+    </compilerArgs>
+  </configuration>
+</plugin>
+...
+```
+
+列举常用选项：
+
+- `defaultComponentModel`，其常用的可选值有：
+  - `default`：映射器不使用组件模型，通常通过 `Mappers#getMapper(Class)` 检索实例；
+  - `spring`：生成的映射器是一个单例的 Spring Bean，可以通过 `@Autowired` 注解检索；
+  - 至于其他的 `cdi`、`jsr330` 等等请自行参考文档 https://mapstruct.org/documentation/stable/reference/html/#configuration-options
+- `defaultInjectionStrategy`：用于指定映射器（Mapper）中默认的依赖注入方式，该配置仅适用于基于注解的组件模型，例如 CDI（Contexts and Dependency Injection）、Spring 和 JSR 330。存在如下两个可选值：
+  - `field`（默认值）：使用字段注入依赖。在生成的映射类中，依赖的目标对象通常作为字段声明，并在映射方法之前通过字段注入进行初始化。
+  - `constructor`：使用构造函数注入依赖。在这种策略下，生成的映射类会创建构造函数，该构造函数将依赖的目标对象作为参数，通过构造函数注入来初始化依赖。
+
+### 与 Lombok 一起使用
+
+MapStruct 从 1.2.0. Beta1 版本开始可以与 Lombok 1.16.14 及更高版本一起使用。MapStruct 会自动利用 Lombok 生成的 getter、setter 方法和构造函数，并在生成映射器时使用它们，从而减少手动编写代码的工作，让你的代码更简洁和易于维护，这两个工具的组合可以极大地提高开发效率。
+
+Lombok 在 1.18.16 版本中引入了一个重大变化，**需要添加一个额外的注解处理器 `lombok-mapstruct-binding`（适用于 Maven 项目）**，否则的话 MapStruct 将无法与 Lombok 一起正常工作。这个注解处理器的作用是用来解决 Lombok 和 MapStruct 模块之间的编译问题。通过添加它，可以确保 Lombok 和 MapStruct 在项目中协同工作，并避免潜在的编译问题。
+
+完整配置如下所示：
+
+```xml hl:3,15-21,39-49
+<properties>
+  <org.mapstruct.version>1.6.3</org.mapstruct.version>
+  <org.projectlombok.version>1.18.16</org.projectlombok.version>
+  <maven.compiler.source>8</maven.compiler.source>
+  <maven.compiler.target>8</maven.compiler.target>
+</properties>
+
+<dependencies>
+  <dependency>
+    <groupId>org.mapstruct</groupId>
+    <artifactId>mapstruct</artifactId>
+    <version>${org.mapstruct.version}</version>
+    <scope>provided</scope>
+  </dependency>
+  <!-- lombok dependency should not end up on classpath -->
+  <dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <version>${org.projectlombok.version}</version>
+    <scope>provided</scope>
+  </dependency>
+</dependencies>
+
+<build>
+  <plugins>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-compiler-plugin</artifactId>
+      <version>3.8.1</version>
+      <configuration>
+        <source>1.8</source> <!-- depending on your project -->
+        <target>1.8</target> <!-- depending on your project -->
+        <annotationProcessorPaths>
+          <path>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${org.mapstruct.version}</version>
+          </path>
+          <path>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${org.projectlombok.version}</version>
+          </path>
+          <!-- additional annotation processor required as of Lombok 1.18.16 -->
+          <path>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok-mapstruct-binding</artifactId>
+            <version>0.2.0</version>
+          </path>
+        </annotationProcessorPaths>
+        <!-- due to problem in maven-compiler-plugin, for verbose mode add showWarnings -->
+        <showWarnings>true</showWarnings>
+        <compilerArgs>
+          <arg>
+            -Amapstruct.defaultComponentModel=default
+          </arg>
+          <arg>
+            -Amapstruct.defaultInjectionStrategy=constructor
+          </arg>
+        </compilerArgs>
+      </configuration>
+    </plugin>
+  </plugins>
+</build>
+```
+
+### IDE 支持
+
+> [!quote]
+> [IDE Support – MapStruct](https://mapstruct.org/documentation/ide-support/)
+
+以 IntelliJ IDEA 为例，安装 [MapStruct Support - IntelliJ IDEs Plugin | Marketplace (jetbrains.com)](https://plugins.jetbrains.com/plugin/10036-mapstruct-support) 插件，该插件具备如下[特性](https://github.com/mapstruct/mapstruct-idea#features)：
+
+- 代码补全
+  ![](https://img.xiaorang.fun/202502281859583.gif)
+- 转到声明
+  ![](https://img.xiaorang.fun/202502281900241.gif)
+- 查找用法
+  ![](https://img.xiaorang.fun/202502281900562.png)
+- 高亮显示
+- 快速修复
+
+## 快速入门
 
 下面演示如何使用 MapStruct 映射两个对象。
 
@@ -85,11 +276,11 @@ public class CarDTO {
 
 ```java
 @Mapper
-public interface CarMapper { 
-  CarMapper INSTANCE = Mappers.getMapper(CarMapper.class );
+public interface CarMapper {
+  CarMapper INSTANCE = Mappers.getMapper(CarMapper.class);
 
   @Mapping(source = "numberOfSeats", target = "seatCount")
-  CarDto carToCarDto(Car car);
+  CarDTO carToCarDTO(Car car);
 }
 ```
 
@@ -97,8 +288,38 @@ public interface CarMapper {
 - 实际映射方法需要源对象作为参数并返回目标对象。其名称可以自由选择。
 - 对于源对象和目标对象中名称不同的属性，可以使用 `@Mapping` 注解来配置它们之间的映射关系。
 - 在必要且可行的情况下，将对源和目标中具有不同类型的属性执行类型转换，例如，将 `type` 属性从枚举类型转换为字符串。
-- 当然，一个接口中可以有多个映射方法，MapStruct 将为所有映射方法生成对应的实现。
+- 一个接口中可以有多个映射方法，MapStruct 将为所有映射方法生成对应的实现。
 - 可以从 `Mappers` 类中获取接口实现的实例。按照约定，接口通常声明成一个名为 `INSTANCE` 的成员，以便客户端可以访问映射器的实现。
+
+由 MapStruct 生成的 `carToCarDTO()` 方法实现：
+
+```java
+// GENERATED CODE
+@Generated(
+  value = "org.mapstruct.ap.MappingProcessor",
+  date = "2025-03-01T19:12:50+0800",
+  comments = "version: 1.6.3, compiler: javac, environment: Java 17.0.13 (Amazon.com Inc.)"
+)
+public class CarMapperImpl implements CarMapper {
+
+  @Override
+  public CarDTO carToCarDTO(Car car) {
+    if ( car == null ) {
+      return null;
+    }
+
+    CarDTO carDTO = new CarDTO();
+
+    carDTO.setSeatCount( car.getNumberOfSeats() );
+    carDTO.setMake( car.getMake() );
+    if ( car.getType() != null ) {
+      carDTO.setType( car.getType().name() );
+    }
+
+    return carDTO;
+  }
+}
+```
 
 ### 使用映射器
 
@@ -107,136 +328,21 @@ public interface CarMapper {
 ```java
 class CarMapperTest {
   @Test
-  public void shouldMapCarToDto() {
-    //given
-    Car car = new Car("Morris", 5, Car.CarType.SEDAN);
+  public void shouldMapCarToCarDTO() {
+    // given
+    final Car car = new Car("Morris", 5, Car.CarType.SEDAN);
 
-    //when
-    CarDto carDto = CarMapper.INSTANCE.carToCarDto(car);
+    // when
+    final CarDTO carDTO = CarMapper.INSTANCE.carToCarDTO(car);
 
-    //then
-    assertThat(carDto).isNotNull();
-    assertThat(carDto.getMake()).isEqualTo("Morris");
-    assertThat(carDto.getSeatCount()).isEqualTo(5);
-    assertThat(carDto.getType()).isEqualTo("SEDAN");
+    // then
+    assertNotNull(carDTO);
+    assertEquals("Morris", carDTO.getMake());
+    assertEquals(5, carDTO.getSeatCount());
+    assertEquals("SEDAN", carDTO.getType());
   }
 }
 ```
-
-## 设置
-
-MapStruct 是基于 JSR269 规范的 Java 注解处理器，因此可以在命令行构建（javac，Ant，Maven 等）以及 IDE 中使用。
-
-它包含以下组件:
-
-- `org.mapstruct`: 包含所需的注解，如 `@Mapping`；
-- `org.mapstruct:mapstruct-processor`: 包含生成映射器实现的注解处理器；
-
-### 安装
-
-对于 Maven 项目，如果想使用 MapStruct 的话，需要添加如下内容至 `pom.xml` 配置文件中：
-
-```xml
-<properties>
-  <org.mapstruct.version>1.6.3</org.mapstruct.version>
-</properties>
-...
-<dependencies>
-  <dependency>
-    <groupId>org.mapstruct</groupId>
-    <artifactId>mapstruct</artifactId>
-    <version>${org.mapstruct.version}</version>
-  </dependency>
-</dependencies>
-...
-<build>
-  <plugins>
-    <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-compiler-plugin</artifactId>
-      <version>3.8.1</version>
-      <configuration>
-        <source>1.8</source> <!-- depending on your project -->
-        <target>1.8</target> <!-- depending on your project -->
-        <annotationProcessorPaths>
-          <path>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct-processor</artifactId>
-            <version>${org.mapstruct.version}</version>
-          </path>
-          <!-- other annotation processors -->
-        </annotationProcessorPaths>
-      </configuration>
-    </plugin>
-  </plugins>
-</build>
-```
-
-### 配置选项
-
-MapStruct 代码生成器可以使用注解处理器选项进行配置。
-
-当直接调用 javac 时，这些选项以 `-Akey=value` 的形式传递给编译器。当通过 Maven 使用 MapStruct 时，任何处理器选项都可以通过在 Maven 处理器插件的配置中使用 `compilerArgs` 进行传递，如下所示：
-
-```xml
-...
-<plugin>
-  <groupId>org.apache.maven.plugins</groupId>
-  <artifactId>maven-compiler-plugin</artifactId>
-  <version>3.8.1</version>
-  <configuration>
-    <source>1.8</source>
-    <target>1.8</target>
-    <annotationProcessorPaths>
-      <path>
-        <groupId>org.mapstruct</groupId>
-        <artifactId>mapstruct-processor</artifactId>
-        <version>${org.mapstruct.version}</version>
-      </path>
-    </annotationProcessorPaths>
-    <!-- due to problem in maven-compiler-plugin, for verbose mode add showWarnings -->
-    <showWarnings>true</showWarnings>
-    <compilerArgs>
-      <arg>
-        -Amapstruct.suppressGeneratorTimestamp=true
-      </arg>
-      <arg>
-        -Amapstruct.suppressGeneratorVersionInfoComment=true
-      </arg>
-      <arg>
-        -Amapstruct.verbose=true
-      </arg>
-    </compilerArgs>
-  </configuration>
-</plugin>
-...
-```
-
-列举常用选项：
-
-- `defaultComponentModel`，其常用的可选值有：
-  - `default`：映射器不使用组件模型，通常通过 `Mappers#getMapper(Class)` 检索实例；
-  - `spring`：生成的映射器是一个单例的 Spring Bean，可以通过 `@Autowired` 注解检索；
-  - 至于其他的 `cdi`、`jsr330` 等等请自行参考文档 https://mapstruct.org/documentation/stable/reference/html/#configuration-options
-- `defaultInjectionStrategy`：用于指定映射器（Mapper）中默认的依赖注入方式，该配置仅适用于基于注解的组件模型，例如 CDI（Contexts and Dependency Injection）、Spring 和 JSR 330。存在如下两个可选值：
-  - `field`（默认值）：使用字段注入依赖。在生成的映射类中，依赖的目标对象通常作为字段声明，并在映射方法之前通过字段注入进行初始化。
-  - `constructor`：使用构造函数注入依赖。在这种策略下，生成的映射类会创建构造函数，该构造函数将依赖的目标对象作为参数，通过构造函数注入来初始化依赖。
-
-### IDE 支持
-
-> [!quote]
-> [IDE Support – MapStruct](https://mapstruct.org/documentation/ide-support/)
-
-以 IntelliJ IDEA 为例，安装 [MapStruct Support - IntelliJ IDEs Plugin | Marketplace (jetbrains.com)](https://plugins.jetbrains.com/plugin/10036-mapstruct-support) 插件，该插件具备如下[特性](https://github.com/mapstruct/mapstruct-idea#features)：
-
-- 代码补全
-  ![](https://img.xiaorang.fun/202502281859583.gif)
-- 转到声明
-  ![](https://img.xiaorang.fun/202502281900241.gif)
-- 查找用法
-  ![](https://img.xiaorang.fun/202502281900562.png)
-- 高亮显示
-- 快速修复
 
 ## 定义映射器
 
@@ -251,44 +357,44 @@ MapStruct 代码生成器可以使用注解处理器选项进行配置。
 public interface CarMapper {
   @Mapping(target = "manufacturer", source = "make")
   @Mapping(target = "seatCount", source = "numberOfSeats")
-  CarDto carToCarDto(Car car);
+  CarDTO carToCarDTO(Car car);
 }
 ```
 
 `@Mapper` 注解会在构建过程中让 MapStruct 代码生成器生成 `CarMapper` 接口的实现。
 
-在生成的方法实现中，会将源类型（如，`Car`）中的所有可读属性复制到目标类型（如，`CarDto`）的相应属性中：
+在生成的方法实现中，会将源类型（如，`Car`）中的所有可读属性复制到目标类型（如，`CarDTO`）的相应属性中：
 
 - 当属性与目标实体的属性具有相同的名称时，它们将自动进行映射；
 - 如果目标实体中的属性名称与源属性不同，你可以使用 `@Mapping` 注解来指定它们之间的映射关系；
 
-为了更好地理解 MapStruct 的工作原理，请查看以下由 MapStruct 生成的 `carToCarDto()` 方法的实现：
+为了更好地理解 MapStruct 的工作原理，请查看以下由 MapStruct 生成的 `carToCarDTO()` 方法的实现：
 
 ```java
 // GENERATED CODE
 public class CarMapperImpl implements CarMapper {
 
   @Override
-  public CarDto carToCarDto(Car car) {
+  public CarDTO carToCarDTO(Car car) {
     if ( car == null ) {
       return null;
     }
 
-    CarDto carDto = new CarDto();
+    CarDTO carDTO = new CarDTO();
 
     if ( car.getFeatures() != null ) {
-      carDto.setFeatures( new ArrayList<String>( car.getFeatures() ) );
+      carDTO.setFeatures( new ArrayList<String>( car.getFeatures() ) );
     }
-    carDto.setManufacturer( car.getMake() );
-    carDto.setSeatCount( car.getNumberOfSeats() );
-    carDto.setDriver( personToPersonDto( car.getDriver() ) );
-    carDto.setPrice( String.valueOf( car.getPrice() ) );
+    carDTO.setManufacturer( car.getMake() );
+    carDTO.setSeatCount( car.getNumberOfSeats() );
+    carDTO.setDriver( personToPersonDTO( car.getDriver() ) );
+    carDTO.setPrice( String.valueOf( car.getPrice() ) );
     if ( car.getCategory() != null ) {
-      carDto.setCategory( car.getCategory().toString() );
+      carDTO.setCategory( car.getCategory().toString() );
     }
-    carDto.setEngine( engineToEngineDto( car.getEngine() ) );
+    carDTO.setEngine( engineToEngineDTO( car.getEngine() ) );
 
-    return carDto;
+    return carDTO;
   }
 }
 ```
@@ -297,29 +403,29 @@ MapStruct 的基本原理是生成看起来尽可能像是你亲手编写的代�
 
 ### 向映射器中添加自定义方法
 
-在某些情况下，可能需要手动实现一个从一种类型到另一种类型的特定映射，而这种映射是 MapStruct 无法生成的。处理这个问题的一种方法是在另一个类上实现自定义方法，然后由 MapStruct 生成的映射器使用该方法。或者，在使用 Java 8 或更高版本时，你可以**直接在映射器接口中实现自定义方法作为默认方法**。如果参数和返回类型匹配的话，生成的代码将调用这些默认方法。
+在某些情况下，可能需要**手动实现一个从一种类型到另一种类型的特定映射**，而这种映射是 MapStruct 无法生成的。处理这个问题的一种方法是在另一个类上实现自定义方法，然后由 MapStruct 生成的映射器使用该方法。或者，在使用 Java 8 或更高版本时，你可以**直接在映射器接口中实现自定义方法作为默认方法**。如果参数和返回类型匹配的话，生成的代码将调用这些默认方法。
 
-举个栗子，假设从 `Person` 到 `PersonDto` 的映射需要一些特殊逻辑，而这些特殊逻辑无法由 MapStruct 自动生成。然后，你可以像这样定义上一个示例中的映射器：
+举个栗子，假设从 `Person` 到 `PersonDTO` 的映射需要一些特殊逻辑，而这些特殊逻辑无法由 MapStruct 自动生成。然后，你可以像这样定义上一个示例中的映射器：
 
 ```java
 @Mapper
 public interface CarMapper {
-    CarMapper INSTANCE = Mappers.getMapper(CarMapper.class);
+  CarMapper INSTANCE = Mappers.getMapper(CarMapper.class);
 
-    @Mapping(source = "numberOfSeats", target = "seatCount")
-    CarDto carToCarDto(Car car);
-    
-    default PersonDto personToPersonDto(Person person) {
-        //hand-written mapping logic
-    }
+  @Mapping(source = "numberOfSeats", target = "seatCount")
+  CarDTO carToCarDTO(Car car);
+
+  default PersonDTO personToPersonDTO(Person person) {
+    //hand-written mapping logic
+  }
 }
 ```
 
-在 `carToCarDto ()` 方法中，MapStruct 会自动调用你手动实现的 `personToPersonDto ()` 方法，以确保 `driver` 属性得到正确的映射。
+在 `carToCarDTO()` 方法中，MapStruct 会自动调用你手动实现的 `personToPersonDTO()` 方法，以确保 `driver` 属性得到正确的映射。
 
 ### 使用抽象类代替接口
 
-当你定义一个映射器时，你可以**选择使用抽象类代替接口**。使用抽象类后，你**可以在映射器中直接编写自定义方法，并且还可以在映射器中声明额外的字段**。MapStruct 会自动生成一个扩展了你的抽象类的实现类，其中包含了所有必需的映射方法的实现。这样，你既可以在抽象类中编写自定义逻辑，又可以充分利用 MapStruct 的自动生成功能。与使用默认方法（在接口中声明的方法）相比，它允许你在映射器中添加额外的字段，这些字段可以在映射过程中使用。
+当你定义一个映射器时，你可以**选择使用抽象类代替接口**。使用抽象类后，你**可以在映射器中直接编写自定义方法，并且还可以在映射器中声明额外的字段**。MapStruct 会自动生成一个扩展了你的抽象类的实现类，其中包含了所有必需的映射方法的实现。这样，你既可以在抽象类中编写自定义逻辑，又可以充分利用 MapStruct 的自动生成功能。**与使用默认方法（在接口中声明的方法）相比，它允许你在映射器中添加额外的字段，这些字段可以在映射过程中使用**。
 
 可以将上面的栗子改成如下所示：
 
@@ -327,84 +433,61 @@ public interface CarMapper {
 @Mapper
 public abstract class CarMapper {
 
-    @Mapping(...)
-    ...
-    public abstract CarDto carToCarDto(Car car);
+  @Mapping(...)
+  ...
+    public abstract CarDTO carToCarDTO(Car car);
 
-    public PersonDto personToPersonDto(Person person) {
-        //hand-written mapping logic
-    }
+  public PersonDTO personToPersonDTO(Person person) {
+    //hand-written mapping logic
+  }
 }
 ```
 
-MapStruct 将生成一个 `CarMapper` 的子类，并且该子类重写了 `carToCarDto ()` 抽象方法。在生成的 `carToCarDto ()` 方法中，当映射 `driver` 属性时，它将调用手动实现的 `personToPersonDto ()` 方法。这意味着 MapStruct 会自动生成 `carToCarDto ()` 方法的实现，同时调用手动实现的 `personToPersonDto ()` 方法来处理 `driver` 属性的映射。
+MapStruct 将生成一个 `CarMapper` 的子类，并且该子类重写了 `carToCarDTO()` 抽象方法。在生成的 `carToCarDTO()` 方法中，当映射 `driver` 属性时，它将调用手动实现的 `personToPersonDTO()` 方法。这意味着 MapStruct 会自动生成 `carToCarDTO()` 方法的实现，同时调用手动实现的 `personToPersonDTO()` 方法来处理 `driver` 属性的映射。
 
-### 多来源参数的映射方法
+### 具有多个源参数的映射方法
 
-<mark style="background: #FFB8EBA6;">TODO</mark>
+MapStruct 支持带有**多个源参数**的映射方法，这在**合并多个实体对象到一个数据传输对象（DTO）** 时非常有用。
 
-## 与 Lombok 一起使用
+#### 多个源参数的映射方法
 
-MapStruct 从 1.2.0. Beta1 版本开始可以与 Lombok 1.16.14 及更高版本一起使用。MapStruct 会自动利用 Lombok 生成的 getter、setter 方法和构造函数，并在生成映射器时使用它们，从而减少手动编写代码的工作，让你的代码更简洁和易于维护，这两个工具的组合可以极大地提高开发效率。
-
-Lombok 在 1.18.16 版本中引入了一个重大变化，需要添加一个额外的注解处理器 `lombok-mapstruct-binding`（适用于 Maven 项目），否则的话 MapStruct 将无法与 Lombok 一起正常工作。这个注解处理器的作用是用来解决 Lombok 和 MapStruct 模块之间的编译问题。通过添加它，可以确保 Lombok 和 MapStruct 在项目中协同工作，并避免潜在的编译问题。
-
-完整配置如下所示：
-
-```xml
-<properties>
-    <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
-    <org.projectlombok.version>1.18.16</org.projectlombok.version>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-</properties>
-
-<dependencies>
-    <dependency>
-        <groupId>org.mapstruct</groupId>
-        <artifactId>mapstruct</artifactId>
-        <version>${org.mapstruct.version}</version>
-    </dependency>
-
-    <!-- lombok dependency should not end up on classpath -->
-    <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <version>${org.projectlombok.version}</version>
-        <scope>provided</scope>
-    </dependency>
-</dependencies>
-
-<build>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.8.1</version>
-            <configuration>
-                <source>1.8</source>
-                <target>1.8</target>
-                <annotationProcessorPaths>
-                    <path>
-                        <groupId>org.mapstruct</groupId>
-                        <artifactId>mapstruct-processor</artifactId>
-                        <version>${org.mapstruct.version}</version>
-                    </path>
-                    <path>
-                        <groupId>org.projectlombok</groupId>
-                        <artifactId>lombok</artifactId>
-                        <version>${org.projectlombok.version}</version>
-                    </path>
-
-                    <!-- additional annotation processor required as of Lombok 1.18.16 -->
-                    <path>
-                        <groupId>org.projectlombok</groupId>
-                        <artifactId>lombok-mapstruct-binding</artifactId>
-                        <version>0.2.0</version>
-                    </path>
-                </annotationProcessorPaths>
-            </configuration>
-        </plugin>
-    </plugins>
-</build>
+```java
+@Mapper
+public interface AddressMapper {
+  @Mapping(target = "description", source = "person.description")
+  @Mapping(target = "houseNumber", source = "address.houseNo")
+  DeliveryAddressDTO personAndAddressToDeliveryAddressDTO(Person person, Address address);
+}
 ```
+
+在上面的示例中：
+
+- 该方法接受两个源参数：`Person person` 和 `Address address`。
+- 目标对象 `DeliveryAddressDto` 是这两个源对象的组合。
+- **属性按名称匹配**，如果名称相同，则会自动映射。
+
+如果**多个源对象中有相同名称的属性**，必须使用 `@Mapping` 注解明确指定**从哪个源参数获取该属性**。否则，MapStruct **无法自动推断**，会抛出错误。如果某个属性**只在一个源对象中存在**，那么 `@Mapping` 注解**可以省略 `source`**，MapStruct 会自动识别。
+
+> [!warning]
+> 但是，只要使用 `@Mapping` 注解，就必须明确指定 `source` 参数。
+
+> [!tip]
+> - **如果所有源参数都是 `null`**，则映射方法会返回 `null`。
+> - **如果至少有一个源参数不为 `null`**，则目标对象会被实例化，并填充可用的属性。
+
+#### 直接引用源参数
+
+```java
+@Mapper
+public interface AddressMapper {
+  @Mapping(target = "description", source = "person.description")
+  @Mapping(target = "houseNumber", source = "hn")
+  DeliveryAddressDto personAndAddressToDeliveryAddressDto(Person person, Integer hn);
+}
+```
+
+在这个示例中：
+
+- `hn` 不是 `Address` 对象，而是一个**独立的整数参数**（`Integer`）。
+- 但它仍然可以直接映射到目标对象的 `houseNumber` 属性。
+- 说明 MapStruct **不仅支持 Bean 类型（如 `Person`、`Address`），也支持基本数据类型（如 `Integer`）作为源参数**。
