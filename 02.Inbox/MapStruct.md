@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/02/28 22:52
+update_time: 2025/03/01 12:46
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -123,7 +123,16 @@ class CarMapperTest {
 }
 ```
 
-## 安装
+## 设置
+
+MapStruct 是基于 JSR269 规范的 Java 注解处理器，因此可以在命令行构建（javac，Ant，Maven 等）以及 IDE 中使用。
+
+它包含以下组件:
+
+- `org.mapstruct`: 包含所需的注解，如 `@Mapping`；
+- `org.mapstruct:mapstruct-processor`: 包含生成映射器实现的注解处理器；
+
+### 安装
 
 对于 Maven 项目，如果想使用 MapStruct 的话，需要添加如下内容至 `pom.xml` 配置文件中：
 
@@ -162,15 +171,6 @@ class CarMapperTest {
   </plugins>
 </build>
 ```
-
-## 设置
-
-MapStruct 是基于 JSR269 规范的 Java 注解处理器，因此可以在命令行构建（javac，Ant，Maven 等）以及 IDE 中使用。
-
-它包含以下组件:
-
-- `org.mapstruct`: 包含所需的注解，如 `@Mapping`；
-- `org.mapstruct:mapstruct-processor`: 包含生成映射器实现的注解处理器；
 
 ### 配置选项
 
@@ -244,48 +244,52 @@ MapStruct 代码生成器可以使用注解处理器选项进行配置。
 
 ### 基本映射
 
-要创建一个映射器，只需定义一个具有所需映射方法的 Java 接口，并使用 `org.mapstruct.Mapper` 注释对其进行注释：
+要创建一个映射器，只需定义一个具有所需映射方法的 Java 接口，并使用 `org.mapstruct.Mapper` 注解对其进行标注：
 
 ```java
 @Mapper
 public interface CarMapper {
-    @Mapping(target = "manufacturer", source = "make")
-    @Mapping(target = "seatCount", source = "numberOfSeats")
-    CarDto carToCarDto(Car car);
-
-    @Mapping(target = "fullName", source = "name")
-    PersonDto personToPersonDto(Person person);
+  @Mapping(target = "manufacturer", source = "make")
+  @Mapping(target = "seatCount", source = "numberOfSeats")
+  CarDto carToCarDto(Car car);
 }
 ```
 
-`@Mapper` 注解会在构建过程中让 MapStruct 代码生成器生成 `CarMapper` 接口的实现代码。
+`@Mapper` 注解会在构建过程中让 MapStruct 代码生成器生成 `CarMapper` 接口的实现。
 
-在生成的方法实现中，会将源类型（例如，`Car`）中的所有可读属性复制到目标类型（例如，`CarDto`）的相应属性中：
+在生成的方法实现中，会将源类型（如，`Car`）中的所有可读属性复制到目标类型（如，`CarDto`）的相应属性中：
 
 - 当属性与目标实体的属性具有相同的名称时，它们将自动进行映射；
 - 如果目标实体中的属性名称与源属性不同，你可以使用 `@Mapping` 注解来指定它们之间的映射关系；
 
-为了更好地理解 MapStruct 的工作原理，请查看以下由 MapStruct 生成的 `carToCarDto ()` 方法的实现：
+为了更好地理解 MapStruct 的工作原理，请查看以下由 MapStruct 生成的 `carToCarDto()` 方法的实现：
 
 ```java
+// GENERATED CODE
 public class CarMapperImpl implements CarMapper {
 
-    @Override
-    public CarDto carToCarDto(Car car) {
-        if ( car == null ) {
-            return null;
-        }
-
-        CarDto carDto = new CarDto();
-
-        carDto.setSeatCount( car.getNumberOfSeats() );
-        carDto.setMake( car.getMake() );
-        if ( car.getType() != null ) {
-            carDto.setType( car.getType().name() );
-        }
-
-        return carDto;
+  @Override
+  public CarDto carToCarDto(Car car) {
+    if ( car == null ) {
+      return null;
     }
+
+    CarDto carDto = new CarDto();
+
+    if ( car.getFeatures() != null ) {
+      carDto.setFeatures( new ArrayList<String>( car.getFeatures() ) );
+    }
+    carDto.setManufacturer( car.getMake() );
+    carDto.setSeatCount( car.getNumberOfSeats() );
+    carDto.setDriver( personToPersonDto( car.getDriver() ) );
+    carDto.setPrice( String.valueOf( car.getPrice() ) );
+    if ( car.getCategory() != null ) {
+      carDto.setCategory( car.getCategory().toString() );
+    }
+    carDto.setEngine( engineToEngineDto( car.getEngine() ) );
+
+    return carDto;
+  }
 }
 ```
 
