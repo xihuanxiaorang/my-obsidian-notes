@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/01 22:35
+update_time: 2025/03/02 23:07
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -13,35 +13,24 @@ create_time: 2025-02-28T18:46:00
 
 ### What is it?
 
-MapStruct 是一个代码生成器，它基于**约定大于配置**的方式极大地简化了 Java Bean 类型之间映射的实现。生成的映射代码使用普通方法调用，因此是快速、类型安全和易于理解的。
+MapStruct 是一个代码生成器，采用 **约定大于配置** 的方式，大幅简化 Java Bean 之间的映射。生成的代码使用普通方法调用，无需反射，因此 **快速、类型安全、易读**。
 
 ### Why?
 
-多层应用程序通常需要在不同的对象模型（例如，实体和 DTO）之间进行映射。编写这样的映射代码是一项乏味且容易出错的任务。MapStruct 的目标是通过自动化的方式尽量简化这项任务。
-
-与其他映射框架相比，MapStruct 通过在编译时生成 Java Bean 映射，确保了高性能，同时为开发者提供了快速的反馈和全面的错误检查。
+多层应用程序需要在不同对象模型（如实体与 DTO）间转换，手写映射代码繁琐且易出错。MapStruct 通过 **编译时生成** 映射代码，提高性能，并提供完整的错误检查。
 
 ### How?
 
-MapStruct 是一个集成到 Java 编译器中的注解处理器，它可以在命令行构建工具（如 Maven、Gradle 等）中使用，也可以在你喜欢的集成开发环境（IDE）中使用。
+MapStruct 是 Java 注解处理器，可用于 **Maven、Gradle** 及 IDE。它提供合理的默认设置，同时允许开发者灵活配置。
 
-MapStruct 使用合理的默认设置，但在需要配置或实现特殊行为时也能给予开发者足够的灵活性。
+### Features
 
----
-
-MapStruct 是一个 **Java 注解处理器，用于为 Java Bean 类生成类型安全和性能良好的映射器**。
-
-你只需**定义一个映射器接口，其中声明所需的映射方法**。在<mark style="background: #BBFABBA6;">编译</mark>过程中，MapStruct 将**自动生成此接口的实现**。该实现使用普通的 Java 方法调用来进行源对象和目标对象之间的映射，不涉及反射等复杂机制。
-
-与手动编写映射代码相比，MapStruct 通过生成代码来帮助你节省时间，因为手动编写这些代码通常很繁琐且容易出错。遵循**约定大于配置**的方式，MapStruct 在大多数情况下都提供了合理的默认值，不过在需要配置或实现特殊行为时也能给予开发者足够的灵活性。
-
-与其他动态映射框架相比，MapStruct 具有以下优势：
-
-- 通过普通方法调用而不是反射来实现快速执行；
-- **编译时类型安全**: 只有可以相互映射的对象和属性才能进行映射，不会发生将订单实体映射到客户 DTO 等意外情况；
-- 在构建时提供清晰的错误报告，如果出现以下情况：
-  - 映射不完整 (未映射所有目标属性)；
-  - 映射不正确 (找不到正确的映射方法或类型转换)；
+MapStruct **基于注解定义映射器接口**，编译时自动生成实现类。其特点：
+- **无反射**，仅普通方法调用，提高执行速度；
+- **编译时类型安全**，防止错误映射；
+- **构建时错误报告**，如：
+    - 目标属性未映射；
+    - 找不到正确的映射方法。
 
 ## 设置
 
@@ -52,7 +41,7 @@ MapStruct 是基于 JSR269 规范的 Java 注解处理器，因此可以在命�
 - `org.mapstruct`: 包含所需的注解，如 `@Mapping`；
 - `org.mapstruct:mapstruct-processor`: 包含生成映射器实现的注解处理器；
 
-### 安装
+### 依赖
 
 对于 Maven 项目，如果想使用 MapStruct 的话，需要添加如下内容至 `pom.xml` 配置文件中：
 
@@ -138,7 +127,7 @@ MapStruct 代码生成器可以使用注解处理器选项进行配置。
 - `defaultComponentModel`，其常用的可选值有：
   - `default`：映射器不使用组件模型，通常通过 `Mappers#getMapper(Class)` 检索实例；
   - `spring`：生成的映射器是一个单例的 Spring Bean，可以通过 `@Autowired` 注解检索；
-  - 至于其他的 `cdi`、`jsr330` 等等请自行参考文档 https://mapstruct.org/documentation/stable/reference/html/#configuration-options
+  - 至于其他的 `cdi`、`jsr330` 等选项值请自行参考文档 https://mapstruct.org/documentation/stable/reference/html/#configuration-options
 - `defaultInjectionStrategy`：用于指定映射器（Mapper）中默认的依赖注入方式，该配置仅适用于基于注解的组件模型，例如 CDI（Contexts and Dependency Injection）、Spring 和 JSR 330。存在如下两个可选值：
   - `field`（默认值）：使用字段注入依赖。在生成的映射类中，依赖的目标对象通常作为字段声明，并在映射方法之前通过字段注入进行初始化。
   - `constructor`：使用构造函数注入依赖。在这种策略下，生成的映射类会创建构造函数，该构造函数将依赖的目标对象作为参数，通过构造函数注入来初始化依赖。
@@ -350,7 +339,7 @@ class CarMapperTest {
 
 ### 基本映射
 
-要创建一个映射器，只需定义一个具有所需映射方法的 Java 接口，并使用 `org.mapstruct.Mapper` 注解对其进行标注：
+要创建一个映射器，只需定义一个具有所需映射方法的 Java 接口，并使用 `@Mapper` 注解进行标注：
 
 ```java
 @Mapper
@@ -361,14 +350,14 @@ public interface CarMapper {
 }
 ```
 
-`@Mapper` 注解会在构建过程中让 MapStruct 代码生成器生成 `CarMapper` 接口的实现。
+`@Mapper` 注解会在构建时触发 MapStruct 生成 `CarMapper` 接口的实现。
 
-在生成的方法实现中，会将源类型（如，`Car`）中的所有可读属性复制到目标类型（如，`CarDTO`）的相应属性中：
+在生成的方法中，源类型（如 `Car`）的所有可读属性都会复制到目标类型（如 `CarDTO`）的对应属性中：
 
-- 当属性与目标实体的属性具有相同的名称时，它们将自动进行映射；
-- 如果目标实体中的属性名称与源属性不同，你可以使用 `@Mapping` 注解来指定它们之间的映射关系；
+- **同名属性会自动映射**。
+- **若名称不同，使用 `@Mapping` 注解指定映射关系**。
 
-为了更好地理解 MapStruct 的工作原理，请查看以下由 MapStruct 生成的 `carToCarDTO()` 方法的实现：
+以下是由 MapStruct 生成的 `carToCarDTO()` 方法实现：
 
 ```java
 // GENERATED CODE
@@ -399,15 +388,18 @@ public class CarMapperImpl implements CarMapper {
 }
 ```
 
-MapStruct 的基本原理是生成看起来尽可能像是你亲手编写的代码。特别是这意味着这些值是通过普通的 getter/setter 调用从源复制到目标，而不是通过反射或类似的方式。
+MapStruct 的基本原理是生成的代码尽可能接近手写代码，不使用反射，而是通过普通的 getter/setter 调用完成数据复制。
 
-### 向映射器中添加自定义方法
+### 添加自定义映射方法
 
-在某些情况下，可能需要**手动实现一个从一种类型到另一种类型的特定映射**，而这种映射是 MapStruct 无法生成的。处理这个问题的一种方法是在另一个类上实现自定义方法，然后由 MapStruct 生成的映射器使用该方法。或者，在使用 Java 8 或更高版本时，你可以**直接在映射器接口中实现自定义方法作为默认方法**。如果参数和返回类型匹配的话，生成的代码将调用这些默认方法。
+有时，某些类型转换**无法由 MapStruct 自动生成**，需要手动实现映射逻辑。可以通过以下两种方式添加自定义映射方法：
 
-举个栗子，假设从 `Person` 到 `PersonDTO` 的映射需要一些特殊逻辑，而这些特殊逻辑无法由 MapStruct 自动生成。然后，你可以像这样定义上一个示例中的映射器：
+1. **在单独的类中实现自定义方法**，然后让 MapStruct 使用它。
+2. **在映射器接口中定义默认方法**（Java 8+），MapStruct 会自动调用这些方法。
 
-```java
+手动实现 `Person` 到 `PersonDTO` 的映射方法：
+
+```java hl:8-10
 @Mapper
 public interface CarMapper {
   CarMapper INSTANCE = Mappers.getMapper(CarMapper.class);
@@ -416,7 +408,7 @@ public interface CarMapper {
   CarDTO carToCarDTO(Car car);
 
   default PersonDTO personToPersonDTO(Person person) {
-    //hand-written mapping logic
+    //手写映射逻辑
   }
 }
 ```
@@ -425,7 +417,7 @@ public interface CarMapper {
 
 ### 使用抽象类代替接口
 
-当你定义一个映射器时，你可以**选择使用抽象类代替接口**。使用抽象类后，你**可以在映射器中直接编写自定义方法，并且还可以在映射器中声明额外的字段**。MapStruct 会自动生成一个扩展了你的抽象类的实现类，其中包含了所有必需的映射方法的实现。这样，你既可以在抽象类中编写自定义逻辑，又可以充分利用 MapStruct 的自动生成功能。**与使用默认方法（在接口中声明的方法）相比，它允许你在映射器中添加额外的字段，这些字段可以在映射过程中使用**。
+定义映射器时，可以**使用抽象类代替接口**。这样可以**直接编写自定义方法，并在映射器中声明额外字段**。MapStruct 会自动生成一个继承该抽象类的实现类，**既能手写逻辑，又能利用 MapStruct 的自动生成功能**。与接口中的默认方法相比，抽象类允许定义字段，在映射过程中使用。
 
 可以将上面的栗子改成如下所示：
 
@@ -434,20 +426,19 @@ public interface CarMapper {
 public abstract class CarMapper {
 
   @Mapping(...)
-  ...
-    public abstract CarDTO carToCarDTO(Car car);
+  public abstract CarDTO carToCarDTO(Car car);
 
   public PersonDTO personToPersonDTO(Person person) {
-    //hand-written mapping logic
+    //手写映射逻辑
   }
 }
 ```
 
-MapStruct 将生成一个 `CarMapper` 的子类，并且该子类重写了 `carToCarDTO()` 抽象方法。在生成的 `carToCarDTO()` 方法中，当映射 `driver` 属性时，它将调用手动实现的 `personToPersonDTO()` 方法。这意味着 MapStruct 会自动生成 `carToCarDTO()` 方法的实现，同时调用手动实现的 `personToPersonDTO()` 方法来处理 `driver` 属性的映射。
+MapStruct 会生成 `CarMapper` 的子类，并重写 `carToCarDTO()` 抽象方法。当映射 `driver` 属性时，会自动调用你手动实现的 `personToPersonDTO()` 方法处理转换。
 
 ### 具有多个源参数的映射方法
 
-MapStruct 支持带有**多个源参数**的映射方法，这在**合并多个实体对象到一个数据传输对象（DTO）** 时非常有用。
+MapStruct 支持带有**多个源参数**的映射方法，适用于**合并多个实体对象到一个数据传输对象（DTO）**。
 
 #### 多个源参数的映射方法
 
@@ -460,34 +451,112 @@ public interface AddressMapper {
 }
 ```
 
-在上面的示例中：
-
 - 该方法接受两个源参数：`Person person` 和 `Address address`。
-- 目标对象 `DeliveryAddressDto` 是这两个源对象的组合。
-- **属性按名称匹配**，如果名称相同，则会自动映射。
+- 目标对象 `DeliveryAddressDTO` 是这两个源对象的组合。
+- **同名属性自动映射**，无需额外注解。
 
-如果**多个源对象中有相同名称的属性**，必须使用 `@Mapping` 注解明确指定**从哪个源参数获取该属性**。否则，MapStruct **无法自动推断**，会抛出错误。如果某个属性**只在一个源对象中存在**，那么 `@Mapping` 注解**可以省略 `source`**，MapStruct 会自动识别。
+如果**多个源对象中有相同名称的属性**时，则必须使用 `@Mapping` 注解明确指定**从哪个源参数获取该属性**。否则，MapStruct **无法自动推断**，会抛出错误。如果某个属性**只在某一个源对象中存在**，那么 `@Mapping` 注解可以省略，MapStruct 会自动识别。
 
 > [!warning]
-> 但是，只要使用 `@Mapping` 注解，就必须明确指定 `source` 参数。
+> - **只要使用 `@Mapping` 注解就必须明确指定 `source` 参数**。
+> - **所有源参数都为 `null` 时则映射方法返回 `null`**，只要有一个源参数不为 `null` 则会创建目标对象并填充可用属性。
 
-> [!tip]
-> - **如果所有源参数都是 `null`**，则映射方法会返回 `null`。
-> - **如果至少有一个源参数不为 `null`**，则目标对象会被实例化，并填充可用的属性。
-
-#### 直接引用源参数
+#### 直接引用非 Bean 类型的参数
 
 ```java
 @Mapper
 public interface AddressMapper {
   @Mapping(target = "description", source = "person.description")
   @Mapping(target = "houseNumber", source = "hn")
-  DeliveryAddressDto personAndAddressToDeliveryAddressDto(Person person, Integer hn);
+  DeliveryAddressDTO personAndAddressToDeliveryAddressDTO(Person person, Integer hn);
 }
 ```
 
-在这个示例中：
+在该示例中，`hn` 参数不是 `Address` 对象，而是一个**独立的整数类型参数**，但它仍然可以直接映射到目标对象的 `houseNumber` 属性。说明 MapStruct **不仅支持 Bean 类型（如 `Person`、`Address`），也支持基本数据类型（如 `Integer`）作为源参数**。
 
-- `hn` 不是 `Address` 对象，而是一个**独立的整数参数**（`Integer`）。
-- 但它仍然可以直接映射到目标对象的 `houseNumber` 属性。
-- 说明 MapStruct **不仅支持 Bean 类型（如 `Person`、`Address`），也支持基本数据类型（如 `Integer`）作为源参数**。
+### 将嵌套对象的属性映射到目标对象
+
+如果不想手动列出嵌套对象所有的属性，可以使用 `.` 作为 `target`。这样，MapStruct 会**自动将源对象的所有属性映射到目标对象**，无需逐个指定。
+
+```java
+@Mapper
+public interface CustomerMapper {
+  @Mapping( target = "name", source = "record.name" )
+  @Mapping( target = ".", source = "record" )
+  @Mapping( target = ".", source = "account" )
+  Customer customerDTOToCustomer(CustomerDTO customerDTO);
+}
+```
+
+在生成的代码中：
+
+- `CustomerDto.record` 中的所有属性会直接映射到 `Customer`，不需要手动列出每个属性。
+- `CustomerDto.account` 中的所有属性也会直接映射到 `Customer`。
+- 由于 `record` 和 `account` **可能存在相同属性**（如 `name`），可以使用 `@Mapping(target = "name", source = "record.name")` **显式指定来源**，解决冲突。
+
+适用场景：
+- **层级结构对象映射为扁平结构对象**（如 `CustomerDto` → `Customer`）。
+- **反向映射**时使用 `@InheritInverseConfiguration` 注解可减少重复代码。
+
+> [!info]- 何为反向映射？
+> `@InheritInverseConfiguration` 注解主要用于**反向映射**，即从 DTO 映射回实体（或反向操作）。当一个映射方法已经定义了 `@Mapping` 规则，可以使用 `@InheritInverseConfiguration` **自动继承**这些规则，避免重复书写相反方向的映射逻辑。
+>
+> ```java
+> @Mapper
+> public interface CustomerMapper {
+> 
+> @Mapping(target = "name", source = "record.name") 
+> @Mapping(target = ".", source = "record") 
+> @Mapping(target = ".", source = "account") 
+> Customer customerDtoToCustomer(CustomerDto customerDto);
+> 
+> @InheritInverseConfiguration
+> CustomerDto customerToCustomerDto(Customer customer);
+> }
+> ```
+>
+> ### **如何工作**
+>
+> 1. **`customerDtoToCustomer()`** 方法：
+>    - `record.name` → `Customer.name`
+>    - `record` 的所有属性 → `Customer`
+>    - `account` 的所有属性 → `Customer`
+> 2. **`customerToCustomerDto()`** 方法：
+>    - 不需要显式声明映射规则，因为 `@InheritInverseConfiguration` 注解会自动反向应用 `customerDtoToCustomer()` 的映射规则：
+>      - `Customer.name` → `record.name`
+>      - `Customer` 的所有属性 → `record`
+>      - `Customer` 的所有属性 → `account`
+>
+> ### **作用**
+>
+> - **避免重复代码**，只需定义一次映射规则，反向映射自动继承。
+> - **保持一致性**，不会因为手动编写反向规则而导致映射错误。
+>
+>
+>
+> 适用于**双向转换**的场景，如：
+>
+> - **DTO ↔ 实体**
+> - **请求对象 ↔ 数据库对象**
+
+### 更新现有 Bean 实例
+
+有时，我们希望**更新现有的目标对象**，而不是创建一个新的实例。这可以通过**在方法参数中添加目标对象，并使用 `@MappingTarget` 进行标注**来实现。
+
+```java
+@Mapper
+public interface CarMapper {
+  void updateCarFromDto(CarDto carDto, @MappingTarget Car car);
+}
+```
+
+- 该方法不会返回新对象，而是**直接修改传入的 `Car` 实例**，用 `CarDto` 的属性更新它。
+- **`@MappingTarget` 只能标注一个参数**，即需要更新的对象。
+- **方法返回值可以是 `void`**，也可以**返回 `Car`**，这样可以支持**链式调用**。
+
+更新目标对象时，`CollectionMappingStrategy` 决定**如何处理集合或 Map 类型的属性**：
+
+1. **`ACCESSOR_ONLY`（默认策略）**
+    - **清空目标集合**，然后用源对象的集合填充。
+2. **`ADDER_PREFERRED` 或 `TARGET_IMMUTABLE`**
+    - **不清空目标集合**，而是直接添加新值。

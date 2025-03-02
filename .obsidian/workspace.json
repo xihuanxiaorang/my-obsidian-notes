@@ -270,9 +270,12 @@
       "daily-notes:打开/创建今天的日记": false
     }
   },
-  "active": "0948d0fbdadd2109",
+  "active": "9bbed510414b75b1",
   "lastOpenFiles": [
+    "02.Inbox/Nacos-Discovery&Config.md",
     "02.Inbox/MapStruct.md",
+    "00.Overview/02 - 参考资料.md",
+    "02.Inbox/Maven.md",
     "02.Inbox/ApiFox.md",
     "01.Articles/Tools/Auto Dark Mode.md",
     "Zttachments/Pasted image 20250301131956.png",
@@ -281,7 +284,6 @@
     "Zttachments/PixPin_2025-03-01_13-06-58.png",
     "02.Inbox/反射.md",
     "00.Overview/01 - 任务清单.md",
-    "00.Overview/02 - 参考资料.md",
     "01.Articles/Tools/篡改猴(Tampermonkey).md",
     "01.Articles/Misc/如何选择开源协议.md",
     "01.Articles/Misc/搞定UML类图！.md",
@@ -302,9 +304,7 @@
     "01.Articles/Reading/阿里巴巴Java开发手册-嵩山版/分层领域模型规约(DO,PO,BO,DTO,VO).canvas",
     "03.Excalidraw/Drawing 2025-02-27 19.02.37.excalidraw.md",
     "02.Inbox/Java9 新特性.md",
-    "03.Excalidraw/C语言知识点03-函数的参数传递.md",
     "Zttachments/Pasted image 20250226175120.png",
-    "02.Inbox/分层领域模型规约.md",
     "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
     "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
     "01.Articles/Reading/阿里巴巴Java开发手册-嵩山版",
