@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/02 23:07
+update_time: 2025/03/03 22:12
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -335,7 +335,7 @@ class CarMapperTest {
 
 ## 定义映射器
 
-在本节中，您将学习如何使用 MapStruct 定义一个 Bean 映射器以及必须使用哪些选项来执行此操作。
+在本节中，你将学习如何使用 MapStruct 定义一个 Bean 映射器以及必须使用哪些选项来执行此操作。
 
 ### 基本映射
 
@@ -490,12 +490,12 @@ public interface CustomerMapper {
 
 在生成的代码中：
 
-- `CustomerDto.record` 中的所有属性会直接映射到 `Customer`，不需要手动列出每个属性。
-- `CustomerDto.account` 中的所有属性也会直接映射到 `Customer`。
+- `CustomerDTO.record` 中的所有属性会直接映射到 `Customer`，不需要手动列出每个属性。
+- `CustomerDTO.account` 中的所有属性也会直接映射到 `Customer`。
 - 由于 `record` 和 `account` **可能存在相同属性**（如 `name`），可以使用 `@Mapping(target = "name", source = "record.name")` **显式指定来源**，解决冲突。
 
 适用场景：
-- **层级结构对象映射为扁平结构对象**（如 `CustomerDto` → `Customer`）。
+- **层级结构对象映射为扁平结构对象**（如 `CustomerDTO` → `Customer`）。
 - **反向映射**时使用 `@InheritInverseConfiguration` 注解可减少重复代码。
 
 > [!info]- 何为反向映射？
@@ -508,21 +508,21 @@ public interface CustomerMapper {
 > @Mapping(target = "name", source = "record.name") 
 > @Mapping(target = ".", source = "record") 
 > @Mapping(target = ".", source = "account") 
-> Customer customerDtoToCustomer(CustomerDto customerDto);
+> Customer customerDTOToCustomer(CustomerDTO customerDTO);
 > 
 > @InheritInverseConfiguration
-> CustomerDto customerToCustomerDto(Customer customer);
+> CustomerDTO customerToCustomerDTO(Customer customer);
 > }
 > ```
 >
 > ### **如何工作**
 >
-> 1. **`customerDtoToCustomer()`** 方法：
+> 1. **`customerDTOToCustomer()`** 方法：
 >    - `record.name` → `Customer.name`
 >    - `record` 的所有属性 → `Customer`
 >    - `account` 的所有属性 → `Customer`
-> 2. **`customerToCustomerDto()`** 方法：
->    - 不需要显式声明映射规则，因为 `@InheritInverseConfiguration` 注解会自动反向应用 `customerDtoToCustomer()` 的映射规则：
+> 2. **`customerToCustomerDTO()`** 方法：
+>    - 不需要显式声明映射规则，因为 `@InheritInverseConfiguration` 注解会自动反向应用 `customerDTOToCustomer()` 的映射规则：
 >      - `Customer.name` → `record.name`
 >      - `Customer` 的所有属性 → `record`
 >      - `Customer` 的所有属性 → `account`
@@ -536,8 +536,8 @@ public interface CustomerMapper {
 >
 > 适用于**双向转换**的场景，如：
 >
-> - **DTO ↔ 实体**
-> - **请求对象 ↔ 数据库对象**
+> - **DTO ↔️ 实体**
+> - **请求对象 ↔️ 数据库对象**
 
 ### 更新现有 Bean 实例
 
@@ -546,11 +546,11 @@ public interface CustomerMapper {
 ```java
 @Mapper
 public interface CarMapper {
-  void updateCarFromDto(CarDto carDto, @MappingTarget Car car);
+  void updateCarFromDTO(CarDTO carDTO, @MappingTarget Car car);
 }
 ```
 
-- 该方法不会返回新对象，而是**直接修改传入的 `Car` 实例**，用 `CarDto` 的属性更新它。
+- 该方法不会返回新对象，而是**直接修改传入的 `Car` 实例**，用 `CarDTO` 的属性更新它。
 - **`@MappingTarget` 只能标注一个参数**，即需要更新的对象。
 - **方法返回值可以是 `void`**，也可以**返回 `Car`**，这样可以支持**链式调用**。
 
@@ -560,3 +560,148 @@ public interface CarMapper {
     - **清空目标集合**，然后用源对象的集合填充。
 2. **`ADDER_PREFERRED` 或 `TARGET_IMMUTABLE`**
     - **不清空目标集合**，而是直接添加新值。
+
+### 直接字段访问映射
+
+MapStruct 允许直接映射那些没有 getter/setter 方法的 `public` 字段。当 MapStruct 无法找到适合某个属性的 getter/setter 方法时，它将使用字段本身作为读/写访问器。
+
+- **读取访问器（read accessor）**：
+	- ✅被 `public` / `pubilc final` 修饰的字段才被视为读取访问器。
+	- ❌被 `static` 修饰的字段不被视为读取访问器。
+- **写入访问器（write accessor）**：
+	- ✅被 `public` 修饰的字段才被视为写入访问器。
+	- ❌被 `final` / `static` 修饰的字段不被视为写入访问器。
+
+举个栗子：
+
+```java
+public class Customer {
+  private Long id;
+  private String name;
+
+  //省略 getter/setter
+}
+
+public class CustomerDTO {
+  public Long id;
+  public String customerName;
+}
+
+@Mapper
+public interface CustomerMapper {
+  CustomerMapper INSTANCE = Mappers.getMapper(CustomerMapper.class);
+
+  @Mapping(target = "name", source = "customerName")
+  Customer toCustomer(CustomerDTO customerDTO);
+
+  @InheritInverseConfiguration
+  CustomerDTO fromCustomer(Customer customer);
+}
+```
+
+对于上述例子，生成的映射器如下所示：
+
+```java
+// GENERATED CODE
+public class CustomerMapperImpl implements CustomerMapper {
+
+  @Override
+  public Customer toCustomer(CustomerDTO customerDTO) {
+    // ...
+    customer.setId(customerDTO.id);
+    customer.setName(customerDTO.customerName);
+    // ...
+  }
+
+  @Override
+  public CustomerDTO fromCustomer(Customer customer) {
+    // ...
+    customerDTO.id = customer.getId();
+    customerDTO.customerName = customer.getName();
+    // ...
+  }
+}
+```
+
+在这个例子中，`CustomerDTO` 中的 `id` 和 `customerName` 字段将直接映射到 `Customer` 对象的相应字段。生成的映射代码将直接访问这些字段，无需通过 getter/setter 方法。
+
+### 使用构建器（Builder）
+
+MapStruct **支持使用构建器映射不可变对象**。在映射过程中，MapStruct 会检查目标类型是否有可用的构建器，并通过 `BuilderProvider`（[[04  - SPI 机制|SPI]]）自动选择合适的构建器。
+
+默认 `BuilderProvider` 认为一个类具备构建器需要满足以下条件：
+- **该类中有一个无参的公共静态构建器创建方法，该方法返回一个构建器实例。** 例如，`Person` 类中有一个返回 `PersonBuilder` 实例的公共静态方法。
+- **构建器类中有一个无参的公共方法（构建方法），该方法返回正在构建的类型实例。** 例如，`PersonBuilder` 类中有一个返回 `Person` 实例的方法。
+- 如果存在多个构建方法，MapStruct 将寻找名为 `build` 的方法，如果存在这样的方法，则将使用它，否则会产生编译错误。
+- 可以在 `@BeanMapping`、`@Mapper` 或 `@MapperConfig` 注解中使用 `@Builder` 来指定构建方法。
+- 如果存在多个满足上述条件的构建器创建方法，`DefaultBuilderProvider`（[[04  - SPI 机制|SPI]]）会抛出 `MoreThanOneBuilderCreationMethodException` 异常，并记录编译警告，同时不会使用任何构建器。
+
+如果满足条件，MapStruct 会调用构建器的 setter 方法（或类似的方法）进行属性映射，并最终调用 `build()` 方法创建对象实例。
+
+> [!tip]
+> 可以通过 `@Builder#disableBuilder` 关闭构建器支持。禁用后，MapStruct 将回退到标准的 getter/setter 方式进行映射。
+
+> [!tip]
+> 构建器类型也可以通过 **对象工厂（Object Factory）** 进行管理。例如，如果 `PersonBuilder` 具有对应的对象工厂，MapStruct 会**优先使用工厂创建 `PersonBuilder` 实例，而不是直接调用 `Person.builder()` 方法。**
+
+> [!warning]
+> 此外，构建器的使用会影响 `@BeforeMapping` 和 `@AfterMapping` 方法的行为。详情请参考[[#使用映射前和映射后方法进行映射定制]]。
+
+举个栗子：
+
+```java hl:9-11,22-24
+public class Person {
+=
+  private final String name;
+
+  protected Person(Person.Builder builder) {
+    this.name = builder.name;
+  }
+
+  public static Person.Builder builder() {
+    return new Person.Builder();
+  }
+
+  public static class Builder {
+
+    private String name;
+
+    public Builder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public Person build() {
+      return new Person(this);
+    }
+  }
+}
+```
+
+```java
+public interface PersonMapper {
+  Person map(PersonDTO dto);
+}
+```
+
+使用构建器生成的映射器实现如下所示：
+
+```java
+// GENERATED CODE
+public class PersonMapperImpl implements PersonMapper {
+  public Person map(PersonDTO dto) {
+    if (dto == null) {
+      return null;
+    }
+
+    Person.Builder builder = Person.builder();
+
+    builder.name( dto.getName() );
+
+    return builder.build();
+  }
+}
+```
+
+> [!tip]
+> 如果你想禁用构建器，可以将 `mapstruct.disableBuilders` 选项传递给编译器，例如：`-Amapstruct.disableBuilders=true`。

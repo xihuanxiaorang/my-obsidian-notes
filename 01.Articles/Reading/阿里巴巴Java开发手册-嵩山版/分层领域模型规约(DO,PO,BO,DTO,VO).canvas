@@ -81,25 +81,12 @@
       "y": 240
     },
     {
-      "color": "3",
-      "height": 280,
-      "id": "f0d1ddf88fad7263",
-      "styleAttributes": {
-        "textAlign": null
-      },
-      "text": "## 发车前\n1. 无论是 DO、BO、还是 VO....等。说到底都是用于区分和标识代码、并无强业务含义。即使不用、也可以写出完美无缺的代码。\n2. 不必过分纠结各种命名、适合自己的才是最好的。如 SysUserDo 和 SysUser 都可以表述数据库用户实体。",
-      "type": "text",
-      "width": 600,
-      "x": -240,
-      "y": -80
-    },
-    {
       "color": "1",
       "height": 280,
       "id": "f2008467a0967ba5",
       "styleAttributes": {
       },
-      "text": "【**强制**】类名使用 UpperCamelCase 风格,但以下情形例外: DO / BO / DTO / VO / AO /  PO / UID 等。\n\n- 正例: ForceCode / UserDO / HtmlDTO / XmlService / TcpUdpDeal / TaPromotion  \n- 反例: forcecode / UserDo / HTMLDto / XMLService / TCPUDPDeal / TAPromotion",
+      "text": "【**强制**】类名使用 UpperCamelCase 风格,但以下情形例外: DO / BO / DTO / VO / AO /  PO / UID 等。\n\n- ✅正例: ForceCode / UserDO / HtmlDTO / XmlService / TcpUdpDeal / TaPromotion  \n- ❌反例: forcecode / UserDo / HTMLDto / XMLService / TCPUDPDeal / TAPromotion",
       "type": "text",
       "width": 940,
       "x": 418,
@@ -116,6 +103,19 @@
       "width": 600,
       "x": -240,
       "y": 560
+    },
+    {
+      "color": "3",
+      "height": 280,
+      "id": "f0d1ddf88fad7263",
+      "styleAttributes": {
+        "textAlign": null
+      },
+      "text": "## 发车前\n1. 无论是 DO、BO、还是 VO....等。说到底都是用于区分和标识代码、并无强业务含义。即使不用、也可以写出完美无缺的代码。\n2. 不必过分纠结各种命名、适合自己的才是最好的。如 SysUserDo 和 SysUser 都可以表述数据库用户实体。\n\n#Java ",
+      "type": "text",
+      "width": 600,
+      "x": -240,
+      "y": -80
     }
   ]
 }
