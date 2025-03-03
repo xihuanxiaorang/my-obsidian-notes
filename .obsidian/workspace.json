@@ -105,7 +105,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "down",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -272,9 +272,9 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "02.Inbox/Nacos-Discovery&Config.md",
     "02.Inbox/MapStruct.md",
     "00.Overview/02 - 参考资料.md",
+    "02.Inbox/Nacos-Discovery&Config.md",
     "02.Inbox/Maven.md",
     "02.Inbox/ApiFox.md",
     "01.Articles/Tools/Auto Dark Mode.md",
