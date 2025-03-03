@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/03 22:12
+update_time: 2025/03/03 23:44
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -705,3 +705,79 @@ public class PersonMapperImpl implements PersonMapper {
 
 > [!tip]
 > 如果你想禁用构建器，可以将 `mapstruct.disableBuilders` 选项传递给编译器，例如：`-Amapstruct.disableBuilders=true`。
+
+### 使用构造函数（Constructor）
+
+MapStruct **支持使用构造函数映射目标类型**。在映射过程中，MapStruct 会优先检查目标类型是否存在[[#使用构建器（Builder）|构建器]]，如果没有构建器，MapStruct 会寻找一个可访问的构造函数。当存在多个构造函数时，MapStruct 会按照以下规则选择使用哪个构造函数：
+- 如果某个构造函数被 `@Default` 注解标记，则优先使用该构造函数。
+- 如果类中只有一个公共的（`public`）构造函数，则使用该构造函数，并忽略其他非公共的构造函数。
+- 如果存在无参构造函数，则使用该构造函数，并忽略其他构造函数。
+- 如果存在多个符合条件的构造函数，则会因为构造函数不明确而导致编译错误。为了解决歧义，可以使用 `@Default` 注解明确指定要使用的构造函数。
+
+举个栗子：决定使用哪个构造函数
+
+```java
+public class Vehicle {
+
+  protected Vehicle() { }
+
+  // MapStruct 选择此构造函数，因为它是唯一的 public 构造函数
+  public Vehicle(String color) { }
+}
+
+public class Car {
+
+  // MapStruct 选择此构造函数，因为它是一个无参构造函数
+  public Car() { }
+
+  public Car(String make, String color) { }
+}
+
+public class Truck {
+
+  public Truck() { }
+
+  // MapStruct 选择此构造函数，因为它被 @Default 注解标记
+  @Default
+  public Truck(String make, String color) { }
+}
+
+public class Van {
+
+  // MapStruct 无法选择构造函数，导致编译错误
+  public Van(String make) { }
+
+  public Van(String make, String color) { }
+}
+```
+
+使用构造函数进行映射时，MapStruct 会**根据构造函数的参数名称来匹配目标对象的属性**。如果构造函数带有 `@ConstructorProperties` 注解，MapStruct 会使用该注解来获取参数名称。
+
+> [!note]
+> 如果目标类型存在**对象工厂方法**或使用 `@ObjectFactory` 注解标记的方法，则**工厂方法的优先级高于构造函数**。在这种情况下，MapStruct 不会调用构造函数，而是使用工厂方法创建目标对象。
+
+举个栗子：使用构造函数映射
+
+```java
+public interface PersonMapper {
+  Person map(PersonDTO dto);
+}
+```
+
+生成的映射器实现如下所示：
+
+```java
+// GENERATED CODE
+public class PersonMapperImpl implements PersonMapper {
+  public Person map(PersonDTO dto) {
+    if (dto == null) {
+      return null;
+    }
+
+    String name = dto.getName();
+    String surname = dto.getSurname();
+
+    return new Person(name, surname);
+  }
+}
+```

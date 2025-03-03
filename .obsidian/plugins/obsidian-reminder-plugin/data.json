@@ -5,18 +5,19 @@
       {
         "title": "[[HTML5]] 🔺 ➕ 2025-02-08",
         "time": "2025-02-14",
-        "rowNumber": 28
+        "rowNumber": 27
       },
       {
         "title": "[[Maven]]  🔼 ➕ 2025-02-14",
         "time": "2025-02-15",
-        "rowNumber": 27
+        "rowNumber": 26
       }
     ]
   },
   "debug": false,
   "settings": {
     "reminderTime": "10:00",
+    "reminderTimeStep": 15,
     "laters": "In 30 minutes\nIn 1 hour\nIn 3 hours\nTomorrow\nNext week",
     "useSystemNotification": true,
     "autoCompleteTrigger": "(@",
