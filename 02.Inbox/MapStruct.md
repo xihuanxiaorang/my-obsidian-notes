@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/04 19:07
+update_time: 2025/03/04 23:18
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -82,7 +82,7 @@ MapStruct 是基于 JSR269 规范的 Java 注解处理器，因此可以在命�
 </build>
 ```
 
-### 配置选项
+### 编译选项
 
 MapStruct 代码生成器可以使用注解处理器选项进行配置。
 
@@ -124,11 +124,11 @@ MapStruct 代码生成器可以使用注解处理器选项进行配置。
 
 列举常用选项：
 
-- `defaultComponentModel`，其常用的可选值有：
+- `defaultComponentModel`，其常用的可选值有： ^d4dc33
   - `default`：映射器不使用组件模型，通常通过 `Mappers#getMapper(Class)` 检索实例；
   - `spring`：生成的映射器是一个单例的 Spring Bean，可以通过 `@Autowired` 注解检索；
   - 至于其他的 `cdi`、`jsr330` 等选项值请自行参考文档 https://mapstruct.org/documentation/stable/reference/html/#configuration-options
-- `defaultInjectionStrategy`：用于指定映射器（Mapper）中默认的依赖注入方式，该配置仅适用于基于注解的组件模型，例如 CDI（Contexts and Dependency Injection）、Spring 和 JSR 330。存在如下两个可选值：
+- `defaultInjectionStrategy`：用于指定映射器（Mapper）中默认的依赖注入方式，该配置仅适用于基于注解的组件模型，例如 CDI（Contexts and Dependency Injection）、Spring 和 JSR 330。存在如下两个可选值： ^e705d4
   - `field`（默认值）：使用字段注入依赖。在生成的映射类中，依赖的目标对象通常作为字段声明，并在映射方法之前通过字段注入进行初始化。
   - `constructor`：使用构造函数注入依赖。在这种策略下，生成的映射类会创建构造函数，该构造函数将依赖的目标对象作为参数，通过构造函数注入来初始化依赖。
 
@@ -941,3 +941,92 @@ public interface MyAnnotatedWithJavadocMapper {
   //...
 }
 ```
+
+## 获取映射器实例
+
+### 使用 Mappers 工厂（无依赖注入）
+
+如果不使用依赖注入（DI）框架，可以通过 `org.mapstruct.factory.Mappers` 类获取映射器实例。只需调用 `getMapper()` 方法，并传入映射器接口类型即可。
+举个栗子：使用 `Mappers` 工厂获取映射器实例
+
+```java
+CarMapper mapper = Mappers.getMapper( CarMapper.class );
+```
+
+按照惯例，映射器接口应该定义一个名为 `INSTANCE` 的静态成员，该成员用于保存映射器类型的单例对象。
+举个栗子：在接口中声明映射器实例
+
+```java
+@Mapper
+public interface CarMapper {
+  CarMapper INSTANCE = Mappers.getMapper(CarMapper.class);
+
+  CarDTO carToCarDTO(Car car);
+}
+```
+
+举个栗子：在抽象类中声明映射器实例
+
+```java
+@Mapper
+public abstract class CarMapper {
+  public static final CarMapper INSTANCE = Mappers.getMapper(CarMapper.class);
+
+  CarDTO carToCarDTO(Car car);
+}
+```
+
+这种方式使得客户端可以很轻松地获取映射器对象，而无需重复创建新实例。
+举个栗子：获取映射器实例
+
+```java
+Car car = ...;
+CarDTO dto = CarMapper.INSTANCE.carToCarDTO(car);
+```
+
+> [!note]
+> 由 MapStruct 生成的映射器是**无状态且线程安全的**，因此可以安全地在多个线程中共享使用。
+
+### 使用依赖注入
+
+如果你正在使用依赖注入框架，如 CDI（Java EE 的上下文和依赖注入）或 Spring 框架，建议**通过依赖注入地方式获取映射器实例**，而不是通过上述的 `Mappers` 工厂。为此，你可以通过 `@Mapper(componentModel = "spring")` 或 `@Mapper(componentModel = "cdi")` 指定组件模型，或者在[[#^d4dc33|编译选项]]中配置全局默认组件模型。
+
+目前支持 CDI 和 Spring（后者可通过其自定义注解或使用 JSR 330 注解）。请参阅[[#^d4dc33|编译选项]]以了解 `componentModel` 属性的可选值，这些值与 `mapstruct.defaultComponentModel` 处理器选项相同，常量定义在 `MappingConstants.ComponentModel` 类中。在这两种情况下，都会在生成的映射器实现类中添加上所需的注解，以便使其可以进行依赖注入。以下是一个使用 CDI 的示例：
+
+```java
+@Mapper(componentModel = MappingConstants.ComponentModel.CDI)
+public interface CarMapper {
+  CarDTO carToCarDTO(Car car);
+}
+```
+
+生成的映射器实现将自动加上 `@ApplicationScoped` 注解，因此可以使用 `@Inject` 注解注入到字段、构造函数参数等中。
+
+举个栗子：通过依赖注入获取映射器
+
+```java
+@Inject
+private CarMapper mapper;
+```
+
+使用其他映射器类（参见[[#调用其他映射器]]）的映射器时将按照相同配置的组件模型进行注入。因此，如果前一个示例中的 `CarMapper` 使用了另一个映射器，那么这个其他映射器也必须是可注入的 CDI Bean。
+
+### 注入策略
+
+在[[#使用依赖注入]]时，可以选择构造函数注入、字段注入或 setter 注入，通过 `@Mapper` 或 `@MapperConfig` 注解指定 `injectionStrategy` 参数来配置注入策略。
+
+举个栗子：使用构造函数注入
+
+```java
+@Mapper(componentModel = MappingConstants.ComponentModel.CDI, 
+        uses = EngineMapper.class, 
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+public interface CarMapper {
+  CarDTO carToCarDTO(Car car);
+}
+```
+
+- **默认使用字段注入**，但可以通过[[#^e705d4|编译选项]]修改默认的注入策略。
+- 👍**建议使用构造器注入**，因为它更符合**依赖倒置原则**（Dependency Inversion Principle），更方便测试。
+- 在 Spring 中定义具有**循环依赖**的映射器时，可能导致编译失败，这时应使用 **setter 注入** 的方式来解决。
+- 对于抽象类或装饰器，应使用 setter 注入的方式。
