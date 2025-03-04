@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/04 18:21
+update_time: 2025/03/04 19:07
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -832,3 +832,112 @@ MapStruct 在由 Map ➡️ Bean 转换时，仍然遵循普通对象映射的�
 
 > [!warning]
 > 如果使用**原始类型的 Map（即 Map 没有泛型参数）**，或者 Map 的键**不是 `String` 类型**，则 MapStruct 会生成警告。不过，如果将 Map 作为一个整体直接映射到目标的某个属性（即 Map 直接作为 Bean 的一个字段），则不会触发警告。
+
+### 添加注解
+
+有时其他框架需要你在特定类上添加注解，以便框架能够正确识别和管理映射器（Mapper）。MapStruct 提供了 `@AnnotateWith` 注解，可用于在指定位置生成额外的注解。
+例如，Apache Camel 提供了一个 `@Converter` 注解，你可以通过 `@AnnotateWith` 注解让 MapStruct 在编译时自动为映射器添加 `@Converter` 注解。
+
+举个栗子：
+
+```java
+@Mapper
+@AnnotateWith(
+  value = Converter.class,
+  elements = @AnnotateWith.Element(name = "generateBulkLoader", booleans = true)
+)
+public interface MyConverter {
+  @AnnotateWith(Converter.class)
+  DomainObject map(DtoObject dto);
+}
+```
+
+在这个示例中， `MyConverter` 接口使用 `@AnnotateWith` 注解来指定在生成的实现类上添加 `@Converter` 注解，并设置 `generateBulkLoader` 属性为 `true`。同时，`map()` 方法也添加 `@Converter` 注解，表明它是一个转换方法。
+
+生成的映射器代码实现：
+
+```java hl:2,4
+// GENERATED CODE
+@Converter(generateBulkLoader = true)
+public class MyConverterImpl implements MyConverter {
+  @Converter
+  public DomainObject map(DtoObject dto) {
+    // 默认的映射逻辑
+  }
+}
+```
+
+### 添加 Javadoc 注释
+
+MapStruct 允许使用 `@Javadoc` 注解在生成的映射器实现类中自动添加 Javadoc 注释。这对于需要遵循特定的 Javadoc 规范，或者需要满足 Javadoc 校验要求的项目来说特别有用。
+`@Javadoc` 提供了多个参数，分别对应不同的 Javadoc 元素，例如：类描述、作者、版本信息、弃用说明等。
+
+举个栗子：
+
+```java
+@Mapper
+@Javadoc(
+  value = "This is the description",
+  authors = { "author1", "author2" },
+  deprecated = "Use {@link OtherMapper} instead",
+  since = "0.1"
+)
+public interface MyAnnotatedWithJavadocMapper {
+  //...
+}
+```
+
+生成的映射器代码实现：
+
+```java
+/**
+* This is the description
+*
+* @author author1
+* @author author2
+*
+* @deprecated Use {@link OtherMapper} instead
+* @since 0.1
+*/
+public class MyAnnotatedWithJavadocMapperImpl implements MyAnnotatedWithJavadocMapper {
+  //...
+}
+```
+
+也可以直接提供整个 Javadoc 注释块。
+
+```java
+@Mapper
+@Javadoc(
+  "This is the description\n"
+  + "\n"
+  + "@author author1\n"
+  + "@author author2\n"
+  + "\n"
+  + "@deprecated Use {@link OtherMapper} instead\n"
+  + "@since 0.1\n"
+)
+public interface MyAnnotatedWithJavadocMapper {
+  //...
+}
+```
+
+如果使用 JDK15+，可以使用**文本块（`"""`**）。
+
+```java
+@Mapper
+@Javadoc(
+  """
+  This is the description
+
+  @author author1
+  @author author2
+
+  @deprecated Use {@link OtherMapper} instead
+  @since 0.1
+  """
+)
+public interface MyAnnotatedWithJavadocMapper {
+  //...
+}
+```
