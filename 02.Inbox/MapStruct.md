@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/03 23:44
+update_time: 2025/03/04 18:21
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -261,6 +261,9 @@ public class CarDTO {
 
 ### 映射器接口
 
+> [!tip]
+> 在实际项目中，建议使用 `Convert` 作为后缀，并将其放入 `convert` 包下，以避免与 MyBatis 的 `Mapper` 产生歧义。
+
 为了生成一个映射器用于将 `Car` 对象转换为 `CarDTO` 对象，需要定义一个映射器接口，如下所示：
 
 ```java
@@ -517,13 +520,13 @@ public interface CustomerMapper {
 >
 > ### **如何工作**
 >
-> 1. **`customerDTOToCustomer()`** 方法：
->    - `record.name` → `Customer.name`
+> 1. **`customerDTOToCustomer ()`** 方法：
+>    - `record. name` → `Customer. name`
 >    - `record` 的所有属性 → `Customer`
 >    - `account` 的所有属性 → `Customer`
-> 2. **`customerToCustomerDTO()`** 方法：
->    - 不需要显式声明映射规则，因为 `@InheritInverseConfiguration` 注解会自动反向应用 `customerDTOToCustomer()` 的映射规则：
->      - `Customer.name` → `record.name`
+> 2. **`customerToCustomerDTO ()`** 方法：
+>    - 不需要显式声明映射规则，因为 `@InheritInverseConfiguration` 注解会自动反向应用 `customerDTOToCustomer ()` 的映射规则：
+>      - `Customer. name` → `record. name`
 >      - `Customer` 的所有属性 → `record`
 >      - `Customer` 的所有属性 → `account`
 >
@@ -599,7 +602,7 @@ public interface CustomerMapper {
 }
 ```
 
-对于上述例子，生成的映射器如下所示：
+对于上述例子，生成的映射器代码实现：
 
 ```java
 // GENERATED CODE
@@ -636,13 +639,13 @@ MapStruct **支持使用构建器映射不可变对象**。在映射过程中，
 - 可以在 `@BeanMapping`、`@Mapper` 或 `@MapperConfig` 注解中使用 `@Builder` 来指定构建方法。
 - 如果存在多个满足上述条件的构建器创建方法，`DefaultBuilderProvider`（[[04  - SPI 机制|SPI]]）会抛出 `MoreThanOneBuilderCreationMethodException` 异常，并记录编译警告，同时不会使用任何构建器。
 
-如果满足条件，MapStruct 会调用构建器的 setter 方法（或类似的方法）进行属性映射，并最终调用 `build()` 方法创建对象实例。
+如果满足条件，MapStruct 会调用构建器的 setter 方法（或类似的方法）进行属性映射，并最终调用 `build ()` 方法创建对象实例。
 
 > [!tip]
-> 可以通过 `@Builder#disableBuilder` 关闭构建器支持。禁用后，MapStruct 将回退到标准的 getter/setter 方式进行映射。
+> 可以通过 `@Builder #disableBuilder ` 关闭构建器支持。禁用后，MapStruct 将回退到标准的 getter/setter 方式进行映射。
 
 > [!tip]
-> 构建器类型也可以通过 **对象工厂（Object Factory）** 进行管理。例如，如果 `PersonBuilder` 具有对应的对象工厂，MapStruct 会**优先使用工厂创建 `PersonBuilder` 实例，而不是直接调用 `Person.builder()` 方法。**
+> 构建器类型也可以通过 **对象工厂（Object Factory）** 进行管理。例如，如果 `PersonBuilder` 具有对应的对象工厂，MapStruct 会**优先使用工厂创建 `PersonBuilder` 实例，而不是直接调用 `Person.builder ()` 方法。**
 
 > [!warning]
 > 此外，构建器的使用会影响 `@BeforeMapping` 和 `@AfterMapping` 方法的行为。详情请参考[[#使用映射前和映射后方法进行映射定制]]。
@@ -684,7 +687,7 @@ public interface PersonMapper {
 }
 ```
 
-使用构建器生成的映射器实现如下所示：
+使用构建器生成的映射器代码实现：
 
 ```java
 // GENERATED CODE
@@ -704,7 +707,7 @@ public class PersonMapperImpl implements PersonMapper {
 ```
 
 > [!tip]
-> 如果你想禁用构建器，可以将 `mapstruct.disableBuilders` 选项传递给编译器，例如：`-Amapstruct.disableBuilders=true`。
+> 如果你想禁用构建器，可以将 `mapstruct. disableBuilders` 选项传递给编译器，例如：`-Amapstruct. disableBuilders=true`。
 
 ### 使用构造函数（Constructor）
 
@@ -756,7 +759,7 @@ public class Van {
 > [!note]
 > 如果目标类型存在**对象工厂方法**或使用 `@ObjectFactory` 注解标记的方法，则**工厂方法的优先级高于构造函数**。在这种情况下，MapStruct 不会调用构造函数，而是使用工厂方法创建目标对象。
 
-举个栗子：使用构造函数映射
+举个栗子：
 
 ```java
 public interface PersonMapper {
@@ -764,7 +767,7 @@ public interface PersonMapper {
 }
 ```
 
-生成的映射器实现如下所示：
+生成的映射器代码实现：
 
 ```java
 // GENERATED CODE
@@ -781,3 +784,51 @@ public class PersonMapperImpl implements PersonMapper {
   }
 }
 ```
+
+### 映射 Map 到 Bean
+
+在某些情况下，可能需要将 `Map<String, ???>` 映射到特定的 Java Bean 中。MapStruct 提供了一种透明的方式来进行此类映射，即通过目标 Bean 的属性（或 `@Mapping#source` 显式指定的属性）来提取 Map 中的值。
+
+举个栗子：
+
+```java
+public class Customer {
+  private Long id;
+  private String name;
+  // 省略 getter/setter
+}
+
+@Mapper
+public interface CustomerMapper {
+  @Mapping(target = "name", source = "customerName")
+  Customer toCustomer(Map<String, String> map);
+}
+```
+
+生成的映射器代码实现：
+
+```java
+// GENERATED CODE
+public class CustomerMapperImpl implements CustomerMapper {
+  @Override
+  public Customer toCustomer(Map<String, String> map) {
+    // ...
+    if ( map.containsKey( "id" ) ) {
+      customer.setId( Integer.parseInt( map.get( "id" ) ) );
+    }
+    if ( map.containsKey( "customerName" ) ) {
+      customer.setName( map.get( "customerName" ) );
+    }
+    // ...
+  }
+}
+```
+
+MapStruct 在由 Map ➡️ Bean 转换时，仍然遵循普通对象映射的所有规则，包括：
+- ✅**自动类型转换**（如果源字段和目标字段类型不同，MapStruct 会尝试自动转换）
+- ✅**支持 `@Mapping` 自定义字段映射**
+- ✅**支持 `@Mapper#uses` 关联其他映射器进行复杂类型转换**
+- ✅**使用自定义转换方法**（在映射器中写 `default` 方法）
+
+> [!warning]
+> 如果使用**原始类型的 Map（即 Map 没有泛型参数）**，或者 Map 的键**不是 `String` 类型**，则 MapStruct 会生成警告。不过，如果将 Map 作为一个整体直接映射到目标的某个属性（即 Map 直接作为 Bean 的一个字段），则不会触发警告。
