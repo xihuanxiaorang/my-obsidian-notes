@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/05 23:07
+update_time: 2025/03/05 23:09
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -1091,18 +1091,18 @@ MapStruct 在许多情况下会自动处理类型转换。例如：
   - `java.util.Calendar` / `java.util.Date` 和 JAXB 的 `XMLGregorianCalendar` 之间。
   - `XMLGregorianCalendar` / **`java.util.Date` 和 `String`** 之间。可以通过 `dateFormat` 选项指定一个 `java.text.SimpleDateFormat` 可以理解的格式字符串。
 
-    举个栗子：`Date` ➡️ `String`
+  举个栗子：`Date` ➡️ `String`
 
-	  ```java
-	  @Mapper
-	  public interface CarMapper {
-	    @Mapping(source = "manufacturingDate", dateFormat = "dd.MM.yyyy")
-	    CarDTO carToCarDTO(Car car);
-	  
-	    @IterableMapping(dateFormat = "dd.MM.yyyy")
-	    List<String> stringListToDateList(List<Date> dates);
-	  }
-	  ```
+	```java
+	@Mapper
+	public interface CarMapper {
+		@Mapping(source = "manufacturingDate", dateFormat = "dd.MM.yyyy")
+		CarDTO carToCarDTO(Car car);
+		
+		@IterableMapping(dateFormat = "dd.MM.yyyy")
+		List<String> stringListToDateList(List<Date> dates);
+	}
+	```
 
 - Joda-Time 相关类型：
   - Joda 的 `org.joda.time.DateTime`、`org.joda.time.LocalDateTime`、`org.joda.time.LocalDate`、`org.joda.time.LocalTime` 和 `String` 之间。可以通过 `dateFormat` 选项指定一个 `java.text.SimpleDateFormat` 可以理解的格式字符串。
