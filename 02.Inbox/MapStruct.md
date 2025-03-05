@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/04 23:18
+update_time: 2025/03/05 23:07
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -1030,3 +1030,117 @@ public interface CarMapper {
 - 👍**建议使用构造器注入**，因为它更符合**依赖倒置原则**（Dependency Inversion Principle），更方便测试。
 - 在 Spring 中定义具有**循环依赖**的映射器时，可能导致编译失败，这时应使用 **setter 注入** 的方式来解决。
 - 对于抽象类或装饰器，应使用 setter 注入的方式。
+
+## 数据类型转换
+
+在映射过程中，源对象和目标对象的属性类型可能不同。例如，源对象的某个属性可能是 `int` 类型，而目标对象对应属性是 `Long` 类型。
+此外，某些对象引用也可能需要转换成目标模型的对应类型。例如，`Car` 类可能有一个类型为 `Person` 的 `driver` 属性，当映射一个 `Car` 对象时，需要将其转换为 `PersonDTO` 对象。
+
+### 隐式类型转换
+
+MapStruct 在许多情况下会自动处理类型转换。例如：
+- `int` ➡️ `String`：自动调用 ` String.valueOf(int) `
+- `String` ➡️ `int`：自动调用 ` Integer.parseInt(String) `
+
+支持的自动转换包括：
+
+- 所有 Java **基本数据类型及其对应的包装类型**之间，例如 `int` 和 `Integer`，`boolean` 和 `Boolean` 等。生成的代码会进行空值（`null`）检查，即在将包装类型转换为相应的基本类型时会执行空值检查。
+- 所有 Java **数值类型**之间，例如 `int` 和 `long` 或 `byte` 和 `Integer`。
+
+  > [!warning]
+  >
+  > 从较大范围的数据类型转换为较小范围的数据类型（例如从 `long` 到 `int`）可能会导致数据溢出或精度损失。
+  > 可以通过 `@Mapper` 和 `@MapperConfig` 注解中的 `typeConversionPolicy` 属性来控制输出警告或者错误。由于向后兼容的原因，默认值是 `ReportingPolicy.IGNORE`。
+
+- 所有 Java **基本数据类型（包括其包装类型）和字符串 `String`** 之间，例如 `int` 和 `String` 或 `Boolean` 和 `String`。可以指定一个 `java.text.DecimalFormat` 可以理解的格式字符串。
+
+  举个栗子：`int` ➡️ `String`
+
+	```java
+	@Mapper
+	public interface CarMapper {
+	  @Mapping(source = "price", numberFormat = "$#.00")
+	  CarDTO carToCarDTO(Car car);
+	
+	  @IterableMapping(numberFormat = "$#.00")
+	  List<String> prices(List<Integer> prices);
+	}
+	```
+
+- **枚举类型转换**
+  - 枚举类型 ↔️ `String`
+  - 枚举类型 ↔️ `Integer`，使用 `enum.ordinal()`
+
+    > [!note]
+    > 从 `Integer` 类型转换为枚举类型时，值必须小于枚举值的数量（`enum.values().length`），否则会抛出 `ArrayOutOfBoundsException` 异常！
+
+- **大数值类型（`java.math.BigInteger`，`java.math.BigDecimal`）和 Java 基本类型（包括其包装类型）以及 `String`** 之间。可以指定一个 `java.text.DecimalFormat` 可以理解的格式字符串。
+
+  举个栗子：`BigDecimal` ➡️ `String`
+
+	```java
+	@Mapper
+	public interface CarMapper {
+	  @Mapping(source = "power", numberFormat = "#.##E0")
+	  CarDTO carToCarDTO(Car car);
+	}
+	```
+
+- JAXB 相关类型：
+  - `JAXBElement<T>` 和 `T`，`List<JAXBElement<T>>` 和 `List<T>` 之间。
+  - `java.util.Calendar` / `java.util.Date` 和 JAXB 的 `XMLGregorianCalendar` 之间。
+  - `XMLGregorianCalendar` / **`java.util.Date` 和 `String`** 之间。可以通过 `dateFormat` 选项指定一个 `java.text.SimpleDateFormat` 可以理解的格式字符串。
+
+    举个栗子：`Date` ➡️ `String`
+
+	  ```java
+	  @Mapper
+	  public interface CarMapper {
+	    @Mapping(source = "manufacturingDate", dateFormat = "dd.MM.yyyy")
+	    CarDTO carToCarDTO(Car car);
+	  
+	    @IterableMapping(dateFormat = "dd.MM.yyyy")
+	    List<String> stringListToDateList(List<Date> dates);
+	  }
+	  ```
+
+- Joda-Time 相关类型：
+  - Joda 的 `org.joda.time.DateTime`、`org.joda.time.LocalDateTime`、`org.joda.time.LocalDate`、`org.joda.time.LocalTime` 和 `String` 之间。可以通过 `dateFormat` 选项指定一个 `java.text.SimpleDateFormat` 可以理解的格式字符串。
+  - Joda 的 `org.joda.time.DateTime` 和 `javax.xml.datatype.XMLGregorianCalendar`，`java.util.Calendar` 之间。
+  - Joda 的 `org.joda.time.LocalDateTime`、`org.joda.time.LocalDate` 和 `javax.xml.datatype.XMLGregorianCalendar`，`java.util.Date` 之间。
+- Java 8 日期时间 API：
+  - `java.time.LocalDate`、`java.time.LocalDateTime` 和 `javax.xml.datatype.XMLGregorianCalendar` 之间。
+  - `java.time.ZonedDateTime`、**`java.time.LocalDateTime`、`java.time.LocalDate`、`java.time.LocalTime` 和 `String`** 之间。可以通过 `dateFormat` 选项指定一个 `java.text.SimpleDateFormat` 可以理解的格式字符串。
+  - **`java.time.Instant`、`java.time.Duration`、`java.time.Period` 和 `String`** 之间，使用每个类的解析方法从 `String` 映射，并使用 `toString` 映射到 `String`。
+  - `java.time.ZonedDateTime` 和 `java.util.Date` 之间，当从给定的 `Date` 映射 `ZonedDateTime` 时，使用系统默认时区。
+  - **`java.time.LocalDateTime` 和 `java.util.Date`** 之间，使用 UTC 作为时区。
+  - **`java.time.LocalDate` 和 `java.util.Date` / `java.sql.Date`** 之间，使用 UTC 作为时区。
+  - **`java.time.Instant` 和 `java.util.Date`** 之间。
+  - **`java.time.LocalDateTime` 和 `java.time.LocalDate`** 之间。
+  - `java.time.ZonedDateTime` 和 `java.util.Calendar` 之间。
+- SQL 时间类型：
+  - **`java.sql.Date` 和 `java.util.Date`** 之间。
+  - **`java.sql.Time` 和 `java.util.Date`** 之间。
+  - **`java.sql.Timestamp` 和 `java.util.Date`** 之间。
+- `java.util.Currency` 和 `String` 之间。
+
+    > [!note]
+    >
+    > 由 `String` ➡️ `java.util.Currency` 时，值必须是有效的 ISO-4217 货币代码，否则会抛出 `IllegalArgumentException` 异常！
+
+- `java.util.UUID` 和 `String` 之间。
+
+    > [!note]
+    >
+    > 由 `String` ➡️ `java.util.UUID` 时，值必须是有效的 UUID，否则会抛出 `IllegalArgumentException` 异常！
+
+- **`String` 和 `StringBuilder`** 之间。
+- `java.net.URL` 和 `String` 之间。
+
+    > [!note]
+    >
+    > 由 `String` ➡️ `java.net.URL` 时，值必须是有效的 URL，否则会抛出 `MalformedURLException` 异常！
+
+- `java.util.Locale` 和 `String` 之间。
+    - `java.util.Locale` ➡️ `String`：生成的字符串将是一个格式良好的 IETF BCP 47 语言标签，表示该区域设置。
+    - `String` ➡️ `java.util.Locale`：返回最能代表该语言标签的区域设置。
