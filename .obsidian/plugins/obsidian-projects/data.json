@@ -204,7 +204,7 @@
               "tags",
               "Storyline"
             ],
-            "fitStyle": "contain",
+            "fitStyle": "cover",
             "cardWidth": 220
           },
           "filter": {
@@ -233,10 +233,6 @@
     },
     {
       "fieldConfig": {
-        "repository": {
-          "richText": true,
-          "options": []
-        },
         "refrence": {
           "richText": true
         }
@@ -275,15 +271,14 @@
               "refrence": {
                 "hide": true
               },
-              "repository": {
-                "hide": false,
-                "width": 1246
-              },
               "refrence_url": {
                 "width": 418,
                 "hide": true
               },
               "create_time": {
+                "hide": true
+              },
+              "repository": {
                 "hide": true
               }
             },
@@ -292,8 +287,9 @@
               "tags",
               "create_time",
               "update_time",
-              "repository",
-              "refrence"
+              "refrence",
+              "path",
+              "refrence_url"
             ]
           },
           "filter": {

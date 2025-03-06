@@ -2,7 +2,7 @@
 tags:
   - Tool
 create_time: 2024-12-28T17:30:00
-update_time: 2025/02/14 18:39
+update_time: 2025/03/06 22:11
 ---
 
 ## 安装与激活🚀
@@ -21,6 +21,8 @@ update_time: 2025/02/14 18:39
 
 + 文件：
     - 启动选项：重新打开上次使用的文件和目录。
+    - 大纲：
+        - ✅允许折叠和展开侧边栏的大纲视图。
     - 保存 & 恢复：✅自动保存。
 + 编辑器：
     - 即时渲染：✅显示当前块元素的 Markdown 源码（支持标题等块元素）。
@@ -35,8 +37,20 @@ update_time: 2025/02/14 18:39
         * ✅优先使用相对路径。
     - 上传服务设定：
         * 上传服务： [PicList](https://piclist.cn/)。
-        * PicList 路径：E:\PicList\PicList. exe。
+        * PicList 路径：`E:\PicList\PicList.exe`。
+* Markdown：
+	* Markdown 扩展语法：
+		* ✅内联公式
+		* ✅下标
+		* ✅上标
+		* ✅高亮
+	* 代码块：
+		* ✅显式行号
+		* ✅代码块自动换行
+		* ✅使用 Shift+Tab 自动调整所选代码的缩进
 + 外观：
+    - 字体大小：
+        - ✅自定义
     - Zoom：
         * ✅按住 Ctrl 时使用鼠标滑轮缩放。
     - 主题： [Drake](https://theme.typora.io/theme/Drake/) Vue3。
