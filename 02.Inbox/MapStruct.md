@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/05 23:09
+update_time: 2025/03/06 16:39
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -1144,3 +1144,58 @@ MapStruct 在许多情况下会自动处理类型转换。例如：
 - `java.util.Locale` 和 `String` 之间。
     - `java.util.Locale` ➡️ `String`：生成的字符串将是一个格式良好的 IETF BCP 47 语言标签，表示该区域设置。
     - `String` ➡️ `java.util.Locale`：返回最能代表该语言标签的区域设置。
+
+### 映射对象引用
+
+通常，对象不仅包含基本属性，还可能引用其他对象。例如，`Car` 类可能包含对 `Person` 对象的引用（代表司机），而该对象映射到 `CarDTO` 时可能需要引用 `PersonDTO` 对象。
+
+在这种情况下，要正确映射对象引用，需要为被引用的对象定义一个单独的映射方法：
+
+举个栗子：
+
+```java
+@Mapper
+public interface CarMapper {
+  CarDTO carToCarDTO(Car car);
+
+  PersonDTO personToPersonDTO(Person person);
+}
+```
+
+在 `carToCarDTO()` 方法的实现中，MapStruct 会自动调用 `personToPersonDTO()` 方法来映射 `driver` 属性，而 `personToPersonDTO()` 方法的生成实现则负责 `Person` 对象的映射，从而完成 `Car` ➡️ `CarDTO` 的转换。
+
+这样可以**映射任意深度的对象层级**。在从实体（entity）映射到数据传输对象（DTO）时，通常需要在某个层级截断对其他实体的引用。要实现这一点，可以自定义映射方法（详见下一节），例如将引用的实体转换为其 ID 并存入目标对象。
+
+🚀🚀🚀在生成映射方法的实现时，MapStruct 会对源对象和目标对象的每对属性按以下规则进行处理：
+- 如果**源属性和目标属性的类型相同**，则直接将值从源对象复制到目标对象。若属性是集合（如 `List`），则会创建集合的副本并赋值给目标属性。
+- 如果**源属性和目标属性的类型不同**，MapStruct 会检查是否**存在一个映射方法，该方法的参数类型与源属性类型匹配，返回类型与目标属性类型匹配**。如果存在这样的方法，它将在生成的映射实现中被调用。
+- 如果**找不到匹配的映射方法**，MapStruct 会检查是否存在针对该属性类型的**内置转换**。如果有，生成的映射代码将应用该转换。
+- 如果**仍然找不到合适的方法**，MapStruct 会执行**复杂转换**，包括：
+    - 先调用一个映射方法，再使用另一个映射方法处理结果，例如：`target = method1(method2(source))`
+    - 先执行内置转换，再调用映射方法处理结果，例如：`target = method(conversion(source))`
+    - 先调用映射方法，再执行内置转换处理结果，例如：`target = conversion(method(source))`
+- 如果**仍无法转换**，MapStruct 会**尝试自动生成一个子映射方法，以处理源属性和目标属性之间的映射**。
+- 如果 MapStruct **无法创建基于名称的映射方法**，则会在构建时抛出错误，并指明无法映射的属性及其路径。
+
+可以在多个级别上定义映射控制（`MappingControl`），包括 `@MapperConfig`、`@Mapper`、`@BeanMapping` 和 `@Mapping`，其中后者的优先级高于前者。例如，`@Mapper(mappingControl = NoComplexMapping.class)` 的优先级高于 `@MapperConfig(mappingControl = DeepClone.class)`。
+
+`@IterableMapping` 和 `@MapMapping` 的工作方式与 `@Mapping` 类似。`MappingControl` 是从 MapStruct 1.4 开始的实验性功能。
+
+`MappingControl` 具有一个枚举类型，对应前面提到的四种映射方式：
+- `MappingControl.Use#DIRECT`（直接映射）
+- `MappingControl.Use#MAPPING_METHOD`（使用映射方法）
+- `MappingControl.Use#BUILT_IN_CONVERSION`（使用内置转换）
+- `MappingControl.Use#COMPLEX_MAPPING`（使用复杂映射）
+指定枚举表示启用该映射方式，未指定则禁用。默认情况下，这四种选项均处于启用状态，允许所有映射方式。
+
+> [!info]
+> 要阻止 MapStruct 自动生成子映射方法，可使用 `@Mapper(disableSubMappingMethodsGeneration = true)`。
+
+> [!tip]
+> 用户可以通过元注解完全控制映射。例如，`@DeepClone` 仅允许直接映射。如果源类型与目标类型相同，MapStruct 将对源进行深度克隆。默认情况下，允许自动生成子映射方法。
+
+> [!info]
+> 自动生成子映射方法时暂时不会考虑[[#共享配置]]。详情见 [issue #1086](https://github.com/mapstruct/mapstruct/issues/1086)
+
+> [!info]
+> 目标对象的构造方法参数也被视为目标属性。详情见[[#使用构造函数（Constructor）]]
