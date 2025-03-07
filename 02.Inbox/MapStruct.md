@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/06 22:19
+update_time: 2025/03/07 23:20
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -1199,3 +1199,87 @@ public interface CarMapper {
 
 > [!info]
 > 目标对象的构造方法参数也被视为目标属性。详情见[[#使用构造函数（Constructor）]]
+
+### 控制嵌套对象映射
+
+如上所述，MapStruct 默认会根据源对象和目标对象的属性名称生成映射方法。然而，在许多情况下，这些名称可能并不匹配。
+
+在 `@Mapping` 注解中使用 `.` 语法，可以控制属性的映射方式，以解决名称不匹配的问题。MapStruct 官方示例库中提供了详细的[示例](https://github.com/mapstruct/mapstruct-examples/tree/master/mapstruct-nested-bean-mappings)说明如何处理此类问题。
+
+最简单的情况是，需要调整嵌套属性的映射。例如，`FishTankDTO` 和 `FishTank` 中都包含 `fish` 属性，它们的名称相同，MapStruct 会自动生成一个 `FishDTO fishToFishDTO(Fish fish)` 方法来进行映射。但是，如果 `Fish` 类的 `type` 属性需要映射到 `FishDTO` 类的 `kind` 属性，MapStruct 默认不会处理这种名称不同的情况。我们可以通过 `@Mapping(target="fish.kind", source="fish.type")` 来指定映射规则，让 `fish.type` 映射到 `fish.kind`。
+
+举个栗子：
+
+```java
+@Mapper
+public interface FishTankMapper {
+  @Mapping(target = "fish.kind", source = "fish.type")
+  @Mapping(target = "fish.name", ignore = true)
+  @Mapping(target = "ornament", source = "interior.ornament")
+  @Mapping(target = "material.materialType", source = "material")
+  @Mapping(target = "quality.report.organisation.name", source = "quality.report.organisationName")
+  FishTankDTO map(FishTank source);
+}
+```
+
+上述示例展示了几种映射方式：
+
+- `@Mapping(target = "fish.kind", source = "fish.type")` 解决属性名称不同的问题。
+- `@Mapping(target = "fish.name", ignore = true)` 忽略某个属性的映射。
+- `@Mapping(target = "ornament", source = "interior.ornament")` & `@Mapping(target = "material.materialType", source = "material")` 允许从不同层级映射属性。
+- `@Mapping(target = "quality.report.organisation.name", source = "quality.report.organisationName")` 在不同嵌套层级间映射特定属性。
+
+有时候，源对象和目标对象的属性层级不匹配，此时可以"挑选"某些属性进行映射。例如：
+
+```java
+@Mapping(target = "ornament", source = "interior.ornament")
+@Mapping(target = "material.materialType", source = "material")
+```
+
+这里 `materialType` 不是 `material` 的直接属性，而是 `material` 这个对象的属性。因此，`material` 会被映射到 `materialType`。
+
+如果某些对象在映射过程中共享相同的基础结构，MapStruct 也能处理。例如：
+
+```java
+@Mapping(target = "quality.report.organisation.name", source = "quality.report.organisationName")
+```
+
+这里 `organisation` 在 `OrganisationDTO` 中没有对应的 `organisation` 对象，因此 MapStruct 只会映射 `organisationName`。
+
+假设 `kind` 和 `type` 本身是对象，MapStruct 仍会生成相应的方法进行映射：
+
+```java
+@Mapper
+public interface FishTankMapperWithDocument {
+  @Mapping(target = "fish.kind", source = "fish.type")
+  @Mapping(target = "fish.name", expression = "java(\"Jaws\")")
+  @Mapping(target = "plant", ignore = true)
+  @Mapping(target = "ornament", ignore = true)
+  @Mapping(target = "material", ignore = true)
+  @Mapping(target = "quality.document", source = "quality.report")
+  @Mapping(target = "quality.document.organisation.name", constant = "NoIdeaInc")
+  FishTankWithNestedDocumentDTO map(FishTank source);
+}
+```
+
+在此示例中：
+- `@Mapping(target = "fish.name", expression = "java(\"Jaws\")")` 使用 Java 表达式为 `fish.name` 赋固定值 `"Jaws"`。
+- `@Mapping(target = "quality.document", source = "quality.report")` 指定 `document` 由 `report` 映射而来，尽管它们的名称不同，MapStruct 仍会根据该规则进行转换。
+- `@Mapping(target = "quality.document.organisation.name", constant = "NoIdeaInc")` 使用常量 `"NoIdeaInc"` 赋值给 `organisation.name`。
+
+MapStruct 在处理嵌套对象时，会自动对源对象中的每个嵌套属性进行 `null` 检查，避免 `NullPointerException`。
+
+虽然可以直接在 `@Mapping` 注解中配置嵌套属性，但更推荐的做法是**编写独立的映射方法**，以便在多个地方复用。例如：
+
+```java
+@Mapper
+public interface FishTankMapper {
+  FishTankDTO map(FishTank source);
+
+  FishDTO map(Fish source);
+}
+```
+
+这样，`FishDto` 的映射逻辑可以在 `map(Fish source)` 方法中定义，并在 `map(FishTank source)` 方法中复用，而不必在多个 `@Mapping` 注解中重复配置。
+
+在某些情况下，嵌套对象的映射可能不会覆盖所有目标对象的属性。MapStruct 提供了 `ReportingPolicy` 来控制未映射属性的处理方式。例如，`IGNORE` 选项允许 MapStruct 忽略未映射的属性，不会在编译时报错。
