@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/07 23:20
+update_time: 2025/03/08 11:39
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -1280,6 +1280,53 @@ public interface FishTankMapper {
 }
 ```
 
-这样，`FishDto` 的映射逻辑可以在 `map(Fish source)` 方法中定义，并在 `map(FishTank source)` 方法中复用，而不必在多个 `@Mapping` 注解中重复配置。
+这样，`FishDTO` 的映射逻辑可以在 `map(Fish source)` 方法中定义，并在 `map(FishTank source)` 方法中复用，而不必在多个 `@Mapping` 注解中重复配置。
 
 在某些情况下，嵌套对象的映射可能不会覆盖所有目标对象的属性。MapStruct 提供了 `ReportingPolicy` 来控制未映射属性的处理方式。例如，`IGNORE` 选项允许 MapStruct 忽略未映射的属性，不会在编译时报错。
+
+### 调用自定义的映射方法
+
+在 MapStruct 中，有时需要对映射逻辑进行自定义，特别是当字段映射不直接对应时。例如，你可能需要将一个复杂对象的多个属性映射到另一个对象的单个属性上，或者需要根据某些条件计算出新的属性值。为了实现这一点，可以定义一个自定义映射方法，该方法接收源对象作为参数，并返回目标对象。MapStruct 会**自动**调用这个方法来处理特定的映射逻辑。其余的字段仍然可以通过标准的 `@Mapping` 注解来映射。
+
+在下面的示例中展示了如何将 `FishTank` 对象的 `length`、`width` 和 `height` 属性映射到 `FishTankWithVolumeDto` 对象的 `volume` 属性。`VolumeDTO` 具有 `volume`（体积）和 `description`（描述）两个属性。这里可以通过一个自定义的映射方法 `mapVolume(FishTank source)` 计算体积和填充描述信息，然后返回 `VolumeDTO` 对象。
+
+```java hl:27
+public class FishTank {
+  Fish fish;
+  String material;
+  Quality quality;
+  int length;
+  int width;
+  int height;
+}
+
+public class FishTankWithVolumeDTO {
+  FishDTO fish;
+  MaterialDTO material;
+  QualityDTO quality;
+  VolumeDTO volume;
+}
+
+public class VolumeDTO {
+  int volume;
+  String description;
+}
+
+@Mapper
+public abstract class FishTankMapperWithVolume {
+  @Mapping(target = "fish.kind", source = "source.fish.type")
+  @Mapping(target = "material.materialType", source = "source.material")
+  @Mapping(target = "quality.document", source = "source.quality.report")
+  @Mapping(target = "volume", source = "source")
+  abstract FishTankWithVolumeDTO map(FishTank source);
+
+  VolumeDTO mapVolume(FishTank source) {
+    int volume = source.length * source.width * source.height;
+    String desc = volume < 100 ? "Small" : "Large";
+    return new VolumeDTO(volume, desc);
+  }
+}
+```
+
+> [!note]
+> 在 `@Mapping(target = "volume", source = "source")` 中，`source` 不是 `FishTank` 的某个属性，而是 `map(FishTank source)` 方法的整个参数对象。这表明 `volume` 需要通过 `mapVolume(FishTank source)` 方法来计算并映射。
