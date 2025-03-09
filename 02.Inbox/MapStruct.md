@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/09 14:00
+update_time: 2025/03/09 23:19
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -1445,3 +1445,21 @@ public class CarMapperImpl implements CarMapper {
 - 生成的代码会自动调用 `ReferenceMapper.resolve()` 方法，并传入目标对象的类型。
 
 这样可以灵活地映射 `Reference` 到对应的 JPA 实体，避免手动编写重复代码。
+
+### 映射方法选择
+
+MapStruct 在映射属性时，会**优先选择最具体的映射方法**，方法可以来自：
+
+- 当前 `@Mapper` 映射器
+- 通过 `@Mapper#uses()` 引入的其他映射器
+
+工厂方法（`@ObjectFactory`）的解析规则相同（详见[对象工厂](#)）。
+
+**解析规则**：
+1. **优先匹配源类型更具体的映射方法**
+    - 例如，`String` ➡️ `Integer ` 比 ` Object` ➡️ `Integer ` 更具体，因此优先使用 ` String` ➡️ `Integer `。
+2. **存在多个同样具体的映射方法时，则抛出错误**
+    - 若存在 `String` ➡️ `Number ` 和 ` String` ➡️ `Integer ` 这样的映射，MapStruct 无法决定使用哪个方法，会抛出报错。
+
+> [!info]- JAXB 支持
+> 在使用 JAXB （如 `String -> JAXBElement<String>`）时，MapStruct 会考虑 `@XmlElementDecl` 注解的作用域（`scope`）和名称（`name`）属性，以确保 `JAXBElement` 实例具有正确的 `QName` 值。

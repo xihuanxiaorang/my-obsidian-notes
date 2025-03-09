@@ -2,7 +2,7 @@
 tags:
   - Tool
 create_time: 2025-03-07 18:14
-update_time: 2025/03/09 18:36
+update_time: 2025/03/09 21:31
 refrence_url:
   - https://curl.se/docs/tutorial.html
   - https://www.ruanyifeng.com/blog/2019/09/curl-reference.html
@@ -88,7 +88,7 @@ curl -O http://www.example.com/index.html
 curl -C - -O https://download.microsoft.com/download/4/6/8/4681f3b2-f327-4d3d-8617-264b20685be0/SSMS-Setup-ENU.exe
 ```
 
-该命令用于从 Microsoft 官方网站下载 SQL Server Management Studio (SSMS) 安装程序，并启用**断点续传**。如果下载过程中断开（通过关闭无线/有线网络，模拟网络不稳定的情况），执行相同命令后，curl 将从中断处继续下载，而不是重新下载整个文件。
+该命令用于从 Microsoft 官方网站下载 SQL Server Management Studio (SSMS) 安装程序，并启用断点续传。如果下载过程中断开（通过关闭无线/有线网络，模拟网络不稳定的情况），执行相同命令后，curl 将从中断处继续下载，而不是重新下载整个文件。
 
 ![](https://img.xiaorang.fun/202503091837814.png)
 
