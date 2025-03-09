@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/08 11:39
+update_time: 2025/03/09 14:00
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -1269,7 +1269,7 @@ public interface FishTankMapperWithDocument {
 
 MapStruct 在处理嵌套对象时，会自动对源对象中的每个嵌套属性进行 `null` 检查，避免 `NullPointerException`。
 
-虽然可以直接在 `@Mapping` 注解中配置嵌套属性，但更推荐的做法是**编写独立的映射方法**，以便在多个地方复用。例如：
+虽然可以直接在 `@Mapping` 注解中配置嵌套属性，👍但更推荐的做法是**编写独立的映射方法**，以便在多个地方复用。例如：
 
 ```java
 @Mapper
@@ -1288,7 +1288,7 @@ public interface FishTankMapper {
 
 在 MapStruct 中，有时需要对映射逻辑进行自定义，特别是当字段映射不直接对应时。例如，你可能需要将一个复杂对象的多个属性映射到另一个对象的单个属性上，或者需要根据某些条件计算出新的属性值。为了实现这一点，可以定义一个自定义映射方法，该方法接收源对象作为参数，并返回目标对象。MapStruct 会**自动**调用这个方法来处理特定的映射逻辑。其余的字段仍然可以通过标准的 `@Mapping` 注解来映射。
 
-在下面的示例中展示了如何将 `FishTank` 对象的 `length`、`width` 和 `height` 属性映射到 `FishTankWithVolumeDto` 对象的 `volume` 属性。`VolumeDTO` 具有 `volume`（体积）和 `description`（描述）两个属性。这里可以通过一个自定义的映射方法 `mapVolume(FishTank source)` 计算体积和填充描述信息，然后返回 `VolumeDTO` 对象。
+在下面的示例中展示了如何将 `FishTank` 对象的 `length`、`width` 和 `height` 属性映射到 `FishTankWithVolumeDTO` 对象的 `volume` 属性。`VolumeDTO` 具有 `volume`（体积）和 `description`（描述）两个属性。这里可以通过一个自定义的映射方法 `mapVolume(FishTank source)` 计算体积和填充描述信息，然后返回 `VolumeDTO` 对象。
 
 ```java hl:27
 public class FishTank {
@@ -1330,3 +1330,118 @@ public abstract class FishTankMapperWithVolume {
 
 > [!note]
 > 在 `@Mapping(target = "volume", source = "source")` 中，`source` 不是 `FishTank` 的某个属性，而是 `map(FishTank source)` 方法的整个参数对象。这表明 `volume` 需要通过 `mapVolume(FishTank source)` 方法来计算并映射。
+
+### 调用其他映射器
+
+除了在同一个映射器接口中定义的方法之外，MapStruct 还可以调用其他类中定义的映射方法，无论是由 MapStruct 生成的映射器还是手写的映射方法。这样可以更好地组织映射代码（例如，每个应用模块一个映射器），或者用于处理 MapStruct 无法自动生成的自定义映射逻辑。
+
+例如，在 `Car` 类中有一个类型为 `Date` 的 `manufacturingDate` 属性，而在 `CarDTO` 中对应的属性却是 `String` 类型。为了实现该转换，可以手动编写一个 `DateMapper` 映射器：
+
+```java
+public class DateMapper {=
+  public String asString(Date date) {
+    return date != null ? new SimpleDateFormat("yyyy-MM-dd").format(date) : null;
+  }
+
+  public Date asDate(String date) {
+    try {
+      return date != null ? new SimpleDateFormat("yyyy-MM-dd").parse(date) : null;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+}
+```
+
+然后，在 `@Mapper` 注解中，通过 `uses` 参数引用 `DateMapper`，如下所示：
+
+```java
+@Mapper(uses = DateMapper.class)
+public interface CarMapper {
+  CarDTO carToCarDTO(Car car);
+}
+```
+
+- **执行过程**：在为 `carToCarDTO()` 方法的实现生成代码时，MapStruct 会查找一个可以将 `Date` 转换为 `String` 的方法，并在 `DateMapper` 类中找到 `asString()` 方法，最终生成代码来调用它映射 `manufacturingDate` 属性。
+- **依赖注入**：**生成的映射器使用为它们配置的组件模型来检索引用的映射器**。例如，
+	- 如果为 `CarMapper` 使用了 CDI 作为组件模型，`DateMapper` 也必须是一个 CDI bean。
+	- 当使用默认组件模型时，任何要被 MapStruct 生成的映射器引用的手写映射器类**必须声明一个公共无参构造函数**，否则 MapStruct 无法实例化它。
+
+### 传递目标类型到自定义映射器（了解）
+
+当使用 `@Mapper#uses()` 引入自定义映射器时，可以在自定义映射方法中添加一个额外的 `Class` 类型（或其超类）参数，以便为特定的目标对象类型执行通用映射逻辑。该参数必须用 `@TargetType` 注解标注，这样 MapStruct 才会在生成代码时传递目标属性的 `Class` 类型实例。
+
+例如，在 `CarDTO` 中有一个类型为 `Reference` 的 `owner` 属性，而 `Reference` 类只存储了 `Person` 实体的主键。现在，我们可以创建一个通用的自定义映射器，将任何 `Reference` 类型的对象解析为相应的 JPA 实体实例。
+
+```java
+public class Car {
+  private Person owner;
+  // ...
+}
+
+public class Person extends BaseEntity {
+  // ...
+}
+
+public class Reference {
+  private String pk;
+  // ...
+}
+
+public class CarDTO {
+  private Reference owner;
+  // ...
+}
+```
+
+```java
+@ApplicationScoped // CDI 组件模型
+public class ReferenceMapper {
+
+  @PersistenceContext
+  private EntityManager entityManager;
+
+  public <T extends BaseEntity> T resolve(Reference reference, @TargetType Class<T> entityClass) {
+    return reference != null ? entityManager.find(entityClass, reference.getPk()) : null;
+  }
+
+  public Reference toReference(BaseEntity entity) {
+    return entity != null ? new Reference(entity.getPk()) : null;
+  }
+}
+```
+
+- `resolve()` 泛型方法，接受一个 `Reference` 对象和一个目标实体类的 `Class` 对象作为参数。通过 `@TargetType` 指示 MapStruct 在生成代码时传递目标类型的类实例，这样可以利用 JPA 的 `EntityManager.find()` 方法查找相应的数据库实体。
+- `toReference()` 方法则用于将实体对象转换回 `Reference`。
+
+生成的映射器代码实现：
+
+```java
+// GENERATED CODE
+@ApplicationScoped
+public class CarMapperImpl implements CarMapper {
+
+  @Inject
+  private ReferenceMapper referenceMapper;
+
+  @Override
+  public Car carDTOToCar(CarDTO carDTO) {
+    if (carDTO == null) {
+      return null;
+    }
+
+    Car car = new Car();
+
+    car.setOwner(referenceMapper.resolve(carDTO.getOwner(), Owner.class));
+    // ...
+
+    return car;
+  }
+}
+```
+
+- `@TargetType Class<T>` 让 MapStruct 在调用 `ReferenceMapper.resolve()` 时，传入 `Owner.class` 作为目标类型。
+- 这样，`ReferenceMapper` 可以通用地处理不同的 JPA 实体，而不仅仅是 `Person`。
+- 生成的代码会自动调用 `ReferenceMapper.resolve()` 方法，并传入目标对象的类型。
+
+这样可以灵活地映射 `Reference` 到对应的 JPA 实体，避免手动编写重复代码。
