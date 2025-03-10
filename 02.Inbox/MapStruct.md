@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/09 23:19
+update_time: 2025/03/10 18:13
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -1450,18 +1450,130 @@ public class CarMapperImpl implements CarMapper {
 
 ### 映射方法选择
 
-MapStruct 在映射属性时，会**优先选择最具体的映射方法**，方法可以来自：
-
+MapStruct 在映射属性时，会**优先选择最具体的映射方法**，方法来源包括：
 - 当前 `@Mapper` 映射器
-- 通过 `@Mapper #uses ()` 引入的其他映射器
+- 通过 `@Mapper#uses()` 引入的其他映射器
 
-工厂方法（`@ObjectFactory`）的解析规则相同（详见[对象工厂](#)）。
+工厂方法（`@ObjectFactory`）遵循相同解析规则（详见[对象工厂](#)）。
 
 **解析规则**：
 1. **优先匹配源类型更具体的映射方法**
     - 例如，`String` ➡️ `Integer ` 比 ` Object` ➡️ `Integer ` 更具体，因此优先使用 ` String` ➡️ `Integer `。
-2. **存在多个同样具体的映射方法时，则抛出错误**
-    - 若存在 `String` ➡️ `Number ` 和 ` String` ➡️ `Integer ` 这样的映射，MapStruct 无法决定使用哪个方法，会抛出报错。
+2. **存在多个同样具体的映射方法时，会抛出错误**
+    - 例如，`String` ➡️ `Number ` 和 ` String` ➡️ `Integer ` 都适用，但 MapStruct 无法决定使用哪个方法，因此会抛出错误。
 
 > [!info]- JAXB 支持
-> 在使用 JAXB （如 `String -> JAXBElement<String>`）时，MapStruct 会考虑 `@XmlElementDecl` 注解的作用域（`scope`）和名称（`name`）属性，以确保 `JAXBElement` 实例具有正确的 `QName` 值。
+> 在使用 JAXB （如 `String -> JAXBElement<String>`）时，MapStruct 会参考 `@XmlElementDecl` 注解的作用域（`scope`）和名称（`name`）属性，以确保 `JAXBElement` 实例具有正确的 `QName` 值。
+
+### 基于限定符的映射方法选择
+
+在某些情况下，需要**多个具有相同方法签名但不同逻辑**的映射方法。MapStruct 提供 `@Qualifier`（`org.mapstruct.Qualifier`）来解决此问题。
+`@Qualifier` 限定符允许用户定义**自定义注解**，并将其**标注在映射方法上**，然后在 `@Mapping` 中**指定使用哪种方法**，适用于**普通属性映射、集合映射和 Map 映射**。
+
+举个栗子：多个相同签名的映射方法。假设有一个 `Titles` 类，其中有两个方法用于翻译标题：
+
+```java
+public class Titles {
+  public String translateTitleEG(String title) { /* 逻辑 */ }
+  public String translateTitleGE(String title) { /* 逻辑 */ }
+}
+```
+
+当 `MovieMapper` 依赖 `Titles` 进行映射时：
+
+```java
+@Mapper(uses = Titles.class)
+public interface MovieMapper {
+  @Mapping(target = "title")
+  GermanRelease toGerman(OriginalRelease movies);
+}
+```
+
+由于 `translateTitleEG` 和 `translateTitleGE` 具有**相同的参数和返回类型**，MapStruct **无法确定**该选择哪个方法，会报错。
+
+使用 `@Qualifier` 解决方法冲突。首先，定义一个通用的 `@Qualifier` 注解：
+
+```java
+@Qualifier
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.CLASS)
+public @interface TitleTranslator {}
+```
+
+然后，为具体的映射方法定义限定符：
+
+```java
+@Qualifier
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.CLASS)
+public @interface EnglishToGerman {}
+
+@Qualifier
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.CLASS)
+public @interface GermanToEnglish {}
+```
+
+> [!note]
+> `TitleTranslator` 为类型级别的限定符，而 `EnglishToGerman` 和 `GermanToEnglish` 为方法级别的限定符！
+
+在 `Titles` 类中应用这些限定符：
+
+```java
+@TitleTranslator
+public class Titles {
+  @EnglishToGerman
+  public String translateTitleEG(String title) { /* 逻辑 */ }
+
+  @GermanToEnglish
+  public String translateTitleGE(String title) { /* 逻辑 */ }
+}
+```
+
+最后，在 `MovieMapper` 映射时指定限定符：
+
+```java
+@Mapper(uses = Titles.class)
+public interface MovieMapper {
+  @Mapping(target = "title", qualifiedBy = { TitleTranslator.class, EnglishToGerman.class })
+  GermanRelease toGerman(OriginalRelease movies);
+}
+```
+
+这样，MapStruct 就会优先选择 `translateTitleEG` 方法进行 `title` 映射。
+
+> [!warning]
+> 请确保使用的保留策略为 `CLASS`（`@Retention(RetentionPolicy.CLASS)`）。
+
+> [!warning]
+> 被 `@Qualifier` 注解标注的类或方法只能用于那些明确指定了 `qualifiedBy` 的映射，不会被其他映射方法自动使用。
+
+> [!tip]
+> 同样的机制也适用于 Bean 映射：`@BeanMapping#qualifiedBy` 可用于选择标注了特定限定符的工厂方法。
+
+在很多情况下，为了选择合适的方法专门创建一个新的注解可能显得过于繁琐。对此，MapStruct 提供了 `@Named` 注解，它本质上是一个**预定义的限定符**（自身带有 `@Qualifier`），可以用来为映射器或具体的映射方法命名。例如，上述示例可以改写为：
+
+```java
+@Named("TitleTranslator")
+public class Titles {
+  @Named("EnglishToGerman")
+  public String translateTitleEG(String title) { /* 逻辑 */ }
+
+  @Named("GermanToEnglish")
+  public String translateTitleGE(String title) { /* 逻辑 */ }
+}
+```
+
+然后在 `MovieMapper` 中使用 `qualifiedByName` 进行匹配：
+
+```java
+@Mapper(uses = Titles.class)
+public interface MovieMapper {
+  @Mapping(target = "title", qualifiedByName = { "TitleTranslator", "EnglishToGerman" })
+  GermanRelease toGerman(OriginalRelease movies);
+}
+```
+
+> [!warning]
+> 虽然 `@Named` 的机制与自定义限定符类似，但使用时需要更加谨慎。
+> 如果在 IDE 中重构一个自定义限定符的名称，IDE 会自动更新所有相关引用，确保代码一致性。而如果直接修改 `@Named` 里的字符串名称，IDE 不会自动更新其他地方的引用，可能会导致映射失败或运行时错误。
