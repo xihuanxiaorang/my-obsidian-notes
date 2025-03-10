@@ -2,7 +2,7 @@
 tags:
   - Tool
 create_time: 2024-12-28T17:32:00
-update_time: 2025/02/25 17:22
+update_time: 2025/03/10 23:14
 ---
 
 ## 介绍📢
@@ -26,7 +26,7 @@ VitePress 是一个[静态站点生成器](https://en.wikipedia.org/wiki/Static_
 3. 执行 `pnpm vitepress init` 命令启动向导，可以帮助你构建一个基本项目；将需要回答几个简单的问题，如下所示：
    ![](https://img.xiaorang.fun/202502251712824.png)
    提示咱们需要使用 `pnpm add -D vue` 安装 vue 作为开发依赖。
-4. 此时就可以运行 `pnpm run docs:dev` 脚本，该脚本将启动具有即时热更新的本地开发服务器。开发服务应该会运行在 http://localhost:5173 上。在浏览器中访问 URL 以查看新站点的运行情况吧！效果如下所示：
+4. 此时就可以运行 `pnpm run docs:dev` 脚本，该脚本将启动具有即时热更新的本地开发服务器。开发服务应该会运行在 [http://localhost:5173](http://localhost:5173) 上。在浏览器中访问 URL 以查看新站点的运行情况吧！效果如下所示：
    ![](https://img.xiaorang.fun/202502251712825.png)
 
 ## 前置知识🏷️
@@ -63,7 +63,7 @@ docs/getting-started.md  -->  /getting-started.html
 
 #### 源目录
 
-源目录是 Markdown 源文件所在的位置。默认情况下，它与项目根目录相同。但是，可以通过 [`srcDir`](https://vitepress.dev/zh/reference/site-config#srcdir) 配置选项对其进行配置。
+源目录是 Markdown 源文件所在的位置。默认情况下，它与项目根目录相同。但是，可以通过 [[#srcDir]] 配置选项对其进行配置。
 
 `srcDir` 选项是相对于项目根目录解析的。例如，对于 `srcDir: 'src'`，文件结构将如下所示：
 
@@ -100,7 +100,7 @@ src/getting-started.md  -->  /getting-started.html
 
 站点的标题。使用默认主题时，这将显示在导航栏中。它还将用作所有单独页面标题的默认后缀，单个页面的最终标题将是其第一个 `<h1>` 标题的文本内容加上的全局 `title`。例如使用以下配置和页面内容：
 
-```ts
+```ts hl:2
 export default {
   title: '小让の码场',
 }
@@ -116,7 +116,7 @@ export default {
 
 站点的描述。这将呈现为页面 HTML 中的 `<meta>` 标签。
 
-```ts
+```ts hl:2
 export default {
   description: "包含: Java 核心技术, Spring全家桶, 设计模式, 数据结构与算法, 源码分析，面试宝典...",
 }
@@ -124,9 +124,9 @@ export default {
 
 ### srcDir
 
-markdown 页面的目录，相对于项目根目录。另请参阅[根目录和源目录](#根目录和源目录)。在这一步咱们需要创建在[根目录](#项目根目录) `docs` 下创建一个 `md` 目录作为[源目录](#源目录)。
+markdown 页面的目录，相对于项目根目录。另请参阅[根目录和源目录](#根目录和源目录)。在这一步咱们需要创建在[根目录](#项目根目录) `docs` 下创建一个名为 `md` 的目录作为[源目录](#源目录)。
 
-```ts
+```ts hl:2
 export default {
   srcDir: './md',
 }
@@ -138,7 +138,7 @@ export default {
 
 要在页面 HTML 的 `<head>` 标签中呈现的其他元素。用户添加的标签在结束 `head` 标签之前呈现，在 VitePress 标签之后。比如，添加一个图标，如下所示：
 
-```ts
+```ts hl:2
 export default {
   head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
 } // 将 favicon.ico 放在公共目录中，如果设置了 base，则使用 /base/favicon.ico
@@ -148,13 +148,13 @@ export default {
 */
 ```
 
-在这一步咱们需要在源目录 `md` 中创建一个 [public 目录]( #public 目录) 作为静态资源存放的目录，并将 `favicon.ico` 网站图标放入其中。
+在这一步咱们需要在源目录 `md` 中创建一个 [[#public 目录]] 作为静态资源存放的目录，并将 `favicon.ico` 网站图标放入其中。
 
 ### lang
 
 站点的 lang 属性。这将呈现为页面 HTML 中的 `<html lang="en-US">` 标签。咱们配置成 `zh-CN`。
 
-```ts
+```ts hl:2
 export default {
   lang: 'zh-CN',
 }
@@ -164,7 +164,7 @@ export default {
 
 当设置为 `true` 时，VitePress 不会因为死链而导致构建失败。当设置为 `'localhostLinks'` ，出现死链时构建将失败，但不会检查 `localhost` 链接。
 
-```ts
+```ts hl:2
 export default {
   ignoreDeadLinks: true,
 }
@@ -191,7 +191,7 @@ export default {
 
 咱们此处就设置为 `'localhostLinks'` 即可，如下所示：
 
-```ts
+```ts hl:2
 export default {
   ignoreDeadLinks: 'localhostLinks',
 }
@@ -201,7 +201,7 @@ export default {
 
 是否使用 Git 获取每个页面的最后更新时间戳。时间戳将包含在每个页面的页面数据中，可通过 [`useData`](https://vitepress.dev/zh/reference/runtime-api#usedata) 访问。使用默认主题时，启用此选项将显示每个页面的最后更新时间。可以通过 [`themeConfig.lastUpdatedText`](https://vitepress.dev/zh/reference/default-theme-config#lastupdatedtext) 选项自定义文本。咱们此处就设置为 `true` 启用该选项用于显示每个页面的最后更新时间，如下所示：
 
-```ts
+```ts hl:2
 export default {
   lastUpdated: true,
 }
@@ -568,7 +568,7 @@ export default {
 }
 ```
 
-推荐这种方式，因为咱们写博客时一般是单独的侧边栏，并不会所有的文章都共用同一个侧边栏。以下为本人目前博客侧边栏配置：需要在 `技术碎片` 目录中新增如下几篇文章 `如何选择开源协议`、`手绘风格的开源白板Excalidraw搭建教程` 和 `手摸手教你快速搭建部署Vitepress博客`。
+推荐这种方式，因为咱们写博客时一般是单独的侧边栏，并不会所有的文章都共用同一个侧边栏。以下为本人目前博客侧边栏配置：需要在 `技术碎片` 目录中新增如下几篇文章 `如何选择开源协议`、`手绘风格的开源白板 Excalidraw 搭建教程` 和 `手摸手教你快速搭建部署 Vitepress 博客`。
 
 ```ts
 export default {
@@ -593,7 +593,7 @@ export default {
 
 ### 页脚
 
-配置好 `themeConfig.footer`，VitePress 将在全局页面底部显示页脚。
+配置好 `themeConfig. footer`，VitePress 将在全局页面底部显示页脚。
 
 ```ts
 export default {
@@ -612,7 +612,7 @@ export default {
 
 ### 编辑链接
 
-编辑链接让你可以显示一个链接，以在 GitHub 或 GitLab 等 Git 管理服务上编辑页面。要启用它，请将 `themeConfig.editLink` 选项添加到配置中。
+编辑链接让你可以显示一个链接，以在 GitHub 或 GitLab 等 Git 管理服务上编辑页面。要启用它，请将 `themeConfig. editLink` 选项添加到配置中。
 
 ```ts
 export default {
@@ -634,7 +634,7 @@ export default {
 > [!tip]
 > 你必须提交 markdown 文件才能看到最后更新时间。
 
-其中 `themeConfig.lastUpdated` 选项允许自定义上次更新的文本和日期格式。
+其中 `themeConfig. lastUpdated` 选项允许自定义上次更新的文本和日期格式。
 
 ```ts
 export default {
@@ -673,7 +673,7 @@ export default defineConfig({
 
 #### Algolia Search
 
-如果要使用 Algolia Search，则需要在 `.vitepress/config.ts` 文件中将 `themeConfig.search.provider` 选项设置为 `'algolia'`，并配置相关选项。
+如果要使用 Algolia Search，则需要在 `.vitepress/config. ts` 文件中将 `themeConfig.search.provider` 选项设置为 `'algolia'`，并配置相关选项。
 
 ```ts
 import { defineConfig } from 'vitepress'
@@ -709,7 +709,7 @@ VitePress 支持使用 [Algolia DocSearch](https://docsearch.algolia.com/docs/wh
 填写完后，等待一段时间（我等了 x 天），如果申请通过，会收到如下类似的邮件回复：
 ![](https://img.xiaorang.fun/202502251712831.png)
 
-将邮件中的 `appId`、`appKey` 以及 `indexName` 填写到 `.vitepress/config.ts` 配置文件中。
+将邮件中的 `appId`、`appKey` 以及 `indexName` 填写到 `. vitepress/config. ts` 配置文件中。
 
 ##### 方案二：CI 自动爬取数据
 
@@ -735,7 +735,7 @@ VitePress 支持使用 [Algolia DocSearch](https://docsearch.algolia.com/docs/wh
 点击侧边栏最下面的小齿轮进入 Settings 页面 ➡️ API Keys。
 ![](https://img.xiaorang.fun/202502251712835.png)
 
-其中的 Application ID、<u>Search API Key</u> 以及前一个步骤中的 index 名称填写到 `.vitepress/config.ts` 配置文件中。
+其中的 Application ID、<u>Search API Key</u> 以及前一个步骤中的 index 名称填写到 `. vitepress/config. ts` 配置文件中。
 
 ```ts
 import { defineConfig } from 'vitepress'
@@ -758,7 +758,7 @@ export default defineConfig({
 
 ###### 创建 crawlerConfig. json
 
-在项目的根目录下创建 `crawlerConfig.json` 文件，该文件用于告诉 algolia 需要爬取哪些内容。
+在项目的根目录下创建 `crawlerConfig. json` 文件，该文件用于告诉 algolia 需要爬取哪些内容。
 
 ```json
 {
@@ -798,7 +798,7 @@ export default defineConfig({
 
 ###### 编写 CI 脚本
 
-在项目根目录下的 `.github/workflows` 文件夹中新建一个 `algolia.yml` 文件，内容如下所示：
+在项目根目录下的 `. github/workflows` 文件夹中新建一个 `algolia. yml` 文件，内容如下所示：
 
 ```yaml
 name: algolia
@@ -834,7 +834,6 @@ jobs:
 ![](https://img.xiaorang.fun/202502251712838.png)
 
 咱们访问一下文档/博客地址，可以看到已经可以成功搜索到数据。
-![](https://img.xiaorang.fun/202502251712839.png)
 
 ### outline
 
@@ -891,17 +890,17 @@ export default {
 }
 ```
 
-![](https://img.xiaorang.fun/202502251712840.png)
+![](https://img.xiaorang.fun/202502251712839.png)
 
 ## Markdown 扩展
 
 VitePress 带有内置的 Markdown 扩展。对于一些简单的扩展，如标题锚点、自定义容器、代码块中的语法高亮、在代码块中实现行高亮、行号等等此处就不再赘述，咱们要说的是如果在 markdown 文件中使用 `plantuml` 代码块的话，访问页面时渲染不出来该如何解决？此时就需要用到 Vitepress 的[高级扩展](https://vitepress.dev/zh/guide/markdown#advanced-configuration)。
 
-VitePress 使用 [markdown-it](https://github.com/markdown-it/markdown-it) 作为 Markdown 渲染器。上面提到的很多扩展功能都是通过自定义插件实现的。可以使用 `.vitepress/config.js` 中的 `markdown` 选项来进一步自定义 `markdown-it` 实例。
+VitePress 使用 [markdown-it](https://github.com/markdown-it/markdown-it) 作为 Markdown 渲染器。上面提到的很多扩展功能都是通过自定义插件实现的。可以使用 `.vitepress/config. js` 中的 `markdown` 选项来进一步自定义 `markdown-it` 实例。
 
 ### PlantUML 支持
 
-本人查到一款插件 [markdown-it-textual-uml](https://github.com/manastalukdar/markdown-it-textual-uml)，使用 `pnpm add markdown-it-textual-uml` 命令下载该插件，然后需要按照如下所示配置 `.vitepress/config.mts` 文件中的 `markdown` 选项。
+本人查到一款插件 [markdown-it-textual-uml](https://github.com/manastalukdar/markdown-it-textual-uml)，使用 `pnpm add markdown-it-textual-uml` 命令下载该插件，然后需要按照如下所示配置 `. vitepress/config. mts` 文件中的 `markdown` 选项。
 
 ```ts {15}
 import { defineConfig } from "vitepress";
@@ -973,8 +972,8 @@ export default defineConfig({
 以下指南基于一些前提：
 
 - VitePress 站点位于项目的 `docs` 目录中。
-- 你使用的是默认的生成输出目录 （`.vitepress/dist`）。
-- VitePress 作为本地依赖项安装在项目中，并且你已在 `package.json` 中设置以下脚本：
+- 你使用的是默认的生成输出目录 （`. vitepress/dist`）。
+- VitePress 作为本地依赖项安装在项目中，并且你已在 `package. json` 中设置以下脚本：
 
 	```json
 	{
@@ -989,7 +988,7 @@ export default defineConfig({
 ### 本地构建与测试
 
 1. 可以运行 `pnpm run docs:build` 命令来构建文档；
-2. 构建文档后，通过运行 `pnpm run docs:preview` 命令可以在本地预览它，`preview` 命令将启动一个本地静态 Web 服务 `http://localhost:4173`，该服务以 `.vitepress/dist` 作为源文件。**这是检查生产版本在本地环境中是否正常的一种简单方法**。
+2. 构建文档后，通过运行 `pnpm run docs:preview` 命令可以在本地预览它，`preview` 命令将启动一个本地静态 Web 服务 `http://localhost:4173`，该服务以 `. vitepress/dist` 作为源文件。**这是检查生产版本在本地环境中是否正常的一种简单方法**。
 3. 可以通过传递 `--port` 作为参数来配置服务器的端口。
 
 	```json
@@ -1006,13 +1005,13 @@ export default defineConfig({
 
 默认情况下，我们假设站点将部署在域名 (`/`) 的根路径上。如果站点在子路径中提供服务，例如 `https://mywebsite.com/blog/`，则需要在 VitePress 配置中将 [`base`](https://vitepress.dev/zh/reference/site-config#base) 选项设置为 `'/blog/'`。
 
-**例**：如果你使用的是 Github（或 GitLab）页面并部署到 `user.github.io/repo/`，请将 `base` 设置为 `/repo/`。
+**例**：如果你使用的是 Github（或 GitLab）页面并部署到 `user. github. io/repo/`，请将 `base` 设置为 `/repo/`。
 
 ### GitHub Pages
 
 部署到 Github Pages 具体步骤如下所示：
 
-1. 在项目目录下创建一个 `.gitignore` 文件，用于配置 git 忽略文件，内容如下所示：
+1. 在项目目录下创建一个 `. gitignore` 文件，用于配置 git 忽略文件，内容如下所示：
 
 	```
 	node_modules
@@ -1021,7 +1020,7 @@ export default defineConfig({
 	.temp
 	```
 
-2. 在项目的 `.github/workflows` 目录中创建一个名为 `deploy.yml` 的文件，其中包含这样的内容：
+2. 在项目的 `. github/workflows` 目录中创建一个名为 `deploy. yml` 的文件，其中包含这样的内容：
 
 	  ```yaml hl:35-38
 	  # 构建 VitePress 站点并将其部署到 GitHub Pages 的示例工作流程
@@ -1098,12 +1097,13 @@ export default defineConfig({
 	> [!tip]
 	>
 	> - 如果完全照搬官方文档的话，在构建时会失败，需要如 `35-38` 行处一样，在使用 `pnpm` 部署的时候需要指定 `pnpm` 的版本号，这样才能构建成功！
-	> - 在 `public` 目录下新建一个 `.nojekyll` 文件，无需填写任何内容。
+	> - 在 `public` 目录下新建一个 `. nojekyll` 文件，无需填写任何内容。
 
 3. 现在咱们在终端中输入 `git init` 命令初始化一个本地仓库，使用 `git add .` 命令将所有文件添加到暂存区，使用 `git commit -m "feat: init blog"` 命令进行一次提交。
 4. 接下来需要在 Github 上创建一个新的仓库，如 `docs`，名称可以根据自己的喜欢来命名，然后在存储库设置中的"Pages"菜单项下，选择"Build and deployment > Source > GitHub Actions"。
-5. 然后使用 `git remote add origin git@github.com:xihuanxiaorang/docs.git` 命令关联远程仓库，最后使用 `git branch -M main` 和 `git push -u origin main` 命令推送到远程仓库。
-6. 将更改推送到 `main` 分支并等待 GitHub Action 工作流完成。你应该看到站点部署到 `https://<username>.github.io/[repository]/` 或 `https://<custom-domain>/`，这取决于你的设置。你的站点将在每次推送到 `main` 分支时自动部署。
+5. 然后使用 `git remote add origin git@github.com : xihuanxiaorang/docs. git` 命令关联远程仓库，最后使用 `git branch -M main` 和 `git push -u origin main` 命令推送到远程仓库。
+6. 将更改推送到 `main` 分支并等待 GitHub Action 工作流完成。你应该看到站点部署到 `https://<username>. github. io/[repository]/` 或 `https://<custom-domain>/`，这取决于你的设置。你的站点将在每次推送到 `main` 分支时自动部署。
+   ![](https://img.xiaorang.fun/202502251712840.png)
    ![](https://img.xiaorang.fun/202502251712841.png)
 
 ## Q&A
@@ -1120,10 +1120,10 @@ export default defineConfig({
 
 那么该如何解决呢？有如下几种解决方案：
 
-1. 如果小伙伴们是直接部署在 `<用户名>.github.io` 仓库的话，则一路走下来部署上去之后应该不会出现样式丢失的问题；
+1. 如果小伙伴们是直接部署在 `<用户名>. github. io` 仓库的话，则一路走下来部署上去之后应该不会出现样式丢失的问题；
 2. 如果小伙伴们像我一样部署在 `docs` 仓库的话，则存在以下两种方案：
-   1. 如果在 Github Pages 上配置使用自定义域名的话，就能解决当前样式丢失的问题，即不需要设置 `config.base` 的值，让其保持默认值 `/` 即可；
-   2. 如果不使用自定义域名的话，则需要设置 `config.base` 的值为小伙伴们当前仓库的名称，如 `docs`；如下所示：
+   1. 如果在 Github Pages 上配置使用自定义域名的话，就能解决当前样式丢失的问题，即不需要设置 `config. base` 的值，让其保持默认值 `/` 即可；
+   2. 如果不使用自定义域名的话，则需要设置 `config. base` 的值为小伙伴们当前仓库的名称，如 `docs`；如下所示：
 
 		```typescript
 		export default defineConfig({
@@ -1139,7 +1139,7 @@ VitePress 使用 [Inter](https://rsms.me/inter/) 作为默认字体，并且将�
 
 具体实现步骤如下所示：
 
-1. 在 `.vitepress/theme` 目录下创建一个 `custom.css` 样式文件，文件内容如下所示：
+1. 在 `. vitepress/theme` 目录下创建一个 `custom. css` 样式文件，文件内容如下所示：
 
 	```css
 	@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=Ubuntu+Mono:wght@400;700&display=swap");
@@ -1154,7 +1154,7 @@ VitePress 使用 [Inter](https://rsms.me/inter/) 作为默认字体，并且将�
 
    本人是使用的[谷歌在线字体](https://fonts.google.com/)，小伙伴若是喜欢其他的字体可以自行搜索->添加->导入，也可以通过 `@font-face` 引用本地字体文件的方式实现，具体细节请查阅[扩展默认主题 | VitePress](https://vitepress.dev/zh/guide/extending-default-theme#using-different-fonts)。
 
-2. 在 `.vitepress/theme/index.ts` 文件中导入该 `custom.css` 文件；
+2. 在 `. vitepress/theme/index. ts` 文件中导入该 `custom. css` 文件；
 
 	> [!tip]
 	>
