@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/10 18:13
+update_time: 2025/03/10 18:41
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -1577,3 +1577,67 @@ public interface MovieMapper {
 > [!warning]
 > 虽然 `@Named` 的机制与自定义限定符类似，但使用时需要更加谨慎。
 > 如果在 IDE 中重构一个自定义限定符的名称，IDE 会自动更新所有相关引用，确保代码一致性。而如果直接修改 `@Named` 里的字符串名称，IDE 不会自动更新其他地方的引用，可能会导致映射失败或运行时错误。
+
+### 结合限定符和默认值
+
+请注意，`@Mapping#defaultValue` 本质上是一个字符串，MapStruct 需要将其转换为 `@Mapping#target` 指定的类型。如果 `@Mapping` 还指定了 `qualifiedByName` 或 `qualifiedBy`，MapStruct 会强制使用对应的方法进行转换，而不会自动推断转换方式。
+
+如果希望 `defaultValue` 采用特定的转换方式，需要提供一个专门的方法，将 `String` 转换为目标类型，并使用 `@Named` 或 `@Qualifier` 进行标注，以便 MapStruct 正确识别和调用该方法。
+
+举个栗子：使用默认值的映射器
+
+```java
+@Mapper
+public interface MovieMapper {
+  @Mapping(target = "category", qualifiedByName = "CategoryToString", defaultValue = "DEFAULT")
+  GermanRelease toGerman(OriginalRelease movies);
+
+  @Named("CategoryToString")
+  default String defaultValueForQualifier(Category cat) {
+    // 自定义映射逻辑
+  }
+}
+```
+
+如果 `category` 为空，则 MapStruct 会调用 `defaultValueForQualifier(Enum.valueOf(Category.class, "DEFAULT"))` 方法，并将返回值赋给 `category` 字段。
+
+举个栗子：使用默认值和默认方法的映射器。
+
+```java
+@Mapper
+public interface MovieMapper {
+  @Mapping(target = "category", qualifiedByName = "CategoryToString", defaultValue = "Unknown")
+  GermanRelease toGerman(OriginalRelease movies);
+
+  @Named("CategoryToString")
+  default String defaultValueForQualifier(Category cat) {
+    // 自定义映射逻辑
+  }
+
+  @Named("CategoryToString")
+  default String defaultValueForQualifier(String value) {
+    return value;
+  }
+}
+```
+
+在此示例中，当 `category` 为空时，MapStruct 会调用 `defaultValueForQualifier("Unknown")`，将 `"Unknown"` 赋值给 `category`。
+
+如果上面的 `defaultValue` 方案无法满足需求，可以选择使用 `defaultExpression` 来设置默认值。
+
+举个栗子：使用默认表达式的映射器
+
+```java
+@Mapper
+public interface MovieMapper {
+  @Mapping(target = "category", qualifiedByName = "CategoryToString", defaultExpression = "java(\"Unknown\")")
+  GermanRelease toGerman(OriginalRelease movies);
+
+  @Named("CategoryToString")
+  default String defaultValueForQualifier(Category cat) {
+    // 自定义映射逻辑
+  }
+}
+```
+
+此方式会直接将 `"Unknown"` 作为 Java 代码执行，相当于 `category = "Unknown"`，适用于更灵活的默认值赋值场景。

@@ -138,7 +138,7 @@
               "type": "tag",
               "state": {
                 "sortOrder": "alphabetical",
-                "useHierarchy": true,
+                "useHierarchy": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
@@ -287,11 +287,11 @@
   },
   "active": "ecc443435986c782",
   "lastOpenFiles": [
-    "00.Overview/01 - 任务清单.md",
-    "00.Overview/02 - 参考资料.md",
     "02.Inbox/JDBC.md",
-    "01.Articles/Java/Basic/01  - 代码块.md",
+    "00.Overview/02 - 参考资料.md",
     "02.Inbox/MapStruct.md",
+    "00.Overview/01 - 任务清单.md",
+    "01.Articles/Java/Basic/01  - 代码块.md",
     "01.Articles/DevKit/curl.md",
     "Zttachments/Pasted image 20250309183458.png",
     "Zttachments/Pasted image 20250309182235.png",
