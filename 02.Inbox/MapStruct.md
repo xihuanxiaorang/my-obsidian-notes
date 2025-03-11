@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/11 21:29
+update_time: 2025/03/11 21:48
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -1654,15 +1654,14 @@ public interface MovieMapper {
 public interface CarMapper {
   Set<String> integerSetToStringSet(Set<Integer> integers);
 
-  List<CarDto> carsToCarDtos(List<Car> cars);
+  List<CarDTO> carsToCarDTOs(List<Car> cars);
 
-  CarDto carToCarDto(Car car);
+  CarDTO carToCarDTO(Car car);
 }
 ```
 
-在上面的示例中：
 - `integerSetToStringSet()` 方法会将集合中每个 `Integer` 类型的元素转换为 `String` 类型
-- `carsToCarDtos()` 遍历集合，并调用 `carToCarDto()` 将每个 `Car` 元素转换为 `CarDto`。
+- `carsToCarDTOs()` 遍历集合，并调用 `carToCarDTO()` 将每个 `Car` 元素转换为 `CarDTO`。
 
 生成的映射器代码实现：
 
@@ -1684,34 +1683,79 @@ public Set<String> integerSetToStringSet(Set<Integer> integers) {
 }
 
 @Override
-public List<CarDto> carsToCarDtos(List<Car> cars) {
+public List<CarDTO> carsToCarDTOs(List<Car> cars) {
   if (cars == null) {
     return null;
   }
 
-  List<CarDto> list = new ArrayList<>();
+  List<CarDTO> list = new ArrayList<>();
 
   for (Car car : cars) {
-    list.add(carToCarDto(car));
+    list.add(carToCarDTO(car));
   }
 
   return list;
 }
 ```
 
-当映射对象的集合属性时（如 `Car#passengers` ➡️ `CarDto#passengers`），MapStruct 会寻找参数和返回类型匹配的集合映射方法：
+当映射对象的集合属性时（如 `Car#passengers` ➡️ `CarDTO#passengers`），MapStruct 会寻找参数和返回类型匹配的集合映射方法：
 
 ```java
 // GENERATED CODE
-carDto.setPassengers(personsToPersonDtos(car.getPassengers()));
+carDTO.setPassengers(personsToPersonDTOs(car.getPassengers()));
 ```
 
 某些框架（如 JAXB）生成的类可能仅提供 getter 方法而没有 setter 方法，此时生成的代码会调用 getter 并通过 `addAll()` 添加元素：
 
 ```java
 // 生成的代码
-carDto.getPassengers().addAll(personsToPersonDtos(car.getPassengers()));
+carDTO.getPassengers().addAll(personsToPersonDTOs(car.getPassengers()));
 ```
 
 > [!warning]
 > 不允许将可迭代类型映射为非可迭代类型，反之亦然！否则，MapStruct 会抛出错误。
+
+### 映射 Map 集合
+
+MapStruct 也支持 `Map` 集合类型的映射。举个栗子：
+
+```java
+public interface SourceTargetMapper {
+  @MapMapping(valueDateFormat = "dd.MM.yyyy")
+  Map<String, String> longDateMapToStringStringMap(Map<Long, Date> source);
+}
+```
+
+与集合映射类似，生成的代码会遍历源 `Map`，对键和值进行转换（可通过隐式转换或调用其他映射方法），然后放入目标 `Map` 中。
+
+生成的映射器代码实现：
+
+```java
+// GENERATED CODE
+@Override
+public Map<Long, Date> stringStringMapToLongDateMap(Map<String, String> source) {
+  if (source == null) {
+    return null;
+  }
+
+  Map<Long, Date> map = new LinkedHashMap<>();
+
+  for (Map.Entry<String, String> entry : source.entrySet()) {
+    Long key = Long.parseLong(entry.getKey());
+    Date value;
+    try {
+      value = new SimpleDateFormat("dd.MM.yyyy").parse(entry.getValue());
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+
+    map.put(key, value);
+  }
+
+  return map;
+}
+```
+
+- 遍历 `source` 的键值对，将 `String` 类型的键转换为 `Long`。
+- 使用 `SimpleDateFormat` 将 `String` 类型的值转换为 `Date`。
+- 转换后，将键值对存入 `LinkedHashMap` 集合并返回。
