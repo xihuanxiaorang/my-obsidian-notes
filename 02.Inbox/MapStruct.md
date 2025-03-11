@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/10 18:41
+update_time: 2025/03/11 21:29
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -1641,3 +1641,77 @@ public interface MovieMapper {
 ```
 
 此方式会直接将 `"Unknown"` 作为 Java 代码执行，相当于 `category = "Unknown"`，适用于更灵活的默认值赋值场景。
+
+## 映射集合
+
+集合类型（如 `List`、`Set` 等）的映射方式与普通对象的映射方式类似，即通过在映射器接口中定义源类型和目标类型的映射方法。MapStruct 支持 Java 集合框架中的多种可迭代类型。
+生成的代码会通过一个循环来遍历源集合，转换每个元素，并将其放入目标集合。如果在当前映射器或关联的映射器中能找到匹配的元素映射方法，MapStruct 就会调用它来进行元素转换，否则就会使用隐式转换。
+
+举个栗子：
+
+```java
+@Mapper
+public interface CarMapper {
+  Set<String> integerSetToStringSet(Set<Integer> integers);
+
+  List<CarDto> carsToCarDtos(List<Car> cars);
+
+  CarDto carToCarDto(Car car);
+}
+```
+
+在上面的示例中：
+- `integerSetToStringSet()` 方法会将集合中每个 `Integer` 类型的元素转换为 `String` 类型
+- `carsToCarDtos()` 遍历集合，并调用 `carToCarDto()` 将每个 `Car` 元素转换为 `CarDto`。
+
+生成的映射器代码实现：
+
+```java hl:11,26
+// GENERATED CODE
+@Override
+public Set<String> integerSetToStringSet(Set<Integer> integers) {
+  if (integers == null) {
+    return null;
+  }
+
+  Set<String> set = new LinkedHashSet<>();
+
+  for (Integer integer : integers) {
+    set.add(String.valueOf(integer));
+  }
+
+  return set;
+}
+
+@Override
+public List<CarDto> carsToCarDtos(List<Car> cars) {
+  if (cars == null) {
+    return null;
+  }
+
+  List<CarDto> list = new ArrayList<>();
+
+  for (Car car : cars) {
+    list.add(carToCarDto(car));
+  }
+
+  return list;
+}
+```
+
+当映射对象的集合属性时（如 `Car#passengers` ➡️ `CarDto#passengers`），MapStruct 会寻找参数和返回类型匹配的集合映射方法：
+
+```java
+// GENERATED CODE
+carDto.setPassengers(personsToPersonDtos(car.getPassengers()));
+```
+
+某些框架（如 JAXB）生成的类可能仅提供 getter 方法而没有 setter 方法，此时生成的代码会调用 getter 并通过 `addAll()` 添加元素：
+
+```java
+// 生成的代码
+carDto.getPassengers().addAll(personsToPersonDtos(car.getPassengers()));
+```
+
+> [!warning]
+> 不允许将可迭代类型映射为非可迭代类型，反之亦然！否则，MapStruct 会抛出错误。
