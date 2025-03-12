@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/12 11:42
+update_time: 2025/03/12 15:52
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -1801,3 +1801,53 @@ MapStruct 提供了 `CollectionMappingStrategy`，可选值包括：
 | `NavigableMap` | `TreeMap` |
 | `ConcurrentMap` | `ConcurrentHashMap` |
 | `ConcurrentNavigableMap` | `ConcurrentSkipListMap` |
+
+## 映射流（Stream）
+
+`java.util.Stream` 的映射方式与集合类型的映射方法类似，即通过在 `@Mapper` 映射器接口中定义所需源类型和目标类型的映射方法来实现。生成的代码会：
+
+- 从 `Iterable` 或数组创建 `Stream` 流
+- 将 `Stream` 流收集（collect）到 `Iterable` 或数组
+- 若存在显式映射方法或隐式类型转换，则会在 `Stream#map()` 方法中完成元素转换
+
+举个栗子：
+
+```java
+@Mapper
+public interface CarMapper {
+  Set<String> integerStreamToStringSet(Stream<Integer> integers);
+  List<CarDTO> carsToCarDTOs(Stream<Car> cars);
+  CarDTO carToCarDTO(Car car);
+}
+```
+
+在 `integerStreamToStringSet()` 方法中，每个 `Integer` 类型的元素都会被转换为 `String` 类型，而 `carsToCarDTOs()` 方法则会为每个 `Car` 元素调用 `carToCarDTO()` 方法进行转换。
+
+生成的映射器代码实现：
+
+```java
+// GENERATED CODE
+@Override
+public Set<String> integerStreamToStringSet(Stream<Integer> integers) {
+  if (integers == null) {
+    return null;
+  }
+
+  return integers.map(String::valueOf)
+    .collect(Collectors.toCollection(LinkedHashSet::new));
+}
+
+@Override
+public List<CarDTO> carsToCarDTOs(Stream<Car> cars) {
+  if (cars == null) {
+    return null;
+  }
+
+  return cars.map(this::carToCarDTO)
+    .collect(Collectors.toCollection(ArrayList::new));
+}
+```
+
+> [!warning]
+> **从 `Stream` 转换为 `Iterable` 或数组时，`Stream` 会被消费，无法再次使用！**
+> 映射流到可迭代或数组时，默认使用[[#集合映射的默认实现类型]]中指定的具体实现类来创建集合。
