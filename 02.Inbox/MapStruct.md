@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/11 21:48
+update_time: 2025/03/12 11:42
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -1759,3 +1759,45 @@ public Map<Long, Date> stringStringMapToLongDateMap(Map<String, String> source) 
 - 遍历 `source` 的键值对，将 `String` 类型的键转换为 `Long`。
 - 使用 `SimpleDateFormat` 将 `String` 类型的值转换为 `Date`。
 - 转换后，将键值对存入 `LinkedHashMap` 集合并返回。
+
+### 集合映射策略
+
+MapStruct 提供了 `CollectionMappingStrategy`，可选值包括：
+- `ACCESSOR_ONLY`：仅通过 **getter** 访问集合，并调用 `getter().addAll(...)` 添加元素，适用于 **不可变集合** 或 **仅提供 getter** 的对象。
+- `SETTER_PREFERRED`：优先调用 **setter** 直接赋值整个集合，适用于 **标准 Java Bean**。
+- `ADDER_PREFERRED`：优先使用 **adder 方法**（如 `addItem(T item)`），适用于 **JPA 实体**（如 `@OneToMany` 关系）。
+- `TARGET_IMMUTABLE`：目标集合 **不可修改**，尝试变更会抛出异常，适用于 **不可变对象**（如 `record`、Guava `ImmutableList`）。
+
+下表展示了不同策略在目标对象具有或缺少 `set-`、`add-` 和 `get-` 方法时的适用情况（`-s` 表示复数形式）：
+
+| 选项                   | 仅有 `set-s` 方法 | 仅有 `add-` 方法 | 同时有 `set-s` 和 `add-` | 无 `set-s` 或 `add-` 方法 | 目标已存在 (`@TargetType`) |
+| -------------------- | ------------- | ------------ | -------------------- | --------------------- | --------------------- |
+| **ACCESSOR_ONLY**    | `set-s`       | `get-s`      | `set-s`              | `get-s`               | `get-s`               |
+| **SETTER_PREFERRED** | `set-s`       | `add-`       | `set-s`              | `get-s`               | `get-s`               |
+| **ADDER_PREFERRED**  | `set-s`       | `add-`       | `add-`               | `get-s`               | `get-s`               |
+| **TARGET_IMMUTABLE** | `set-s`       | *异常*         | `set-s`              | *异常*                  | `set-s`               |
+
+`Adder` 方法常用于 JPA 实体（例如 `addChild()`），用于向集合中添加单个元素，同时维护父子关系。MapStruct 通过匹配集合的泛型类型与 `Adder` 方法的参数来确定合适的方法。如果有多个候选方法，MapStruct 会尝试将复数形式的 `Setter` / `Getter` 名称转换为单数进行匹配。
+
+不应直接使用 `DEFAULT`，它仅用于区分 `@MapperConfig` 中用户显式指定的策略和 `@Mapper` 内 MapStruct 采用的默认策略。`DEFAULT` 的行为等同于 `ACCESSOR_ONLY`。
+
+> [!tip]
+> 在 JPA 实体中使用 `Adder` 方法时，MapStruct 假设目标集合已初始化（如 `new ArrayList<>()`）。如果需要初始化集合，可以使用工厂方法创建目标实体，而不是依赖 MapStruct 通过构造方法实例化对象。
+
+### 集合映射的默认实现类型
+
+当集合或 `Map` 类型的映射方法返回的是接口类型，MapStruct 会在生成的代码中实例化对应的具体实现。下表列出了支持的接口类型及其在生成代码中对应的默认实现类型：
+
+|**接口类型**|**默认实现类型**|
+|---|---|
+| `Iterable` | `ArrayList` |
+| `Collection` | `ArrayList` |
+| `List` | `ArrayList` |
+| `Set` | `LinkedHashSet` |
+| `SortedSet` | `TreeSet` |
+| `NavigableSet` | `TreeSet` |
+| `Map` | `LinkedHashMap` |
+| `SortedMap` | `TreeMap` |
+| `NavigableMap` | `TreeMap` |
+| `ConcurrentMap` | `ConcurrentHashMap` |
+| `ConcurrentNavigableMap` | `ConcurrentSkipListMap` |

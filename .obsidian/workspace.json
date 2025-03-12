@@ -46,6 +46,20 @@
             }
           },
           {
+            "id": "31008e1659294511",
+            "type": "leaf",
+            "state": {
+              "type": "webviewer",
+              "state": {
+                "url": "https://www.bilibili.com/video/BV1UJc2ezEFU/?vd_source=84272a2d7f72158b38778819be5bc6ad",
+                "title": "尚硅谷2025最新SpringCloud教程，springcloud从入门到大牛_哔哩哔哩_bilibili",
+                "mode": "webview"
+              },
+              "icon": "globe-2",
+              "title": "尚硅谷2025最新SpringCloud教程，springcloud从入门到大牛_哔哩哔哩_bilibili"
+            }
+          },
+          {
             "id": "02c91713ef9a2a08",
             "type": "leaf",
             "pinned": true,
@@ -88,7 +102,7 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 5
       }
     ],
     "direction": "vertical"
@@ -287,10 +301,10 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "02.Inbox/JDBC.md",
     "00.Overview/02 - 参考资料.md",
-    "02.Inbox/ApiFox.md",
     "02.Inbox/MapStruct.md",
+    "02.Inbox/JDBC.md",
+    "02.Inbox/ApiFox.md",
     "00.Overview/01 - 任务清单.md",
     "01.Articles/Tools/Obsidian.md",
     "01.Articles/Tools/手摸手教你搭建部署 Vitepress 博客.md",
