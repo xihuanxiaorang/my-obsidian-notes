@@ -4,7 +4,7 @@ tags:
   - Frontend
   - DevKit
 create_time: 2024-12-28T17:29:00
-update_time: 2025/02/25 18:02
+update_time: 2025/03/13 19:03
 ---
 
 > [!quote] > [GitHub - nvm-sh/nvm: Node Version Manager - POSIX-compliant bash script to manage multiple active node.js versions](https://github.com/nvm-sh/nvm)
@@ -21,7 +21,7 @@ nvm (Node Version Manager) 是一个用于管理 Node.js 版本的工具，可�
 
 安装完成之后，可以使用 `nvm version` 命令测试 nvm 是否安装成功。若输出版本号，则说明 nvm 已成功安装。
 
-不要急着安装 Node. js，可以先使用如下命令配置 Node. js 和 npm 的镜像源地址。
+不要急着安装 Node.js，可以先使用如下命令配置 Node.js 和 npm 的镜像源地址。
 
 ```bash
 nvm node_mirror https://npmmirror.com/mirrors/node/

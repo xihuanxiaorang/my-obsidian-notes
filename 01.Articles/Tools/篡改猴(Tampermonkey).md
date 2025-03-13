@@ -2,7 +2,7 @@
 tags:
   - Tool
 create_time: 2025-02-28T18:26:00
-update_time: 2025/02/28 18:37
+update_time: 2025/03/13 19:04
 ---
 
 [**篡改猴 (Tampermonkey)**](https://www.tampermonkey.net/index.php?browser=edge) 是拥有 **超过 1000 万用户** 的最流行的浏览器扩展之一。它适用于 [**Chrome**](https://www.tampermonkey.net/index.php?browser=chrome)、[**Microsoft Edge**](https://www.tampermonkey.net/index.php?browser=edge)、[**Safari**](https://www.tampermonkey.net/index.php?browser=safari)、[**Opera Next**](https://www.tampermonkey.net/index.php?browser=opera) 和 [**Firefox**](https://www.tampermonkey.net/index.php?browser=firefox)。

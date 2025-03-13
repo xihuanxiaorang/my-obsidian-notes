@@ -2,7 +2,7 @@
 tags:
   - Tool
 create_time: 2024-12-28T17:32:00
-update_time: 2025/03/12 17:52
+update_time: 2025/03/13 19:04
 ---
 
 ## 介绍📢
@@ -593,7 +593,7 @@ export default {
 
 ### 页脚
 
-配置好 `themeConfig. footer`，VitePress 将在全局页面底部显示页脚。
+配置好 `themeConfig.footer`，VitePress 将在全局页面底部显示页脚。
 
 ```ts
 export default {
@@ -612,7 +612,7 @@ export default {
 
 ### 编辑链接
 
-编辑链接让你可以显示一个链接，以在 GitHub 或 GitLab 等 Git 管理服务上编辑页面。要启用它，请将 `themeConfig. editLink` 选项添加到配置中。
+编辑链接让你可以显示一个链接，以在 GitHub 或 GitLab 等 Git 管理服务上编辑页面。要启用它，请将 `themeConfig.editLink` 选项添加到配置中。
 
 ```ts
 export default {
@@ -634,7 +634,7 @@ export default {
 > [!tip]
 > 你必须提交 markdown 文件才能看到最后更新时间。
 
-其中 `themeConfig. lastUpdated` 选项允许自定义上次更新的文本和日期格式。
+其中 `themeConfig.lastUpdated` 选项允许自定义上次更新的文本和日期格式。
 
 ```ts
 export default {
@@ -673,7 +673,7 @@ export default defineConfig({
 
 #### Algolia Search
 
-如果要使用 Algolia Search，则需要在 `.vitepress/config. ts` 文件中将 `themeConfig.search.provider` 选项设置为 `'algolia'`，并配置相关选项。
+如果要使用 Algolia Search，则需要在 `.vitepress/config.ts` 文件中将 `themeConfig.search.provider` 选项设置为 `'algolia'`，并配置相关选项。
 
 ```ts
 import { defineConfig } from 'vitepress'
@@ -709,7 +709,7 @@ VitePress 支持使用 [Algolia DocSearch](https://docsearch.algolia.com/docs/wh
 填写完后，等待一段时间（我等了 x 天），如果申请通过，会收到如下类似的邮件回复：
 ![](https://img.xiaorang.fun/202502251712831.png)
 
-将邮件中的 `appId`、`appKey` 以及 `indexName` 填写到 `. vitepress/config. ts` 配置文件中。
+将邮件中的 `appId`、`appKey` 以及 `indexName` 填写到 `.vitepress/config.ts` 配置文件中。
 
 ##### 方案二：CI 自动爬取数据
 
@@ -735,7 +735,7 @@ VitePress 支持使用 [Algolia DocSearch](https://docsearch.algolia.com/docs/wh
 点击侧边栏最下面的小齿轮进入 Settings 页面 ➡️ API Keys。
 ![](https://img.xiaorang.fun/202502251712835.png)
 
-其中的 Application ID、<u>Search API Key</u> 以及前一个步骤中的 index 名称填写到 `. vitepress/config. ts` 配置文件中。
+其中的 Application ID、<u>Search API Key</u> 以及前一个步骤中的 index 名称填写到 `.vitepress/config.ts` 配置文件中。
 
 ```ts
 import { defineConfig } from 'vitepress'
@@ -756,9 +756,9 @@ export default defineConfig({
 
 至于 <u>Admin API Key</u> 会在后面的 CI 步骤中被用到。
 
-###### 创建 crawlerConfig. json
+###### 创建 crawlerConfig.json
 
-在项目的根目录下创建 `crawlerConfig. json` 文件，该文件用于告诉 algolia 需要爬取哪些内容。
+在项目的根目录下创建 `crawlerConfig.json` 文件，该文件用于告诉 algolia 需要爬取哪些内容。
 
 ```json
 {
@@ -798,7 +798,7 @@ export default defineConfig({
 
 ###### 编写 CI 脚本
 
-在项目根目录下的 `. github/workflows` 文件夹中新建一个 `algolia. yml` 文件，内容如下所示：
+在项目根目录下的 `.github/workflows` 文件夹中新建一个 `algolia.yml` 文件，内容如下所示：
 
 ```yaml
 name: algolia
@@ -896,11 +896,11 @@ export default {
 
 VitePress 带有内置的 Markdown 扩展。对于一些简单的扩展，如标题锚点、自定义容器、代码块中的语法高亮、在代码块中实现行高亮、行号等等此处就不再赘述，咱们要说的是如果在 markdown 文件中使用 `plantuml` 代码块的话，访问页面时渲染不出来该如何解决？此时就需要用到 Vitepress 的[高级扩展](https://vitepress.dev/zh/guide/markdown#advanced-configuration)。
 
-VitePress 使用 [markdown-it](https://github.com/markdown-it/markdown-it) 作为 Markdown 渲染器。上面提到的很多扩展功能都是通过自定义插件实现的。可以使用 `.vitepress/config. js` 中的 `markdown` 选项来进一步自定义 `markdown-it` 实例。
+VitePress 使用 [markdown-it](https://github.com/markdown-it/markdown-it) 作为 Markdown 渲染器。上面提到的很多扩展功能都是通过自定义插件实现的。可以使用 `.vitepress/config.js` 中的 `markdown` 选项来进一步自定义 `markdown-it` 实例。
 
 ### PlantUML 支持
 
-本人查到一款插件 [markdown-it-textual-uml](https://github.com/manastalukdar/markdown-it-textual-uml)，使用 `pnpm add markdown-it-textual-uml` 命令下载该插件，然后需要按照如下所示配置 `.vitepress/config. mts` 文件中的 `markdown` 选项。
+本人查到一款插件 [markdown-it-textual-uml](https://github.com/manastalukdar/markdown-it-textual-uml)，使用 `pnpm add markdown-it-textual-uml` 命令下载该插件，然后需要按照如下所示配置 `.vitepress/config.mts` 文件中的 `markdown` 选项。
 
 ```ts {15}
 import { defineConfig } from "vitepress";
@@ -972,8 +972,8 @@ export default defineConfig({
 以下指南基于一些前提：
 
 - VitePress 站点位于项目的 `docs` 目录中。
-- 你使用的是默认的生成输出目录 （`. vitepress/dist`）。
-- VitePress 作为本地依赖项安装在项目中，并且你已在 `package. json` 中设置以下脚本：
+- 你使用的是默认的生成输出目录 （`.vitepress/dist`）。
+- VitePress 作为本地依赖项安装在项目中，并且你已在 `package.json` 中设置以下脚本：
 
 	```json
 	{

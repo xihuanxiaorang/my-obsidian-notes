@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/12 15:52
+update_time: 2025/03/13 18:59
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -523,12 +523,12 @@ public interface CustomerMapper {
 > ### **如何工作**
 >
 > 1. **`customerDTOToCustomer ()`** 方法：
->    - `record. name` → `Customer. name`
+>    - `record.name` → `Customer.name`
 >    - `record` 的所有属性 → `Customer`
 >    - `account` 的所有属性 → `Customer`
 > 2. **`customerToCustomerDTO ()`** 方法：
 >    - 不需要显式声明映射规则，因为 `@InheritInverseConfiguration` 注解会自动反向应用 `customerDTOToCustomer ()` 的映射规则：
->      - `Customer. name` → `record. name`
+>      - `Customer.name` → `record.name`
 >      - `Customer` 的所有属性 → `record`
 >      - `Customer` 的所有属性 → `account`
 >
@@ -647,7 +647,7 @@ MapStruct **支持使用构建器映射不可变对象**。在映射过程中，
 > 可以通过 `@Builder #disableBuilder ` 关闭构建器支持。禁用后，MapStruct 将回退到标准的 getter/setter 方式进行映射。
 
 > [!tip]
-> 构建器类型也可以通过 **对象工厂（Object Factory）** 进行管理。例如，如果 `PersonBuilder` 具有对应的对象工厂，MapStruct 会**优先使用工厂创建 `PersonBuilder` 实例，而不是直接调用 `Person. builder ()` 方法。**
+> 构建器类型也可以通过 **对象工厂（Object Factory）** 进行管理。例如，如果 `PersonBuilder` 具有对应的对象工厂，MapStruct 会**优先使用工厂创建 `PersonBuilder` 实例，而不是直接调用 `Person.builder ()` 方法。**
 
 > [!warning]
 > 此外，构建器的使用会影响 `@BeforeMapping` 和 `@AfterMapping` 方法的行为。详情请参考[[#使用映射前和映射后方法进行映射定制]]。
@@ -709,7 +709,7 @@ public class PersonMapperImpl implements PersonMapper {
 ```
 
 > [!tip]
-> 如果你想禁用构建器，可以将 `mapstruct. disableBuilders` 选项传递给编译器，例如：`-Amapstruct. disableBuilders=true`。
+> 如果你想禁用构建器，可以将 `mapstruct.disableBuilders` 选项传递给编译器，例如：`-Amapstruct.disableBuilders=true`。
 
 ### 使用构造函数（Constructor）
 
@@ -948,7 +948,7 @@ public interface MyAnnotatedWithJavadocMapper {
 
 ### 使用 Mappers 工厂（无依赖注入）
 
-如果不使用依赖注入（DI）框架，可以通过 `org. mapstruct. factory. Mappers` 类获取映射器实例。只需调用 `getMapper ()` 方法，并传入映射器接口类型即可。
+如果不使用依赖注入（DI）框架，可以通过 `org.mapstruct.factory.Mappers` 类获取映射器实例。只需调用 `getMapper ()` 方法，并传入映射器接口类型即可。
 举个栗子：使用 `Mappers` 工厂获取映射器实例
 
 ```java
@@ -993,7 +993,7 @@ CarDTO dto = CarMapper.INSTANCE.carToCarDTO(car);
 
 如果你正在使用依赖注入框架，如 CDI（Java EE 的上下文和依赖注入）或 Spring 框架，建议**通过依赖注入地方式获取映射器实例**，而不是通过上述的 `Mappers` 工厂。为此，你可以通过 `@Mapper (componentModel = "spring")` 或 `@Mapper (componentModel = "cdi")` 指定组件模型，或者在[[#^d4dc33|编译选项]]中配置全局默认组件模型。
 
-目前支持 CDI 和 Spring（后者可通过其自定义注解或使用 JSR 330 注解）。请参阅[[#^d4dc33|编译选项]]以了解 `componentModel` 属性的可选值，这些值与 `mapstruct. defaultComponentModel` 处理器选项相同，常量定义在 `MappingConstants. ComponentModel` 类中。在这两种情况下，都会在生成的映射器实现类中添加上所需的注解，以便使其可以进行依赖注入。以下是一个使用 CDI 的示例：
+目前支持 CDI 和 Spring（后者可通过其自定义注解或使用 JSR 330 注解）。请参阅[[#^d4dc33|编译选项]]以了解 `componentModel` 属性的可选值，这些值与 `mapstruct.defaultComponentModel` 处理器选项相同，常量定义在 `MappingConstants.ComponentModel` 类中。在这两种情况下，都会在生成的映射器实现类中添加上所需的注解，以便使其可以进行依赖注入。以下是一个使用 CDI 的示例：
 
 ```java
 @Mapper(componentModel = MappingConstants.ComponentModel.CDI)
@@ -1054,7 +1054,7 @@ MapStruct 在许多情况下会自动处理类型转换。例如：
   > 从较大范围的数据类型转换为较小范围的数据类型（例如从 `long` 到 `int`）可能会导致数据溢出或精度损失。
   > 可以通过 `@Mapper` 和 `@MapperConfig` 注解中的 `typeConversionPolicy` 属性来控制输出警告或者错误。由于向后兼容的原因，默认值是 `ReportingPolicy. IGNORE`。
 
-- 所有 Java **基本数据类型（包括其包装类型）和字符串 `String`** 之间，例如 `int` 和 `String` 或 `Boolean` 和 `String`。可以指定一个 `java. text. DecimalFormat` 可以理解的格式字符串。
+- 所有 Java **基本数据类型（包括其包装类型）和字符串 `String`** 之间，例如 `int` 和 `String` 或 `Boolean` 和 `String`。可以指定一个 `java.text.DecimalFormat` 可以理解的格式字符串。
 
   举个栗子：`int` ➡️ `String`
 
@@ -1076,7 +1076,7 @@ MapStruct 在许多情况下会自动处理类型转换。例如：
     > [!note]
     > 从 `Integer` 类型转换为枚举类型时，值必须小于枚举值的数量（`enum.values (). length`），否则会抛出 `ArrayOutOfBoundsException` 异常！
 
-- **大数值类型（`java. math. BigInteger`，`java. math. BigDecimal`）和 Java 基本类型（包括其包装类型）以及 `String`** 之间。可以指定一个 `java. text. DecimalFormat` 可以理解的格式字符串。
+- **大数值类型（`java.math.BigInteger`，`java.math.BigDecimal`）和 Java 基本类型（包括其包装类型）以及 `String`** 之间。可以指定一个 `java.text.DecimalFormat` 可以理解的格式字符串。
 
   举个栗子：`BigDecimal` ➡️ `String`
 
@@ -1090,8 +1090,8 @@ MapStruct 在许多情况下会自动处理类型转换。例如：
 
 - JAXB 相关类型：
   - `JAXBElement<T>` 和 `T`，`List<JAXBElement<T>>` 和 `List<T>` 之间。
-  - `java. util. Calendar` / `java. util. Date` 和 JAXB 的 `XMLGregorianCalendar` 之间。
-  - `XMLGregorianCalendar` / **`java. util. Date` 和 `String`** 之间。可以通过 `dateFormat` 选项指定一个 `java. text. SimpleDateFormat` 可以理解的格式字符串。
+  - `java.util.Calendar` / `java.util.Date` 和 JAXB 的 `XMLGregorianCalendar` 之间。
+  - `XMLGregorianCalendar` / **`java.util.Date` 和 `String`** 之间。可以通过 `dateFormat` 选项指定一个 `java.text.SimpleDateFormat` 可以理解的格式字符串。
 
   举个栗子：`Date` ➡️ `String`
 
@@ -1107,45 +1107,45 @@ MapStruct 在许多情况下会自动处理类型转换。例如：
 	```
 
 - Joda-Time 相关类型：
-  - Joda 的 `org. joda. time. DateTime`、`org. joda. time. LocalDateTime`、`org. joda. time. LocalDate`、`org. joda. time. LocalTime` 和 `String` 之间。可以通过 `dateFormat` 选项指定一个 `java. text. SimpleDateFormat` 可以理解的格式字符串。
-  - Joda 的 `org. joda. time. DateTime` 和 `javax. xml. datatype. XMLGregorianCalendar`，`java. util. Calendar` 之间。
-  - Joda 的 `org. joda. time. LocalDateTime`、`org. joda. time. LocalDate` 和 `javax. xml. datatype. XMLGregorianCalendar`，`java. util. Date` 之间。
+  - Joda 的 `org.joda.time.DateTime`、`org.joda.time.LocalDateTime`、`org.joda.time.LocalDate`、`org.joda.time.LocalTime` 和 `String` 之间。可以通过 `dateFormat` 选项指定一个 `java.text.SimpleDateFormat` 可以理解的格式字符串。
+  - Joda 的 `org.joda.time.DateTime` 和 `javax.xml.datatype.XMLGregorianCalendar`，`java.util.Calendar` 之间。
+  - Joda 的 `org.joda.time.LocalDateTime`、`org.joda.time.LocalDate` 和 `javax.xml.datatype.XMLGregorianCalendar`，`java.util.Date` 之间。
 - Java 8 日期时间 API：
-  - `java. time. LocalDate`、`java. time. LocalDateTime` 和 `javax. xml. datatype. XMLGregorianCalendar` 之间。
-  - `java. time. ZonedDateTime`、**`java. time. LocalDateTime`、`java. time. LocalDate`、`java. time. LocalTime` 和 `String`** 之间。可以通过 `dateFormat` 选项指定一个 `java. text. SimpleDateFormat` 可以理解的格式字符串。
-  - **`java. time. Instant`、`java. time. Duration`、`java. time. Period` 和 `String`** 之间，使用每个类的解析方法从 `String` 映射，并使用 `toString` 映射到 `String`。
-  - `java. time. ZonedDateTime` 和 `java. util. Date` 之间，当从给定的 `Date` 映射 `ZonedDateTime` 时，使用系统默认时区。
-  - **`java. time. LocalDateTime` 和 `java. util. Date`** 之间，使用 UTC 作为时区。
-  - **`java. time. LocalDate` 和 `java. util. Date` / `java. sql. Date`** 之间，使用 UTC 作为时区。
-  - **`java. time. Instant` 和 `java. util. Date`** 之间。
-  - **`java. time. LocalDateTime` 和 `java. time. LocalDate`** 之间。
-  - `java. time. ZonedDateTime` 和 `java. util. Calendar` 之间。
+  - `java.time.LocalDate`、`java.time.LocalDateTime` 和 `javax.xml.datatype.XMLGregorianCalendar` 之间。
+  - `java.time.ZonedDateTime`、**`java.time.LocalDateTime`、`java.time.LocalDate`、`java.time.LocalTime` 和 `String`** 之间。可以通过 `dateFormat` 选项指定一个 `java.text.SimpleDateFormat` 可以理解的格式字符串。
+  - **`java.time.Instant`、`java.time.Duration`、`java.time.Period` 和 `String`** 之间，使用每个类的解析方法从 `String` 映射，并使用 `toString` 映射到 `String`。
+  - `java.time.ZonedDateTime` 和 `java.util.Date` 之间，当从给定的 `Date` 映射 `ZonedDateTime` 时，使用系统默认时区。
+  - **`java.time.LocalDateTime` 和 `java.util.Date`** 之间，使用 UTC 作为时区。
+  - **`java.time.LocalDate` 和 `java.util.Date` / `java.sql.Date`** 之间，使用 UTC 作为时区。
+  - **`java.time.Instant` 和 `java.util.Date`** 之间。
+  - **`java.time.LocalDateTime` 和 `java.time.LocalDate`** 之间。
+  - `java.time.ZonedDateTime` 和 `java.util.Calendar` 之间。
 - SQL 时间类型：
-  - **`java. sql. Date` 和 `java. util. Date`** 之间。
-  - **`java. sql. Time` 和 `java. util. Date`** 之间。
-  - **`java. sql. Timestamp` 和 `java. util. Date`** 之间。
-- `java. util. Currency` 和 `String` 之间。
+  - **`java.sql.Date` 和 `java.util.Date`** 之间。
+  - **`java.sql.Time` 和 `java.util.Date`** 之间。
+  - **`java.sql.Timestamp` 和 `java.util.Date`** 之间。
+- `java.util.Currency` 和 `String` 之间。
 
     > [!note]
     >
     > 由 `String` ➡️ `java. util. Currency` 时，值必须是有效的 ISO-4217 货币代码，否则会抛出 `IllegalArgumentException` 异常！
 
-- `java. util. UUID` 和 `String` 之间。
+- `java.util.UUID` 和 `String` 之间。
 
     > [!note]
     >
     > 由 `String` ➡️ `java. util. UUID` 时，值必须是有效的 UUID，否则会抛出 `IllegalArgumentException` 异常！
 
 - **`String` 和 `StringBuilder`** 之间。
-- `java. net. URL` 和 `String` 之间。
+- `java.net.URL` 和 `String` 之间。
 
     > [!note]
     >
     > 由 `String` ➡️ `java. net. URL` 时，值必须是有效的 URL，否则会抛出 `MalformedURLException` 异常！
 
-- `java. util. Locale` 和 `String` 之间。
-    - `java. util. Locale` ➡️ `String`：生成的字符串将是一个格式良好的 IETF BCP 47 语言标签，表示该区域设置。
-    - `String` ➡️ `java. util. Locale`：返回最能代表该语言标签的区域设置。
+- `java.util.Locale` 和 `String` 之间。
+    - `java.util.Locale` ➡️ `String`：生成的字符串将是一个格式良好的 IETF BCP 47 语言标签，表示该区域设置。
+    - `String` ➡️ `java.util.Locale`：返回最能代表该语言标签的区域设置。
 
 ### 映射对象引用
 
@@ -1184,10 +1184,10 @@ public interface CarMapper {
 `@IterableMapping` 和 `@MapMapping` 的工作方式与 `@Mapping` 类似。`MappingControl` 是从 MapStruct 1.4 开始的实验性功能。
 
 `MappingControl` 具有一个枚举类型，对应前面提到的四种映射方式：
-- `MappingControl. Use #DIRECT `（直接映射）
-- `MappingControl. Use #MAPPING_METHOD `（使用映射方法）
-- `MappingControl. Use #BUILT_IN_CONVERSION `（使用内置转换）
-- `MappingControl. Use #COMPLEX_MAPPING `（使用复杂映射）
+- `MappingControl.Use #DIRECT `（直接映射）
+- `MappingControl.Use #MAPPING_METHOD `（使用映射方法）
+- `MappingControl.Use #BUILT_IN_CONVERSION `（使用内置转换）
+- `MappingControl.Use #COMPLEX_MAPPING `（使用复杂映射）
 指定枚举表示启用该映射方式，未指定则禁用。默认情况下，这四种选项均处于启用状态，允许所有映射方式。
 
 > [!info]
@@ -1226,10 +1226,10 @@ public interface FishTankMapper {
 
 上述示例展示了几种映射方式：
 
-- `@Mapping (target = "fish. kind", source = "fish. type")` 解决属性名称不同的问题。
-- `@Mapping (target = "fish. name", ignore = true)` 忽略某个属性的映射。
-- `@Mapping (target = "ornament", source = "interior. ornament")` & `@Mapping (target = "material. materialType", source = "material")` 允许从不同层级映射属性。
-- `@Mapping (target = "quality. report. organisation. name", source = "quality. report. organisationName")` 在不同嵌套层级间映射特定属性。
+- `@Mapping (target = "fish.kind", source = "fish.type")` 解决属性名称不同的问题。
+- `@Mapping (target = "fish.name", ignore = true)` 忽略某个属性的映射。
+- `@Mapping (target = "ornament", source = "interior.ornament")` & `@Mapping (target = "material.materialType", source = "material")` 允许从不同层级映射属性。
+- `@Mapping (target = "quality.report.organisation.name", source = "quality.report.organisationName")` 在不同嵌套层级间映射特定属性。
 
 有时候，源对象和目标对象的属性层级不匹配，此时可以"挑选"某些属性进行映射。例如：
 
@@ -1265,9 +1265,9 @@ public interface FishTankMapperWithDocument {
 ```
 
 在此示例中：
-- `@Mapping (target = "fish. name", expression = "java (\"Jaws\")")` 使用 Java 表达式为 `fish. name` 赋固定值 `"Jaws"`。
-- `@Mapping (target = "quality. document", source = "quality. report")` 指定 `document` 由 `report` 映射而来，尽管它们的名称不同，MapStruct 仍会根据该规则进行转换。
-- `@Mapping (target = "quality. document. organisation. name", constant = "NoIdeaInc")` 使用常量 `"NoIdeaInc"` 赋值给 `organisation. name`。
+- `@Mapping (target = "fish.name", expression = "java (\"Jaws\")")` 使用 Java 表达式为 `fish.name` 赋固定值 `"Jaws"`。
+- `@Mapping (target = "quality.document", source = "quality.report")` 指定 `document` 由 `report` 映射而来，尽管它们的名称不同，MapStruct 仍会根据该规则进行转换。
+- `@Mapping (target = "quality.document.organisation.name", constant = "NoIdeaInc")` 使用常量 `"NoIdeaInc"` 赋值给 `organisation.name`。
 
 MapStruct 在处理嵌套对象时，会自动对源对象中的每个嵌套属性进行 `null` 检查，避免 `NullPointerException`。
 
@@ -1442,7 +1442,7 @@ public class CarMapperImpl implements CarMapper {
 }
 ```
 
-- `@TargetType Class<T>` 让 MapStruct 在调用 `ReferenceMapper.resolve ()` 时，传入 `Owner. class` 作为目标类型。
+- `@TargetType Class<T>` 让 MapStruct 在调用 `ReferenceMapper.resolve ()` 时，传入 `Owner.class` 作为目标类型。
 - 这样，`ReferenceMapper` 可以通用地处理不同的 JPA 实体，而不仅仅是 `Person`。
 - 生成的代码会自动调用 `ReferenceMapper.resolve ()` 方法，并传入目标对象的类型。
 

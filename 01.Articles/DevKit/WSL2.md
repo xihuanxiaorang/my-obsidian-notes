@@ -2,7 +2,7 @@
 tags:
   - DevKit
 create_time: 2024-12-28T17:30:00
-update_time: 2025/02/25 22:03
+update_time: 2025/03/13 19:03
 ---
 
 > [!quote]
@@ -160,7 +160,7 @@ wsl --set-default-version 2
    ![](https://img.xiaorang.fun/202502252159312.png)
 2. 使用 `oh-my-posh font install` 命令安装 [Nerd Fonts](https://www.nerdfonts.com/) 字体，官方推荐安装 [Meslo LGM NF](https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/Meslo.zip) 字体，不过可以根据自己的喜爱选择其他的字体，如 `DejaVuSansMono` 字体！！！
    ![](https://img.xiaorang.fun/202502252159313.png)
-   使用⬇️箭头选中 `Meslo` 字体，回车开始安装... 如下所示，使用官方这种安装方式会一直卡住不动，因此不是很推荐！
+   使用⬇️箭头选中 `Meslo` 字体，回车开始安装...如下所示，使用官方这种安装方式会一直卡住不动，因此不是很推荐！
    ![](https://img.xiaorang.fun/202502252159314.png)
    进入 [Releases · ryanoasis/nerd-fonts (github.com)](https://github.com/ryanoasis/nerd-fonts/releases) 页面，选择下载 `Meslo.tar.xz` 包，复制下载链接
    ![](https://img.xiaorang.fun/202502252159315.png)使用 `wget https://slink.ltd/https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/Meslo.tar.xz ` 命令开始下载...

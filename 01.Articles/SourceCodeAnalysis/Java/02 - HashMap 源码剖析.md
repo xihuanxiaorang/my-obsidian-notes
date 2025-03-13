@@ -5,7 +5,7 @@ tags:
   - SourceCodeAnalysis
   - DataStructure
 create_time: 2024-12-24 17:50
-update_time: 2025/02/25 18:17
+update_time: 2025/03/13 19:04
 version: 8
 ---
 
@@ -314,7 +314,7 @@ static final int hash(Object key) {
 ```
 
 - 如果 `key` 为 `null`，直接返回 `0`。
-- 如果 `key` 不为 `null`，通过公式 `(h = key. hashCode ()) ^ (h >>> 16)` 计算哈希值：
+- 如果 `key` 不为 `null`，通过公式 `(h = key.hashCode ()) ^ (h >>> 16)` 计算哈希值：
   1. 先获取 `key` 的哈希值 `h`。
   2. 再将 `h` 无符号右移 16 位（高位补 0），与 `h` 本身按位异或。
   3. 高 16 位保持不变（与 0 异或仍为自身），而低 16 位与高 16 位发生异或。
@@ -334,7 +334,7 @@ static final int hash(Object key) {
 #### 添加元素主流程✨
 
 1. 检查数组 `table` 是否已初始化：
-   - 若未初始化（`tab == null || tab. length == 0`），则调用 `resize` 方法先完成初始化。
+   - 若未初始化（`tab == null || tab.length == 0`），则调用 `resize` 方法先完成初始化。
 2. 根据公式 `index = (n - 1) & hash` 计算插入位置索引 `i`，并取出该位置节点 `p = tab[i]`：
    - 若 `p == null`（位置为空），直接插入新节点，**元素个数 size + 1**。
    - 若 `p != null`（位置已有节点），按以下情况处理：
@@ -580,7 +580,7 @@ final Node<K,V>[] resize() {
      - 检查 `key` 引用是否相同或通过 `equals` 方法判定为相等。
    - 若匹配，则直接返回该节点。
 3. 处理链表或树结构：
-   - 若首节点不匹配，但存在下一个节点 (`first. next != null`)，则进一步判断：
+   - 若首节点不匹配，但存在下一个节点 (`first.next != null`)，则进一步判断：
      - 如果首节点是树节点 (`TreeNode`)，调用树节点的 `getTreeNode` 方法。
      - 如果是链表结构，遍历链表节点：
        - 对每个节点，逐一比较 `hash` 值和 `key` 值，找到匹配的节点则返回。
@@ -693,7 +693,7 @@ final Node<K,V> removeNode(int hash, Object key, Object value,
     - `table` 中包含大量未使用的空槽位，直接序列化整个数组会浪费存储空间。
     - 自定义序列化逻辑可以仅保存实际存在的键值对，避免存储无效数据，从而减少存储和传输的开销。
 2. **保证跨 JVM 一致性**
-    - `HashMap` 的数据存储位置依赖于键的 `hashCode`，而 `Object. hashCode ()` 是基于 native 实现的，在不同 JVM 上可能有不同的结果。
+    - `HashMap` 的数据存储位置依赖于键的 `hashCode`，而 `Object.hashCode ()` 是基于 native 实现的，在不同 JVM 上可能有不同的结果。
     - 通过序列化键值对而非直接保存数组，反序列化时重新计算哈希值并重新存储数据，可以确保在不同 JVM 环境下的数据一致性。
 
 #### writeObject 方法

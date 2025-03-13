@@ -3,7 +3,7 @@ tags:
   - Java
 repository: https://github.com/xihuanxiaorang/java-study/tree/core-study/core-study/spi-study
 create_time: 2024-12-28T17:52:00
-update_time: 2025/02/25 18:15
+update_time: 2025/03/13 19:03
 ---
 
 ## 简介
@@ -74,7 +74,7 @@ public class ApiTest {
 }
 ```
 
-下面我们重点了解一下数据库驱动的加载方式。在 Java SPI 机制出现之前，程序员通常通过调用 Class. forName 手动加载数据库驱动，例如：
+下面我们重点了解一下数据库驱动的加载方式。在 Java SPI 机制出现之前，程序员通常通过调用 Class.forName 手动加载数据库驱动，例如：
 
 ```java
 // 加载 MySQL8 数据库驱动
@@ -87,7 +87,7 @@ Class.forName("oracle.jdbc.driver.OracleDriver");
 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 ```
 
-🤔：为什么使用 Class. forName 就能加载数据库驱动呢？
+🤔：为什么使用 Class.forName 就能加载数据库驱动呢？
 🤓：这是因为 JDBC 规范要求 Driver 实现类在类加载的时候能将自动将自身的实例对象注册到 DriverManager 中。其中 MySQL 的 Driver 源码如下所示：
 
 ```java
@@ -113,7 +113,7 @@ public class Driver extends NonRegisteringDriver implements java.sql.Driver {
 }
 ```
 
-具体来说，每个数据库驱动都会实现 java. sql. Driver 接口，并在静态代码块中通过调用 `DriverManager.registerDriver()` 方法，将自身注册到 DriverManager 的驱动列表中。因此，使用 Class. forName 加载驱动类时，静态代码块会自动执行，从而完成驱动的注册和加载。
+具体来说，每个数据库驱动都会实现 java.sql.Driver 接口，并在静态代码块中通过调用 `DriverManager.registerDriver()` 方法，将自身注册到 DriverManager 的驱动列表中。因此，使用 Class.forName 加载驱动类时，静态代码块会自动执行，从而完成驱动的注册和加载。
 
 > [!chat-bubble]+ 看着这些硬编码的类名，作为一名有追求的程序员，脑海中自然会冒出这样的念头：
 >
@@ -128,12 +128,12 @@ public class Driver extends NonRegisteringDriver implements java.sql.Driver {
 
 于是，JDBC 借助 Java SPI 机制实现了数据库驱动的自动加载。通过这种方式：
 
-- 程序员无需显式调用 Class. forName 来加载驱动。
+- 程序员无需显式调用 Class.forName 来加载驱动。
 - 只需在项目中引入所需的数据库驱动 jar 包即可。
 - 更换数据库时，只需更换对应的 jar 包，无需修改代码。
 
 🤔：那么 JDBC 具体是如何实现的呢？
-🤓：以 MySQL 驱动为例，当你第一次调用 DriverManager. getConnection (url, user, password); 方法时，系统会首先调用 DriverManager 类中的静态方法 ensureDriversInitialized ()，该方法负责加载数据库驱动。具体实现流程如下：
+🤓：以 MySQL 驱动为例，当你第一次调用 DriverManager.getConnection (url, user, password); 方法时，系统会首先调用 DriverManager 类中的静态方法 ensureDriversInitialized ()，该方法负责加载数据库驱动。具体实现流程如下：
 
 1. 第 601 行代码：使用 SPI 机制动态加载 Driver 接口的实现类。
 
@@ -159,12 +159,12 @@ public class Driver extends NonRegisteringDriver implements java.sql.Driver {
 2. 文件名称：文件名必须为 Service 接口的全限定类名。
 3. 文件内容：写入 Service 实现类（即 Service Provider）的全限定类名。多个实现类需换行分开，每行一个。
 
-以 MySQL 数据库驱动为例，查看 mysql-connector-java 的 jar 包。在 resources/META-INF/services 目录下存在一个名称为 java. sql. Driver（Service 接口的全限定类名）的配置文件，其内容是 MySQL 数据库驱动类的全限定类名： `com.mysql.cj.jdbc.Driver` 。
+以 MySQL 数据库驱动为例，查看 mysql-connector-java 的 jar 包。在 resources/META-INF/services 目录下存在一个名称为 java.sql.Driver（Service 接口的全限定类名）的配置文件，其内容是 MySQL 数据库驱动类的全限定类名： `com.mysql.cj.jdbc.Driver` 。
 ![](https://img.xiaorang.fun/202502251814555.png)
 
 ### Service Provider 类必须具备无参构造方法
 
-SPI 机制要求 Service 接口的实现类（即 Service Provider 类）必须提供无参构造方法。因为 SPI 使用反射技术 Class. forName () 来实例化服务提供者，而反射机制默认调用的是无参构造方法。
+SPI 机制要求 Service 接口的实现类（即 Service Provider 类）必须提供无参构造方法。因为 SPI 使用反射技术 Class.forName () 来实例化服务提供者，而反射机制默认调用的是无参构造方法。
 
 例如，MySQL 数据库驱动类 Driver 就提供了无参构造方法：
 
@@ -338,7 +338,7 @@ SpringBoot 项目启动的时候默认会自动扫描当前项目的 package，�
 以 [mybatis-spring-boot-autoconfigure](https://github.com/mybatis/spring-boot-starter/tree/master/mybatis-spring-boot-autoconfigure/src/main/java/org/mybatis/spring/boot/autoconfigure) 为例来分析一下 SpringBoot 自动配置：
 ![](https://img.xiaorang.fun/202502251814558.png)
 
-由上图可知，在 mybatis-spring-boot-autoconfigure 中存在两个自动配置类，分别是 MybatisAutoConfiguration 和 MybatisLanguageDriverAutoConfiguration，然后在 resources 目录下的 META-INF 中确实存在一个 spring. factories 配置文件，里面的内容是 K = V 的格式，其中 KEY 是 EnableAutoConfiguration 的全限定类名，VALUE 则是两个自动配置类的全限定类名，两个类名之间用逗号隔开。
+由上图可知，在 mybatis-spring-boot-autoconfigure 中存在两个自动配置类，分别是 MybatisAutoConfiguration 和 MybatisLanguageDriverAutoConfiguration，然后在 resources 目录下的 META-INF 中确实存在一个 spring.factories 配置文件，里面的内容是 K = V 的格式，其中 KEY 是 EnableAutoConfiguration 的全限定类名，VALUE 则是两个自动配置类的全限定类名，两个类名之间用逗号隔开。
 
 最后，简单总结一下 SpringBoot 自动配置的核心流程：
 

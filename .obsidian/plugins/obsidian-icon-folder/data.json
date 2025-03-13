@@ -6,6 +6,7 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiStarHalfLine",
       "RiToolsLine",
       "RiAlibabaCloudLine",
       "RiFireFill",
@@ -14,8 +15,7 @@
       "RiBrainLine",
       "RiCalendarLine",
       "RiBookLine",
-      "RiCalendarCheckLine",
-      "RiVideoOnLine"
+      "RiCalendarCheckLine"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -59,7 +59,7 @@
   "01.Articles/Reading": "RiBookOpenLine",
   "Templates": "RiShapeLine",
   "Zttachments": "RiAttachment2",
-  "Recommend": "RiHeartLine",
+  "Recommend": "RiStarHalfLine",
   "Recommend/Books": "RiBookReadLine",
   "Recommend/Movies": "RiMovie2Line",
   "01.Articles/DataStructure & Algorithm/Algorithm/排序算法": "RiSortNumberAsc",

@@ -4,7 +4,7 @@ tags:
 repository: https://github.com/xihuanxiaorang/java-study/tree/core-study/core-study/lambda-study
 version: 8
 create_time: 2024-12-28T17:51:00
-update_time: 2025/02/25 18:14
+update_time: 2025/03/13 19:03
 ---
 
 Lambda 表达式、强大的 Stream API、全新时间日期 API；新特性使得 Java 的运行速度更快、代码更少（Lambda 表达式）、便于并行、最大化减少空指针异常！
@@ -438,7 +438,7 @@ public class Person {
 ### Lambda 作用范围
 
 > [!quote]
-> Accessing outer scope variables from Lambda expressions is very similar to anonymous objects. You can access final variables from the local outer scope as well as instance fields and static variables.
+> Accessing outer scope variables from Lambda expressions is very similar to anonymous objects.You can access final variables from the local outer scope as well as instance fields and static variables.
 
 ⬇️
 
@@ -715,10 +715,10 @@ public void test4() {
 创建 Stream 流的几种方式：
 
 - 从集合 | 数组创建（最常见）
-- 使用 Stream. of (T)
-- 使用 Stream. builder ()
+- 使用 Stream.of (T)
+- 使用 Stream.builder ()
 - 从其他来源（如文件、正则表达式分割等）创建
-- 使用无限流：使用 Stream. iterate 和 Stream. generate 方法可以创建无限流，这类流会按需生成或迭代新的元素直至程序显式终止它们
+- 使用无限流：使用 Stream.iterate 和 Stream.generate 方法可以创建无限流，这类流会按需生成或迭代新的元素直至程序显式终止它们
 
 ```java hl:16,54,61
 public class StreamTest {
@@ -1062,8 +1062,8 @@ User(id=5, name=钱七, age=25, password=123456, email=q7@qq.com)
 
 sorted 排序：
 
-- 自然排序，适用于内置的数据类型，要求 Stream 内的元素实现 java. lang. Comparable 接口。
-- 自定义排序，适用于自定义的数据类型，要求手动实现 Comparable 接口中的 compareTo 方法。其中 compareTo 就是比较两个值，如果前者大于后者，返回 1；两者相等返回 0；前者小于后者返回 -1；更为简单的用法是 Comparator. comparingXxx (比较的属性)。
+- 自然排序，适用于内置的数据类型，要求 Stream 内的元素实现 java.lang.Comparable 接口。
+- 自定义排序，适用于自定义的数据类型，要求手动实现 Comparable 接口中的 compareTo 方法。其中 compareTo 就是比较两个值，如果前者大于后者，返回 1；两者相等返回 0；前者小于后者返回 -1；更为简单的用法是 Comparator.comparingXxx (比较的属性)。
 
 > [!note]
 > 使用 `sorted ()` 对 User 集合进行排序的时候，User 需要实现 Comparable 接口，否则的话会报 ClassCastException 转换异常，无法将 User 对象转换为 Comparable 接口实例！
@@ -1347,8 +1347,8 @@ collect 收集：对流中的数据执行收集操作（如收集到 List，Set�
 | averagingInt   | Double                     | 用来计算流中元素经过 ToIntFunction 函数处理后的所有 int 值的算术平均值。如果流为空，则返回 0                                                                                                    |
 | summarizingInt | IntSummaryStatistics       | 对流中的元素进行整数值的汇总统计，包括总和、平均值、最大值、最小值等。                                                                                                                          |
 | joining        | String                     | 用于将流中的字符序列元素连接成一个字符串。可以提供分隔符、前缀和后缀。                                                                                                                          |
-| maxBy          | Optional<T>                | 根据给定的比较器选择流中的最大值。如果流为空，返回 Optional. empty ()。                                                                                                                         |
-| minBy          | Optional<T>                | 根据给定的比较器选择流中的最小值。如果流为空，返回 Optional. empty ()。                                                                                                                         |
+| maxBy          | Optional<T>                | 根据给定的比较器选择流中的最大值。如果流为空，返回 Optional.empty ()。                                                                                                                         |
+| minBy          | Optional<T>                | 根据给定的比较器选择流中的最小值。如果流为空，返回 Optional.empty ()。                                                                                                                         |
 | reducing       | 规约产生的类型             | 根据提供的合并规则将流中的元素合并成一个单一的值。可以用来做如求和、求最大值、求最小值等。                                                                                                      |
 | groupingBy     | Map<K, List<T>>            | 根据流中元素的某个属性值对流进行分组，生成一个 Map，键是属性值，值是该属性值对应的元素列表。                                                                                                    |
 | partitioningBy | Map<Boolean, List<T>>      | 根据给定的条件对流中的元素进行分区，生成一个 Map。键是布尔值，表示元素是否满足条件，值是满足条件或不满足条件的元素列表。                                                                        |
@@ -1775,7 +1775,7 @@ Optional 私有了构造函数，因此只能通过 Optional 对外提供的三�
 
 - `public static<T> Optional<T> empty ()` 返回一个空的 Optional 实例，即不包含任何值的 Optional。这个方法通常用于表示空值的情况。
 - `public static <T> Optional<T> of (T value)` 创建一个包含非空值的 Optional 实例。如果传入的值为 null 的话会直接抛出 <span style="background:rgba(255, 183, 139, 0.55)">NullPointerException</span> 异常。
-- `public static <T> Optional<T> ofNullable (T value)` 创建一个 Optional 实例。如果传入的值是 null，则返回一个空的 Optional（Optional. empty ()）。否则，返回一个包含该值的 Optional。
+- `public static <T> Optional<T> ofNullable (T value)` 创建一个 Optional 实例。如果传入的值是 null，则返回一个空的 Optional（Optional.empty ()）。否则，返回一个包含该值的 Optional。
 
 #### Optional 实例方法
 

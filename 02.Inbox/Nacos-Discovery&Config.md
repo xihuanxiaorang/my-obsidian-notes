@@ -3,7 +3,7 @@ tags:
   - SpringCloudAlibaba
   - SpringCloud
 create_time: 2025-02-17T23:17:00
-update_time: 2025/02/25 18:58
+update_time: 2025/03/13 19:02
 ---
 
 Nacos 是 Dynamic Naming and Configuration Service 的首字母简称，是 Alibaba 开源的、易于构建云原生应用的动态**服务发现**、**配置管理**和**服务管理**平台。
@@ -44,13 +44,13 @@ Nacos 依赖 Java 环境来运行，请确保是在以下版本环境中安装�
 		tar -zxvf jdk-8u371-linux-x64.tar.gz
 		```
 
-3. 配置环境变量
+3.5.环境变量
 
 	```bash
 	vim /etc/profile
 	```
 
-4. 输入 `i` 进入编辑模式，将以下内容粘贴到文件末尾，`esc` ➡️ `:wq`，保存退出
+4.6.`i` 进入编辑模式，将以下内容粘贴到文件末尾，`esc` ➡️ `:wq`，保存退出
 
 	```bash
 	export JAVA_HOME=/usr/local/java/jdk1.8.0_371
@@ -58,13 +58,13 @@ Nacos 依赖 Java 环境来运行，请确保是在以下版本环境中安装�
 	export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 	```
 
-5. 重新加载配置文件
+5.7.加载配置文件
 
 	```bash
 	source /etc/profile
 	```
 
-6. 使用 `java -version` 命令验证是否安装成功
+6.8.`java -version` 命令验证是否安装成功
    ![](https://img.xiaorang.fun/202502251844953.png)
 
 ### 版本选择
@@ -73,10 +73,10 @@ Nacos 依赖 Java 环境来运行，请确保是在以下版本环境中安装�
 
 | SpringCloudAlibaba | Spring Cloud | SpringBoot     | Nacos |
 | ------------------ | ------------ | -------------- | ----- |
-| 2.2.9. RELEASE      | Hoxton. SR12  | 2.3.12. RELEASE | 2.1.0 |
+| 2.2.9.RELEASE      | Hoxton.SR12  | 2.3.12.RELEASE | 2.1.0 |
 | 2021.0.5.0         | 2021.0.5     | 2.6.13         | 2.2.0 |
 
-如上表所示，假如 SpringCloudAlibaba 选择 2.2.9. RELEASE 版本，则 Nacos 组件对应的版本为 2.1.0，因此需要安装 2.1.0 版本的 nacos-server 服务器 [Release 2.1.0 (Apr 29, 2022) · alibaba/nacos (github.com)](https://github.com/alibaba/nacos/releases/tag/2.1.0)
+如上表所示，假如 SpringCloudAlibaba 选择 2.2.9.RELEASE 版本，则 Nacos 组件对应的版本为 2.1.0，因此需要安装 2.1.0 版本的 nacos-server 服务器 [Release 2.1.0 (Apr 29, 2022) · alibaba/nacos (github.com)](https://github.com/alibaba/nacos/releases/tag/2.1.0)
 ![](https://img.xiaorang.fun/202502251845862.png)
 
 ```bash
@@ -133,7 +133,7 @@ Linux & 单机模式 `sh startup.sh -m standalone`
 
 #### 父模块
 
-首先创建父模块 `spring-cloud-study`，其 pom. xml 配置文件如下所示：确定使用的 SpringCloud 版本为 `Hoxton.SR12`。
+首先创建父模块 `spring-cloud-study`，其 pom.xml 配置文件如下所示：确定使用的 SpringCloud 版本为 `Hoxton.SR12`。
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -168,7 +168,7 @@ Linux & 单机模式 `sh startup.sh -m standalone`
 </project>
 ```
 
-再创建 `spring-cloud-alibaba-study` 模块，它的的父模块为 `spring-cloud-study` 模块，其 pom. xml 配置文件如下所示：确定使用的 SpringCloudAlibaba 版本为 `2.2.9. RELEASE`，SpringBoot 版本为 `2.3.12. RELEASE`。
+再创建 `spring-cloud-alibaba-study` 模块，它的的父模块为 `spring-cloud-study` 模块，其 pom.xml 配置文件如下所示：确定使用的 SpringCloudAlibaba 版本为 `2.2.9.RELEASE`，SpringBoot 版本为 `2.3.12.RELEASE`。
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -210,7 +210,7 @@ Linux & 单机模式 `sh startup.sh -m standalone`
 </project>
 ```
 
-以上两个模块主要用于管理依赖的版本；再创建 `spring-cloud-alibaba-nacos-study` 模块，它的父模块为 `spring-cloud-alibaba-study` 模块，其 pom. xml 配置文件如下所示：
+以上两个模块主要用于管理依赖的版本；再创建 `spring-cloud-alibaba-nacos-study` 模块，它的父模块为 `spring-cloud-alibaba-study` 模块，其 pom.xml 配置文件如下所示：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -229,7 +229,7 @@ Linux & 单机模式 `sh startup.sh -m standalone`
 </project>
 ```
 
-最后创建 `nacos-discovery-study` 模块，它的父模块为 `spring-cloud-alibaba-nacos-study` 模块，其 pom. xml 配置文件如下所示：
+最后创建 `nacos-discovery-study` 模块，它的父模块为 `spring-cloud-alibaba-nacos-study` 模块，其 pom.xml 配置文件如下所示：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -274,7 +274,7 @@ Linux & 单机模式 `sh startup.sh -m standalone`
 
 #### 启动一个 Provider 应用
 
-创建一个 `nacos-discovery-provider` 模块，它的父模块为 `nacos-discovery-study` 模块，其 pom. xml 配置文件如下所示：
+创建一个 `nacos-discovery-provider` 模块，它的父模块为 `nacos-discovery-study` 模块，其 pom.xml 配置文件如下所示：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -294,7 +294,7 @@ Linux & 单机模式 `sh startup.sh -m standalone`
 </project>
 ```
 
-application. yml 配置文件如下所示：配置当前服务的名称为 `nacos-provider`，端口为 `8081`、nacos 服务器地址为 `127.0.0.1:8848`；
+application.yml 配置文件如下所示：配置当前服务的名称为 `nacos-provider`，端口为 `8081`、nacos 服务器地址为 `127.0.0.1:8848`；
 
 ```yaml
 server:
@@ -317,11 +317,11 @@ management:
 
 | 配置项   | Key                                      | 默认值                        | 说明                                               |
 | ----- | ---------------------------------------- | -------------------------- | ------------------------------------------------ |
-| 服务端地址 | spring. cloud. nacos. discovery. server-addr |                            | Nacos Server 启动监听的 ip 地址和端口                      |
-| 服务名   | spring. cloud. nacos. discovery. service     | ${spring. application. name} | 给当前的服务命名                                         |
-| 服务分组  | spring. cloud. nacos. discovery. group       | DEFAULT_GROUP              | 设置服务所处的分组                                        |
-| 权重    | spring. cloud. nacos. discovery. weight      | 1                          | 取值范围 1 到 100，数值越大，权重越大                           |
-| 命名空间  | spring. cloud. nacos. discovery. namespace   |                            | 常用场景之一是不同环境的注册的区分隔离，例如开发测试环境和生产环境的资源（如配置、服务）隔离等。 |
+| 服务端地址 | spring.cloud.nacos.discovery.server-addr |                            | Nacos Server 启动监听的 ip 地址和端口                      |
+| 服务名   | spring.cloud.nacos.discovery.service     | ${spring.application.name} | 给当前的服务命名                                         |
+| 服务分组  | spring.cloud.nacos.discovery.group       | DEFAULT_GROUP              | 设置服务所处的分组                                        |
+| 权重    | spring.cloud.nacos.discovery.weight      | 1                          | 取值范围 1 到 100，数值越大，权重越大                           |
+| 命名空间  | spring.cloud.nacos.discovery.namespace   |                            | 常用场景之一是不同环境的注册的区分隔离，例如开发测试环境和生产环境的资源（如配置、服务）隔离等。 |
 
 启动 Provider 示例，如下所示：
 
@@ -352,7 +352,7 @@ public class NacosProviderApplication {
 
 #### 启动一个 Consumer 应用
 
-创建一个 `nacos-discovery-consumer` 模块，它的父模块为 `nacos-discovery-study` 模块，其 pom. xml 配置文件如下所示：
+创建一个 `nacos-discovery-consumer` 模块，它的父模块为 `nacos-discovery-study` 模块，其 pom.xml 配置文件如下所示：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -372,7 +372,7 @@ public class NacosProviderApplication {
 </project>
 ```
 
-application. yml 配置如下所示：配置当前服务的名称为 `nacos-consumer`，端口为 `8082`、nacos 服务器地址为 `127.0.0.1:8848`；
+application.yml 配置如下所示：配置当前服务的名称为 `nacos-consumer`，端口为 `8082`、nacos 服务器地址为 `127.0.0.1:8848`；
 
 ```yaml
 server:
@@ -479,7 +479,7 @@ public class NacosConsumerApplication {
 > }
 > ```
 
-在这个例子中咱们注入了一个 `LoadBalancerClient` 的实例（因为 `spring-cloud-starter-alibaba-nacos-discovery` 内置了 **Ribbon**，所以可以直接注入 `LoadBalancerClient`），并且手动的实例化一个 `RestTemplate`，同时将 `spring. application. name` 的配置值注入到应用中来，目的是调用 Provider 提供的服务时，将当前配置的应用名给显示出来。
+在这个例子中咱们注入了一个 `LoadBalancerClient` 的实例（因为 `spring-cloud-starter-alibaba-nacos-discovery` 内置了 **Ribbon**，所以可以直接注入 `LoadBalancerClient`），并且手动的实例化一个 `RestTemplate`，同时将 `spring.application.name` 的配置值注入到应用中来，目的是调用 Provider 提供的服务时，将当前配置的应用名给显示出来。
 
 项目启动成功之后，查看 Nacos 控制台，可以看到 nacos-consumer 服务已经注册成功！
 ![](https://img.xiaorang.fun/202502251849107.png)
@@ -588,7 +588,7 @@ Spring Cloud Alibaba Nacos Config 是 Config Server 和 Client 的替代方案�
 
 ### 如何引入 Nacos Config Starter 进行配置管理
 
-如果你想要在项目中使用 Nacos 来实现配置管理，可以使用 groupId 为 `com. alibaba. cloud` 和 artifactId 为 `spring-cloud-starter-alibaba-nacos-config` 的 Starter。
+如果你想要在项目中使用 Nacos 来实现配置管理，可以使用 groupId 为 `com.alibaba.cloud` 和 artifactId 为 `spring-cloud-starter-alibaba-nacos-config` 的 Starter。
 
 ```xml
 <dependency>
@@ -624,7 +624,7 @@ Group  :    DEFAULT_GROUP
 
 #### 客户端使用方式
 
-创建一个 `nacos-config-study` 模块，它的父模块为 `spring-cloud-alibaba-nacos-study` 模块，其 pom. xml 配置文件如下所示：
+创建一个 `nacos-config-study` 模块，它的父模块为 `spring-cloud-alibaba-nacos-study` 模块，其 pom.xml 配置文件如下所示：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -674,9 +674,9 @@ public class NacosConfigApplication {
 ```
 
 > [!ATTENTION]
-> 在运行此示例程序之前，必须使用 **bootstrap. properties** 或者 **bootstrap. yml** 配置文件来配置 Nacos Server 地址！
+> 在运行此示例程序之前，必须使用 **bootstrap.properties** 或者 **bootstrap.yml** 配置文件来配置 Nacos Server 地址！
 
-bootstrap. yml 配置文件如下所示：
+bootstrap.yml 配置文件如下所示：
 
 ```yaml
 server:
@@ -696,20 +696,20 @@ management:
 ```
 
 > [!NOTE]
-> 当你使用使用域名的方式来访问 Nacos 时，`spring. cloud. nacos. config. server-addr` 配置的方式为 `域名:port`。例如 Nacos 的域名为 abc. com. nacos，监听的端口为 80，则 `spring. cloud. nacos. config. server-addr=abc. com. nacos:80`。❗注意：80 端口不能省略！
+> 当你使用使用域名的方式来访问 Nacos 时，`spring.cloud.nacos.config.server-addr` 配置的方式为 `域名:port`。例如 Nacos 的域名为 abc.com.nacos，监听的端口为 80，则 `spring.cloud.nacos.config.server-addr=abc.com.nacos:80`。❗注意：80 端口不能省略！
 
 对于以上 Nacos Config Starter 配置不清楚的小伙伴可以参考[关于 Nacos Config Starter 更多的配置项信息](https://spring-cloud-alibaba-group.github.io/github-pages/hoxton/zh-cn/index.html#_关于_nacos_config_starter_更多的配置项信息)，如下列举出常用配置项：
 
 | 配置项          | Key                                         | 默认值                        | 说明                                                                                                                                                                                                         |
 | ------------ | ------------------------------------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 服务端地址        | spring. cloud. nacos. config. server-addr       |                            | Nacos Server 启动监听的 ip 地址和端口                                                                                                                                                                                |
-| 配置对应的 DataId | spring. cloud. nacos. config. name              |                            | `dataId = ${prefix}-${spring. profiles. active}.${file-extension}`，而其中 prefix 的可选值有如下三种，优先级从高到底依次为：`spring. cloud. nacos. config. prefix` ➡️ `spring. cloud. nacos. config. name` ➡️ 默认值 `${spring. application. name}` |
-| 配置对应的 DataId | spring. cloud. nacos. config. prefix            | ${spring. application. name} | 同上                                                                                                                                                                                                         |
-| GROUP        | spring. cloud. nacos. config. group             | DEFAULT_GROUP              | 配置对应的组                                                                                                                                                                                                     |
-| 文件扩展名        | spring. cloud. nacos. config. fileExtension     | properties                 | 配置项对应的文件扩展名，目前支持 properties 和 yaml (yml)                                                                                                                                                                    |
-| 命名空间         | spring. cloud. nacos. config. namespace         |                            | 常用场景之一是不同环境的配置的区分隔离，例如开发测试环境和生产环境的资源（如配置、服务）隔离等                                                                                                                                                            |
-| 共享配置         | spring. cloud. nacos. config. shared-configs    |                            | 属性是个集合，内部由 `Config` POJO 组成。`Config` 有 4 个属性，分别是 `dataId`, `group`，`fileExtension` 以及 `refresh`                                                                                                             |
-| 扩展配置         | spring. cloud. nacos. config. extension-configs |                            | 属性是个集合，内部由 `Config` POJO 组成。`Config` 有 4 个属性，分别是 `dataId`, `group`，`fileExtension` 以及 `refresh`                                                                                                             |
+| 服务端地址        | spring.cloud.nacos.config.server-addr       |                            | Nacos Server 启动监听的 ip 地址和端口                                                                                                                                                                                |
+| 配置对应的 DataId | spring.cloud.nacos.config.name              |                            | `dataId = ${prefix}-${spring.profiles.active}.${file-extension}`，而其中 prefix 的可选值有如下三种，优先级从高到底依次为：`spring.cloud.nacos.config.prefix` ➡️ `spring.cloud.nacos.config.name` ➡️ 默认值 `${spring.application.name}` |
+| 配置对应的 DataId | spring.cloud.nacos.config.prefix            | ${spring.application.name} | 同上                                                                                                                                                                                                         |
+| GROUP        | spring.cloud.nacos.config.group             | DEFAULT_GROUP              | 配置对应的组                                                                                                                                                                                                     |
+| 文件扩展名        | spring.cloud.nacos.config.fileExtension     | properties                 | 配置项对应的文件扩展名，目前支持 properties 和 yaml (yml)                                                                                                                                                                    |
+| 命名空间         | spring.cloud.nacos.config.namespace         |                            | 常用场景之一是不同环境的配置的区分隔离，例如开发测试环境和生产环境的资源（如配置、服务）隔离等                                                                                                                                                            |
+| 共享配置         | spring.cloud.nacos.config.shared-configs    |                            | 属性是个集合，内部由 `Config` POJO 组成。`Config` 有 4 个属性，分别是 `dataId`, `group`，`fileExtension` 以及 `refresh`                                                                                                             |
+| 扩展配置         | spring.cloud.nacos.config.extension-configs |                            | 属性是个集合，内部由 `Config` POJO 组成。`Config` 有 4 个属性，分别是 `dataId`, `group`，`fileExtension` 以及 `refresh`                                                                                                             |
 
 现在启动该示例程序，可以看到如下输出结果：
 
@@ -723,7 +723,7 @@ user name :nacos-config-properties; age: 90
 
 `spring-cloud-alibaba-nacos-config` 对于 yaml 格式也是完美支持的。此时只需要完成以下两步：
 
-1. 在应用的 bootstrap. properties 或者 bootstrap. yml 配置文件中显示的声明 dataId 文件扩展名，即 `file-extension: yaml`。如下所示：
+1. 在应用的 bootstrap.properties 或者 bootstrap.yml 配置文件中显示的声明 dataId 文件扩展名，即 `file-extension: yaml`。如下所示：
 
    ```yaml
     server:
@@ -768,7 +768,7 @@ user name :nacos-config-yaml; age: 68
 
 ### 支持配置的动态更新
 
-`spring-cloud-alibaba-nacos-config` **默认**支持**配置的动态更新**，不过可以通过配置 `spring. cloud. nacos. config. refresh. enabled=false` 来关闭动态刷新。
+`spring-cloud-alibaba-nacos-config` **默认**支持**配置的动态更新**，不过可以通过配置 `spring.cloud.nacos.config.refresh.enabled=false` 来关闭动态刷新。
 
 启动 SpringBoot 应用测试的代码如下所示：
 
@@ -788,7 +788,7 @@ public class NacosConfigApplication {
 }
 ```
 
-如下所示，当变更 `user. name` 时，应用程序中能够获取到最新的值：
+如下所示，当变更 `user.name` 时，应用程序中能够获取到最新的值：
 
 ```markdown
 user name :nacos-config-yaml; age: 68
@@ -807,7 +807,7 @@ user name :nacos-config-yaml-update; age: 68
 
 ### 支持 profile 粒度的配置
 
-`spring-cloud-starter-alibaba-nacos-config` 在加载配置的时候，不仅仅加载 dataId 为 `${spring. application. name}.${file-extension: properties}` 为前缀的基础配置，还加载了 dataId 为 `${spring. application. name}-${profile}.${file-extension: properties}` 的配置。在日常开发中如果遇到多套环境下的不同配置，可以通过 Spring 提供的 `spring. profiles. active` 这个配置项来配置。
+`spring-cloud-starter-alibaba-nacos-config` 在加载配置的时候，不仅仅加载 dataId 为 `${spring.application.name}.${file-extension: properties}` 为前缀的基础配置，还加载了 dataId 为 `${spring.application.name}-${profile}.${file-extension: properties}` 的配置。在日常开发中如果遇到多套环境下的不同配置，可以通过 Spring 提供的 `spring.profiles.active` 这个配置项来配置。
 
 ```yaml
 server:
@@ -830,9 +830,9 @@ management:
 ```
 
 > [!ATTENTION]
-> `${spring. profiles. active}` 当通过配置文件来指定时必须放在 **bootstrap. properties** 或者 **bootstrap. yml** 配置文件中。
+> `${spring.profiles.active}` 当通过配置文件来指定时必须放在 **bootstrap.properties** 或者 **bootstrap.yml** 配置文件中。
 
-Nacos 上新增一个 dataId 为 nacos-config-develop. yaml 的基础配置，如下所示：
+Nacos 上新增一个 dataId 为 nacos-config-develop.yaml 的基础配置，如下所示：
 
 ```properties
 Data ID:        nacos-config-develop.yaml
@@ -874,7 +874,7 @@ in develop-env enviroment; user name :nacos-config-yaml-update; age: 68
 2023-07-13 15:37:35.297  INFO 17260 --- [(3)-192.168.1.3] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
 ```
 
-如果需要切换到生产环境，只需要更改 `${spring. profiles. active}` 参数配置即可。如下所示：
+如果需要切换到生产环境，只需要更改 `${spring.profiles.active}` 参数配置即可。如下所示：
 
 ```yaml
 server:
@@ -896,7 +896,7 @@ management:
         include: '*'
 ```
 
-同时生产环境上的 Nacos 添加对应 dataId 的基础配置即可。例如，在生产环境下的 Nacos 添加了 dataId 为 nacos-config-product. yaml 的配置：
+同时生产环境上的 Nacos 添加对应 dataId 的基础配置即可。例如，在生产环境下的 Nacos 添加了 dataId 为 nacos-config-product.yaml 的配置：
 
 ```properties
 Data ID:        nacos-config-product.yaml
@@ -921,10 +921,10 @@ in product-env enviroment; user name :nacos-config-yaml-update; age: 68
 
 ```
 
-在此案例中咱们通过 `spring. profiles. active=<profilename>` 的方式写死在配置文件中，而在真正的项目实施过程中这个变量的值是需要根据不同环境而有不同的值。
+在此案例中咱们通过 `spring.profiles.active=<profilename>` 的方式写死在配置文件中，而在真正的项目实施过程中这个变量的值是需要根据不同环境而有不同的值。
 
 > [!IMPORTANT]
-> 通常的做法是通过 **`-Dspring. Profiles. Active=<profile>`** 参数指定其配置来达到环境间灵活的切换；如下所示：
+> 通常的做法是通过 **`-Dspring.Profiles.Active=<profile>`** 参数指定其配置来达到环境间灵活的切换；如下所示：
 > ![](https://img.xiaorang.fun/202502251852341.png)
 
 ### 支持自定义 Namespace 的配置
@@ -933,7 +933,7 @@ namespace：命名空间，用于进行租户粒度的配置隔离；对于 Naco
 
 - 在不同的命名空间下，可以存在相同的 group 或 dataId 的配置；
 - namespace 的常用场景之一是**对不同环境的配置进行区分隔离**，例如开发环境（dev）、测试环境（test）和生产环境（prod）的资源（如配置、服务）隔离等；
-- 在没有明确指定 `${spring. cloud. nacos. config. namespace}` 配置的情况下，**默认**使用的是 Nacos 上 **public** 这个 namespace。
+- 在没有明确指定 `${spring.cloud.nacos.config.namespace}` 配置的情况下，**默认**使用的是 Nacos 上 **public** 这个 namespace。
 
 如果需要使用自定义的命名空间，可以通过以下配置来实现：
 
@@ -942,9 +942,9 @@ spring.cloud.nacos.config.namespace=1330e6ed-dcc3-4fe4-9b36-b3d1b2f3c16b
 ```
 
 > [!attention]
-> 该配置必须放在 **bootstrap. properties** 或者 **bootstrap. yml** 配置文件中。
+> 该配置必须放在 **bootstrap.properties** 或者 **bootstrap.yml** 配置文件中。
 
-此时 `spring. cloud. nacos. config. namespace` 的值是 namespace 对应的 id，该 id 值可以在 Nacos 的控制台获取。并且在添加配置时注意不要选择其他的 namespace，否则将会导致读取不到正确的配置。
+此时 `spring.cloud.nacos.config.namespace` 的值是 namespace 对应的 id，该 id 值可以在 Nacos 的控制台获取。并且在添加配置时注意不要选择其他的 namespace，否则将会导致读取不到正确的配置。
 
 ### 支持自定义 Group 的配置
 
@@ -957,7 +957,7 @@ group：配置分组，Nacos 中的一组配置集，是组织配置的维度之
 
 - 通过一个有意义的字符串（如 Buy 或 Trade）对配置集进行分组，从而区分 dataId 相同的配置集；
 - group 的常见场景：不同的应用或组件使用了相同的配置类型，如 database_url 配置和 MQ_topic 配置；
-- 在没有明确指定 `${spring. cloud. nacos. config. group}` 配置的情况下，默认使用的是 **DEFAULT_GROUP**。
+- 在没有明确指定 `${spring.cloud.nacos.config.group}` 配置的情况下，默认使用的是 **DEFAULT_GROUP**。
 
 如果需要使用自定义的 group，可以通过以下配置来实现：
 
@@ -966,7 +966,7 @@ spring.cloud.nacos.config.group=DEVELOP_GROUP
 ```
 
 > [!ATTENTION]
-> 该配置必须放在 **bootstrap. properties** 或者 **bootstrap. yml** 配置文件中。并且在添加配置时 group 的值一定要和配置文件中 `spring. cloud. nacos. config. group` 的配置值一致！
+> 该配置必须放在 **bootstrap.properties** 或者 **bootstrap.yml** 配置文件中。并且在添加配置时 group 的值一定要和配置文件中 `spring.cloud.nacos.config.group` 的配置值一致！
 
 ### 支持自定义扩展的 Data Id 配置
 
@@ -994,15 +994,15 @@ spring.cloud.nacos.config.extension-configs[2].refresh=true
 
 可以看到：
 
-- 通过 `spring. cloud. nacos. config. extension-configs[n]. data-id` 的配置方式来支持多个 dataId 的配置；
-- 通过 `spring. cloud. nacos. config. extension-configs[n]. group` 的配置方式自定义 dataId 所在的组，不明确配置的话，默认是 DEFAULT_GROUP；
-- 通过 `spring. cloud. nacos. config. extension-configs[n]. refresh` 的配置方式来控制该 dataId 在配置变更时，是否支持应用中可动态刷新，感知到最新的配置值。**默认是不支持的**，即不会动态更新；
+- 通过 `spring.cloud.nacos.config.extension-configs[n].data-id` 的配置方式来支持多个 dataId 的配置；
+- 通过 `spring.cloud.nacos.config.extension-configs[n].group` 的配置方式自定义 dataId 所在的组，不明确配置的话，默认是 DEFAULT_GROUP；
+- 通过 `spring.cloud.nacos.config.extension-configs[n].refresh` 的配置方式来控制该 dataId 在配置变更时，是否支持应用中可动态刷新，感知到最新的配置值。**默认是不支持的**，即不会动态更新；
 
-🎨当多个 dataId 同时配置时，它的优先级是 `spring. cloud. nacos. config. extension-configs[n]. data-id` 其中 **n 的值越大，优先级越高**
+🎨当多个 dataId 同时配置时，它的优先级是 `spring.cloud.nacos.config.extension-configs[n].data-id` 其中 **n 的值越大，优先级越高**
 
 > [!ATTENTION]
 >
-> `spring. cloud. nacos. config. extension-configs[n]. data-id` 的值**必须带文件扩展名**，文件扩展名即可支持 properties，又可以支持 yaml/yml。此时 `spring. cloud. nacos. config. file-extension` 的配置对自定义扩展配置的 dataId 文件扩展名没有影响。
+> `spring.cloud.nacos.config.extension-configs[n].data-id` 的值**必须带文件扩展名**，文件扩展名即可支持 properties，又可以支持 yaml/yml。此时 `spring.cloud.nacos.config.file-extension` 的配置对自定义扩展配置的 dataId 文件扩展名没有影响。
 
 🎯优点：通过自定义扩展的 dataId 配置，既可以解决**多个应用间配置共享**的问题，又可以支持**一个应用拥有多个配置文件**。
 
@@ -1021,16 +1021,16 @@ spring.cloud.nacos.config.shared-configs[0].refresh=true
 
 可以看到：
 
-- 通过 `spring. cloud. nacos. config. shared-configs[n]. data-id` 来支持多个共享 dataId 的配置；
-- 通过 `spring. cloud. nacos. config. shared-configs[n]. group` 来配置自定义 dataId 所在的组，不明确配置的话，默认是 DEFAULT_GROUP；
-- 通过 `spring. cloud. nacos. config. shared-configs[n]. refresh` 来控制该 dataId 在配置变更时，是否支持应用中可动态刷新，默认 `false`；
+- 通过 `spring.cloud.nacos.config.shared-configs[n].data-id` 来支持多个共享 dataId 的配置；
+- 通过 `spring.cloud.nacos.config.shared-configs[n].group` 来配置自定义 dataId 所在的组，不明确配置的话，默认是 DEFAULT_GROUP；
+- 通过 `spring.cloud.nacos.config.shared-configs[n].refresh` 来控制该 dataId 在配置变更时，是否支持应用中可动态刷新，默认 `false`；
 
 ### 配置的优先级
 
 `spring-cloud-starter-alibaba-nacos-config` 目前提供了三种配置能力从 Nacos 拉取相关的配置。
 
-- A：通过 `spring. cloud. nacos. config. shared-configs[n]. data-id` 来支持多个共享 dataId 的配置；
-- B：通过 `spring. cloud. nacos. config. extension-configs[n]. data-id` 的方式支持多个扩展 dataId 的配置；
+- A：通过 `spring.cloud.nacos.config.shared-configs[n].data-id` 来支持多个共享 dataId 的配置；
+- B：通过 `spring.cloud.nacos.config.extension-configs[n].data-id` 的方式支持多个扩展 dataId 的配置；
 - C：通过内部相关规则（应用名、应用名 + profile）自动生成相关的 dataId 配置；
 
 当三种方式共同使用时，它们的优先级关系是：`A < B < C`。
@@ -1112,7 +1112,7 @@ Nacos Config 内部提供了一个 Endpoint，EndPoint 的访问地址为 <http:
 
 ### 完全关闭 Nacos Config 的自动化配置
 
-可以通过设置 `spring. cloud. nacos. config. enabled=false` 来完全关闭 Spring Cloud Nacos Config.
+可以通过设置 `spring.cloud.nacos.config.enabled=false` 来完全关闭 Spring Cloud Nacos Config.
 
 ### 总结
 
@@ -1125,7 +1125,7 @@ Nacos Config 内部提供了一个 Endpoint，EndPoint 的访问地址为 <http:
 
 - **在不同的命名空间 （namespace）下，可以存在相同的 group 或 dataId 的配置**；①
 - namespace 的常用场景之一是不同环境的配置的区分隔离，例如开发环境（dev）、测试环境（test）和生产环境（prod）的资源（如配置、服务）隔离等；
-- 在没有明确指定 `${spring. cloud. nacos. config. namespace}` 配置的情况下，默认使用的是 Nacos 上 public 这个 namespace。
+- 在没有明确指定 `${spring.cloud.nacos.config.namespace}` 配置的情况下，默认使用的是 Nacos 上 public 这个 namespace。
 如果需要使用自定义的命名空间，可以通过以下配置来实现：
 
 ```properties
@@ -1134,7 +1134,7 @@ spring.cloud.nacos.config.namespace =1330e6ed-dcc3-4fe4-9b36-b3d1b2f3c16b
 
 > [!attention]
 >
-> 该配置必须放在 **bootstrap. properties** 或者 **bootstrap. yml** 配置文件中。此时 `spring. cloud. nacos. config. namespace` 的值是 namespace 对应的 id，该 id 值可以在 Nacos 的控制台获取。并且在添加配置时注意不要选择其他的 namespace，否则将会导致读取不到正确的配置。
+> 该配置必须放在 **bootstrap.properties** 或者 **bootstrap.yml** 配置文件中。此时 `spring.cloud.nacos.config.namespace` 的值是 namespace 对应的 id，该 id 值可以在 Nacos 的控制台获取。并且在添加配置时注意不要选择其他的 namespace，否则将会导致读取不到正确的配置。
 
 #### Group
 
@@ -1142,7 +1142,7 @@ spring.cloud.nacos.config.namespace =1330e6ed-dcc3-4fe4-9b36-b3d1b2f3c16b
 
 - **通过一个有意义的字符串（如 Buy 或 Trade）对配置集进行分组，从而区分 dataId 相同的配置集**；②
 - group 的常见场景：不同的应用或组件使用了相同的配置类型，如 database_url 配置和 MQ_topic 配置；
-- 在没有明确指定 `${spring. cloud. nacos. config. group}` 配置的情况下，默认使用的是 DEFAULT_GROUP。
+- 在没有明确指定 `${spring.cloud.nacos.config.group}` 配置的情况下，默认使用的是 DEFAULT_GROUP。
 
 如果需要使用自定义的 group，可以通过以下配置来实现：
 
@@ -1151,7 +1151,7 @@ spring.cloud.nacos.config.group=DEVELOP_GROUP
 ```
 
 > [!ATTENTION]
-> 该配置必须放在 **bootstrap. properties** 或者 **bootstrap. yml** 配置文件中。并且在添加配置时 group 的值一定要和 `spring. cloud. nacos. config. group` 的配置值一致。
+> 该配置必须放在 **bootstrap.properties** 或者 **bootstrap.yml** 配置文件中。并且在添加配置时 group 的值一定要和 `spring.cloud.nacos.config.group` 的配置值一致。
 
 #### DataId
 
@@ -1161,14 +1161,14 @@ spring.cloud.nacos.config.group=DEVELOP_GROUP
 ${prefix}-${spring.profiles.active}.${file-extension}
 ```
 
-- prefix：默认为 `${spring. application. name}` 的值，不过可以通过配置项 `spring. cloud. nacos. config. prefix` 来配置；
-- spring. profiles. active：当前激活的环境；
+- prefix：默认为 `${spring.application.name}` 的值，不过可以通过配置项 `spring.cloud.nacos.config.prefix` 来配置；
+- spring.profiles.active：当前激活的环境；
   - ❗注意：当该配置值为空时，dataId 变为 `${prefix}.${file-extension}` 的拼接格式；
-  - ❗注意：`spring. profiles. active` 当通过配置文件来指定时必须放在 **bootstrap. properties** 或者 **bootstrap. yml** 配置文件中；在真正的项目实施过程中这个变量的值是需要根据不同环境而有不同的值，这个时候通常的做法是通过 `-Dspring. profiles. active=<profile>` 参数指定其配置来达到环境间灵活的切换；
-  - Nacos Config 在加载配置时，不仅仅加载 dataId 为 `${prefix}.${file-extension}` 为前缀的基础配置，还会加载 dataId 为 `${prefix}-${spring. profiles. active}.${file-extension}` 的配置；
+  - ❗注意：`spring.profiles.active` 当通过配置文件来指定时必须放在 **bootstrap.properties** 或者 **bootstrap.yml** 配置文件中；在真正的项目实施过程中这个变量的值是需要根据不同环境而有不同的值，这个时候通常的做法是通过 `-Dspring.profiles.active=<profile>` 参数指定其配置来达到环境间灵活的切换；
+  - Nacos Config 在加载配置时，不仅仅加载 dataId 为 `${prefix}.${file-extension}` 为前缀的基础配置，还会加载 dataId 为 `${prefix}-${spring.profiles.active}.${file-extension}` 的配置；
 - file-extension：配置内容的数据格式；
   - 目前只支持 properties 和 yaml 两种格式；
-- 默认为 properties 格式，不过可以通过 `spring. cloud. nacos. config. file-extension` 来配置；
+- 默认为 properties 格式，不过可以通过 `spring.cloud.nacos.config.file-extension` 来配置；
 
 ## 遇到的问题💣
 
@@ -1189,9 +1189,9 @@ ${prefix}-${spring.profiles.active}.${file-extension}
 
 [原文传送门](https://docs.spring.io/spring-cloud/docs/2020.0.1/reference/htmlsingle/#config-first-bootstrap)
 
-> To use the legacy bootstrap way of connecting to Config Server, **bootstrap must be enabled via a property or the `spring-cloud-starter-bootstrap` starter. The property is `spring. cloud. bootstrap. enabled=true`. It must be set as a System Property or environment variable.**
+> To use the legacy bootstrap way of connecting to Config Server, **bootstrap must be enabled via a property or the `spring-cloud-starter-bootstrap` starter.The property is `spring.cloud.bootstrap.enabled=true`.It must be set as a System Property or environment variable.**
 
-大致意思：需要配置**属性 `spring. clod. bootstrap. enable = true`，该属性必须被设置为系统属性或环境变量**或者添加如下依赖：
+大致意思：需要配置**属性 `spring.clod.bootstrap.enable = true`，该属性必须被设置为系统属性或环境变量**或者添加如下依赖：
 
 ```xml
 <dependency>

@@ -1,6 +1,6 @@
 ---
 create_time: 2025-02-28T18:45:00
-update_time: 2025/02/28 18:46
+update_time: 2025/03/13 19:04
 ---
 
 ## Nacos 服务启动报错
@@ -10,7 +10,7 @@ update_time: 2025/02/28 18:46
 
 解决方案：请将 Java 环境变量 `JAVA_HOME` 更换为更高的 JDK8 版本或直接使用 JDK11 版本及以上。
 
-## bootstrap. yml 配置文件不生效
+## bootstrap.yml 配置文件不生效
 
 当前环境：
 
@@ -20,7 +20,7 @@ update_time: 2025/02/28 18:46
 
 [原文传送门](https://docs.spring.io/spring-cloud/docs/2020.0.1/reference/htmlsingle/#config-first-bootstrap)
 
-> To use the legacy bootstrap way of connecting to Config Server, **bootstrap must be enabled via a property or the `spring-cloud-starter-bootstrap` starter. The property is `spring.cloud.bootstrap.enabled=true`. It must be set as a System Property or environment variable.**
+> To use the legacy bootstrap way of connecting to Config Server, **bootstrap must be enabled via a property or the `spring-cloud-starter-bootstrap` starter.The property is `spring.cloud.bootstrap.enabled=true`.It must be set as a System Property or environment variable.**
 
 大致意思：需要配置**属性 `spring.clod.bootstrap.enable = true`，该属性必须被设置为系统属性或环境变量**或者添加如下依赖：
 

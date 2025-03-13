@@ -3,7 +3,7 @@ tags:
   - Tool
   - PicList
 create_time: 2024-12-28T17:34:00
-update_time: 2025/02/25 17:24
+update_time: 2025/03/13 19:04
 ---
 
 ## PicList
@@ -11,7 +11,7 @@ update_time: 2025/02/25 17:24
 [PicList](https://piclist.cn/) 是一款高效的云存储和图床管理工具，在 PicGo 的基础上进行了深度优化，保留了 PicGo 的核心功能并新增了大量实用特性。
 
 - **完全兼容 PicGo 功能**：支持现有的 PicGo 插件，可搭配 Typora、Obsidian 等工具使用。
-- **更多内置图床**：新增 WebDav、本地图床、SFTP 和 Telegra. ph，支持 imgur 登录账号上传。
+- **更多内置图床**：新增 WebDav、本地图床、SFTP 和 Telegra.ph，支持 imgur 登录账号上传。
 - **云端管理**：
     - 支持同步删除云端图片（所有内置图床和多个插件）。
     - 提供高级搜索、排序和批量修改 URL 功能。

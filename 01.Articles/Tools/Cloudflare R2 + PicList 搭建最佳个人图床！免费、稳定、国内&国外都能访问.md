@@ -2,7 +2,7 @@
 tags:
   - Tool
 create_time: 2024-12-29 21:48
-update_time: 2025/02/25 16:56
+update_time: 2025/03/13 19:04
 ---
 
 在互联网内容创作的时代，拥有一个稳定、可靠、免费且支持全球访问的图床服务变得越来越重要。结合 **Cloudflare R2** 和 [[Github + PicList 搭建个人图床#PicList|PicList]]，您可以轻松搭建一个个人图床，享受 Cloudflare 提供的全球加速和 CDN 服务，同时使用 PicList 高效管理和上传图片。无论您在国内还是国外，都能获得快速且稳定的图片加载体验。

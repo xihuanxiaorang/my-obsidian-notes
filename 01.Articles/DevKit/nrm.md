@@ -3,7 +3,7 @@ tags:
   - Frontend
   - EnvironmentSetup
 create_time: 2024-12-28T17:22:00
-update_time: 2025/02/25 18:00
+update_time: 2025/03/13 19:02
 ---
 
 1. 首先，使用 `npm install nrm -g` 命令全局安装 nrm，安装完成之后，可以使用 `nrm -v` 命令查看是否安装成功，如下所示：

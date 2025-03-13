@@ -3,7 +3,7 @@ tags:
   - Git
   - DevKit
 create_time: 2024-12-29 17:30
-update_time: 2025/02/28 18:14
+update_time: 2025/03/13 19:02
 ---
 
 ## 安装
@@ -189,7 +189,7 @@ git push origin main
 1. 导航到 Github 仓库主页；
 2. 点击 Github 仓库中的**添加文件**按钮 ➡️ 选择**创建新文件**
    ![](https://img.xiaorang.fun/202502281757305.png)
-3. 在文件名字段中，填写 LICENSE 或 LICENSE. md（**全部大写**） ；
+3. 在文件名字段中，填写 LICENSE 或 LICENSE.md（**全部大写**） ；
 4. 在文件名下，点击**选择许可证模板**；
    ![](https://img.xiaorang.fun/202502281757745.png)
 5. 在页面左边的 [Add a license to your project](https://github.com/xihuanxiaorang/java-study/community/license/new)（**添加许可到项目**）下，检查可用的许可，然后从列表中选择许可 ➡️ **查看并提交**；此处选择 MIT 开源协议，对于各个开源协议不懂的小伙伴可以参考[[如何选择开源协议]]这篇文章；

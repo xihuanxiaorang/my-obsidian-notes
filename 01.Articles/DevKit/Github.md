@@ -4,7 +4,7 @@ tags:
   - Git
   - DevKit
 create_time: 2024-12-28T18:02:00
-update_time: 2025/02/25 19:09
+update_time: 2025/03/13 19:02
 ---
 
 ## 如何提交一个 PR？
@@ -134,7 +134,7 @@ endif
 > [!info]
 > 同名指的是与自己 Gihub 用户名相同！
 
-当仓库的名称与用户名相同时，此仓库会被视作一个✨*特殊*✨仓库，此仓库中的 README. md 文件会展示在 Github 个人主页，咱们就是利用这个机制来自定义并美化咱们的个人主页。
+当仓库的名称与用户名相同时，此仓库会被视作一个✨*特殊*✨仓库，此仓库中的 README.md 文件会展示在 Github 个人主页，咱们就是利用这个机制来自定义并美化咱们的个人主页。
 
 举个栗子：本人的 Github 用户名为 xihuanxiaorang，那么我创建的仓库名称就为 xihuanxiaorang。
 
@@ -147,7 +147,7 @@ endif
 
 仓库创建完成之后，咱们就可以开始参考各路大佬的个人主页来美化自己的个人主页。
 
-在仓库的 README. md 文件中有一段默认内容，咱们可以将其删除掉，以便改写成咱们自己想要的效果。如果不想阅读以下繁琐的教程，直接给出本人的 Github 个人主页所对应的仓库地址：[xihuanxiaorang/xihuanxiaorang: 个人主页 (github.com)](https://github.com/xihuanxiaorang/xihuanxiaorang)，小伙伴们可以对照着完善自己的个人主页效果。
+在仓库的 README.md 文件中有一段默认内容，咱们可以将其删除掉，以便改写成咱们自己想要的效果。如果不想阅读以下繁琐的教程，直接给出本人的 Github 个人主页所对应的仓库地址：[xihuanxiaorang/xihuanxiaorang: 个人主页 (github.com)](https://github.com/xihuanxiaorang/xihuanxiaorang)，小伙伴们可以对照着完善自己的个人主页效果。
 
 #### 小徽章
 
@@ -173,7 +173,7 @@ endif
 
 此部分效果主要通过 [tandpfun/skill-icons: Showcase your skills on your Github readme or resumé with ease ✨](https://github.com/tandpfun/skill-icons) 开源项目实现。
 
-将下面的代码块复制并粘贴到 README. md 文件中，以添加技能图标元素！
+将下面的代码块复制并粘贴到 README.md 文件中，以添加技能图标元素！
 
 将 `?i=js,html,css` 更改为用","分隔的技能列表！你可以在[此处](https://github.com/tandpfun/skill-icons?tab=readme-ov-file#icons-list)找到完整的图标列表。
 
@@ -339,7 +339,7 @@ endif
 	          SHOW_TOTAL: true
 	```
 
-7. 使用方式：复制粘贴以下特殊注释后保存 README. md 文件，统计效果将出现在两者之间。
+7. 使用方式：复制粘贴以下特殊注释后保存 README.md 文件，统计效果将出现在两者之间。
 
 	```markdown
 	<!--START_SECTION:waka-->

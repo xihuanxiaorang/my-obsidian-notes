@@ -2,7 +2,7 @@
 tags:
   - DevKit
 create_time: 2024-12-28T17:30:00
-update_time: 2025/02/25 18:07
+update_time: 2025/03/13 19:03
 ---
 
 对于没有安装 Windows Terminal 终端的小伙伴，可以在 Microsoft Store 中进行下载安装。
@@ -28,7 +28,7 @@ update_time: 2025/02/25 18:07
 
 :::
 
-使用 `notepad $PROFILE` 命令编辑 PowerShell 配置文件脚本，然后在配置文件中添加以下内容： `oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH/amro.omp.json" | Invoke-Expression` ，其中的 `amro` 为选择的主题，可以查看 [Themes | Oh My Posh](https://ohmyposh.dev/docs/themes) 总共有哪些主题，根据自己的喜爱进行更换，最后使用 `. $PROFILE` 命令使配置生效！
+使用 `notepad $PROFILE` 命令编辑 PowerShell 配置文件脚本，然后在配置文件中添加以下内容： `oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH/amro.omp.json" | Invoke-Expression` ，其中的 `amro` 为选择的主题，可以查看 [Themes | Oh My Posh](https://ohmyposh.dev/docs/themes) 总共有哪些主题，根据自己的喜爱进行更换，最后使用 `.$PROFILE` 命令使配置生效！
 ![](https://img.xiaorang.fun/202502251807970.png)
 
 :::color3
