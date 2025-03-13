@@ -6,15 +6,12 @@ tags:
 refrence_url:
   - https://www.bilibili.com/video/BV16u4m1c7YX?vd_source=84272a2d7f72158b38778819be5bc6ad
 create_time: 2025-02-20 11:57
-update_time: 2025/03/13 19:03
+update_time: 2025/03/13 22:21
 ---
-
-> [!quote]
-> [Apache Tomcat® - Welcome!](https://tomcat.apache.org/)
 
 ## 简介
 
-- Tomcat 是一个开源应用服务器，专为实现 Jakarta EE 和 Java EE 规范，广泛用于 Web 应用的部署。
+- [Tomcat](https://tomcat.apache.org/) 是一个开源应用服务器，专为实现 Jakarta EE 和 Java EE 规范，广泛用于 Web 应用的部署。
 - Tomcat 10 及以上版本支持 Jakarta EE，Tomcat 9 及以下版本支持 Java EE。
 - 拥有活跃的全球开发者社区，致力于高效的 Web 应用开发与部署。
 

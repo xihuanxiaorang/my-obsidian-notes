@@ -4,13 +4,10 @@ tags:
   - Frontend
   - DevKit
 create_time: 2024-12-28T17:21:00
-update_time: 2025/03/13 18:57
+update_time: 2025/03/13 21:55
 ---
 
-> [!quote]
-> [Node.js — 在任何地方运行 JavaScript](https://nodejs.org/zh-cn)
-
-Node.js® 是一个免费、开源、跨平台的 JavaScript 运行时环境, 它让开发人员能够创建服务器 Web 应用、命令行工具和脚本。
+[Node.js®](https://nodejs.org/zh-cn) 是一个免费、开源、跨平台的 JavaScript 运行时环境, 它让开发人员能够创建服务器 Web 应用、命令行工具和脚本。
 
 ## 下载 & 安装
 

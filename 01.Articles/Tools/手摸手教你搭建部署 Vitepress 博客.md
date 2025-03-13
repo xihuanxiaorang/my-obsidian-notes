@@ -2,15 +2,12 @@
 tags:
   - Tool
 create_time: 2024-12-28T17:32:00
-update_time: 2025/03/13 19:04
+update_time: 2025/03/13 23:49
 ---
 
 ## 介绍📢
 
-> [!quote]
-> 官方文档：[VitePress | Vite & Vue Powered Static Site Generator](https://vitepress.dev/)
-
-VitePress 是一个[静态站点生成器](https://en.wikipedia.org/wiki/Static_site_generator) (SSG)，专为构建快速、以内容为中心的站点而设计。简而言之，VitePress 获取用 Markdown 编写的内容，对其应用主题，并生成可以轻松部署到任何地方的静态 HTML 页面。
+[VitePress](https://vitepress.dev/) 是一个[静态站点生成器](https://en.wikipedia.org/wiki/Static_site_generator) (SSG)，专为构建快速、以内容为中心的站点而设计。简而言之，VitePress 获取用 Markdown 编写的内容，对其应用主题，并生成可以轻松部署到任何地方的静态 HTML 页面。
 
 > [!IMPORTANT]
 >
@@ -1101,7 +1098,7 @@ export default defineConfig({
 
 3. 现在咱们在终端中输入 `git init` 命令初始化一个本地仓库，使用 `git add .` 命令将所有文件添加到暂存区，使用 `git commit -m "feat: init blog"` 命令进行一次提交。
 4. 接下来需要在 Github 上创建一个新的仓库，如 `docs`，名称可以根据自己的喜欢来命名，然后在存储库设置中的"Pages"菜单项下，选择"Build and deployment > Source > GitHub Actions"。
-5. 然后使用 `git remote add origin git@github.com:xihuanxiaorang/docs.git` 命令关联远程仓库，最后使用 `git branch -M main` 和 `git push -u origin main` 命令推送到远程仓库。
+5. 然后使用 `git remote add origin git@github.com : xihuanxiaorang/docs.git` 命令关联远程仓库，最后使用 `git branch -M main` 和 `git push -u origin main` 命令推送到远程仓库。
 6. 将更改推送到 `main` 分支并等待 GitHub Action 工作流完成。你应该看到站点部署到 `https://<username>.github.io/[repository]/` 或 `https://<custom-domain>/`，这取决于你的设置。你的站点将在每次推送到 `main` 分支时自动部署。
    ![](https://img.xiaorang.fun/202502251712840.png)
 

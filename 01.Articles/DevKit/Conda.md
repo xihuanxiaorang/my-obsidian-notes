@@ -4,7 +4,7 @@ tags:
   - DevKit
   - EnvironmentSetup
 create_time: 2025-02-09 21:52
-update_time: 2025/03/13 18:58
+update_time: 2025/03/13 23:43
 ---
 
 ## 简介
@@ -56,10 +56,7 @@ Conda 存在如下两个版本：
 
 ## 更新镜像源✨
 
-> [!quote]
-> https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/
-
-各系统都可以通过修改用户目录下的 `.condarc` 文件来使用清华大学开源软件镜像站。
+各系统都可以通过修改用户目录下的 `.condarc` 文件来使用[清华大学开源软件镜像站](https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/)。
 
 不同系统下的 `.condarc` 目录如下：
 - macOS: `${HOME}/.condarc`

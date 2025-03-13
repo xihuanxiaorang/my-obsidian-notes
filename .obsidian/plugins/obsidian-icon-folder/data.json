@@ -6,6 +6,7 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiFireLine",
       "RiStarHalfLine",
       "RiToolsLine",
       "RiAlibabaCloudLine",
@@ -14,8 +15,7 @@
       "LiSparkles",
       "RiBrainLine",
       "RiCalendarLine",
-      "RiBookLine",
-      "RiCalendarCheckLine"
+      "RiBookLine"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -49,7 +49,7 @@
   "01.Articles/Announcements": "RiMegaphoneLine",
   "01.Articles/JavaScript": "RiJavascriptFill",
   "01.Articles/Vue": "RiVuejsLine",
-  "01.Articles/SourceCodeAnalysis": "RiTerminalLine",
+  "01.Articles/SourceCodeAnalysis": "RiFireLine",
   "01.Articles/SourceCodeAnalysis/Java": "RiJavaLine",
   "00.Overview": "RiDashboardLine",
   "00.Overview/01 - 任务清单.md": "RiTaskLine",
@@ -66,7 +66,7 @@
   "01.Articles/Media": "RiVideoOnLine",
   "00.Overview/02 - 参考资料.md": "RiBookmark3Line",
   "01.Articles/AI": "RiBrainLine",
-  "01.Articles/SpringCloud": "RiAlibabaCloudLine",
+  "01.Articles/SpringCloud": "RiCloudLine",
   "01.Articles/DevKit": "RiToolsLine",
   "01.Articles/Tools": "RiToolsLine"
 }

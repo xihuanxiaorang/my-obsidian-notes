@@ -2,7 +2,7 @@
 tags:
   - DevKit
 create_time: 2024-12-28T17:30:00
-update_time: 2025/03/13 19:03
+update_time: 2025/03/13 22:42
 ---
 
 对于没有安装 Windows Terminal 终端的小伙伴，可以在 Microsoft Store 中进行下载安装。
@@ -22,20 +22,16 @@ update_time: 2025/03/13 19:03
    ![](https://img.xiaorang.fun/202502251807968.png)
 7. 重新以管理员身份打开 Windows Terminal，使 PowerShell 应用 `oh-my-posh` ；
 
-:::color1
-如果你不知道自己目前使用的是哪个 shell，可以使用 `oh-my-posh get shell` 命令进行查看，如下所示：
-![](https://img.xiaorang.fun/202502251807969.png)
-
-:::
+> [!tip]
+> 如果你不知道自己目前使用的是哪个 shell，可以使用 `oh-my-posh get shell` 命令进行查看，如下所示：
+> ![](https://img.xiaorang.fun/202502251807969.png)
 
 使用 `notepad $PROFILE` 命令编辑 PowerShell 配置文件脚本，然后在配置文件中添加以下内容： `oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH/amro.omp.json" | Invoke-Expression` ，其中的 `amro` 为选择的主题，可以查看 [Themes | Oh My Posh](https://ohmyposh.dev/docs/themes) 总共有哪些主题，根据自己的喜爱进行更换，最后使用 `.$PROFILE` 命令使配置生效！
 ![](https://img.xiaorang.fun/202502251807970.png)
 
-:::color3
-当上面的命令出现**系统找不到指定的路径**错误时，请使用 `New-Item -Path $PROFILE -Type File -Force` 命令创建配置文件；
-
-在这种情况下，PowerShell 也可能阻止运行本地脚本。要解决此问题，请将 PowerShell 设置为仅要求使用 `set-ExecutionPolicy-RemoteSigned` 命令对远程脚本进行签名，或对配置文件进行签名。
-
-:::
+> [!caution]
+> 当上面的命令出现**系统找不到指定的路径**错误时，请使用 `New-Item -Path $PROFILE -Type File -Force` 命令创建配置文件；
+>
+> 在这种情况下，PowerShell 也可能阻止运行本地脚本。要解决此问题，请将 PowerShell 设置为仅要求使用 `set-ExecutionPolicy-RemoteSigned` 命令对远程脚本进行签名，或对配置文件进行签名。
 
 至此，Windows Terminal 终端使用 oh-my-posh 美化就圆满完成啦！🎉🎉🎉

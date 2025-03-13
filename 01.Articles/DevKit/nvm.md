@@ -4,12 +4,10 @@ tags:
   - Frontend
   - DevKit
 create_time: 2024-12-28T17:29:00
-update_time: 2025/03/13 19:03
+update_time: 2025/03/13 22:08
 ---
 
-> [!quote] > [GitHub - nvm-sh/nvm: Node Version Manager - POSIX-compliant bash script to manage multiple active node.js versions](https://github.com/nvm-sh/nvm)
-
-nvm (Node Version Manager) 是一个用于管理 Node.js 版本的工具，可以让用户在同一台机器上安装和切换多个 Node.js 版本，非常适合开发环境中需要兼容不同 Node.js 版本的场景。
+[nvm](https://github.com/nvm-sh/nvm) (Node Version Manager) 是一个用于管理 Node.js 版本的工具，可以让用户在同一台机器上安装和切换多个 Node.js 版本，非常适合开发环境中需要兼容不同 Node.js 版本的场景。
 
 ## 下载 & 安装
 
@@ -66,9 +64,9 @@ nvm npm_mirror https://npmmirror.com/mirrors/npm/
 3. 在弹出的 "系统属性" 窗口中，点击 "环境变量"。
 4. 在 "系统变量" 区域，可以看见安装 nvm 时已帮我们新建的 `NVM_HOME` 和 `NVM_SYMLINK` 变量。
 5. 配置 Path 系统变量。
-   1. 在 "系统变量" 中找到 Path 变量，点击 "编辑"。
-   2. 点击 "新建"，添加 `%NVM_SYMLINK%\node_global` ，然后尽量将其 "上移"。
-   3. 最后一路点击 "确定" 进行保存配置。
+	1. 在 "系统变量" 中找到 Path 变量，点击 "编辑"。
+	2. 点击 "新建"，添加 `%NVM_SYMLINK%\node_global` ，然后尽量将其 "上移"。
+	3. 最后一路点击 "确定" 进行保存配置。
 
 ### 镜像源配置
 
