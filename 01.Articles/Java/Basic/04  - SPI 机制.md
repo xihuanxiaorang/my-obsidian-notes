@@ -39,7 +39,7 @@ JDBC，全称是 Java DataBase Connectivity。是 Java 提供的一套用于访�
 
 先来大致了解一下 JDBC 的调用流程，如下图所示：
 
-![[03.Excalidraw/JDBC 调用流程| 500]]
+![[JDBC 执行流程| 500]]
 
 在 Java SPI 出现之前，一个典型的示例代码如下所示：
 

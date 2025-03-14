@@ -2,29 +2,28 @@
 tags:
   - Java
 create_time: 2025-03-09T23:40:00
-update_time: 2025/03/09 23:45
+update_time: 2025/03/14 23:25
 ---
 
 ## 简介
 
-JDBC，全称是 Java DataBase Connectivity。
-
-- JDBC 即使用 Java 语言来访问 **关系型数据库（MySQL、Oracle）** 的一套 API。
-- **JDBC 是一种标准**，JDBC 标准提供的接口存在于 `java.sql` 包中。在这个包中定义有 **数据库的连接标准**、**数据库的操作标准** 以及 **数据库结果集的处理标准**。每个数据库厂商会提供各自的 JDBC 实现，程序员只需要面向接口和标准编程，不需要关心具体实现。
+JDBC（Java Database Connectivity）是 Java 访问关系型数据库（如 MySQL、Oracle）的 API。
+- JDBC 提供**数据库连接**、**数据库操作**、**结果集处理**的标准接口（`java.sql` 包）。
+- 由数据库厂商提供各自的 JDBC 实现，程序员只需**面向接口编程**，无需关心具体实现。
 
 ![JDBC标准](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202116533.png)
 
-| 接口/类 | 作用 |
-| --- | --- |
-| Driver | 驱动接口 |
-| DriverManager | 工具类，用于管理驱动，可以获取数据库的链接 |
-| Connection | 表示 Java 与数据库建立的连接对象（接口） |
-| PreparedStatement | 预编译对象，用于发送 SQL 语句的工具 |
-| ResultSet | 结果集，用于获取查询语句的结果 |
+| 主要接口/类              | 作用           |
+| ------------------- | ------------ |
+| `Driver`            | 驱动接口         |
+| `DriverManager`     | 驱动管理，获取数据库连接 |
+| `Connection`        | 数据库连接对象      |
+| `PreparedStatement` | 预编译 SQL 语句   |
+| `ResultSet`         | 查询结果集        |
 
-## JDBC 执行流程
+## 执行流程
 
-![JDBC 执行流程](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202056667.png)
+![[JDBC 执行流程|500]]
 
 ### 环境搭建
 
@@ -32,7 +31,9 @@ JDBC，全称是 Java DataBase Connectivity。
 
 ```sql
 CREATE DATABASE IF NOT EXISTS atguigudb;  
-use atguigudb;  
+
+use atguigudb;
+  
 CREATE TABLE IF NOT EXISTS `user`  (  
  `uid` BIGINT(32) AUTO_INCREMENT COMMENT '主键列(自动增长)',  
  `name` VARCHAR(32) NOT NULL COMMENT '用户名称',  
@@ -51,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `user`  (
 `java.sql.Driver` 接口是所有驱动程序需要实现的接口。这个接口是提供给数据库厂商使用的，不同的数据库厂商提供不同的实现。其中，加载驱动由 Java SPI 机制实现，无需再像以前一样使用 `Class.forName("com.mysql.driver")` 来加载 MySQL 驱动。
 
 > [!tip]
-> 对于 **Java SPI** 不清楚的小伙伴可以查看 [SPI 机制](../other/SPI机制.md) 这一篇文章，文章中详细地介绍了 Java SPI 机制的由来、原理以及应用。
+> 对于 Java SPI 机制不清楚的小伙伴可以查看 [[04  - SPI 机制]] 这一篇文章，文章中详细地介绍了 Java SPI 机制的由来、原理以及应用。
 
 #### URL
 
@@ -472,7 +473,7 @@ public void testPreparedStatementSQLInjection() throws SQLException {
 
 批处理允许将相关的 SQL 语句分组到一个批处理中，并通过一次调用将它们提交到数据库。当你一次向数据库发送多条 SQL 语句时，可以减少通信开销，从而提高性能。
 
-- JDBC 驱动程序不一定支持该功能，可以使用 `DatabaseMataData.supportsBacthUpdates ()` 方法来确定目标数据库是否支持批处理更新。如果 JDBC 驱动程序支持此功能，则该方法返回值为 true。
+- JDBC 驱动程序不一定支持该功能，可以使用 `DatabaseMataData. supportsBacthUpdates ()` 方法来确定目标数据库是否支持批处理更新。如果 JDBC 驱动程序支持此功能，则该方法返回值为 true。
 
   ```java
   @Test  
@@ -805,7 +806,7 @@ public void testTransferWithTransaction() throws SQLException {
 特别注意：
 
 - 数据源和数据库连接不同，数据源无需创建多个，它是产生数据库连接的工厂，通常情况下，一个应用只需要一个数据源，当然也会有多数据源的情况。
-- 当数据库访问结束后，程序还是像以前一样关闭数据库连接：`conn.close ()`；但 `conn.close ()` 并没有关闭数据库的物理连接，它仅仅把数据库连接释放，归还给了数据库连接池。
+- 当数据库访问结束后，程序还是像以前一样关闭数据库连接：`conn. close ()`；但 `conn. close ()` 并没有关闭数据库的物理连接，它仅仅把数据库连接释放，归还给了数据库连接池。
 
 #### Druid（德鲁伊）
 
