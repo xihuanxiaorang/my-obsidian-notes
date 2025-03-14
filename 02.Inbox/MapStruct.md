@@ -2,7 +2,7 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/13 18:59
+update_time: 2025/03/14 21:51
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -1851,3 +1851,197 @@ public List<CarDTO> carsToCarDTOs(Stream<Car> cars) {
 > [!warning]
 > **从 `Stream` 转换为 `Iterable` 或数组时，`Stream` 会被消费，无法再次使用！**
 > 映射流到可迭代或数组时，默认使用[[#集合映射的默认实现类型]]中指定的具体实现类来创建集合。
+
+## 映射值
+
+### 枚举类型之间的映射
+
+MapStruct 支持将一个 Java 枚举类型映射到另一个枚举类型。
+
+默认情况下，源枚举中的每个常量都会映射到目标枚举中同名的常量。如需将源枚举的某个常量映射到不同名称的常量，可使用 `@ValueMapping` 注解。多个源枚举常量可以映射到目标类型中的同一个常量。
+
+举个栗子（一）：枚举映射方法
+
+```java
+@Mapper
+public interface OrderMapper {
+  OrderMapper INSTANCE = Mappers.getMapper(OrderMapper.class);
+
+  @ValueMappings({
+    @ValueMapping(target = "SPECIAL", source = "EXTRA"),
+    @ValueMapping(target = "DEFAULT", source = "STANDARD"),
+    @ValueMapping(target = "DEFAULT", source = "NORMAL")
+  })
+  ExternalOrderType orderTypeToExternalOrderType(OrderType orderType);
+}
+```
+
+生成的映射器代码实现：
+
+```java
+// GENERATED CODE
+public class OrderMapperImpl implements OrderMapper {
+
+  @Override
+  public ExternalOrderType orderTypeToExternalOrderType(OrderType orderType) {
+    if (orderType == null) {
+      return null;
+    }
+
+    ExternalOrderType externalOrderType_;
+
+    switch (orderType) {
+      case EXTRA: externalOrderType_ = ExternalOrderType.SPECIAL;
+        break;
+      case STANDARD: externalOrderType_ = ExternalOrderType.DEFAULT;
+        break;
+      case NORMAL: externalOrderType_ = ExternalOrderType.DEFAULT;
+        break;
+      case RETAIL: externalOrderType_ = ExternalOrderType.RETAIL;
+        break;
+      case B2B: externalOrderType_ = ExternalOrderType.B2B;
+        break;
+      default: throw new IllegalArgumentException("Unexpected enum constant: " + orderType);
+    }
+
+    return externalOrderType_;
+  }
+}
+```
+
+代码解析：
+1. **显式映射**：
+    - `EXTRA -> SPECIAL`
+    - `STANDARD -> DEFAULT`
+    - `NORMAL -> DEFAULT`
+2. **隐式映射**（未在 `@ValueMappings` 中声明的枚举）：
+    - `RETAIL -> RETAIL`
+    - `B2B -> B2B`
+
+    MapStruct 发现 `ExternalOrderType` 里有相同名称的 `RETAIL` 和 `B2B`，默认按名称匹配。
+3. **异常处理**：
+    - 如果 `OrderType` 传入了一个不在 `ExternalOrderType` 中定义的值，代码会 `throw new IllegalArgumentException(...)`，确保所有的映射都是可控的。
+
+如果源枚举中的某个常量没有对应的目标常量，并且未使用 `@ValueMapping` 指定映射，MapStruct 默认会抛出错误，以确保所有常量都能被安全映射。对于无法识别的值，生成的映射方法会抛出 `IllegalStateException` 异常。
+
+MapStruct 提供了 `<ANY_REMAINING>` 和 `<ANY_UNMAPPED>` 两种方式（不能同时使用）来处理未明确指定的映射：
+
+- **`<ANY_REMAINING>`**：尝试先按名称自动匹配，剩下的未匹配项才映射到指定的目标常量。
+- **`<ANY_UNMAPPED>`**：不会尝试按名称匹配，所有未匹配项直接映射到指定的目标常量。
+
+此外，MapStruct 还支持以下特殊值：
+
+- **`<NULL>`**：用于处理空源和空目标。
+- **`<THROW_EXCEPTION>`**：用于为特定值映射抛出异常。仅适用于 `ValueMapping#target()`，不能用于 `ValueMapping#source()`，因为 MapStruct 不能从异常映射。
+
+> [!tip]
+> `<ANY_REMAINING>`、`<ANY_UNMAPPED>`、`<THROW_EXCEPTION>` 和 `<NULL>` 常量均定义在 `MappingConstants` 类中。
+
+最后，`@InheritInverseConfiguration` 和 `@InheritConfiguration` 可与 `@ValueMappings` 一起使用。在这种情况下，`<ANY_REMAINING>` 和 `<ANY_UNMAPPED>` 将被忽略。
+
+举个栗子（二）：使用 `<NULL>` 和 `<ANY_REMAINING>` 的枚举映射方法
+
+```java
+@Mapper
+public interface SpecialOrderMapper {
+  SpecialOrderMapper INSTANCE = Mappers.getMapper(SpecialOrderMapper.class);
+
+  @ValueMappings({
+    @ValueMapping(source = MappingConstants.NULL, target = "DEFAULT" ),
+    @ValueMapping(source = "STANDARD", target = MappingConstants.NULL ),
+    @ValueMapping(source = MappingConstants.ANY_REMAINING, target = "SPECIAL" )
+  })
+  ExternalOrderType orderTypeToExternalOrderType(OrderType orderType);
+}
+```
+
+生成的映射器代码实现：
+
+```java
+// GENERATED CODE
+public class SpecialOrderMapperImpl implements SpecialOrderMapper {
+
+  @Override
+  public ExternalOrderType orderTypeToExternalOrderType(OrderType orderType) {
+    if (orderType == null) {
+      return ExternalOrderType.DEFAULT;
+    }
+
+    ExternalOrderType externalOrderType_;
+
+    switch (orderType) {
+      case STANDARD: externalOrderType_ = null;
+        break;
+      case RETAIL: externalOrderType_ = ExternalOrderType.RETAIL;
+        break;
+      case B2B: externalOrderType_ = ExternalOrderType.B2B;
+        break;
+      default: externalOrderType_ = ExternalOrderType.SPECIAL;
+    }
+
+    return externalOrderType_;
+  }
+}
+```
+
+代码解析：
+1. **`<NULL>` 处理空值**
+    - `if (orderType == null) return ExternalOrderType.DEFAULT;`
+    - 如果 `orderType` 为空，则映射到 `DEFAULT`。
+2. **`STANDARD -> null`**
+    - 这意味着 `STANDARD` 在目标枚举中不会有值。
+3. **`<ANY_REMAINING> -> SPECIAL`**
+    - `default: externalOrderType_ = ExternalOrderType.SPECIAL;`
+    - 所有未匹配的 `OrderType`（如 `EXTRA`）都会被映射到 `SPECIAL`。
+
+> [!note]
+> 如果使用 `<ANY_UNMAPPED>` 代替 `<ANY_REMAINING>`，MapStruct 将不会映射 `RETAIL` 和 `B2B`。
+
+举个栗子（三）：使用 `<THROW_EXCEPTION>` 的枚举映射方法
+
+```java
+@Mapper
+public interface SpecialOrderMapper {
+  SpecialOrderMapper INSTANCE = Mappers.getMapper(SpecialOrderMapper.class);
+
+  @ValueMappings({
+    @ValueMapping(source = "STANDARD", target = "DEFAULT" ),
+    @ValueMapping(source = "C2C", target = MappingConstants.THROW_EXCEPTION )
+  })
+  ExternalOrderType orderTypeToExternalOrderType(OrderType orderType);
+}
+```
+
+生成的映射器代码实现：
+
+```java
+// GENERATED CODE
+public class SpecialOrderMapperImpl implements SpecialOrderMapper {
+
+    @Override
+    public ExternalOrderType orderTypeToExternalOrderType(OrderType orderType) {
+        if (orderType == null) {
+            return null;
+        }
+
+        ExternalOrderType externalOrderType_;
+
+        switch (orderType) {
+            case STANDARD: externalOrderType = ExternalOrderType.DEFAULT;
+                break;
+            case C2C: throw new IllegalArgumentException("Unexpected enum constant: " + orderType );
+            default: throw new IllegalArgumentException("Unexpected enum constant: " + orderType );
+        }
+
+        return externalOrderType;
+    }
+}
+```
+
+代码解析：
+1. **`STANDARD -> DEFAULT`**
+    - 符合 `@ValueMapping` 规则。
+2. **`C2C -> throw Exception`**
+    - `C2C` 被明确指定为 `THROW_EXCEPTION`，代码会直接抛出 `IllegalArgumentException`。
+3. **默认抛出异常**
+    - 由于 `@ValueMappings` 只处理了 `STANDARD` 和 `C2C`，其余所有未匹配的枚举值都会进入 `default` 分支，并抛出 `IllegalArgumentException`。
