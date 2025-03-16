@@ -2,30 +2,24 @@
 tags:
   - Java
 create_time: 2025-03-09T23:40:00
-update_time: 2025/03/14 23:25
+update_time: 2025/03/16 23:30
 ---
 
 ## 简介
 
-JDBC（Java Database Connectivity）是 Java 访问关系型数据库（如 MySQL、Oracle）的 API。
-- JDBC 提供**数据库连接**、**数据库操作**、**结果集处理**的标准接口（`java.sql` 包）。
-- 由数据库厂商提供各自的 JDBC 实现，程序员只需**面向接口编程**，无需关心具体实现。
+JDBC，全称为 Java Database Connectivity，是 Java 提供的一套用于访问关系型数据库的标准 API 接口（位于 `java.sql` 包中）。简而言之，JDBC 允许开发者使用 Java 语言与数据库进行交互。各个数据库厂商会根据 JDBC 规范提供各自的实现，这些实现被称为 "数据库驱动"（Driver）。通过加载相应的数据库驱动，应用程序能够实现与不同数据库的无缝连接和操作。程序员只需**面向接口编程**，而无需关心底层的具体实现细节。
 
-![JDBC标准](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202116533.png)
+![[JDBC 标准 | 1000]]
 
 | 主要接口/类              | 作用           |
 | ------------------- | ------------ |
-| `Driver`            | 驱动接口         |
 | `DriverManager`     | 驱动管理，获取数据库连接 |
+| `Driver`            | 驱动接口         |
 | `Connection`        | 数据库连接对象      |
 | `PreparedStatement` | 预编译 SQL 语句   |
 | `ResultSet`         | 查询结果集        |
 
-## 执行流程
-
-![[JDBC 执行流程|500]]
-
-### 环境搭建
+## 环境搭建
 
 执行以下 SQL 语句创建 `atguigudb` 数据库和 `user` 用户表，为后续的 JDBC 操作搭建一个测试环境。
 
@@ -45,14 +39,137 @@ CREATE TABLE IF NOT EXISTS `user`  (
 ) COMMENT '用户表';
 ```
 
-### 获取连接
+## 执行流程
+
+![[JDBC 执行流程 | 250]]
+
+1. **加载驱动（Load Driver）**：通过 `Class.forName()` 或 [[04 - SPI 机制|SPI 机制]] 加载数据库驱动程序，注册到 `DriverManager`。
+2. **创建连接（Open Connection）**：使用 `DriverManager.getConnection()` 建立与数据库的连接。
+3. **创建操作对象（Create Statement）**：通过连接对象创建 `Statement` 或 `PreparedStatement`。
+4. **执行 SQL（Execute Statement）**：使用 `Statement` 中的 `executeQuery()` 或 `executeUpdate()` 执行 SQL 查询或更新语句。
+5. **处理结果（Process Results）**：通过 `ResultSet` 读取和处理查询结果。
+6. **关闭连接，释放资源（Close Connection）**：通过 `try-with-resources` 自动关闭 `ResultSet`、`Statement` 和 `Connection`，释放资源。
+
+### 加载驱动
+
+在 Java [[04 - SPI 机制|SPI 机制]] 出现之前，一个典型的示例代码如下所示：
+
+#CodeSnippet
+
+```java
+public class ApiTest {
+  private static final String URL = "jdbc:mysql://localhost:3306/test";
+  private static final String USERNAME = "root";
+  private static final String PASSWORD = "123456";
+
+  @Test
+  public void test() throws ClassNotFoundException {
+    // 加载驱动（使用 Class.forName 方法）
+    Class.forName("com.mysql.cj.jdbc.Driver");
+    // 使用 try-catch-resources 语句块来确保资源被正确关闭
+    try (
+      // 打开数据库连接
+      final Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+      // 创建 Statement 对象
+      final Statement statement = connection.createStatement();
+      // 执行查询
+      final ResultSet resultSet = statement.executeQuery("SELECT * FROM tb_user")) {
+      // 处理查询结果
+      while (resultSet.next()) {
+        System.out.println(resultSet.getString("name"));
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+}
+```
+
+下面我们重点了解一下数据库驱动的加载方式。在 Java SPI 机制出现之前，程序员通常通过调用 `Class.forName` 手动加载数据库驱动，例如：
+
+```java
+// 加载 MySQL8 数据库驱动
+Class.forName("com.mysql.cj.jdbc.Driver");
+
+// 加载 Oracle 数据库驱动
+Class.forName("oracle.jdbc.driver.OracleDriver");
+
+// 加载 SqlServer 数据库驱动
+Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+```
+
+🤔：为什么使用 `Class.forName` 就能加载数据库驱动呢？
+🤓：这是因为 JDBC 规范要求 `Driver` 实现类在类加载的时候能将自动将自身的实例对象注册到 `DriverManager` 中。其中 MySQL 的 `Driver` 源码如下所示：
+
+```java
+public class Driver extends NonRegisteringDriver implements java.sql.Driver {
+  // Register ourselves with the DriverManager.
+  static {
+    try {
+      java.sql.DriverManager.registerDriver(new Driver());
+    } catch (SQLException E) {
+      throw new RuntimeException("Can't register driver!");
+    }
+  }
+
+  /**
+     * Construct a new driver and register it with DriverManager
+     * 
+     * @throws SQLException
+     *             if a database error occurs.
+     */
+  public Driver() throws SQLException {
+    // Required for Class.forName().newInstance().
+  }
+}
+```
+
+具体来说，每个数据库驱动都会实现 `java.sql.Driver` 接口，并在静态代码块中通过调用 `DriverManager.registerDriver()` 方法，将自身注册到 `DriverManager` 的驱动列表中。因此，使用 `Class.forName` 加载驱动类时，静态代码块会自动执行，从而完成驱动的注册和加载。
+
+> [!chat-bubble]+ 看着这些硬编码的类名，作为一名有追求的程序员，脑海中自然会冒出这样的念头：
+>
+> - 咦！？这些类名是不是可以写到配置文件中呢？这样我更换数据库驱动时，就不用修改代码了。比如： `dirver-name: com.mysql.cj.jdbc.Driver`
+> - 不过，这样还是不够完美……我还得记住不同数据库厂商提供的 Driver 类名！这也太麻烦了吧！头发本来就不多了，换驱动还得查文档，太不友好了。
+> - 能不能和数据库厂商商量一下，让他们直接把配置文件也一并提供？程序员省事，厂商也省事！程序员不用了解驱动类名，厂商还能方便地升级驱动。
+> + 听起来是个好主意！不过，如果厂商提供配置文件，那程序如何去读取它呢？
+> - 还记得 ClassLoader 吗？它不仅可以加载类，还能通过 `getResource()` 或 `getResources()` 方法读取 classpath 下的文件。只要我们和厂商**事先约定好配置文件的路径和格式**，就可以通过它来读取厂商放在 jar 包中的配置文件！
+> + 你 TN 的还真是个天才！！！这套机制，我们就叫它 SPI 吧！
+
+这种设计既简化了开发，又提升了代码的可维护性，堪称一举两得！
+
+于是，JDBC 借助 Java SPI 机制实现了数据库驱动的自动加载。通过这种方式：
+
+- 程序员无需显式调用 `Class.forName` 来加载驱动。
+- 只需在项目中引入所需的数据库驱动 jar 包即可。
+- 更换数据库时，只需更换对应的 jar 包，无需修改代码。
+
+🤔：那么 JDBC 具体是如何实现的呢？
+🤓：以 MySQL 驱动为例，当你第一次调用 `DriverManager.getConnection(url, user, password)` 方法时，系统会首先调用 `DriverManager` 类中的静态方法 `ensureDriversInitialized()`，该方法负责加载数据库驱动。具体实现流程如下：
+
+1. 第 601 行代码：使用 SPI 机制动态加载 `Driver` 接口的实现类。
+
+	```java
+	ServiceLoader<Driver> loadedDrivers = ServiceLoader.load(Driver.class);
+	```
+
+2. 第 635 行代码：使用反射技术创建驱动类的实例对象。
+
+	```java
+	Class.forName(aDriver, true, ClassLoader.getSystemClassLoader());
+	```
+
+	`Class.forName()` 方法会通过反射动态加载驱动类，并调用其无参构造方法实例化对象，从而将其注册到 `DriverManager` 中。
+
+通过这两个步骤，数据库驱动可以在运行时自动加载，程序员只需引入驱动的 jar 包，JDBC 会自动完成驱动的加载与注册，而无需手动调用 `Class.forName()` 方法。
+
+### 创建连接
 
 #### 驱动
 
 `java.sql.Driver` 接口是所有驱动程序需要实现的接口。这个接口是提供给数据库厂商使用的，不同的数据库厂商提供不同的实现。其中，加载驱动由 Java SPI 机制实现，无需再像以前一样使用 `Class.forName("com.mysql.driver")` 来加载 MySQL 驱动。
 
 > [!tip]
-> 对于 Java SPI 机制不清楚的小伙伴可以查看 [[04  - SPI 机制]] 这一篇文章，文章中详细地介绍了 Java SPI 机制的由来、原理以及应用。
+> 对于 Java SPI 机制不清楚的小伙伴可以查看 [[04 - SPI 机制]] 这一篇文章，文章中详细地介绍了 Java SPI 机制的由来、原理以及应用。
 
 #### URL
 
@@ -77,7 +194,7 @@ MySQL 的连接 URL 编写方式：jdbc:mysql://主机名称: mysql 服务端口
 在资源目录 `resources` 下新建 `db.properties` 配置文件，用于维护数据库连接 URL、用户名和密码信息。
 
 ```properties
-jdbc.url=jdbc:mysql://localhost:3306/atguigudb?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai  
+jdbc.url=jdbc:mysql://localhost:3306/atguigudb?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai 
 jdbc.username=root  
 jdbc.password=123456
 ```
@@ -473,7 +590,7 @@ public void testPreparedStatementSQLInjection() throws SQLException {
 
 批处理允许将相关的 SQL 语句分组到一个批处理中，并通过一次调用将它们提交到数据库。当你一次向数据库发送多条 SQL 语句时，可以减少通信开销，从而提高性能。
 
-- JDBC 驱动程序不一定支持该功能，可以使用 `DatabaseMataData. supportsBacthUpdates ()` 方法来确定目标数据库是否支持批处理更新。如果 JDBC 驱动程序支持此功能，则该方法返回值为 true。
+- JDBC 驱动程序不一定支持该功能，可以使用 `DatabaseMataData.supportsBacthUpdates ()` 方法来确定目标数据库是否支持批处理更新。如果 JDBC 驱动程序支持此功能，则该方法返回值为 true。
 
   ```java
   @Test  
@@ -487,7 +604,7 @@ public void testPreparedStatementSQLInjection() throws SQLException {
   运行测试代码，发现居然报错！
   ![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202136005.png)
 
-  上网一查，发现 MySQL8. x 版本还需在 URL 上加上 `allowPublicKeyRetrieval=true` 参数。咱们加上，再试一次，发现 MySQL 是支持批处理功能的。
+  上网一查，发现 MySQL8.x 版本还需在 URL 上加上 `allowPublicKeyRetrieval=true` 参数。咱们加上，再试一次，发现 MySQL 是支持批处理功能的。
   ![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202136365.png)
 
 - `Statement`、`PreparedStatement`、`CallableStatement` 的 `addBatch ()` 方法用于将单个 SQL 语句添加到批处理中。
@@ -582,7 +699,7 @@ public void testPreparedStatementBatchAdd() {
 
 ### 优化
 
-由于 JDBC 批处理利用的是 SQL 中 `INSERT INTO ... VALUES` 的方式插入多条数据，所以当以这种方式插入大量的 (几百万或者几千万) 数据时，可能会出现如下异常：
+由于 JDBC 批处理利用的是 SQL 中 `INSERT INTO ...VALUES` 的方式插入多条数据，所以当以这种方式插入大量的 (几百万或者几千万) 数据时，可能会出现如下异常：
 
 ```
 com.mysql.cj.jdbc.exceptions.PacketTooBigException: Packet for query is too large (99,899,527 > 67,108,864). You can change this value on the server by setting the 'max_allowed_packet' variable.
@@ -806,7 +923,7 @@ public void testTransferWithTransaction() throws SQLException {
 特别注意：
 
 - 数据源和数据库连接不同，数据源无需创建多个，它是产生数据库连接的工厂，通常情况下，一个应用只需要一个数据源，当然也会有多数据源的情况。
-- 当数据库访问结束后，程序还是像以前一样关闭数据库连接：`conn. close ()`；但 `conn. close ()` 并没有关闭数据库的物理连接，它仅仅把数据库连接释放，归还给了数据库连接池。
+- 当数据库访问结束后，程序还是像以前一样关闭数据库连接：`conn.close ()`；但 `conn.close ()` 并没有关闭数据库的物理连接，它仅仅把数据库连接释放，归还给了数据库连接池。
 
 #### Druid（德鲁伊）
 

@@ -2,7 +2,8 @@
 tags:
   - DevKit
   - Java
-update_time: 2025/03/14 21:51
+repository: https://github.com/xihuanxiaorang/mapstruct-study
+update_time: 2025/03/16 18:23
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -632,14 +633,14 @@ public class CustomerMapperImpl implements CustomerMapper {
 
 ### 使用构建器（Builder）
 
-MapStruct **支持使用构建器映射不可变对象**。在映射过程中，MapStruct 会检查目标类型是否有可用的构建器，并通过 `BuilderProvider`（[[04  - SPI 机制|SPI]]）自动选择合适的构建器。
+MapStruct **支持使用构建器映射不可变对象**。在映射过程中，MapStruct 会检查目标类型是否有可用的构建器，并通过 `BuilderProvider`（[[04 - SPI 机制|SPI]]）自动选择合适的构建器。
 
 默认 `BuilderProvider` 认为一个类具备构建器需要满足以下条件：
 - **该类中有一个无参的公共静态构建器创建方法，该方法返回一个构建器实例。** 例如，`Person` 类中有一个返回 `PersonBuilder` 实例的公共静态方法。
 - **构建器类中有一个无参的公共方法（构建方法），该方法返回正在构建的类型实例。** 例如，`PersonBuilder` 类中有一个返回 `Person` 实例的方法。
 - 如果存在多个构建方法，MapStruct 将寻找名为 `build` 的方法，如果存在这样的方法，则将使用它，否则会产生编译错误。
 - 可以在 `@BeanMapping`、`@Mapper` 或 `@MapperConfig` 注解中使用 `@Builder` 来指定构建方法。
-- 如果存在多个满足上述条件的构建器创建方法，`DefaultBuilderProvider`（[[04  - SPI 机制|SPI]]）会抛出 `MoreThanOneBuilderCreationMethodException` 异常，并记录编译警告，同时不会使用任何构建器。
+- 如果存在多个满足上述条件的构建器创建方法，`DefaultBuilderProvider`（[[04 - SPI 机制|SPI]]）会抛出 `MoreThanOneBuilderCreationMethodException` 异常，并记录编译警告，同时不会使用任何构建器。
 
 如果满足条件，MapStruct 会调用构建器的 setter 方法（或类似的方法）进行属性映射，并最终调用 `build ()` 方法创建对象实例。
 

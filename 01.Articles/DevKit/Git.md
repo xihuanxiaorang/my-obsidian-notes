@@ -3,7 +3,7 @@ tags:
   - Git
   - DevKit
 create_time: 2024-12-29 17:30
-update_time: 2025/03/13 19:02
+update_time: 2025/03/15 22:54
 ---
 
 ## 安装
@@ -124,6 +124,125 @@ git pull origin main --allow-unrelated-histories
 git push origin main
 ```
 
+## 子模块
+
+Git 子模块（Submodule）用于在一个 Git 仓库中包含另一个 Git 仓库，常见于管理依赖库或子项目。
+
+### 添加子模块
+
+```bash
+git submodule add <子模块仓库URL> <子模块路径>
+```
+
+举个栗子：
+
+```bash
+git submodule add https://github.com/example/repo.git submodule-dir
+```
+
+在 `submodule-dir` 目录中克隆 `repo.git` 仓库，并在 `.gitmodules` 记录子模块信息。
+
+### 初始化和更新子模块
+
+> [!warning]
+> **每次添加新的子模块后，Push 主仓库前必须先初始化和更新子模块。**
+
+```bash
+git submodule update --init --recursive
+```
+
+- `--init`：初始化 `.gitmodules` 中定义的子模块。
+- `--recursive`：递归更新嵌套子模块。
+
+### 拉取最新的子模块更新
+
+```bash
+git submodule update --remote
+```
+
+- 这会拉取子模块的最新提交，但不会自动合并到主仓库。
+- 拉取后，子模块可能处于 `detached HEAD`（游离 HEAD）状态。
+
+### 更新子模块至最新提交
+
+更新并合并子模块最新提交：
+
+```bash
+git submodule update --remote --merge <子模块路径>
+```
+
+合并到主仓库：
+
+```bash
+git add <子模块路径>
+git commit -m "Updated submodule to latest commit"
+```
+
+### 移除子模块
+
+① **注销子模块**
+
+```bash
+git submodule deinit -f <子模块路径>
+```
+
+② **删除子模块目录**
+
+```bash
+rm -rf <子模块路径>
+```
+
+③ **删除 `.gitmodules` 记录**
+
+删除 `.gitmodules` 中的相关配置行后，移除子模块：
+
+```bash
+git rm --cached <子模块路径>
+```
+
+④ **提交变更**
+
+```bash
+git commit -m "Removed submodule"
+```
+
+### 查看子模块状态
+
+```bash
+git submodule status
+```
+
+输出示例：
+
+```bash
+e3c43f6c3ff4c4d1eaa013e83703b6d8f512f7f7 submodule-dir (heads/main)
+```
+
+状态说明：
+
+- `-` 表示未初始化
+- `+` 表示存在未提交的更改
+- 空格表示已同步
+
+### 子模块切换到特定分支
+
+默认情况下，子模块处于 `detached HEAD`（游离 HEAD）状态。
+
+切换到分支：
+
+```bash
+cd <子模块路径>
+git checkout main  # 或其他分支
+```
+
+返回主仓库：
+
+```bash
+cd ..
+git add <子模块路径>
+git commit -m "Updated submodule branch"
+```
+
 ## 其他
 
 ### 通过 SSH 连接到 GitHub
@@ -189,7 +308,7 @@ git push origin main
 1. 导航到 Github 仓库主页；
 2. 点击 Github 仓库中的**添加文件**按钮 ➡️ 选择**创建新文件**
    ![](https://img.xiaorang.fun/202502281757305.png)
-3. 在文件名字段中，填写 LICENSE 或 LICENSE.md（**全部大写**） ；
+3. 在文件名字段中，填写 LICENSE 或 LICENSE. md（**全部大写**） ；
 4. 在文件名下，点击**选择许可证模板**；
    ![](https://img.xiaorang.fun/202502281757745.png)
 5. 在页面左边的 [Add a license to your project](https://github.com/xihuanxiaorang/java-study/community/license/new)（**添加许可到项目**）下，检查可用的许可，然后从列表中选择许可 ➡️ **查看并提交**；此处选择 MIT 开源协议，对于各个开源协议不懂的小伙伴可以参考[[如何选择开源协议]]这篇文章；
@@ -223,3 +342,9 @@ git push origin main
    ![](https://img.xiaorang.fun/202502281813736.png)
    ![](https://img.xiaorang.fun/202502281814505.png)
 6. 查看是否已解决
+
+### 仓库中只有一个提交如何回滚？
+
+```
+git update-ref -d HEAD
+```

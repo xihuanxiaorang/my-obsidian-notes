@@ -1,10 +1,10 @@
 ---
 tags:
   - Java
-repository: https://github.com/xihuanxiaorang/java-study/tree/core-study/core-study/lambda-study
+repository: https://github.com/xihuanxiaorang/javase-study/tree/main/lambda-study
 version: 8
 create_time: 2024-12-28T17:51:00
-update_time: 2025/03/13 19:03
+update_time: 2025/03/16 18:18
 ---
 
 Lambda 表达式、强大的 Stream API、全新时间日期 API；新特性使得 Java 的运行速度更快、代码更少（Lambda 表达式）、便于并行、最大化减少空指针异常！

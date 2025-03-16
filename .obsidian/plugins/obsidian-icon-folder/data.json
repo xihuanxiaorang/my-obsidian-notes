@@ -45,7 +45,6 @@
   "01.Articles": "RiMarkdownLine",
   "01.Articles/Java": "RiJavaLine",
   "01.Articles/Misc": "RiArchiveLine",
-  "01.Articles/Snippets": "RiBookmark3Line",
   "01.Articles/Announcements": "RiMegaphoneLine",
   "01.Articles/JavaScript": "RiJavascriptFill",
   "01.Articles/Vue": "RiVuejsLine",
@@ -66,7 +65,6 @@
   "01.Articles/Media": "RiVideoOnLine",
   "00.Overview/02 - 参考资料.md": "RiBookmark3Line",
   "01.Articles/AI": "RiBrainLine",
-  "01.Articles/SpringCloud": "RiCloudLine",
   "01.Articles/DevKit": "RiToolsLine",
   "01.Articles/Tools": "RiToolsLine"
 }
