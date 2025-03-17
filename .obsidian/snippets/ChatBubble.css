@@ -22,6 +22,18 @@
   margin-right: auto !important; /* 靠左对齐 */
 }
 
+/* 浅色模式下调整背景和文本颜色 */
+@media (prefers-color-scheme: light) {
+  .callout[data-callout="chat-bubble"] {
+    --callout-color: 255, 255, 255; /* 浅色模式下的气泡背景色 */
+    --callout-text-color: 30, 30, 30; /* 浅色模式下的标题文字颜色 */
+    --callout-tip-color: 100, 100, 100; /* 浅色模式下的提示文字颜色 */
+    --bubble-left: 200, 200, 200; /* 左侧气泡背景色 */
+    --bubble-right: 200, 240, 200; /* 右侧气泡背景色 */
+    background: rgb(var(--callout-color)); /* 设置整体背景颜色 */
+  }
+}
+
 /* 标题部分的样式 */
 .callout[data-callout="chat-bubble"] > .callout-title,
 .callout[data-callout="chat-bubble"] > .callout-title > .callout-icon,

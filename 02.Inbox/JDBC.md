@@ -2,90 +2,109 @@
 tags:
   - Java
 create_time: 2025-03-09T23:40:00
-update_time: 2025/03/16 23:30
+update_time: 2025/03/17 23:16
 ---
 
 ## 简介
 
-JDBC，全称为 Java Database Connectivity，是 Java 提供的一套用于访问关系型数据库的标准 API 接口（位于 `java.sql` 包中）。简而言之，JDBC 允许开发者使用 Java 语言与数据库进行交互。各个数据库厂商会根据 JDBC 规范提供各自的实现，这些实现被称为 "数据库驱动"（Driver）。通过加载相应的数据库驱动，应用程序能够实现与不同数据库的无缝连接和操作。程序员只需**面向接口编程**，而无需关心底层的具体实现细节。
+JDBC（Java Database Connectivity）是 Java 提供的一套访问关系型数据库的标准 API（位于 `java.sql` 包）。JDBC 允许开发者使用 Java 与数据库交互。各数据库厂商根据 JDBC 规范提供自己的实现，称为**数据库驱动**（Driver）。通过加载合适的驱动，应用程序可以与不同数据库无缝连接和操作。程序员只需**面向接口编程**，无需关注底层的具体实现。
 
 ![[JDBC 标准 | 1000]]
 
-| 主要接口/类              | 作用           |
-| ------------------- | ------------ |
-| `DriverManager`     | 驱动管理，获取数据库连接 |
-| `Driver`            | 驱动接口         |
-| `Connection`        | 数据库连接对象      |
-| `PreparedStatement` | 预编译 SQL 语句   |
-| `ResultSet`         | 查询结果集        |
+| 主要接口/类              | 作用                |
+| ------------------- | ----------------- |
+| `DriverManager`     | 管理数据库驱动 & 获取数据库连接 |
+| `Driver`            | 定义数据库驱动接口         |
+| `Connection`        | 表示与数据库的连接对象       |
+| `PreparedStatement` | 预编译 SQL 语句        |
+| `ResultSet`         | 处理查询结果集           |
 
 ## 环境搭建
 
-执行以下 SQL 语句创建 `atguigudb` 数据库和 `user` 用户表，为后续的 JDBC 操作搭建一个测试环境。
+执行以下 SQL 语句创建 `jdbc-study` 数据库和 `t_user` 用户表，为后续的 JDBC 操作搭建一个测试环境。
 
 ```sql
-CREATE DATABASE IF NOT EXISTS atguigudb;  
+CREATE DATABASE IF NOT EXISTS `jdbc-study`;  
+USE `jdbc-study`;
 
-use atguigudb;
-  
-CREATE TABLE IF NOT EXISTS `user`  (  
- `uid` BIGINT(32) AUTO_INCREMENT COMMENT '主键列(自动增长)',  
- `name` VARCHAR(32) NOT NULL COMMENT '用户名称',  
- `age` INT(3) NOT NULL COMMENT '用户年龄',  
- `birthday` DATE NOT NULL COMMENT '用户生日',  
- `salary` FLOAT DEFAULT 15000.0 COMMENT '用户月薪',  
- `note` TEXT COMMENT '用户说明',  
- CONSTRAINT pk_uid PRIMARY KEY (`uid`)  
-) COMMENT '用户表';
+CREATE TABLE IF NOT EXISTS `t_user` (  
+  `id` BIGINT(32) AUTO_INCREMENT COMMENT '用户ID',  
+  `username` VARCHAR(32) NOT NULL COMMENT '用户名称',  
+  `age` TINYINT(3) UNSIGNED NOT NULL COMMENT '用户年龄',  
+  `gender` TINYINT(1) NOT NULL COMMENT '性别（0-女，1-男）',  
+  `birthday` DATE NOT NULL COMMENT '用户生日',  
+  PRIMARY KEY (`id`)  
+) ENGINE=InnoDB  
+DEFAULT CHARSET=utf8mb4  
+COLLATE=utf8mb4_general_ci  
+COMMENT='用户表';
+```
+
+✅ 将存储引擎设置为 `InnoDB`，支持事务和外键。
+✅ 字符集设置为 `utf8mb4`，兼容所有 Unicode 字符（包括 emoji）。
+✅ 排序规则设置为 `utf8mb4_general_ci`，忽略大小写，提升查询性能。
+
+插入测试数据：
+
+```sql
+INSERT INTO `t_user` (`username`, `age`, `gender`, `birthday`) VALUES  
+('张三', 25, 1, '1999-03-15'),  
+('李四', 22, 0, '2002-07-21'),  
+('王五', 30, 1, '1994-05-12'),  
+('赵六', 28, 0, '1996-11-08'),  
+('孙七', 27, 1, '1997-09-03'),  
+('周八', 24, 0, '2000-12-25'),  
+('吴九', 26, 1, '1998-06-18'),  
+('郑十', 23, 0, '2001-04-30'),  
+('陈十一', 29, 1, '1995-08-14'),  
+('杨十二', 31, 0, '1993-02-28');
 ```
 
 ## 执行流程
 
 ![[JDBC 执行流程 | 250]]
 
-1. **加载驱动（Load Driver）**：通过 `Class.forName()` 或 [[04 - SPI 机制|SPI 机制]] 加载数据库驱动程序，注册到 `DriverManager`。
+1. **加载驱动（Load Driver）**：通过 `Class.forName()` 或 [[04 - SPI 机制|SPI 机制]] 加载数据库驱动程序，并注册到 `DriverManager`。
 2. **创建连接（Open Connection）**：使用 `DriverManager.getConnection()` 建立与数据库的连接。
 3. **创建操作对象（Create Statement）**：通过连接对象创建 `Statement` 或 `PreparedStatement`。
-4. **执行 SQL（Execute Statement）**：使用 `Statement` 中的 `executeQuery()` 或 `executeUpdate()` 执行 SQL 查询或更新语句。
+4. **执行 SQL（Execute Statement）**：使用 `Statement` 中的 `executeQuery()` 或 `executeUpdate()` 执行查询或更新语句。
 5. **处理结果（Process Results）**：通过 `ResultSet` 读取和处理查询结果。
 6. **关闭连接，释放资源（Close Connection）**：通过 `try-with-resources` 自动关闭 `ResultSet`、`Statement` 和 `Connection`，释放资源。
 
 ### 加载驱动
 
-在 Java [[04 - SPI 机制|SPI 机制]] 出现之前，一个典型的示例代码如下所示：
+在 SPI 机制 出现之前，加载数据库驱动的典型示例如下：
 
-#CodeSnippet
+```java hl:9
+public class ApiTest {  
+  private static final String URL = "jdbc:mysql://localhost:3306/jdbc-study";  
+  private static final String USERNAME = "root";  
+  private static final String PASSWORD = "123456";  
 
-```java
-public class ApiTest {
-  private static final String URL = "jdbc:mysql://localhost:3306/test";
-  private static final String USERNAME = "root";
-  private static final String PASSWORD = "123456";
-
-  @Test
-  public void test() throws ClassNotFoundException {
-    // 加载驱动（使用 Class.forName 方法）
-    Class.forName("com.mysql.cj.jdbc.Driver");
-    // 使用 try-catch-resources 语句块来确保资源被正确关闭
-    try (
-      // 打开数据库连接
-      final Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-      // 创建 Statement 对象
-      final Statement statement = connection.createStatement();
-      // 执行查询
-      final ResultSet resultSet = statement.executeQuery("SELECT * FROM tb_user")) {
-      // 处理查询结果
-      while (resultSet.next()) {
-        System.out.println(resultSet.getString("name"));
-      }
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-  }
+  @Test  
+  public void test() throws ClassNotFoundException {  
+    // 加载驱动（使用 Class.forName() 方法）  
+    Class.forName("com.mysql.cj.jdbc.Driver");  
+    // 使用 try-catch-resources 语句块来确保资源被正确关闭  
+    try (  
+      // 创建连接  
+      final Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);  
+      // 创建 Statement 对象  
+      final Statement statement = connection.createStatement();  
+      // 执行 SQL 查询  
+      final ResultSet resultSet = statement.executeQuery("select * from t_user")) {  
+      // 处理查询结果  
+      while (resultSet.next()) {  
+        System.out.println(resultSet.getString("username"));  
+      }  
+    } catch (SQLException e) {  
+      throw new RuntimeException(e);  
+    }  
+  }  
 }
 ```
 
-下面我们重点了解一下数据库驱动的加载方式。在 Java SPI 机制出现之前，程序员通常通过调用 `Class.forName` 手动加载数据库驱动，例如：
+在 SPI 机制出现之前，程序员通常需要通过 `Class.forName()` 手动加载数据库驱动，例如：
 
 ```java
 // 加载 MySQL8 数据库驱动
@@ -99,102 +118,100 @@ Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 ```
 
 🤔：为什么使用 `Class.forName` 就能加载数据库驱动呢？
-🤓：这是因为 JDBC 规范要求 `Driver` 实现类在类加载的时候能将自动将自身的实例对象注册到 `DriverManager` 中。其中 MySQL 的 `Driver` 源码如下所示：
+🤓：这是因为 JDBC 规范要求每个数据库驱动在类加载时自动注册到 `DriverManager`，通常通过[[01  - 代码块#静态初始化块|静态代码块]]实现。例如，MySQL 的 `Driver` 源码如下：
 
-```java
+```java hl:5
 public class Driver extends NonRegisteringDriver implements java.sql.Driver {
-  // Register ourselves with the DriverManager.
   static {
     try {
+      // 注册驱动到 DriverManager
       java.sql.DriverManager.registerDriver(new Driver());
     } catch (SQLException E) {
       throw new RuntimeException("Can't register driver!");
     }
   }
-
-  /**
-     * Construct a new driver and register it with DriverManager
-     * 
-     * @throws SQLException
-     *             if a database error occurs.
-     */
-  public Driver() throws SQLException {
-    // Required for Class.forName().newInstance().
-  }
 }
 ```
 
-具体来说，每个数据库驱动都会实现 `java.sql.Driver` 接口，并在静态代码块中通过调用 `DriverManager.registerDriver()` 方法，将自身注册到 `DriverManager` 的驱动列表中。因此，使用 `Class.forName` 加载驱动类时，静态代码块会自动执行，从而完成驱动的注册和加载。
+🔎**原理**：
+1. **类加载阶段**：驱动类加载时，静态代码块会调用 `DriverManager.registerDriver()` 方法，自动完成驱动注册。
+2. **`Class.forName()` 触发注册**：调用 `Class.forName()` 方法时，JVM 会执行静态代码块，从而完成驱动的注册与加载。 ^3f789e
 
 > [!chat-bubble]+ 看着这些硬编码的类名，作为一名有追求的程序员，脑海中自然会冒出这样的念头：
 >
-> - 咦！？这些类名是不是可以写到配置文件中呢？这样我更换数据库驱动时，就不用修改代码了。比如： `dirver-name: com.mysql.cj.jdbc.Driver`
-> - 不过，这样还是不够完美……我还得记住不同数据库厂商提供的 Driver 类名！这也太麻烦了吧！头发本来就不多了，换驱动还得查文档，太不友好了。
-> - 能不能和数据库厂商商量一下，让他们直接把配置文件也一并提供？程序员省事，厂商也省事！程序员不用了解驱动类名，厂商还能方便地升级驱动。
-> + 听起来是个好主意！不过，如果厂商提供配置文件，那程序如何去读取它呢？
-> - 还记得 ClassLoader 吗？它不仅可以加载类，还能通过 `getResource()` 或 `getResources()` 方法读取 classpath 下的文件。只要我们和厂商**事先约定好配置文件的路径和格式**，就可以通过它来读取厂商放在 jar 包中的配置文件！
-> + 你 TN 的还真是个天才！！！这套机制，我们就叫它 SPI 吧！
+> - 🤔 咦！？这些类名是不是可以写到配置文件中呢？这样更换数据库驱动时，就不用修改代码了。比如：`driver-name: com.mysql.cj.jdbc.Driver`。
+> - 😩 不过，这样还是不够完美……我还得记住不同数据库厂商提供的 `Driver` 类名！这也太麻烦了吧！头发本来就不多了，换驱动还得查文档，太不友好了。
+> - 🧐 能不能和数据库厂商商量一下，让他们直接把配置文件也一并提供？程序员省事，厂商也省事！程序员不用了解驱动类名，厂商还能方便地升级驱动。
+> + 😎 听起来是个好主意！不过，如果厂商提供配置文件，程序如何读取它呢？
+> - 🏆 还记得 `ClassLoader` 吗？它不仅可以加载类，还能通过 `getResource()` 或 `getResources()` 读取 classpath 下的文件。👉 只要和厂商**事先约定好配置文件的路径和格式**，就能通过它读取配置！
+> + 🎉 你 TN 的还真是个天才！！！这套机制，我们就叫它 **SPI** 吧！
 
 这种设计既简化了开发，又提升了代码的可维护性，堪称一举两得！
 
-于是，JDBC 借助 Java SPI 机制实现了数据库驱动的自动加载。通过这种方式：
+JDBC 通过 SPI（Service Provider Interface） 机制自动完成驱动加载和注册。通过这种机制：
 
-- 程序员无需显式调用 `Class.forName` 来加载驱动。
-- 只需在项目中引入所需的数据库驱动 jar 包即可。
-- 更换数据库时，只需更换对应的 jar 包，无需修改代码。
+✅ 程序员无需手动调用 `Class.forName()` 加载驱动
+✅ 引入驱动 jar 包后，JDBC 会自动完成驱动加载
+✅ 更换数据库时，仅需替换 jar 包，无需修改代码
 
-🤔：那么 JDBC 具体是如何实现的呢？
-🤓：以 MySQL 驱动为例，当你第一次调用 `DriverManager.getConnection(url, user, password)` 方法时，系统会首先调用 `DriverManager` 类中的静态方法 `ensureDriversInitialized()`，该方法负责加载数据库驱动。具体实现流程如下：
+🤔：那么 JDBC 是如何实现自动加载驱动的呢？
+🤓：以 MySQL 驱动为例，当你第一次调用 `DriverManager.getConnection(url, user, password)` 方法时，系统会首先调用 `DriverManager` 类中的 `ensureDriversInitialized()` 静态方法，该方法负责加载数据库驱动。具体实现流程如下：
 
-1. 第 601 行代码：使用 SPI 机制动态加载 `Driver` 接口的实现类。
+1. 第 601 行代码：使用 SPI 机制动态加载驱动。
 
 	```java
 	ServiceLoader<Driver> loadedDrivers = ServiceLoader.load(Driver.class);
 	```
 
-2. 第 635 行代码：使用反射技术创建驱动类的实例对象。
+2. 第 635 行代码：通过反射实例化驱动类。
 
 	```java
 	Class.forName(aDriver, true, ClassLoader.getSystemClassLoader());
 	```
 
-	`Class.forName()` 方法会通过反射动态加载驱动类，并调用其无参构造方法实例化对象，从而将其注册到 `DriverManager` 中。
+	`Class.forName()` 方法通过反射动态加载驱动类，并调用无参构造方法实例化对象，完成驱动注册。[[#^3f789e]]
 
-通过这两个步骤，数据库驱动可以在运行时自动加载，程序员只需引入驱动的 jar 包，JDBC 会自动完成驱动的加载与注册，而无需手动调用 `Class.forName()` 方法。
+通过这两个步骤，JDBC 在运行时即可动态加载驱动。程序员只需引入驱动 jar 包，JDBC 便能自动完成驱动的加载与注册。
 
 ### 创建连接
 
-#### 驱动
-
-`java.sql.Driver` 接口是所有驱动程序需要实现的接口。这个接口是提供给数据库厂商使用的，不同的数据库厂商提供不同的实现。其中，加载驱动由 Java SPI 机制实现，无需再像以前一样使用 `Class.forName("com.mysql.driver")` 来加载 MySQL 驱动。
-
-> [!tip]
-> 对于 Java SPI 机制不清楚的小伙伴可以查看 [[04 - SPI 机制]] 这一篇文章，文章中详细地介绍了 Java SPI 机制的由来、原理以及应用。
-
 #### URL
 
-URL 用于标识一个被注册的驱动程序，从而建立到数据库的连接。URL 的标准由三部分组成，各部分之间用冒号分隔：
+URL 用于标识一个建立数据库连接的驱动程序，格式由三部分组成，使用冒号进行分隔：
 
-- 协议：java 的连接 URL 中的协议总是 jdbc
-- 子协议：子协议用于标识一个数据库驱动程序
-- 子名称：一种标识数据库的方法。子名称作用是为了 **定位数据库**。其包含 **主机名 (对应服务器的 ip 地址)**，**端口号**、**数据库名**
+- **协议**：在 JDBC 连接 URL 中始终为 `jdbc`
+- **子协议**：用于标识数据库驱动程序
+- **子名称**：用于定位数据库，包含主机名（或 IP 地址）、端口号和数据库名
 
-MySQL 的连接 URL 编写方式：jdbc:mysql://主机名称: mysql 服务端口号/数据库名称? 参数=值&参数=值。一个完整的 URL="`jdbc:mysql://localhost:3306/atguigudb?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimeze=Asia/Shanghaion`"。
+MySQL 的完整连接 URL 格式如下：
 
-- `useUnicode=true&characterEncoding=utf-8` 的作用是指定字符的编码、解码格式。若 MySQL 数据库用到的是 GBK 的编码方式，而项目数据使用的是 UTF-8 的编码方式，这时如果添加了该参数则会在存取数据时根据 MySQL 和项目的编码方式将数据进行相应的格式转化。即：数据库在存项目数据时，会先将 UTF-8 格式数据解码成字节码，然后再将字节码重新使用 GBK 编码存到数据库中。在从数据库取数据时，会先将数据库中的数据按 GBK 格式解码成字节码，然后再将字节码重新按 UTF-8 格式编码数据，最后再将数据返回给客户端。
-- MySQL5.7 之后要加上 `useSSL=false`，MySQL5.7 以及之前的版本则不用添加，默认为 false。`useSSL=true` 通过证书或者令牌进行安全验证，SSL 协议服务主要提供：认证用户服务器，确保数据发送到正确的服务器；加密数据，放置数据传输途中被窃取使用；维护数据完整性，验证数据在传输过程中是否丢失。
-- MySQL8.0 之后必须加上 `serverTimezone=Asia/Shanghai`，指定当前服务器所处的时区。
+```text
+jdbc:mysql://主机名:端口号/数据库名?参数=值&参数=值
+```
+
+示例：
+
+```text
+jdbc:mysql://localhost:3306/jdbc-study?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+```
+
+- `useUnicode=true&characterEncoding=utf-8`：指定字符编码格式，确保数据在传输和存储过程中正确解码。若 MySQL 使用 GBK 编码，而项目使用 UTF-8 编码时，JDBC 会在数据存取时进行格式转换。
+- `useSSL=false`：MySQL 5.7 之后默认启用 SSL 连接。禁用 SSL 可提升连接速度。SSL 主要作用：
+	- 认证服务器身份，确保数据传输到正确的服务器
+	- 加密数据，防止中途被窃取
+	- 维护数据完整性，防止数据在传输过程中丢失或被篡改
+- `serverTimezone=Asia/Shanghai`：MySQL 8.0 之后必须指定服务器时区，避免时区不一致导致时间偏移。
 
 #### 用户名密码
 
-建立数据库连接时必须的参数，其中的用户名和密码由自己保管，务必不要告诉他人！
+建立数据库连接时需要提供用户名和密码。这些信息需妥善保管，避免泄露。
 
 #### 测试
 
-在资源目录 `resources` 下新建 `db.properties` 配置文件，用于维护数据库连接 URL、用户名和密码信息。
+在 `resources` 资源目录下新建 `db.properties` 配置文件，用于保存数据库连接信息：
 
 ```properties
-jdbc.url=jdbc:mysql://localhost:3306/atguigudb?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai 
+jdbc.url=jdbc:mysql://localhost:3306/jdbc-study?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai  
 jdbc.username=root  
 jdbc.password=123456
 ```
@@ -203,45 +220,44 @@ jdbc.password=123456
 
 ```java
 public class JdbcTests {  
-    private static final Logger LOGGER = LoggerFactory.getLogger(JdbcTest.class);  
-	private static Connection CONNECTION = null;  
-  
-	@BeforeEach  
-	public void before() {  
-	    try (InputStream inputStream = JdbcTest.class.getClassLoader().getResourceAsStream("db.properties")) {  
-	        Properties properties = new Properties();  
-	        properties.load(inputStream);  
-	        String url = properties.getProperty("jdbc.url");  
-	        String username = properties.getProperty("jdbc.username");  
-	        String password = properties.getProperty("jdbc.password");  
-	        CONNECTION = DriverManager.getConnection(url, username, password);  
-	        LOGGER.info("【建立数据库连接】：{}", CONNECTION);  
-	    } catch (IOException | SQLException e) {  
-	        throw new RuntimeException(e);  
-	    }  
-	}  
-  
-	@AfterEach  
-	public void after() {  
-	    if (CONNECTION != null) {  
-	        try {  
-	            CONNECTION.close();  
-	            LOGGER.info("【关闭数据库连接】：{}", CONNECTION);  
-	        } catch (SQLException e) {  
-	            throw new RuntimeException(e);  
-	        }  
-	    }  
-	}
-  
-    @Test  
-    public void testConnection() {  
-  
-    }   
+  private static final Logger LOGGER = LoggerFactory.getLogger(JdbcTests.class);  
+  private static Connection CONNECTION = null;  
+
+  @BeforeEach  
+  public void before() {  
+    try (InputStream ins = JdbcTests.class.getClassLoader().getResourceAsStream("db.properties")) {  
+      final Properties properties = new Properties();  
+      properties.load(ins);  
+      final String url = properties.getProperty("jdbc.url");  
+      final String username = properties.getProperty("jdbc.username");  
+      final String password = properties.getProperty("jdbc.password");  
+      CONNECTION = DriverManager.getConnection(url, username, password);  
+      LOGGER.info("【建立数据库连接】: {}", CONNECTION);  
+    } catch (IOException | SQLException e) {  
+      throw new RuntimeException(e);  
+    }  
+  }  
+
+  @AfterEach  
+  public void after() {  
+    if (CONNECTION != null) {  
+      try {  
+        CONNECTION.close();  
+        LOGGER.info("【关闭数据库连接】:{}", CONNECTION);  
+      } catch (SQLException e) {  
+        throw new RuntimeException(e);  
+      }  
+    }  
+  }  
+
+  @Test  
+  public void testConnection() {  
+  }  
 }
 ```
 
-测试结果如下所示：获取到 MySQL 连接实例对象，以及使用完成后及时关闭连接。`Connection` 的使用原则是 **尽量晚创建，尽量早释放**。
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202125244.png)
+成功建立数据库连接，并在操作完成后关闭连接。`Connection` 的使用原则是：**尽量晚创建，尽量早释放**。
+![[Pasted image 20250317231640.png]]
 
 ### Statement 接口
 
