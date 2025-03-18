@@ -5,7 +5,7 @@ tags:
   - SourceCodeAnalysis
   - DataStructure
 create_time: 2024-12-24 17:50
-update_time: 2025/03/13 19:04
+update_time: 2025/03/18 22:16
 version: 8
 ---
 
@@ -686,9 +686,8 @@ final Node<K,V> removeNode(int hash, Object key, Object value,
 
 ### 序列化机制
 
-🤔 为什么 `table` 和其他字段使用 [[transient]] 修饰？
-
-🤓 `table` 是 `HashMap` 存储数据的核心数组，但在序列化时不会直接保存，而是通过 `transient` 修饰跳过。这种设计有以下两个主要目的：
+🤔为什么 `table` 和其他字段使用 [[transient]] 修饰？
+🤓`table` 是 `HashMap` 存储数据的核心数组，但在序列化时不会直接保存，而是通过 `transient` 修饰跳过。这种设计有以下两个主要目的：
 1. **节省空间**
     - `table` 中包含大量未使用的空槽位，直接序列化整个数组会浪费存储空间。
     - 自定义序列化逻辑可以仅保存实际存在的键值对，避免存储无效数据，从而减少存储和传输的开销。

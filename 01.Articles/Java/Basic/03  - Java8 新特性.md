@@ -4,7 +4,7 @@ tags:
 repository: https://github.com/xihuanxiaorang/javase-study/tree/main/lambda-study
 version: 8
 create_time: 2024-12-28T17:51:00
-update_time: 2025/03/16 18:18
+update_time: 2025/03/18 22:17
 ---
 
 Lambda 表达式、强大的 Stream API、全新时间日期 API；新特性使得 Java 的运行速度更快、代码更少（Lambda 表达式）、便于并行、最大化减少空指针异常！
@@ -72,9 +72,8 @@ final TreeSet<Integer> treeSet = new TreeSet<>(((o1, o2) -> Integer.compare (o1,
 
 #### 举个栗子
 
-🤔 看到这，有的小伙伴可能会问：我使用匿名内部类的方式实现比较两个整数类型数据的大小并不复杂啊！我为啥还要学习一种新的语法呢？
-
-🤓 我只能说：小伙子，你还是 Too Young Too Simple！接下来，我们一起来写一个稍微复杂一点的例子，来对比下使用匿名内部类和 Lambda 表达式实现相同功能时，哪种方式更加简洁？
+🤔看到这，有的小伙伴可能会问：我使用匿名内部类的方式实现比较两个整数类型数据的大小并不复杂啊！我为啥还要学习一种新的语法呢？
+🤓我只能说：小伙子，你还是 Too Young Too Simple！接下来，我们一起来写一个稍微复杂一点的例子，来对比下使用匿名内部类和 Lambda 表达式实现相同功能时，哪种方式更加简洁？
 
 假如，现在有一个这样的需求：获取年龄大于 30 岁的员工信息。
 

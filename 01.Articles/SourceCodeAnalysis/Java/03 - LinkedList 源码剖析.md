@@ -5,7 +5,7 @@ tags:
   - SourceCodeAnalysis
   - DataStructure
 create_time: 2025-01-02 23:31
-update_time: 2025/02/26 11:34
+update_time: 2025/03/18 22:17
 version: 8
 ---
 
@@ -447,9 +447,8 @@ E unlink(Node<E> x) {
 
 ## 扩展：序列化机制
 
-🤔 为什么 `size`、`first` 和 `last` 等成员变量均使用 [[transient]] 关键字修饰？
-
-🤓 由上面的继承关系图可知，虽然 `LinkedList` 实现了 `Serializable` 接口，支持序列化，但上述关键成员变量都被 `transient` 修饰，这样做是为了：
+🤔为什么 `size`、`first` 和 `last` 等成员变量均使用 [[transient]] 关键字修饰？
+🤓由上面的继承关系图可知，虽然 `LinkedList` 实现了 `Serializable` 接口，支持序列化，但上述关键成员变量都被 `transient` 修饰，这样做是为了：
 1. **节省存储空间**
     - 链表结构包含大量前驱和后继指针，直接序列化会浪费存储空间。
     - 通过自定义序列化，仅存储节点的数据部分（`item`），避免无效数据的传输。

@@ -163,7 +163,7 @@ public ArrayList(Collection<? extends E> c) {
 ```
 
 🤔为什么需要 `Arrays.copyOf`？
-🤓：因为在某些情况下，集合中的 `toArray()` 方法返回的数组类型可能不是 `Object[].class`，因此需要通过 ` Arrays.copyOf ` 复制为 Object[] 类型。例如：
+🤓因为在某些情况下，集合中的 `toArray()` 方法返回的数组类型可能不是 `Object[].class`，因此需要通过 ` Arrays.copyOf ` 复制为 Object[] 类型。例如：
 
 ```java
 Long[] array1 = {1L, 2L};

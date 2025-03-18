@@ -2,7 +2,7 @@
 tags:
   - Java
 create_time: 2025-03-09T23:40:00
-update_time: 2025/03/17 23:16
+update_time: 2025/03/18 23:33
 ---
 
 ## 简介
@@ -29,10 +29,10 @@ USE `jdbc-study`;
 
 CREATE TABLE IF NOT EXISTS `t_user` (  
   `id` BIGINT(32) AUTO_INCREMENT COMMENT '用户ID',  
-  `username` VARCHAR(32) NOT NULL COMMENT '用户名称',  
-  `age` TINYINT(3) UNSIGNED NOT NULL COMMENT '用户年龄',  
+  `username` VARCHAR(32) NOT NULL COMMENT '用户名',  
+  `age` TINYINT(3) UNSIGNED NOT NULL COMMENT '年龄',  
   `gender` TINYINT(1) NOT NULL COMMENT '性别（0-女，1-男）',  
-  `birthday` DATE NOT NULL COMMENT '用户生日',  
+  `birthday` DATE NOT NULL COMMENT '生日',  
   PRIMARY KEY (`id`)  
 ) ENGINE=InnoDB  
 DEFAULT CHARSET=utf8mb4  
@@ -60,6 +60,35 @@ INSERT INTO `t_user` (`username`, `age`, `gender`, `birthday`) VALUES
 ('杨十二', 31, 0, '1993-02-28');
 ```
 
+实体类：
+
+```java
+@Data  
+@NoArgsConstructor  
+@AllArgsConstructor  
+public class User {  
+  /**  
+   * 用户ID  
+   */  private Long id;  
+  /**  
+   * 用户名  
+   */  
+  private String username;  
+  /**  
+   * 年龄  
+   */  
+  private Integer age;  
+  /**  
+   * 性别（0-女，1-男）  
+   */  
+  private Integer gender;  
+  /**  
+   * 生日  
+   */  
+  private Date birthday;  
+}
+```
+
 ## 执行流程
 
 ![[JDBC 执行流程 | 250]]
@@ -73,7 +102,7 @@ INSERT INTO `t_user` (`username`, `age`, `gender`, `birthday`) VALUES
 
 ### 加载驱动
 
-在 SPI 机制 出现之前，加载数据库驱动的典型示例如下：
+在 SPI 机制出现之前，加载数据库驱动的典型示例如下：
 
 ```java hl:9
 public class ApiTest {  
@@ -117,8 +146,8 @@ Class.forName("oracle.jdbc.driver.OracleDriver");
 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 ```
 
-🤔：为什么使用 `Class.forName` 就能加载数据库驱动呢？
-🤓：这是因为 JDBC 规范要求每个数据库驱动在类加载时自动注册到 `DriverManager`，通常通过[[01  - 代码块#静态初始化块|静态代码块]]实现。例如，MySQL 的 `Driver` 源码如下：
+🤔为什么使用 `Class.forName` 就能加载数据库驱动呢？
+🤓这是因为 JDBC 规范要求每个数据库驱动在类加载时自动注册到 `DriverManager`，通常通过[[01  - 代码块#静态初始化块|静态代码块]]实现。例如，MySQL 的 `Driver` 源码如下：
 
 ```java hl:5
 public class Driver extends NonRegisteringDriver implements java.sql.Driver {
@@ -135,7 +164,7 @@ public class Driver extends NonRegisteringDriver implements java.sql.Driver {
 
 🔎**原理**：
 1. **类加载阶段**：驱动类加载时，静态代码块会调用 `DriverManager.registerDriver()` 方法，自动完成驱动注册。
-2. **`Class.forName()` 触发注册**：调用 `Class.forName()` 方法时，JVM 会执行静态代码块，从而完成驱动的注册与加载。 ^3f789e
+2. **`Class.forName()` 触发注册**：调用 `Class.forName()` 方法时，JVM 会执行静态代码块，从而完成驱动的注册与加载。
 
 > [!chat-bubble]+ 看着这些硬编码的类名，作为一名有追求的程序员，脑海中自然会冒出这样的念头：
 >
@@ -154,8 +183,8 @@ JDBC 通过 SPI（Service Provider Interface） 机制自动完成驱动加载�
 ✅ 引入驱动 jar 包后，JDBC 会自动完成驱动加载
 ✅ 更换数据库时，仅需替换 jar 包，无需修改代码
 
-🤔：那么 JDBC 是如何实现自动加载驱动的呢？
-🤓：以 MySQL 驱动为例，当你第一次调用 `DriverManager.getConnection(url, user, password)` 方法时，系统会首先调用 `DriverManager` 类中的 `ensureDriversInitialized()` 静态方法，该方法负责加载数据库驱动。具体实现流程如下：
+🤔那么 JDBC 是如何实现自动加载驱动的呢？
+🤓以 MySQL 驱动为例，当你第一次调用 `DriverManager.getConnection(url, user, password)` 方法时，系统会首先调用 `DriverManager` 类中的 `ensureDriversInitialized()` 静态方法，该方法负责加载数据库驱动。具体实现流程如下：
 
 1. 第 601 行代码：使用 SPI 机制动态加载驱动。
 
@@ -169,7 +198,7 @@ JDBC 通过 SPI（Service Provider Interface） 机制自动完成驱动加载�
 	Class.forName(aDriver, true, ClassLoader.getSystemClassLoader());
 	```
 
-	`Class.forName()` 方法通过反射动态加载驱动类，并调用无参构造方法实例化对象，完成驱动注册。[[#^3f789e]]
+	`Class.forName()` 方法通过反射动态加载驱动类，并调用无参构造方法实例化对象，完成驱动注册。
 
 通过这两个步骤，JDBC 在运行时即可动态加载驱动。程序员只需引入驱动 jar 包，JDBC 便能自动完成驱动的加载与注册。
 
@@ -218,10 +247,10 @@ jdbc.password=123456
 
 编写 `JdbcTests` 测试类：
 
-```java
+```java hl:13,24
 public class JdbcTests {  
   private static final Logger LOGGER = LoggerFactory.getLogger(JdbcTests.class);  
-  private static Connection CONNECTION = null;  
+  private Connection connection = null;  
 
   @BeforeEach  
   public void before() {  
@@ -231,247 +260,217 @@ public class JdbcTests {
       final String url = properties.getProperty("jdbc.url");  
       final String username = properties.getProperty("jdbc.username");  
       final String password = properties.getProperty("jdbc.password");  
-      CONNECTION = DriverManager.getConnection(url, username, password);  
-      LOGGER.info("【建立数据库连接】: {}", CONNECTION);  
+      connection = DriverManager.getConnection(url, username, password);  
+      LOGGER.info("【建立数据库连接】: {}", connection);  
     } catch (IOException | SQLException e) {  
-      throw new RuntimeException(e);  
+      throw new RuntimeException("数据库连接失败", e);  
     }  
   }  
 
   @AfterEach  
   public void after() {  
-    if (CONNECTION != null) {  
+    if (connection != null) {  
       try {  
-        CONNECTION.close();  
-        LOGGER.info("【关闭数据库连接】:{}", CONNECTION);  
+        connection.close();  
+        LOGGER.info("【关闭数据库连接】: {}", connection);  
       } catch (SQLException e) {  
-        throw new RuntimeException(e);  
+        throw new RuntimeException("关闭数据库连接失败", e);  
       }  
     }  
   }  
 
   @Test  
   public void testConnection() {  
-  }  
+    assertNotNull(connection);  
+    LOGGER.info("【测试数据库连接成功】");  
+  }
 }
 ```
 
-成功建立数据库连接，并在操作完成后关闭连接。`Connection` 的使用原则是：**尽量晚创建，尽量早释放**。
-![[Pasted image 20250317231640.png]]
+成功建立数据库连接，并在操作完成后关闭连接。
+![[Pasted image 20250318172702.png]]
 
-### Statement 接口
+> [!important]
+> `Connection` 连接的使用原则是：**尽量晚创建，尽量早释放**。
 
-#### 更新 - 添加数据
+### 创建操作对象
 
-```java
-@Test  
-public void testAdd() throws SQLException {  
-    Statement statement = connection.createStatement();  
-    String sql = "INSERT INTO `user`(`name`, `age`, `birthday`, `salary`, `note`) VALUES('小让', 18, '1995-07-13', 16000.0, '程序员');";  
-    int count = statement.executeUpdate(sql);  
-    LOGGER.info("【数据更新行数】：{}", count);  
-}
-```
+#### Statement 接口
 
-测试结果如下所示：【数据更新行数】：1
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202125843.png)
+##### 添加数据
 
-在 MySQL 客户端中执行 `select * from user;` 语句查看表中全部数据。
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202125170.png)
-
-#### 更新 - 删除数据
-
-```java
-@Test  
-public void testDelete() throws SQLException {  
-    Statement statement = connection.createStatement();  
-    String sql = "DELETE FROM `user` WHERE `uid` = 1;";  
-    int count = statement.executeUpdate(sql);  
-    LOGGER.info("【数据更新行数】：{}", count); 
-}
-```
-
-测试结果如下所示：【数据更新行数】：1
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202125563.png)
-
-再次利用 MySQL 客户端执行 `select * from user;` 语句查看表中全部数据，发现刚刚插入进去的一条的数据已被成功删除。![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202125068.png)
-
-#### 查询数据
-
-在执行查询前先往 `user` 表中插入几条数据，这样可以保证等下查询出来的效果。
-
-```sql
-INSERT INTO `user`(`name`, `age`, `birthday`, `salary`, `note`) VALUES('小让', 18, '1995-07-13', 16000.0, '程序员');  
-INSERT INTO `user`(`name`, `age`, `birthday`, `salary`, `note`) VALUES('小星', 18, '1995-03-20', 20000.0, '幼教');  
-INSERT INTO `user`(`name`, `age`, `birthday`, `salary`, `note`) VALUES('三十', 25, '1995-08-08', 22000.0, '硬件工程师');
-```
-
-创建用户类：
-
-```java
-@Data  
-@NoArgsConstructor  
-@AllArgsConstructor  
-public class User {  
-    /**  
-     * 主键列  
-     */  
-    private Integer uid;  
-    /**  
-     * 姓名  
-     */  
-    private String name;  
-    /**  
-     * 年龄  
-     */  
-    private Integer age;  
-    /**  
-     * 生日  
-     */  
-    private Date birthday;  
-    /**  
-     * 工资薪水  
-     */  
-    private Float salary;  
-    /**  
-     * 说明  
-     */  
-    private String note;  
-}
-```
-
-编写测试代码：
-
-```java
-@Test  
-public void testQuery() throws SQLException {  
-    Statement statement = connection.createStatement();  
-    String sql = "SELECT * FROM `user`;";  
-    ResultSet rs = statement.executeQuery(sql);  
-    while (rs.next()) {  
-        int uid = rs.getInt("uid");  
-        String name = rs.getString("name");  
-        int age = rs.getInt("age");  
-        Date birthday = rs.getDate("birthday");  
-        float salary = rs.getFloat("salary");  
-        String note = rs.getString("note");  
-        User user = new User(uid, name, age, birthday, salary, note);  
-		LOGGER.info("{}", user);
-    }  
+```java hl:3-5
+@Test
+public void testAdd() {
+  final String sql = "INSERT INTO `t_user`(`username`, `age`, `gender`, `birthday`) VALUES('小让', 30, 1, '1995-07-13')";
+  try (Statement statement = connection.createStatement()) {
+    int count = statement.executeUpdate(sql);
+    LOGGER.info("【插入数据行数】: {}", count);
+    assertEquals(1, count);
+  } catch (SQLException e) {
+    throw new RuntimeException("插入数据失败", e);
+  }
 }
 ```
 
 测试结果如下所示：
-![8ffe64fc-892a-4461-a5d0-176f42fea334](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202125841.png)
+![[Pasted image 20250318172859.png]]
 
-再次利用 MySQL 客户端执行 `select * from user;` 语句查看表中全部数据。
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/images/202303090004164.png#height=159&id=JmnS1&originHeight=177&originWidth=780&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=shadow&title=&width=700)
+在 MySQL 客户端中执行 `SELECT * FROM t_user;` 可查看新增数据：
+![[Pasted image 20250318173537.png]]
 
-#### SQL 注入💣
-
-由于 Statement 使用的是拼接的 SQL 语句，所以很容易出现 **SQL 注入** 问题。那么何为 SQL 注入呢？SQL 注入指的是某些系统没有对用户输入的数据进行充分的检查，而在用户输入数据中注入非法的 SQL 语句段或命令，从而利用系统的 SQL 引擎完成恶意行为的做法。
-
-咱们可以写一个简单的案例来测试一下：查询是否存在 ' 小白 ' 的用户，正常情况下用户表中是查询不到任何叫小白的用户的。
+##### 删除数据
 
 ```java
-@Test  
-public void testSQLInjection() throws SQLException {  
-    Statement statement = connection.createStatement();  
-    String username = "'小白'";  
-    String sql = "SELECT * FROM `user` where `name` = " + username;  
-    ResultSet rs = statement.executeQuery(sql);  
-    while (rs.next()) {  
-        int uid = rs.getInt("uid");  
-        String name = rs.getString("name");  
-        int age = rs.getInt("age");  
-        Date birthday = rs.getDate("birthday");  
-        float salary = rs.getFloat("salary");  
-        String note = rs.getString("note");  
-        System.out.println("User{" +  
-                "uid=" + uid +  
-                ", name='" + name + '\'' +  
-                ", age=" + age +  
-                ", birthday=" + birthday +  
-                ", salary=" + salary +  
-                ", note='" + note + '\'' +  
-                '}');  
-    }  
+@Test
+public void testDelete() {
+  final String sql = "DELETE FROM `t_user` WHERE `id` = 11";
+  try (Statement statement = connection.createStatement()) {
+    int count = statement.executeUpdate(sql);
+    LOGGER.info("【删除数据行数】: {}", count);
+    assertEquals(1, count);
+  } catch (SQLException e) {
+    throw new RuntimeException("删除数据失败", e);
+  }
 }
 ```
 
-测试结果如下所示：的确查询不到叫 ' 小白 ' 的用户。
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202128574.png)
+测试结果如下所示：
+![[Pasted image 20250318174111.png]]
 
-但是此时，咱们将测试代码修改一下，让其中的 username = ' 小白 ' or 1 = 1
+在 MySQL 客户端中再次执行 `SELECT * FROM t_user;`，发现刚插入的数据已被成功删除。
+![[Pasted image 20250318174252.png]]
+
+##### 查询数据
 
 ```java
 @Test  
-public void testSQLInjection() throws SQLException {  
-    Statement statement = connection.createStatement();  
-    String username = "'小白' or 1 = 1";  
-    String sql = "SELECT * FROM `user` where `name` = " + username;  
-    ResultSet rs = statement.executeQuery(sql);  
+public void testQuery() {  
+  final String sql = "SELECT * FROM `t_user`";  
+  try (Statement statement = connection.createStatement();  
+       ResultSet rs = statement.executeQuery(sql)) {  
+    final List<User> users = new ArrayList<>();  
     while (rs.next()) {  
-        int uid = rs.getInt("uid");  
-        String name = rs.getString("name");  
-        int age = rs.getInt("age");  
-        Date birthday = rs.getDate("birthday");  
-        float salary = rs.getFloat("salary");  
-        String note = rs.getString("note");  
-        System.out.println("User{" +  
-                "uid=" + uid +  
-                ", name='" + name + '\'' +  
-                ", age=" + age +  
-                ", birthday=" + birthday +  
-                ", salary=" + salary +  
-                ", note='" + note + '\'' +  
-                '}');  
+      users.add(new User(rs.getLong("id"), rs.getString("username"), rs.getInt("age"), rs.getInt("gender"), rs.getDate("birthday")));  
     }  
+    users.forEach(System.out::println);  
+  } catch (SQLException e) {  
+    throw new RuntimeException("查询数据失败", e);  
+  }  
 }
 ```
 
-测试结果如下所示：可以查询到用户表中的全部数据。
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202128262.png)
+测试结果如下所示：
+![[Pasted image 20250318190116.png]]
 
-可以想象一下如果在登录系统的时候也使用 SQL 注入的手段，那么岂不是任何一个人无需用户名和密码都可以登录进系统，这是一件多么可怕的事情！那么有没有办法解决该问题呢？答案肯定是有的，此时就引出咱们即将学到的 `PreparedStatement` 接口。
+##### SQL 注入💣
 
-### PreparedStatement 接口
+由于 `Statement` 使用字符串拼接构建 SQL 语句，极易导致 **SQL 注入** 问题。
 
-#### MySQL 预编译
+> [!answer]
+> SQL 注入是指在用户输入中注入非法的 SQL 语句，系统在未充分校验的情况下直接执行，从而被恶意利用。
 
-通常咱们发送一条 SQL 语句给 MySQL 服务器时，MySQL 服务器每次都需要对这条语句进行校验、解析等操作。如下图所示：
+举个栗子：查询名为 '小白' 的用户。正常情况下，用户表中不存在名为 '小白' 的用户。
+
+```java hl:3-4
+@Test
+public void testSQLInjection() {
+  final String username = "'小白'";
+  final String sql = "SELECT * FROM `t_user` WHERE `username` = " + username;
+  try (Statement statement = connection.createStatement();
+       ResultSet rs = statement.executeQuery(sql)) {
+    final List<User> users = new ArrayList<>();
+    while (rs.next()) {
+      users.add(new User(rs.getLong("id"), rs.getString("username"), rs.getInt("age"), rs.getInt("gender"), rs.getDate("birthday")));
+    }
+    users.forEach(System.out::println);
+  } catch (SQLException e) {
+    throw new RuntimeException("查询数据失败", e);
+  }
+}
+```
+
+测试结果：确实未查询到名为 '小白' 的用户。
+![[Pasted image 20250318191526.png]]
+
+举个栗子：使用 SQL 注入查询全部数据。将查询条件修改为 `'小白' OR 1 = 1`，即使用户不存在，也会返回所有数据。
+
+```java hl:3
+@Test
+public void testSQLInjection() {
+  final String username = "'小白' OR 1 = 1";
+  final String sql = "SELECT * FROM `t_user` WHERE `username` = " + username;
+  try (Statement statement = connection.createStatement();
+       ResultSet rs = statement.executeQuery(sql)) {
+    final List<User> users = new ArrayList<>();
+    while (rs.next()) {
+      users.add(new User(rs.getLong("id"), rs.getString("username"), rs.getInt("age"), rs.getInt("gender"), rs.getDate("birthday")));
+    }
+    users.forEach(System.out::println);
+  } catch (SQLException e) {
+    throw new RuntimeException("查询数据失败", e);
+  }
+}
+```
+
+测试结果如下所示：返回了所有的用户数据。
+![[Pasted image 20250318221157.png]]
+
+⚠️**问题分析**
+- `Statement` 直接拼接 SQL 语句，未对用户输入进行校验。
+- `OR 1 = 1` 恒成立，导致返回所有数据。
+
+🤔可以想象一下如果登录系统也存在 SQL 注入漏洞，那么攻击者可以绕过身份验证，直接访问系统，这将带来多么严重的安全风险。那么如何防止 SQL 注入呢？
+🤓答案就是 **使用 `PreparedStatement` 代替 `Statement`**，它可以有效防止恶意 SQL 代码的注入，提高系统的安全性。
+- 使用 `PreparedStatement` **预编译** SQL 语句，避免拼接 SQL。
+- `PreparedStatement` 通过**占位符**替代用户输入，防止 SQL 注入。
+
+#### PreparedStatement 接口
+
+##### MySQL 预编译机制
+
+在向 MySQL 服务器发送 SQL 语句时，MySQL 每次都会对语句进行**解析**、**校验**和**执行计划生成**等操作，如下图所示：
 ![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202129064.png)
 
-但是很多情况下，一条 SQL 语句可能需要反复的执行，每次执行可能仅仅是传递的参数不同而已，类似于这样的 SQL 语句如果每次都需要进行校验、解析等操作，未免太过于浪费性能，因此产生了 SQL 语句的预编译。所谓 **预编译** 就是将 **一些灵活的参数值以占位符 `?` 的形式给替代掉，把参数值给抽取出来，把 SQL 语句进行模板化**。让 MySQL 服务器执行相同的 SQL 语句时，不再需要在校验、解析 SQL 语句上面花费重复的时间。
+在实际业务中，很多 SQL 语句结构是固定的，仅参数不同。
+- 如果每次都重新解析和校验，性能会受到影响。
+- **预编译**允许 MySQL 将 SQL 语句模板化，参数以占位符 `?` 形式存在，执行时只需注入参数，避免重复解析和校验。
 
-如何使用预编译呢？步骤如下所示：
+🤔如何使用预编译呢？
+🤓具体实现步骤如下所示：
 
 1. 定义预编译 SQL 语句；
 
-   ```sql
-   prepare statement from 'select * from user where uid = ? and name = ?';
-   ```
+	```sql
+	PREPARE statement FROM 'SELECT * FROM `t_user` WHERE `id` = ? AND `username` = ?';
+	```
 
 2. 设置参数值；
 
-   ```sql
-   set @uid = 4,@name='小星';
-   ```
+	```sql
+	SET @id = 1, @username = '张三';
+	```
 
 3. 执行预编译 SQL 语句；
 
-   ```sql
-   execute statement using @uid,@name;
-   ```
+	```sql
+	EXECUTE statement USING @id, @username;
+	```
+
+✅**性能提升**：解析与校验只在预编译阶段完成
+✅**安全性增强**：参数作为独立变量注入，防止 SQL 注入
 
 运行结果如下所示：
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202131691.png)
+![[Pasted image 20250318232506.png]]
 
-#### PreparedStatement🔥
+##### PreparedStatement🔥
 
-可以通过 `Connection` 连接对象的 `prepareStatement (sql)` 方法获取 `PreparedStatement` 实例对象，其中，`PreparedStatement` 接口继承自 `Statement` 接口，方法中的参数 `sql` 表示一条预编译过的 SQL 语句，在 SQL 语句中的参数值用占位符 `?` 来表示，之后可以使用 `setXxx ()` 或者 `setObject ()` 方法来设置这些参数，💡需要注意的是，**索引值从 1 开始**。
+在 Java 中，可以通过 `Connection` 连接对象的 `prepareStatement(sql)` 方法获取 `PreparedStatement` 实例对象。其中，`PreparedStatement` 接口继承自 `Statement` 接口，方法中的参数 `sql` 表示一条预编译 SQL 语句，SQL 语句中的参数值用占位符 `?` 来表示，之后可以使用 `setXxx()` 或者 `setObject()` 方法来设置这些参数。
 
-##### 更新 - 添加数据
+> [!note]
+> **占位符索引从 1 开始**。
+
+###### 添加数据
 
 ```java
 @Test  
@@ -494,7 +493,7 @@ public void testPreparedStatementAdd() throws SQLException {
 在 MySQL 客户端中执行 `select * from user;` 语句查看表中全部数据。
 ![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202132625.png)
 
-##### 更新 - 删除数据
+###### 删除数据
 
 ```java
 @Test  
@@ -513,7 +512,7 @@ public void testPreparedStatementDelete() throws SQLException {
 在 MySQL 客户端中执行 `select * from user;` 语句查看表中全部数据，发现刚刚插入进去的一条的数据已被成功删除。
 ![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202132721.png)
 
-##### 查询数据
+###### 查询数据
 
 ```java
 @Test  
@@ -543,7 +542,7 @@ public void testPreparedStatementQuery() throws SQLException {
 再次利用 MySQL 客户端执行 `select * from user;` 语句查看表中全部数据。
 ![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202133623.png)
 
-#### 问题💣
+##### 问题💣
 
 事实上，在使用 `PreparedStatement` 时默认是不能执行预编译的，需要在 URL 中增加额外参数 `useServerPrepStmts=true`（MySQL Server 4.1 之前的版本是不支持预编译的，而 MySQL Connector 在 5.0.5 以后的版本默认是不开启预编译功能的）。需要注意的是💡，当使用不同的 `PreparedStatement` 对象来执行相同的 SQL 语句时，还是会出现编译两次的现象，这是因为驱动没有缓存编译后的函数 key，会二次编译。如果希望缓存编译后函数的 key，那么就还需要增加一个参数 `cachePrepStmts=true`。URL 添加参数之后才能保证 MySQL 驱动先把 SQL 语句发送给服务器进行预编译，然后再执行 `executeQuery ()` 时只是把参数发送给服务器。执行流程如下：
 ![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202133766.png)
@@ -571,7 +570,7 @@ show global variables like '%datadir%';
 在 URL 上增加参数 `useServerPrepStmts=true&cachePrepStmts=true`，再次执行 `testPreparedStatementQuery ()` 测试方法，再次查看日志文件，发现日志如下，确实成功开启预编译功能。
 ![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202133551.png)
 
-#### 防止 SQL 注入
+##### 防止 SQL 注入
 
 使用 `PreparedStatement` 可以防止 SQL 注入，其根本原因就是 MySQL 已经对使用了占位符的 SQL 语句进行了预编译，执行计划中的条件已经确定，不能再额外添加其他条件，从而避免了 SQL 注入。咱们使用 `PreparedStatement` 的方式再来测试一下上面的 SQL 注入案例，看看是否可以查到名字叫 ' 小白 ' 的用户。
 
