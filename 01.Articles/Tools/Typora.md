@@ -2,7 +2,7 @@
 tags:
   - Tool
 create_time: 2024-12-28T17:30:00
-update_time: 2025/03/13 19:05
+update_time: 2025/03/19 11:14
 ---
 
 ## 安装与激活🚀
@@ -17,7 +17,7 @@ update_time: 2025/03/13 19:05
 
 ## 偏好设置⚙️
 
-打开 Typora，然后点击顶部导航栏中的 **<font style="color:#F38F39;">文件</font>** ➡️ **<font style="color:#F38F39;">偏好设置</font>**，进入设置界面。
+打开 Typora，然后点击顶部导航栏中的 **<font style="color:#F38F39;">文件</font>** → **<font style="color:#F38F39;">偏好设置</font>**，进入设置界面。
 
 + 文件：
     - 启动选项：重新打开上次使用的文件和目录。

@@ -226,13 +226,13 @@ endif
 
 具体实现步骤如下所示：
 
-1. 创建一个新的 Github Access Token：点击 Github 右上角的头像 ➡️ settings ➡️ Developer Settings ➡️ Personal access tokens (classic) ➡️ Generate new token (classic)
+1. 创建一个新的 Github Access Token：点击 Github 右上角的头像 → settings → Developer Settings → Personal access tokens (classic) → Generate new token (classic)
    ![](https://img.xiaorang.fun/202502251904887.png)
 
-2. 为当前仓库创建一个名为 `GH_TOKEN` 的密钥，值为上一步创建的 Github Access Token：前往当前仓库 Settings ➡️ Secrets and variables ➡️ Actions secrets and variables ➡️ New Repository secret。
+2. 为当前仓库创建一个名为 `GH_TOKEN` 的密钥，值为上一步创建的 Github Access Token：前往当前仓库 Settings → Secrets and variables → Actions secrets and variables → New Repository secret。
    ![](https://img.xiaorang.fun/202502251905688.png)
 
-3. 修改工作流权限：前往当前仓库 Settings ➡️ Actions ➡️ General ➡️ Workflow permissions ➡️ 设置为读写权限。
+3. 修改工作流权限：前往当前仓库 Settings → Actions → General → Workflow permissions → 设置为读写权限。
    ![](https://img.xiaorang.fun/202502251905905.png)
 
 4. 在当前仓库的 `.github/workflows` 目录下创建一个名为 `snake.yml` 的新工作流文件，内容如下所示：
@@ -307,7 +307,7 @@ endif
 4. 粘贴你的 API 密钥到插件设置中，如下所示：
     ![](https://img.xiaorang.fun/202502251906623.png)
 
-5. 为当前仓库创建一个名为 `WAKATIME_API_KEY` 的密钥，值为上一步中拷贝的 API 密钥：前往当前仓库 Settings ➡️ Secrets and variables ➡️ Actions secrets and variables ➡️ New Repository secret。
+5. 为当前仓库创建一个名为 `WAKATIME_API_KEY` 的密钥，值为上一步中拷贝的 API 密钥：前往当前仓库 Settings → Secrets and variables → Actions secrets and variables → New Repository secret。
     ![](https://img.xiaorang.fun/202502251906080.png)
 
 6. 在当前仓库的 `.github/workflows` 目录下创建一个名为 `waka-readme.yml` 的新工作流文件，内容如下所示：

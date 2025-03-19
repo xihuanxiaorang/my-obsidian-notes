@@ -2,7 +2,7 @@
 tags:
   - DevKit
 create_time: 2024-12-28T17:30:00
-update_time: 2025/03/13 19:03
+update_time: 2025/03/19 11:14
 ---
 
 > [!quote]
@@ -12,7 +12,7 @@ update_time: 2025/03/13 19:03
 
 在 Windows 上安装任何 Linux 发行版之前，必须先启用 " 适用于 Linux 的 Windows 子系统 " 可选功能。
 
-以管理员身份运行 `PowerShell`（" 开始 " 菜单 ➡️ "PowerShell" ➡️ 单击右键 ➡️ " 以管理员身份运行 "），输入以下命令：
+以管理员身份运行 `PowerShell`（" 开始 " 菜单 → "PowerShell" → 单击右键 → " 以管理员身份运行 "），输入以下命令：
 
 ```shell
 dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
@@ -25,7 +25,7 @@ dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux 
 安装 WSL2 之前，必须启用虚拟机平台可选功能。
 
 > [!important]
-> 您的计算机需要具备**虚拟化**功能才能使用此功能。如何开启呢？**进入主板 BIOS 界面** ➡️ **启用虚拟化选项**，如果是近几年新买的电脑，该选项默认是打开的。对于该选项每个电脑主板型号不同，设置的方法也不同。所以最好的方法是根据自己的主板型号，去度娘或者谷歌搜索一下开启虚拟化的方法。
+> 您的计算机需要具备**虚拟化**功能才能使用此功能。如何开启呢？**进入主板 BIOS 界面** → **启用虚拟化选项**，如果是近几年新买的电脑，该选项默认是打开的。对于该选项每个电脑主板型号不同，设置的方法也不同。所以最好的方法是根据自己的主板型号，去度娘或者谷歌搜索一下开启虚拟化的方法。
 
 以管理员身份运行 `PowerShell`，输入以下命令：
 
@@ -107,9 +107,9 @@ wsl --set-default-version 2
 2. 使用 `cd /etc/apt` 命令进入 `apt` 目录
 3. 使用 `cp sources.list sources.list.bak` 命令备份原来的配置文件
 4. 使用 `vim sources.list` 命令打开配置文件
-5. 使用 `:` ➡️ `%s/security.ubuntu/mirrors.aliyun/g` 全局替换 `security.ubuntu`
+5. 使用 `:` → `%s/security.ubuntu/mirrors.aliyun/g` 全局替换 `security.ubuntu`
    ![](https://img.xiaorang.fun/202502252159300.png)
-6. 使用 `:` ➡️ `%s/archive.ubuntu/mirrors.aliyun/g` 全局替换 `archive.ubuntu`
+6. 使用 `:` → `%s/archive.ubuntu/mirrors.aliyun/g` 全局替换 `archive.ubuntu`
    ![](https://img.xiaorang.fun/202502252159301.png)
 7. 最后使用 `:wq` 命令进行保存并退出
 8. 使用 `apt-get update` 命令更新软件列表
@@ -126,15 +126,15 @@ wsl --set-default-version 2
 具体步骤如下所示：
 
 1. 下载 [Docker Desktop](https://docs.docker.com/docker-for-windows/wsl/#download) 并按照安装说明进行操作
-2. 确保在 " 设置 " ➡️ " 常规 " 中选中 " 使用基于 WSL2 的引擎 "
+2. 确保在 " 设置 " → " 常规 " 中选中 " 使用基于 WSL2 的引擎 "
    ![](https://img.xiaorang.fun/202502252159304.png)
-3. 通过转到 " 设置 " ➡️ " 资源 " ➡️ "WSL 集成 "，从要启用 Docker 集成的已安装 WSL2 发行版中进行选择
+3. 通过转到 " 设置 " → " 资源 " → "WSL 集成 "，从要启用 Docker 集成的已安装 WSL2 发行版中进行选择
    ![](https://img.xiaorang.fun/202502252159305.png)
 4. 若要确认已安装 Docker，请打开 WSL 发行版（例如 Ubuntu），并通过输入 `docker --version` 来显示版本和内部版本号
    ![](https://img.xiaorang.fun/202502252159306.png)
 5. 通过使用 `docker run hello-world` 运行简单的内置 Docker 映像，测试安装是否正常工作
    ![](https://img.xiaorang.fun/202502252159307.png)
-6. 通过转到 " 设置 " ➡️ "Docker 引擎 "，增加 `registry-mirrors` 键值配置国内镜像源，如下所示：
+6. 通过转到 " 设置 " → "Docker 引擎 "，增加 `registry-mirrors` 键值配置国内镜像源，如下所示：
 
 	```shell
 	"registry-mirrors": [

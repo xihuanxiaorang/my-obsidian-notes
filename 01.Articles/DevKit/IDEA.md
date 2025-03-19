@@ -2,7 +2,7 @@
 tags:
   - DevKit
 create_time: 2024-12-28T17:27:00
-update_time: 2025/03/13 23:46
+update_time: 2025/03/19 11:26
 ---
 
 ## 快捷键
@@ -31,7 +31,7 @@ update_time: 2025/03/13 23:46
 22. 展开：Ctrl + NumPad+
 23. 显示图弹出层：Ctrl + Alt + U
 
-## 配置
+## 设置
 
 ### 如何隐藏不想看到的文件夹或者文件？
 
@@ -76,10 +76,26 @@ File ➡ Settings ➡ Editor ➡ File Types ➡ Ignore Files and Folders，配�
 6. 如果 "SDK" 处的文字不再显示红色就代表已经下载安装完成，最后点击 "确定" 按钮就大功告成啦🌸🌸🌸
    ![](https://img.xiaorang.fun/202502251743007.png)
 
+### 切换中/英文
+
+依次点击：**File** → **Settings** → **Appearance & Behavior** → **System Settings** → **Language and Region**
+
+- 点击 **Language** 选项，选择 **Chinese (Simplified) 简体中文** 切换为中文。
+- 也可在同一位置选择 **English** 切换回英文。
+
+### 欢迎界面
+
+要在 IDEA 启动时显示 **Welcome Screen**（欢迎界面）：
+- 依次点击：**File** → **Settings** → **Appearance & Behavior** → **System Settings**
+- 取消勾选 **"Reopen projects on startup"**（启动时重新打开项目）
+- 点击 **OK**
+
+下次启动时，IDEA 将显示 **Welcome Screen** 而不是自动打开上次的项目。
+
 ## 插件
 
 + 使用 IDE 内置插件系统安装（推荐）
-    - **Preferences (Settings)** ➡️ **Plugins** ➡️ **Marketplace** ➡️ 搜索插件名称 ➡️ 点击 **Install** 按钮进行安装；
+    - **Preferences (Settings)** → **Plugins** → **Marketplace** → 搜索插件名称 → 点击 **Install** 按钮进行安装；
 + 手动安装
     - 到 [JetBrains Marketplace](https://plugins.jetbrains.com/) 上下载与你的 IDE 兼容的最新版本的插件包；
     - **Preferences (Settings)** > **Plugins** > ⚙ > **从磁盘安装插件...** > 选择插件包并安装（无需解压）
@@ -94,9 +110,9 @@ File ➡ Settings ➡ Editor ➡ File Types ➡ Ignore Files and Folders，配�
 
 TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。它集成了<u>谷歌翻译</u>、<u>微软翻译</u>、<u>DeepL 翻译</u>、<u>有道翻译</u>、<u>百度翻译</u>等众多翻译引擎，在你的 IDE 内随时对想要翻译的文本、代码注释、代码文档等进行翻译。
 
-大多数翻译服务都需要注册账号才能访问他们的服务（如：OpenAI、DeepL、有道翻译等）。因此您可能需要注册一个帐号，并获取其**认证密钥**，然后在插件内绑定**认证密钥**：**Preferences (Settings)** ➡️ **Tools** ➡️ **Translation** ➡️ **常规** ➡️ **翻译引擎** ➡️ **配置...**
+大多数翻译服务都需要注册账号才能访问他们的服务（如：OpenAI、DeepL、有道翻译等）。因此您可能需要注册一个帐号，并获取其**认证密钥**，然后在插件内绑定**认证密钥**：**Preferences (Settings)** → **Tools** → **Translation** → **常规** → **翻译引擎** → **配置...**
 
-以**有道翻译**为例，登陆控制台 ➡️ 应用总览 ➡️ 创建应用 ➡️ 填写相关信息（如应用名称：IntelliJ IDEA Translation，选择服务：文本翻译和文档翻译，接入方式选择：API，应用类别：实用工具） ➡️ 确定。
+以**有道翻译**为例，登陆控制台 → 应用总览 → 创建应用 → 填写相关信息（如应用名称：IntelliJ IDEA Translation，选择服务：文本翻译和文档翻译，接入方式选择：API，应用类别：实用工具） → 确定。
 ![](https://img.xiaorang.fun/202502251743008.png)
 
 ![](https://img.xiaorang.fun/202502251743009.png)

@@ -2,7 +2,7 @@
 tags:
   - Java
 create_time: 2025-03-09T23:40:00
-update_time: 2025/03/18 23:33
+update_time: 2025/03/19 23:19
 ---
 
 ## 简介
@@ -47,17 +47,17 @@ COMMENT='用户表';
 插入测试数据：
 
 ```sql
-INSERT INTO `t_user` (`username`, `age`, `gender`, `birthday`) VALUES  
-('张三', 25, 1, '1999-03-15'),  
-('李四', 22, 0, '2002-07-21'),  
-('王五', 30, 1, '1994-05-12'),  
-('赵六', 28, 0, '1996-11-08'),  
-('孙七', 27, 1, '1997-09-03'),  
-('周八', 24, 0, '2000-12-25'),  
-('吴九', 26, 1, '1998-06-18'),  
-('郑十', 23, 0, '2001-04-30'),  
-('陈十一', 29, 1, '1995-08-14'),  
-('杨十二', 31, 0, '1993-02-28');
+INSERT INTO `t_user` (`username`, `age`, `gender`, `birthday`)
+VALUES ('张三', 25, 1, '1999-03-15'),
+       ('李四', 22, 0, '2002-07-21'),
+       ('王五', 30, 1, '1994-05-12'),
+       ('赵六', 28, 0, '1996-11-08'),
+       ('孙七', 27, 1, '1997-09-03'),
+       ('周八', 24, 0, '2000-12-25'),
+       ('吴九', 26, 1, '1998-06-18'),
+       ('郑十', 23, 0, '2001-04-30'),
+       ('陈十一', 29, 1, '1995-08-14'),
+       ('杨十二', 31, 0, '1993-02-28');
 ```
 
 实体类：
@@ -463,7 +463,7 @@ public void testSQLInjection() {
 运行结果如下所示：
 ![[Pasted image 20250318232506.png]]
 
-##### PreparedStatement🔥
+##### PreparedStatement✨
 
 在 Java 中，可以通过 `Connection` 连接对象的 `prepareStatement(sql)` 方法获取 `PreparedStatement` 实例对象。其中，`PreparedStatement` 接口继承自 `Statement` 接口，方法中的参数 `sql` 表示一条预编译 SQL 语句，SQL 语句中的参数值用占位符 `?` 来表示，之后可以使用 `setXxx()` 或者 `setObject()` 方法来设置这些参数。
 
@@ -472,268 +472,267 @@ public void testSQLInjection() {
 
 ###### 添加数据
 
-```java
-@Test  
-public void testPreparedStatementAdd() throws SQLException {  
-    String sql = "INSERT INTO `user`(`name`, `age`, `birthday`, `salary`, `note`) VALUES(?, ?, ?, ?, ?);";  
-    PreparedStatement preparedStatement = connection.prepareStatement(sql);  
-    preparedStatement.setString(1, "小白");  
-    preparedStatement.setInt(2, 18);  
-    preparedStatement.setDate(3, new Date(new java.util.Date().getTime()));  
-    preparedStatement.setFloat(4, 18000.0f);  
-    preparedStatement.setString(5, "销售");  
-    int count = preparedStatement.executeUpdate();  
-    System.out.println("【数据更新行数】：" + count);  
-}
-```
-
-测试结果如下所示：【数据更新行数】：1
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202132178.png)
-
-在 MySQL 客户端中执行 `select * from user;` 语句查看表中全部数据。
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202132625.png)
-
-###### 删除数据
-
-```java
-@Test  
-public void testPreparedStatementDelete() throws SQLException {  
-    String sql = "DELETE FROM `user` WHERE `uid` = ?;";  
-    PreparedStatement preparedStatement = connection.prepareStatement(sql);  
-    preparedStatement.setInt(1, 6);  
-    int count = preparedStatement.executeUpdate();  
-    System.out.println("【数据更新行数】：" + count);  
-}
-```
-
-测试结果如下所示：【数据更新行数】：1
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202132110.png)
-
-在 MySQL 客户端中执行 `select * from user;` 语句查看表中全部数据，发现刚刚插入进去的一条的数据已被成功删除。
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202132721.png)
-
-###### 查询数据
-
-```java
-@Test  
-public void testPreparedStatementQuery() throws SQLException {  
-    String sql = "SELECT * FROM `user` WHERE `name` like ?;";  
-    try (PreparedStatement preparedStatement = CONNECTION.prepareStatement(sql)) {  
-        preparedStatement.setString(1, "%%");  
-        try (ResultSet rs = preparedStatement.executeQuery()) {  
-            while (rs.next()) {  
-                int uid = rs.getInt("uid");  
-                String name = rs.getString("name");  
-                int age = rs.getInt("age");  
-                Date birthday = rs.getDate("birthday");  
-                float salary = rs.getFloat("salary");  
-                String note = rs.getString("note");  
-                User user = new User(uid, name, age, birthday, salary, note);  
-                LOGGER.info("{}", user);  
-            }  
-        }  
-    }  
+```java hl:3-9
+@Test
+public void testPreparedStatementAdd() {
+  final String sql = "INSERT INTO `t_user`(`username`, `age`, `gender`, `birthday`) VALUES(?, ?, ?, ?)";
+  try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+    preparedStatement.setString(1, "小让");
+    preparedStatement.setInt(2, 30);
+    preparedStatement.setInt(3, 1);
+    preparedStatement.setDate(4, new Date(System.currentTimeMillis()));
+    int count = preparedStatement.executeUpdate();
+    LOGGER.info("【插入数据行数】: {} 行", count);
+    assertEquals(1, count);
+  } catch (SQLException e) {
+    throw new RuntimeException("插入数据失败", e);
+  }
 }
 ```
 
 测试结果如下所示：
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202133983.png)
+![[Pasted image 20250319115031.png]]
 
-再次利用 MySQL 客户端执行 `select * from user;` 语句查看表中全部数据。
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202133623.png)
+在 MySQL 客户端中执行 `SELECT * FROM t_user;` 可查看新增数据：
+![[Pasted image 20250319120032.png]]
+
+###### 删除数据
+
+```java
+@Test
+public void testPreparedStatementDelete() {
+  final String sql = "DELETE FROM `t_user` WHERE `id` = ?";
+  try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+    preparedStatement.setInt(1, 12);
+    int count = preparedStatement.executeUpdate();
+    LOGGER.info("【删除数据行数】: {} 行", count);
+    assertEquals(1, count);
+  } catch (SQLException e) {
+    throw new RuntimeException("删除数据失败", e);
+  }
+}
+```
+
+测试结果如下所示：
+![[Pasted image 20250319115738.png]]
+
+在 MySQL 客户端中再次执行 `SELECT * FROM t_user;`，发现刚插入的数据已被成功删除。
+![[Pasted image 20250319120127.png]]
+
+###### 查询数据
+
+```java
+@Test
+public void testPreparedStatementQuery() {
+  final String sql = "SELECT * FROM `t_user` WHERE `gender` = ?";
+  try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+    preparedStatement.setInt(1, 0);
+    try (ResultSet rs = preparedStatement.executeQuery()) {
+      final List<User> users = new ArrayList<>();
+      while (rs.next()) {
+        users.add(new User(rs.getLong("id"), rs.getString("username"), rs.getInt("age"), rs.getInt("gender"), rs.getDate("birthday")));
+      }
+      LOGGER.info("【查询结果】：{} 条记录", users.size());
+      users.forEach(System.out::println);
+    }
+  } catch (SQLException e) {
+    throw new RuntimeException("查询数据失败", e);
+  }
+}
+```
+
+测试结果如下所示：
+![[Pasted image 20250319125616.png]]
 
 ##### 问题💣
 
-事实上，在使用 `PreparedStatement` 时默认是不能执行预编译的，需要在 URL 中增加额外参数 `useServerPrepStmts=true`（MySQL Server 4.1 之前的版本是不支持预编译的，而 MySQL Connector 在 5.0.5 以后的版本默认是不开启预编译功能的）。需要注意的是💡，当使用不同的 `PreparedStatement` 对象来执行相同的 SQL 语句时，还是会出现编译两次的现象，这是因为驱动没有缓存编译后的函数 key，会二次编译。如果希望缓存编译后函数的 key，那么就还需要增加一个参数 `cachePrepStmts=true`。URL 添加参数之后才能保证 MySQL 驱动先把 SQL 语句发送给服务器进行预编译，然后再执行 `executeQuery ()` 时只是把参数发送给服务器。执行流程如下：
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202133766.png)
+默认情况下，`PreparedStatement` **不会执行预编译**，需要在数据库连接 URL 中添加额外参数：
 
-为了查看效果，不妨打开 MySQL 的通用查询日志：
+- `useServerPrepStmts=true` – 启用服务端预编译（MySQL 4.1 之前的版本不支持）。
+- `cachePrepStmts=true` – 启用预编译语句缓存，避免重复编译。
 
-```
-#查看general_log是否开启  
-show variables like 'general_log%';  
-#开启general log:  
-set global general_log = 1;
+举个栗子：
 
-#查询日志时区  
-show variables like 'log_timestamps';  
-#修改日志时区为系统默认的时区，如果想永久修改时区，则在my.ini配置文件中的[mysqld]下增加log_timestamps=SYSTEM  
-set global log_timestamps=SYSTEM;
-
-# 查看mysql数据存储目录  
-show global variables like '%datadir%';
+```text
+jdbc:mysql://localhost:3306/jdbc-study?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&useServerPrepStmts=true
 ```
 
-执行 `testPreparedStatementQuery ()` 测试方法，查看 MySQL 数据存储目录下的 `general_log_file` 所对应的日志文件，发现执行的 SQL 语句依然是普通的 SQL 语句：
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202133465.png)
+在 URL 添加这些参数后，MySQL 将在接收 SQL 语句时进行预编译，之后执行时仅需传递参数，减少解析和校验的开销。执行流程如下所示：
+![[JDBC 预编译执行流程 | 1000]]
 
-在 URL 上增加参数 `useServerPrepStmts=true&cachePrepStmts=true`，再次执行 `testPreparedStatementQuery ()` 测试方法，再次查看日志文件，发现日志如下，确实成功开启预编译功能。
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202133551.png)
+为了查看效果，可以开启 MySQL 通用查询日志：
+
+```sql
+# 查看 general_log 状态  
+SHOW VARIABLES LIKE 'general_log%';  
+
+# 开启 general_log  
+SET GLOBAL general_log = 1;
+
+# 查看日志时区  
+SHOW VARIABLES LIKE 'log_timestamps';  
+
+# 修改日志时区为系统默认值（永久修改需在 my.ini 中配置）  
+SET GLOBAL log_timestamps = SYSTEM;
+
+# 查看 MySQL 数据目录  
+SHOW GLOBAL VARIABLES LIKE '%datadir%';
+```
+
+执行 `testPreparedStatementQuery()` 测试方法后，查看日志文件（位于 MySQL 数据目录下），发现执行的 SQL 语句依然是普通 SQL：
+![[Pasted image 20250319130026.png]]
+
+在 URL 上添加 `useServerPrepStmts=true&cachePrepStmts=true` 参数，再次执行，发现 SQL 语句已被成功预编译：
+![[Pasted image 20250319130329.png]]
 
 ##### 防止 SQL 注入
 
-使用 `PreparedStatement` 可以防止 SQL 注入，其根本原因就是 MySQL 已经对使用了占位符的 SQL 语句进行了预编译，执行计划中的条件已经确定，不能再额外添加其他条件，从而避免了 SQL 注入。咱们使用 `PreparedStatement` 的方式再来测试一下上面的 SQL 注入案例，看看是否可以查到名字叫 ' 小白 ' 的用户。
+`PreparedStatement` 能有效防止 SQL 注入，因为 MySQL 会对使用占位符 `?` 的 SQL 语句进行预编译，执行计划中的条件已固定，无法再通过注入的方式添加其他条件。
+
+举个栗子：使用 `PreparedStatement` 测试 SQL 注入，尝试查询名为 `'小白'` 的用户：
 
 ```java
-@Test  
-public void testPreparedStatementSQLInjection() throws SQLException {  
-    String sql = "SELECT * FROM `user` WHERE `name` = ?";  
-    PreparedStatement preparedStatement = CONNECTION.prepareStatement(sql);  
-    preparedStatement.setString(1, "'小白' or 1 = 1");  
-    try (ResultSet rs = preparedStatement.executeQuery()) {  
-        while (rs.next()) {  
-            int uid = rs.getInt("uid");  
-            String name = rs.getString("name");  
-            int age = rs.getInt("age");  
-            Date birthday = rs.getDate("birthday");  
-            float salary = rs.getFloat("salary");  
-            String note = rs.getString("note");  
-            User user = new User(uid, name, age, birthday, salary, note);  
-            LOGGER.info("{}", user);  
-        }  
-    }  
+@Test
+public void testPreparedStatementSQLInjection() {
+  final String sql = "SELECT * FROM `t_user` WHERE `username` = ?";
+  try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+    preparedStatement.setString(1, "'小白' OR 1 = 1");
+    try (ResultSet rs = preparedStatement.executeQuery()) {
+      final List<User> users = new ArrayList<>();
+      while (rs.next()) {
+        users.add(new User(rs.getLong("id"), rs.getString("username"), rs.getInt("age"), rs.getInt("gender"), rs.getDate("birthday")));
+      }
+      assertEquals(0, users.size());
+      users.forEach(System.out::println);
+    }
+  } catch (SQLException e) {
+    throw new RuntimeException("查询数据失败", e);
+  }
 }
 ```
 
-测试结果如下所示：就是以 SQL 注入的方式也查询不到任何数据，成功！
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202135368.png)
+测试结果如下所示：尝试 SQL 注入失败，查询不到数据。
+![[Pasted image 20250319134339.png]]
 
-查看日志可以发现，它把传入进行的参数值当成一个整体的字符串作为条件。
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202135206.png)
+查看日志可以发现，`PreparedStatement` 会将参数作为一个整体处理，不会将其解析为 SQL 语句的一部分，从而避免了 SQL 注入。
+![[Pasted image 20250319134525.png]]
 
 ## 批处理
 
-批处理允许将相关的 SQL 语句分组到一个批处理中，并通过一次调用将它们提交到数据库。当你一次向数据库发送多条 SQL 语句时，可以减少通信开销，从而提高性能。
+批处理允许将一组相关的 SQL 语句组合成一个批次，并通过一次调用将它们提交到数据库。批处理可以减少与数据库之间的通信次数，从而提高执行性能。
 
-- JDBC 驱动程序不一定支持该功能，可以使用 `DatabaseMataData.supportsBacthUpdates ()` 方法来确定目标数据库是否支持批处理更新。如果 JDBC 驱动程序支持此功能，则该方法返回值为 true。
+### 判断是否支持批处理
 
-  ```java
-  @Test  
-  public void testSupportsBatchUpdates() throws SQLException {  
-      DatabaseMetaData databaseMetaData = CONNECTION.getMetaData();  
-      boolean supportsBatchUpdates = databaseMetaData.supportsBatchUpdates();  
-      System.out.println("是否支持批处理？" + supportsBatchUpdates);  
+JDBC 驱动程序可能不支持批处理，可以通过 `DatabaseMetaData.supportsBatchUpdates()` 方法来判断目标数据库是否支持批处理。
+
+```java
+@Test  
+public void testSupportsBatchUpdates() throws SQLException {  
+  DatabaseMetaData databaseMetaData = CONNECTION.getMetaData();  
+  boolean supportsBatchUpdates = databaseMetaData.supportsBatchUpdates();  
+  System.out.println("是否支持批处理？" + supportsBatchUpdates);  
+}
+```
+
+测试结果如下所示：发现 MySQL 支持批处理。
+![[Pasted image 20250319165828.png]]
+
+### 批处理方法
+
+- `Statement`、`PreparedStatement`、`CallableStatement` 中的 `addBatch()` 方法用于将单个 SQL 语句添加到批处理中。
+- `executeBatch()` 方法用于执行所有放入批处理中的 SQL 语句，返回一个整数数组，表示每个 SQL 语句的影响行数。
+- `clearBatch()` 方法用于清空批处理中的 SQL 语句，无法单独指定删除某条语句。
+
+### 使用 PreparedStatement 进行批处理
+
+使用 `PreparedStatement` 进行批处理的典型步骤：
+
+1. 创建包含占位符的 SQL 语句
+2. 调用 `connection.prepareStatement()` 方法创建 `PreparedStatement` 对象
+3. 关闭自动提交 (`connection.setAutoCommit(false)`)
+4. 使用 `preparedStatement.setXxx()` 方法设置参数值
+5. 调用 `preparedStatement.addBatch()` 方法将语句添加到批处理中
+6. 调用 `preparedStatement.executeBatch()` 方法执行批处理
+7. 成功后调用 `connection.commit()`，出现异常时调用 `connection.rollback()`
+
+```java hl:12,15,17,21
+@Test
+public void testPrepareStatementBatchUpdate() {
+  final String sql = "INSERT INTO `t_user`(`username`, `age`, `gender`, `birthday`) VALUES(?, ?, ?, ?)";
+  try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+    // 关闭自动提交，开启事务
+    connection.setAutoCommit(false);
+    for (int i = 0; i < 5; i++) {
+      preparedStatement.setString(1, "小让" + i);
+      preparedStatement.setInt(2, 30);
+      preparedStatement.setInt(3, 1);
+      preparedStatement.setDate(4, new Date(System.currentTimeMillis()));
+      preparedStatement.addBatch();
+    }
+    // 执行批处理
+    preparedStatement.executeBatch();
+    // 提交事务
+    connection.commit();
+  } catch (SQLException e) {
+    try {
+      // 出现异常时回滚
+      connection.rollback();
+    } catch (SQLException ex) {
+      throw new RuntimeException("回滚失败", ex);
+    }
+    throw new RuntimeException("批处理插入失败", e);
   }
-  ```
-
-  运行测试代码，发现居然报错！
-  ![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202136005.png)
-
-  上网一查，发现 MySQL8.x 版本还需在 URL 上加上 `allowPublicKeyRetrieval=true` 参数。咱们加上，再试一次，发现 MySQL 是支持批处理功能的。
-  ![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202136365.png)
-
-- `Statement`、`PreparedStatement`、`CallableStatement` 的 `addBatch ()` 方法用于将单个 SQL 语句添加到批处理中。
-- `excuteBatch ()` 方法用于执行所有放入批处理中的 SQL 语句。`excuteBatch ()` 方法返回一个整数数组，数组中的每个元素代表各自更新语句的更新数目。
-- 正如将 SQL 语句添加到批处理当中一样，可以使用 `clearBatch ()` 方法清空，该方法用于清空所有添加到批处理当中的 SQL 语句，而无法指定要删除某条数据。
-
-### PreparedStatement 批处理
-
-使用 `PreparedStatement` 实例对象进行批处理的典型步骤顺序如下：
-
-1. 使用占位符创建 SQL 语句
-2. 使用 `Connection` 实例对象的 `prepareStatement ()` 方法获取 `PreparedStatement` 实例对象
-3. 使用 `Connection` 实例对象的 `setAutoCommit (false)` 方法关闭自动提交，即取消自动提交事务 (在下面章节会详细介绍)。
-4. 使用 `PreparedStatement` 实例对象的 `setXxx ()` 方法给占位符赋值之后再使用 `addBatch ()` 方法将 SQL 语句添加到批处理中
-5. 使用 `PreparedStatement` 实例对象的 `executeBatch ()` 方法执行批处理
-6. 最后，使用 `Connection` 实例对象 `commit ()` 方法提交所有的更改，或者出现异常时，使用 `rollback ()` 方法回滚所有操作。
-
-```java
-@Test  
-public void testPreparedStatementBatchAdd() {  
-    try {  
-        CONNECTION.setAutoCommit(false);  
-        String sql = "INSERT INTO `user`(`name`, `age`, `birthday`, `salary`, `note`) VALUES(?, ?, ?, ?, ?);";  
-        try (PreparedStatement preparedStatement = CONNECTION.prepareStatement(sql)) {  
-            for (int i = 0; i < 5; i++) {  
-                preparedStatement.setString(1, "小白" + i);  
-                preparedStatement.setInt(2, 18);  
-                preparedStatement.setDate(3, new Date(new java.util.Date().getTime()));  
-                preparedStatement.setFloat(4, 18000.0f);  
-                preparedStatement.setString(5, "销售");  
-                preparedStatement.addBatch();  
-            }  
-            int[] counts = preparedStatement.executeBatch();  
-            CONNECTION.commit();  
-            LOGGER.info("【数据更新行数】：{}", counts);  
-        }  
-    } catch (SQLException e) {  
-        e.printStackTrace();  
-        try {  
-            CONNECTION.rollback();  
-        } catch (SQLException ex) {  
-            throw new RuntimeException(ex);  
-        }  
-    }  
 }
 ```
 
-点击测试，发现插入还是挺快的，那么到底有没有用上批处理功能呢？咱们来查看一下 MySQL 日志信息，发现 SQL 语句还是一条一条发送的，并没有使用批处理功能！
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202137810.png)不卖关子了，其实还需要在 URL 中增加一个参数 `rewriteBatchedStatements=true`。
+点击测试，插入速度确实很快，但是否真的启用了批处理呢？查看 MySQL 日志后，发现 SQL 语句仍是逐条发送的，批处理功能并未生效。
+![[Pasted image 20250319184515.png]]
 
-> [!NOTE]
->
-> URL 上只有加上 `rewriteBatchedStatements=true` 参数，并保证 MySQL 驱动在 5.1.13 以上版本，才能实现高性能的批量插入。MySQL 驱动在默认情况下会无视 `executeBatch ()` 语句，把咱们期望批量执行的一组 SQL 语句拆散，一条一条地发给 MySQL 服务器，批量插入直接编程单条插入，所以造成较低的性能。另外，这个参数对 INSERT / UPDATE / DELETE 都有效。
+🤔那么该如何启用批处理功能呢？
+🤓在数据库连接 URL 中**添加 `rewriteBatchedStatements=true` 参数**，启用批量优化。
 
-咱们在 URL 上添加上该参数 `rewriteBatchedStatements=true` 后，再来测试一下，再看看 MySQL 的日志信息。惊讶地发现，程序居然报错了！
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202139528.png)
-
-其实细心的小伙伴可以发现，在咱们的 SQL 语句最后有一个分号，这样在做批处理的时候就会出现上图中的错误，所以咱们需要把 SQL 语句最后的分号去掉。
-
-```java
-@Test  
-public void testPreparedStatementBatchAdd() {  
-    try {  
-        CONNECTION.setAutoCommit(false);  
-        String sql = "INSERT INTO `user`(`name`, `age`, `birthday`, `salary`, `note`) VALUES(?, ?, ?, ?, ?)";  
-        try (PreparedStatement preparedStatement = CONNECTION.prepareStatement(sql)) {  
-            for (int i = 0; i < 5; i++) {  
-                preparedStatement.setString(1, "小白" + i);  
-                preparedStatement.setInt(2, 18);  
-                preparedStatement.setDate(3, new Date(new java.util.Date().getTime()));  
-                preparedStatement.setFloat(4, 18000.0f);  
-                preparedStatement.setString(5, "销售");  
-                preparedStatement.addBatch();  
-            }  
-            int[] counts = preparedStatement.executeBatch();  
-            CONNECTION.commit();  
-            LOGGER.info("【数据更新行数】：{}", counts);  
-        }  
-    } catch (SQLException e) {  
-        e.printStackTrace();  
-        try {  
-            CONNECTION.rollback();  
-        } catch (SQLException ex) {  
-            throw new RuntimeException(ex);  
-        }  
-    }  
-}
+```text
+jdbc:mysql://localhost:3306/jdbc-study?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&useServerPrepStmts=true&rewriteBatchedStatements=true
 ```
 
-再来测试一把，发现执行成功，此时再来看看 MySQL 的日志信息，发现达到预期效果！
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202139500.png)
+- 适用于 `INSERT`、`UPDATE`、`DELETE` 语句
+- MySQL 驱动版本 ≥ 5.1.13
+- **必须关闭自动提交才能生效**
 
-### 优化
+在 URL 中添加参数 `rewriteBatchedStatements=true` 后，重新测试，发现执行成功。查看 MySQL 日志，确认批处理已生效，效果达成预期！
+![[Pasted image 20250319190347.png]]
 
-由于 JDBC 批处理利用的是 SQL 中 `INSERT INTO ...VALUES` 的方式插入多条数据，所以当以这种方式插入大量的 (几百万或者几千万) 数据时，可能会出现如下异常：
+### 分批次提交
 
-```
+批处理执行大量数据时可能会触发如下异常：
+
+```text
 com.mysql.cj.jdbc.exceptions.PacketTooBigException: Packet for query is too large (99,899,527 > 67,108,864). You can change this value on the server by setting the 'max_allowed_packet' variable.
 ```
 
-`max_allowed_packet` 为数据包消息缓存区最大大小，单位为字节，默认值为 67108864（64M），最大值 1073741824（1G），最小值 1024（1K），参数值须为 1024 的倍数，非倍数将四舍五入到最接近的倍数。数据包消息缓存区初始大小为 `net_buffer_length` 个字节，每条 SQL 语句和它的参数都会产生一个数据包消息缓存区，跟事务无关。
+`max_allowed_packet` 表示 MySQL 数据包的最大大小，单位为字节。
+- **默认值**：67108864（64M）
+- **最小值**：1024（1K）
+- **最大值**：1073741824（1G）
 
-如何查看与设置 `max_allowed_packet` 参数？
+> [!note]
+> 参数值需为 1024 的倍数，非倍数将自动四舍五入到最接近的倍数。
+
+查看与设置 `max_allowed_packet`：
 
 ```sql
-# 查看数据包消息缓存区初始大小  
-show variables like 'net_buffer_length';  
-# 查看数据包消息缓存区最大大小  
-show variables like 'max_allowed_packet';
-# 重新打开数据库连接参数生效，数据库服务重启后参数恢复为默认，想永久修改的话，则在my.ini配置文件中的[mysqld]下增加max_allowed_packet=32*1024*1024  
-set global max_allowed_packet=32*1024*1024;
+-- 查看最大数据包大小  
+SHOW VARIABLES LIKE 'max_allowed_packet';
+
+-- 设置最大数据包大小（需重启数据库生效）  
+SET GLOBAL max_allowed_packet = 32 * 1024 * 1024;
 ```
 
-咱们为了测试效果，将该值设置小一点，`set global max_allowed_packet=20*1024*10;` 设置成 200K 大小之后，编写测试代码。
+为了测试效果，将 `max_allowed_packet` 值调整为 200K：
+
+```sql
+SET GLOBAL max_allowed_packet = 20 * 1024 * 10;
+```
 
 ```java
 @Test  

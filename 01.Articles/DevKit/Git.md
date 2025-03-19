@@ -3,7 +3,7 @@ tags:
   - Git
   - DevKit
 create_time: 2024-12-29 17:30
-update_time: 2025/03/15 22:54
+update_time: 2025/03/19 11:12
 ---
 
 ## 安装
@@ -288,9 +288,9 @@ git commit -m "Updated submodule branch"
         在复制密钥时，请勿添加任何新行或空格！
     2. 在任何页面的右上角，单击个人资料照片，然后单击**设置**；
        ![](https://img.xiaorang.fun/202502281756049.png)
-    3. 在边栏的访问部分中，点击**SSH 和 GPG 密钥** ➡️ **新建 SSH 密钥**；
+    3. 在边栏的访问部分中，点击**SSH 和 GPG 密钥** → **新建 SSH 密钥**；
        ![](https://img.xiaorang.fun/202502281756139.png)
-    4. **填写标题**（为新密钥添加描述性标签，例如，如果使用的是个人笔记本电脑，则可以将此密钥称为"个人笔记本电脑"） ➡️ **粘贴公钥** ➡️ **添加 SSH 密钥**；
+    4. **填写标题**（为新密钥添加描述性标签，例如，如果使用的是个人笔记本电脑，则可以将此密钥称为"个人笔记本电脑"） → **粘贴公钥** → **添加 SSH 密钥**；
        ![](https://img.xiaorang.fun/202502281757913.png)
 6. 使用 `ssh -T git@github.com` 命令[测试 SSH 连接](https://docs.github.com/zh/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection) ；
    ![](https://img.xiaorang.fun/202502281757005.png)
@@ -306,12 +306,12 @@ git commit -m "Updated submodule branch"
 步骤如下所示：
 
 1. 导航到 Github 仓库主页；
-2. 点击 Github 仓库中的**添加文件**按钮 ➡️ 选择**创建新文件**
+2. 点击 Github 仓库中的**添加文件**按钮 → 选择**创建新文件**
    ![](https://img.xiaorang.fun/202502281757305.png)
-3. 在文件名字段中，填写 LICENSE 或 LICENSE. md（**全部大写**） ；
+3. 在文件名字段中，填写 LICENSE 或 LICENSE.md（**全部大写**） ；
 4. 在文件名下，点击**选择许可证模板**；
    ![](https://img.xiaorang.fun/202502281757745.png)
-5. 在页面左边的 [Add a license to your project](https://github.com/xihuanxiaorang/java-study/community/license/new)（**添加许可到项目**）下，检查可用的许可，然后从列表中选择许可 ➡️ **查看并提交**；此处选择 MIT 开源协议，对于各个开源协议不懂的小伙伴可以参考[[如何选择开源协议]]这篇文章；
+5. 在页面左边的 [Add a license to your project](https://github.com/xihuanxiaorang/java-study/community/license/new)（**添加许可到项目**）下，检查可用的许可，然后从列表中选择许可 → **查看并提交**；此处选择 MIT 开源协议，对于各个开源协议不懂的小伙伴可以参考[[如何选择开源协议]]这篇文章；
    ![](https://img.xiaorang.fun/202502281758417.png)
 6. 点击提交；
    ![](https://img.xiaorang.fun/202502281800329.png)
@@ -330,13 +330,13 @@ git commit -m "Updated submodule branch"
 
 解决方案：更改当前 git 仓库文件夹的所有者！具体步骤如下所示：
 
-1. 鼠标右键文件夹➡️属性➡️安全➡️高级
+1. 鼠标右键文件夹→属性→安全→高级
    ![](https://img.xiaorang.fun/202502281812576.png)
 2. 更改所有者
    ![](https://img.xiaorang.fun/202502281813418.png)
-3. 选择用户或组➡️高级
+3. 选择用户或组→高级
    ![](https://img.xiaorang.fun/202502281813491.png)
-4. 立即查找➡️选择当前登陆用户为所有者
+4. 立即查找→选择当前登陆用户为所有者
    ![](https://img.xiaorang.fun/202502281813300.png)
 5. 应用于当前文件夹下的子文件夹和文件
    ![](https://img.xiaorang.fun/202502281813736.png)

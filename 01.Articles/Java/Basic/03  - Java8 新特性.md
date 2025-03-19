@@ -471,7 +471,7 @@ num = 3;
 ```
 
 > [!quote]
-> Variable used in Lambda expression should be final or effectively final ➡️ 从 Lambda 表达式引用的本地变量必须是最终变量或实际上的最终变量。
+> Variable used in Lambda expression should be final or effectively final → 从 Lambda 表达式引用的本地变量必须是最终变量或实际上的最终变量。
 
 ![](https://img.xiaorang.fun/202502251812772.jpeg)
 

@@ -716,7 +716,7 @@ VitePress 支持使用 [Algolia DocSearch](https://docsearch.algolia.com/docs/wh
 
 ###### 创建应用
 
-进入控制台页面 ➡️ 点击侧边栏最下面的小齿轮进入 Settings 页面 ➡️ Applications。
+进入控制台页面 → 点击侧边栏最下面的小齿轮进入 Settings 页面 → Applications。
 ![](https://img.xiaorang.fun/202502251712832.png)
 
 点击创建应用按钮，创建一个名称为 `blog` 的应用。
@@ -724,12 +724,12 @@ VitePress 支持使用 [Algolia DocSearch](https://docsearch.algolia.com/docs/wh
 
 ###### 创建索引
 
-点击侧边栏倒数第二个数据库图案的按钮 ➡️ 选择 Indices 进入索引页面 ➡️ 点击创建索引按钮，创建一个名称为 `vitepress` 的索引。
+点击侧边栏倒数第二个数据库图案的按钮 → 选择 Indices 进入索引页面 → 点击创建索引按钮，创建一个名称为 `vitepress` 的索引。
 ![](https://img.xiaorang.fun/202502251712834.png)
 
 ###### 获取 API Key
 
-点击侧边栏最下面的小齿轮进入 Settings 页面 ➡️ API Keys。
+点击侧边栏最下面的小齿轮进入 Settings 页面 → API Keys。
 ![](https://img.xiaorang.fun/202502251712835.png)
 
 其中的 Application ID、<u>Search API Key</u> 以及前一个步骤中的 index 名称填写到 `.vitepress/config.ts` 配置文件中。

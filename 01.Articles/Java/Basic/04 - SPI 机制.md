@@ -3,7 +3,7 @@ tags:
   - Java
 repository: https://github.com/xihuanxiaorang/javase-study/tree/main/spi-study
 create_time: 2024-12-28T17:52:00
-update_time: 2025/03/16 23:30
+update_time: 2025/03/19 13:46
 ---
 
 ## 简介
@@ -23,10 +23,6 @@ SPI，全称为 Service Provider Interface，是一种**基于 ClassLoader 的�
 ![[Java SPI 运行流程| 800]]
 
 **应用程序（Application）首先通过调用 ServiceLoader 的 `load()` 方法加载服务提供者（Service Provider）**。在第三方 Jar 包中，可能存在多个服务提供者，这些提供者都实现了统一的服务接口（Service Interface）。ServiceLoader 会将加载的服务提供者以接口实例的形式返回给应用程序，应用程序在获取这些实例后，即可执行后续操作，而**无需关心服务接口的具体实现细节，只需与服务接口进行交互即可**。
-
-## 在 JDBC 中的应用
-
-![[JDBC#加载驱动]]
 
 ## 三大规范要素
 
@@ -222,3 +218,7 @@ SpringBoot 项目启动的时候默认会自动扫描当前项目的 package，�
 ![[SpringBoot 自动配置核心流程| 1300]]
 
 以上，就是 SpringBoot 自动配置的原理，它是不是和 SPI 的设计思想有着异曲同工之妙呢？
+
+## 在 JDBC 中的应用
+
+![[JDBC#加载驱动]]

@@ -3,7 +3,7 @@ tags:
   - DevKit
   - Java
 repository: https://github.com/xihuanxiaorang/mapstruct-study
-update_time: 2025/03/16 18:23
+update_time: 2025/03/19 11:13
 create_time: 2025-02-28T18:46:00
 ---
 
@@ -827,7 +827,7 @@ public class CustomerMapperImpl implements CustomerMapper {
 }
 ```
 
-MapStruct 在由 Map ➡️ Bean 转换时，仍然遵循普通对象映射的所有规则，包括：
+MapStruct 在由 Map → Bean 转换时，仍然遵循普通对象映射的所有规则，包括：
 - ✅**自动类型转换**（如果源字段和目标字段类型不同，MapStruct 会尝试自动转换）
 - ✅**支持 `@Mapping` 自定义字段映射**
 - ✅**支持 `@Mapper #uses ` 关联其他映射器进行复杂类型转换**
@@ -1042,8 +1042,8 @@ public interface CarMapper {
 ### 隐式类型转换
 
 MapStruct 在许多情况下会自动处理类型转换。例如：
-- `int` ➡️ `String`：自动调用 ` String.valueOf (int) `
-- `String` ➡️ `int`：自动调用 ` Integer.parseInt (String) `
+- `int` → `String`：自动调用 ` String.valueOf (int) `
+- `String` → `int`：自动调用 ` Integer.parseInt (String) `
 
 支持的自动转换包括：
 
@@ -1057,7 +1057,7 @@ MapStruct 在许多情况下会自动处理类型转换。例如：
 
 - 所有 Java **基本数据类型（包括其包装类型）和字符串 `String`** 之间，例如 `int` 和 `String` 或 `Boolean` 和 `String`。可以指定一个 `java.text.DecimalFormat` 可以理解的格式字符串。
 
-  举个栗子：`int` ➡️ `String`
+  举个栗子：`int` → `String`
 
 	```java
 	@Mapper
@@ -1079,7 +1079,7 @@ MapStruct 在许多情况下会自动处理类型转换。例如：
 
 - **大数值类型（`java.math.BigInteger`，`java.math.BigDecimal`）和 Java 基本类型（包括其包装类型）以及 `String`** 之间。可以指定一个 `java.text.DecimalFormat` 可以理解的格式字符串。
 
-  举个栗子：`BigDecimal` ➡️ `String`
+  举个栗子：`BigDecimal` → `String`
 
 	```java
 	@Mapper
@@ -1094,7 +1094,7 @@ MapStruct 在许多情况下会自动处理类型转换。例如：
   - `java.util.Calendar` / `java.util.Date` 和 JAXB 的 `XMLGregorianCalendar` 之间。
   - `XMLGregorianCalendar` / **`java.util.Date` 和 `String`** 之间。可以通过 `dateFormat` 选项指定一个 `java.text.SimpleDateFormat` 可以理解的格式字符串。
 
-  举个栗子：`Date` ➡️ `String`
+  举个栗子：`Date` → `String`
 
 	```java
 	@Mapper
@@ -1129,24 +1129,24 @@ MapStruct 在许多情况下会自动处理类型转换。例如：
 
     > [!note]
     >
-    > 由 `String` ➡️ `java. util. Currency` 时，值必须是有效的 ISO-4217 货币代码，否则会抛出 `IllegalArgumentException` 异常！
+    > 由 `String` → `java. util. Currency` 时，值必须是有效的 ISO-4217 货币代码，否则会抛出 `IllegalArgumentException` 异常！
 
 - `java.util.UUID` 和 `String` 之间。
 
     > [!note]
     >
-    > 由 `String` ➡️ `java. util. UUID` 时，值必须是有效的 UUID，否则会抛出 `IllegalArgumentException` 异常！
+    > 由 `String` → `java. util. UUID` 时，值必须是有效的 UUID，否则会抛出 `IllegalArgumentException` 异常！
 
 - **`String` 和 `StringBuilder`** 之间。
 - `java.net.URL` 和 `String` 之间。
 
     > [!note]
     >
-    > 由 `String` ➡️ `java. net. URL` 时，值必须是有效的 URL，否则会抛出 `MalformedURLException` 异常！
+    > 由 `String` → `java. net. URL` 时，值必须是有效的 URL，否则会抛出 `MalformedURLException` 异常！
 
 - `java.util.Locale` 和 `String` 之间。
-    - `java.util.Locale` ➡️ `String`：生成的字符串将是一个格式良好的 IETF BCP 47 语言标签，表示该区域设置。
-    - `String` ➡️ `java.util.Locale`：返回最能代表该语言标签的区域设置。
+    - `java.util.Locale` → `String`：生成的字符串将是一个格式良好的 IETF BCP 47 语言标签，表示该区域设置。
+    - `String` → `java.util.Locale`：返回最能代表该语言标签的区域设置。
 
 ### 映射对象引用
 
@@ -1165,7 +1165,7 @@ public interface CarMapper {
 }
 ```
 
-在 `carToCarDTO ()` 方法的实现中，MapStruct 会自动调用 `personToPersonDTO ()` 方法来映射 `driver` 属性，而 `personToPersonDTO ()` 方法的生成实现则负责 `Person` 对象的映射，从而完成 `Car` ➡️ `CarDTO` 的转换。
+在 `carToCarDTO ()` 方法的实现中，MapStruct 会自动调用 `personToPersonDTO ()` 方法来映射 `driver` 属性，而 `personToPersonDTO ()` 方法的生成实现则负责 `Person` 对象的映射，从而完成 `Car` → `CarDTO` 的转换。
 
 这样可以**映射任意深度的对象层级**。在从实体（entity）映射到数据传输对象（DTO）时，通常需要在某个层级截断对其他实体的引用。要实现这一点，可以自定义映射方法（详见下一节），例如将引用的实体转换为其 ID 并存入目标对象。
 
@@ -1459,9 +1459,9 @@ MapStruct 在映射属性时，会**优先选择最具体的映射方法**，方
 
 **解析规则**：
 1. **优先匹配源类型更具体的映射方法**
-    - 例如，`String` ➡️ `Integer ` 比 ` Object` ➡️ `Integer ` 更具体，因此优先使用 ` String` ➡️ `Integer `。
+    - 例如，`String` → `Integer ` 比 ` Object` → `Integer ` 更具体，因此优先使用 ` String` → `Integer `。
 2. **存在多个同样具体的映射方法时，会抛出错误**
-    - 例如，`String` ➡️ `Number ` 和 ` String` ➡️ `Integer ` 都适用，但 MapStruct 无法决定使用哪个方法，因此会抛出错误。
+    - 例如，`String` → `Number ` 和 ` String` → `Integer ` 都适用，但 MapStruct 无法决定使用哪个方法，因此会抛出错误。
 
 > [!info]- JAXB 支持
 > 在使用 JAXB （如 `String -> JAXBElement<String>`）时，MapStruct 会参考 `@XmlElementDecl` 注解的作用域（`scope`）和名称（`name`）属性，以确保 `JAXBElement` 实例具有正确的 `QName` 值。
@@ -1699,7 +1699,7 @@ public List<CarDTO> carsToCarDTOs(List<Car> cars) {
 }
 ```
 
-当映射对象的集合属性时（如 `Car#passengers` ➡️ `CarDTO#passengers`），MapStruct 会寻找参数和返回类型匹配的集合映射方法：
+当映射对象的集合属性时（如 `Car#passengers` → `CarDTO#passengers`），MapStruct 会寻找参数和返回类型匹配的集合映射方法：
 
 ```java
 // GENERATED CODE
@@ -1992,7 +1992,7 @@ public class SpecialOrderMapperImpl implements SpecialOrderMapper {
 2. **`STANDARD -> null`**
     - 这意味着 `STANDARD` 在目标枚举中不会有值。
 3. **`<ANY_REMAINING> -> SPECIAL`**
-    - `default: externalOrderType_ = ExternalOrderType.SPECIAL;`
+    - `default: externalOrderType_= ExternalOrderType.SPECIAL;`
     - 所有未匹配的 `OrderType`（如 `EXTRA`）都会被映射到 `SPECIAL`。
 
 > [!note]

@@ -72,7 +72,7 @@ update_time: 2025/03/13 19:04
 在 **PicList** 配置 **Cloudflare R2 图床** 时，您需要生成 API 令牌，以便 **PicList** 有权限访问您的存储桶。具体步骤如下：
 
 1. 登录到 **Cloudflare 控制面板**，并进入 **"R2"** 页面。
-2. 点击 **"管理 R2 API 令牌"** ➡️ **"创建 API 令牌"**。
+2. 点击 **"管理 R2 API 令牌"** → **"创建 API 令牌"**。
 3. 在创建 API 令牌时，选择 **"管理员读写"** 权限。
    ![](https://img.xiaorang.fun/202502251655022.png)
 4. 拷贝 **"访问密钥 ID"** 和 **"机密访问密钥"**，并妥善保存。它们分别对应 **PicList** 配置 **AWS S3 图床** 时的 **AccessKeyId** 和 **SecretAccessKey**。

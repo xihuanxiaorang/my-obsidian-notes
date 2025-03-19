@@ -20,9 +20,9 @@ Conda 存在如下两个版本：
 - **Miniconda**：轻量版，仅包含 Conda 和 Python，适合希望手动安装依赖的用户。🚀🚀🚀推荐安装 Miniconda，占用空间小，按需安装依赖。
 - **Anaconda**：完整版本，包含 Conda 以及大量预装的科学计算和数据分析库（如 NumPy、Pandas、Scikit-learn）。
 
-前往 [Anaconda](https://www.anaconda.com/download/#) 官网或者[清华大学开源软件镜像站](https://mirrors.tuna.tsinghua.edu.cn/)（推荐👍👍👍）进行下载，点击右侧的 "获取下载链接" ➡️ 在弹框中选择 "应用软件" 一栏 ➡️ 点击 "Conda" ➡️ 选择适用于你操作系统的最新 Miniconda 安装包 ➡️ 点击等待下载完成。
+前往 [Anaconda](https://www.anaconda.com/download/#) 官网或者[清华大学开源软件镜像站](https://mirrors.tuna.tsinghua.edu.cn/)（推荐👍👍👍）进行下载，点击右侧的 "获取下载链接" → 在弹框中选择 "应用软件" 一栏 → 点击 "Conda" → 选择适用于你操作系统的最新 Miniconda 安装包 → 点击等待下载完成。
 ![](https://img.xiaorang.fun/202502111750222.png)
-双击运行安装包，开始进行安装，安装过程非常简单，只需要一直点击 ➡️ 下一步即可。在安装过程中，有两个步骤值得注意：
+双击运行安装包，开始进行安装，安装过程非常简单，只需要一直点击 → 下一步即可。在安装过程中，有两个步骤值得注意：
 1. 自定义软件的安装路径，如 `E:\devsoft\miniconda3`。
 	![](https://img.xiaorang.fun/202502111750224.png)
 2. 高级安装选项（Advanced Installation Options），用于自定义 Miniconda 在 Windows 上的集成方式。

@@ -4,7 +4,7 @@ tags:
   - Frontend
   - DevKit
 create_time: 2024-12-28T17:29:00
-update_time: 2025/03/13 22:08
+update_time: 2025/03/19 11:13
 ---
 
 [nvm](https://github.com/nvm-sh/nvm) (Node Version Manager) 是一个用于管理 Node.js 版本的工具，可以让用户在同一台机器上安装和切换多个 Node.js 版本，非常适合开发环境中需要兼容不同 Node.js 版本的场景。
@@ -14,7 +14,7 @@ update_time: 2025/03/13 22:08
 针对 windows 用户，推荐使用 [nvm-windows](https://github.com/coreybutler/nvm-windows)。选择最新版本的安装程序，如下所示：
 ![](https://img.xiaorang.fun/202502251800600.png)
 
-双击运行安装程序，在安装过程中，可以选择 nvm 和 Node.js 软链接的安装路径。完成路径选择后，按照提示依次点击 ➡️ 下一步即可完成安装。如下所示：
+双击运行安装程序，在安装过程中，可以选择 nvm 和 Node.js 软链接的安装路径。完成路径选择后，按照提示依次点击 → 下一步即可完成安装。如下所示：
 ![](https://img.xiaorang.fun/202502251800601.png)
 
 安装完成之后，可以使用 `nvm version` 命令测试 nvm 是否安装成功。若输出版本号，则说明 nvm 已成功安装。

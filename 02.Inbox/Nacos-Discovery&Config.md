@@ -50,7 +50,7 @@ Nacos 依赖 Java 环境来运行，请确保是在以下版本环境中安装�
 	vim /etc/profile
 	```
 
-4.6.`i` 进入编辑模式，将以下内容粘贴到文件末尾，`esc` ➡️ `:wq`，保存退出
+4.6.`i` 进入编辑模式，将以下内容粘贴到文件末尾，`esc` → `:wq`，保存退出
 
 	```bash
 	export JAVA_HOME=/usr/local/java/jdk1.8.0_371
@@ -69,7 +69,7 @@ Nacos 依赖 Java 环境来运行，请确保是在以下版本环境中安装�
 
 ### 版本选择
 
-在安装前请先确认项目中使用的 SpringCloudAlibaba 版本 ➡️ Nacos 组件所对应的版本，[版本说明](https://github.com/alibaba/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E)
+在安装前请先确认项目中使用的 SpringCloudAlibaba 版本 → Nacos 组件所对应的版本，[版本说明](https://github.com/alibaba/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E)
 
 | SpringCloudAlibaba | Spring Cloud | SpringBoot     | Nacos |
 | ------------------ | ------------ | -------------- | ----- |
@@ -584,7 +584,7 @@ public class NacosConsumerApplication {
 
 Nacos 提供用于存储配置和其他元数据的 key/value 存储，为分布式系统中的外部化配置提供服务器端和客户端支持。使用 Spring Cloud Alibaba Nacos Config，你可以在 Nacos Server 集中管理你的 Spring Cloud 应用的外部属性配置。
 
-Spring Cloud Alibaba Nacos Config 是 Config Server 和 Client 的替代方案，客户端和服务器上的概念与 Spring **Enviroment** 和 **PropertySource** 有着一致的抽象，在特殊的 **bootstrap** 阶段，配置被加载到 Spring 环境中。当应用程序从开发 ➡️ 测试 ➡️ 生产时，你可以管理这些环境之间的配置，并确保应用程序具有迁移时需要运行的所有内容。
+Spring Cloud Alibaba Nacos Config 是 Config Server 和 Client 的替代方案，客户端和服务器上的概念与 Spring **Enviroment** 和 **PropertySource** 有着一致的抽象，在特殊的 **bootstrap** 阶段，配置被加载到 Spring 环境中。当应用程序从开发 → 测试 → 生产时，你可以管理这些环境之间的配置，并确保应用程序具有迁移时需要运行的所有内容。
 
 ### 如何引入 Nacos Config Starter 进行配置管理
 
@@ -703,7 +703,7 @@ management:
 | 配置项          | Key                                         | 默认值                        | 说明                                                                                                                                                                                                         |
 | ------------ | ------------------------------------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 服务端地址        | spring.cloud.nacos.config.server-addr       |                            | Nacos Server 启动监听的 ip 地址和端口                                                                                                                                                                                |
-| 配置对应的 DataId | spring.cloud.nacos.config.name              |                            | `dataId = ${prefix}-${spring.profiles.active}.${file-extension}`，而其中 prefix 的可选值有如下三种，优先级从高到底依次为：`spring.cloud.nacos.config.prefix` ➡️ `spring.cloud.nacos.config.name` ➡️ 默认值 `${spring.application.name}` |
+| 配置对应的 DataId | spring.cloud.nacos.config.name              |                            | `dataId = ${prefix}-${spring.profiles.active}.${file-extension}`，而其中 prefix 的可选值有如下三种，优先级从高到底依次为：`spring.cloud.nacos.config.prefix` → `spring.cloud.nacos.config.name` → 默认值 `${spring.application.name}` |
 | 配置对应的 DataId | spring.cloud.nacos.config.prefix            | ${spring.application.name} | 同上                                                                                                                                                                                                         |
 | GROUP        | spring.cloud.nacos.config.group             | DEFAULT_GROUP              | 配置对应的组                                                                                                                                                                                                     |
 | 文件扩展名        | spring.cloud.nacos.config.fileExtension     | properties                 | 配置项对应的文件扩展名，目前支持 properties 和 yaml (yml)                                                                                                                                                                    |
