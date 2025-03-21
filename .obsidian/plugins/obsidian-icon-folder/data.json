@@ -6,6 +6,8 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiLayoutMasonryLine",
+      "RiDatabase2Fill",
       "RiFireLine",
       "RiStarHalfLine",
       "RiToolsLine",
@@ -13,9 +15,7 @@
       "RiFireFill",
       "RiCloudLine",
       "LiSparkles",
-      "RiBrainLine",
-      "RiCalendarLine",
-      "RiBookLine"
+      "RiBrainLine"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -66,5 +66,7 @@
   "00.Overview/02 - 参考资料.md": "RiBookmark3Line",
   "01.Articles/AI": "RiBrainLine",
   "01.Articles/DevKit": "RiToolsLine",
-  "01.Articles/Tools": "RiToolsLine"
+  "01.Articles/Tools": "RiToolsLine",
+  "01.Articles/MySQL": "RiDatabase2Fill",
+  "01.Articles/DesignPattern": "RiLayoutMasonryLine"
 }
