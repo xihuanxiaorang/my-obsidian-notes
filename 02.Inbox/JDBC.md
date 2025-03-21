@@ -2,7 +2,7 @@
 tags:
   - Java
 create_time: 2025-03-09T23:40:00
-update_time: 2025/03/19 23:19
+update_time: 2025/03/21 17:14
 ---
 
 ## 简介
@@ -582,7 +582,7 @@ SHOW GLOBAL VARIABLES LIKE '%datadir%';
 执行 `testPreparedStatementQuery()` 测试方法后，查看日志文件（位于 MySQL 数据目录下），发现执行的 SQL 语句依然是普通 SQL：
 ![[Pasted image 20250319130026.png]]
 
-在 URL 上添加 `useServerPrepStmts=true&cachePrepStmts=true` 参数，再次执行，发现 SQL 语句已被成功预编译：
+🔍 **验证**：在 URL 上添加 `useServerPrepStmts=true&cachePrepStmts=true` 参数，再次执行，发现 SQL 语句已被成功预编译：
 ![[Pasted image 20250319130329.png]]
 
 ##### 防止 SQL 注入
@@ -619,11 +619,11 @@ public void testPreparedStatementSQLInjection() {
 
 ## 批处理
 
-批处理允许将一组相关的 SQL 语句组合成一个批次，并通过一次调用将它们提交到数据库。批处理可以减少与数据库之间的通信次数，从而提高执行性能。
+批处理是一种将多条 SQL 语句合并为一个批次并一次性提交给数据库的技术，能有效减少数据库交互次数，提升执行性能。
 
 ### 判断是否支持批处理
 
-JDBC 驱动程序可能不支持批处理，可以通过 `DatabaseMetaData.supportsBatchUpdates()` 方法来判断目标数据库是否支持批处理。
+部分 JDBC 驱动可能不支持批处理，可使用 `DatabaseMetaData.supportsBatchUpdates()` 方法进行检测。
 
 ```java
 @Test  
@@ -637,23 +637,23 @@ public void testSupportsBatchUpdates() throws SQLException {
 测试结果如下所示：发现 MySQL 支持批处理。
 ![[Pasted image 20250319165828.png]]
 
-### 批处理方法
+### 核心方法
 
-- `Statement`、`PreparedStatement`、`CallableStatement` 中的 `addBatch()` 方法用于将单个 SQL 语句添加到批处理中。
-- `executeBatch()` 方法用于执行所有放入批处理中的 SQL 语句，返回一个整数数组，表示每个 SQL 语句的影响行数。
-- `clearBatch()` 方法用于清空批处理中的 SQL 语句，无法单独指定删除某条语句。
+| 方法               | 作用                           |
+| ---------------- | ---------------------------- |
+| `addBatch()`     | 将 SQL 语句添加到批处理中              |
+| `executeBatch()` | 执行批处理                        |
+| `clearBatch()`   | 清空批处理中已添加的 SQL，无法单独指定删除某条语句。 |
 
 ### 使用 PreparedStatement 进行批处理
 
-使用 `PreparedStatement` 进行批处理的典型步骤：
-
-1. 创建包含占位符的 SQL 语句
-2. 调用 `connection.prepareStatement()` 方法创建 `PreparedStatement` 对象
-3. 关闭自动提交 (`connection.setAutoCommit(false)`)
-4. 使用 `preparedStatement.setXxx()` 方法设置参数值
-5. 调用 `preparedStatement.addBatch()` 方法将语句添加到批处理中
-6. 调用 `preparedStatement.executeBatch()` 方法执行批处理
-7. 成功后调用 `connection.commit()`，出现异常时调用 `connection.rollback()`
+执行批处理的标准流程：
+1. 创建 `PreparedStatement` 对象
+2. 关闭自动提交 (`setAutoCommit(false)`)
+3. 🔄**创建 SQL 语句**，使用占位符
+4. 🔄添加 SQL 语句到批处理中，调用 `addBatch()`
+5. 执行批处理，调用 `executeBatch()`
+6. 事务处理，成功后提交 `commit()`，失败时回滚 `rollback()`
 
 ```java hl:12,15,17,21
 @Test
@@ -678,7 +678,7 @@ public void testPrepareStatementBatchUpdate() {
       // 出现异常时回滚
       connection.rollback();
     } catch (SQLException ex) {
-      throw new RuntimeException("回滚失败", ex);
+      throw new RuntimeException("事务回滚失败", ex);
     }
     throw new RuntimeException("批处理插入失败", e);
   }
@@ -689,380 +689,89 @@ public void testPrepareStatementBatchUpdate() {
 ![[Pasted image 20250319184515.png]]
 
 🤔那么该如何启用批处理功能呢？
-🤓在数据库连接 URL 中**添加 `rewriteBatchedStatements=true` 参数**，启用批量优化。
+🤓在数据库连接 URL 中添加 `rewriteBatchedStatements=true` 参数，启用批量优化。
 
 ```text
 jdbc:mysql://localhost:3306/jdbc-study?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&useServerPrepStmts=true&rewriteBatchedStatements=true
 ```
 
-- 适用于 `INSERT`、`UPDATE`、`DELETE` 语句
-- MySQL 驱动版本 ≥ 5.1.13
-- **必须关闭自动提交才能生效**
+> [!note]
+> - 适用于 **`INSERT`、`UPDATE`、`DELETE`** 语句
+>   需要 **MySQL JDBC 驱动版本 ≥ 5.1.13**
+>   **必须关闭自动提交** 才能生效
 
-在 URL 中添加参数 `rewriteBatchedStatements=true` 后，重新测试，发现执行成功。查看 MySQL 日志，确认批处理已生效，效果达成预期！
+🔍 **验证**：启用 `rewriteBatchedStatements=true` 后，查看 MySQL 日志，确认 SQL 语句是批量执行的。
 ![[Pasted image 20250319190347.png]]
 
-### 分批次提交
+### 分批提交（优化）
 
-批处理执行大量数据时可能会触发如下异常：
+> [!warning]- 大数据批量执行可能触发异常
+>
+> ```text
+> com.mysql.cj.jdbc.exceptions.PacketTooBigException: Packet for query is too large (99,899,527 > 67,108,864). You can change this value on the server by setting the 'max_allowed_packet' variable.
+> ```
+>
+> `max_allowed_packet` 表示 MySQL 单个数据包的最大大小（单位：字节）。
+>
+> - **默认值**：67108864（64M）
+> - **最小值**：1024（1K）
+> - **最大值**：1073741824（1G）
+>
+> > [!note]
+> >
+> > 参数值需为 1024 的倍数，非倍数将自动四舍五入到最接近的倍数。
+>
+> 查看与设置 `max_allowed_packet`：
+> ```sql
+> -- 查看最大数据包大小  
+> SHOW VARIABLES LIKE 'max_allowed_packet';
+> 
+> -- 设置最大数据包大小为 32M（需重启 MySQL 服务）
+> SET GLOBAL max_allowed_packet = 32 * 1024 * 1024;
+> ```
 
-```text
-com.mysql.cj.jdbc.exceptions.PacketTooBigException: Packet for query is too large (99,899,527 > 67,108,864). You can change this value on the server by setting the 'max_allowed_packet' variable.
-```
-
-`max_allowed_packet` 表示 MySQL 数据包的最大大小，单位为字节。
-- **默认值**：67108864（64M）
-- **最小值**：1024（1K）
-- **最大值**：1073741824（1G）
-
-> [!note]
-> 参数值需为 1024 的倍数，非倍数将自动四舍五入到最接近的倍数。
-
-查看与设置 `max_allowed_packet`：
-
-```sql
--- 查看最大数据包大小  
-SHOW VARIABLES LIKE 'max_allowed_packet';
-
--- 设置最大数据包大小（需重启数据库生效）  
-SET GLOBAL max_allowed_packet = 32 * 1024 * 1024;
-```
-
-为了测试效果，将 `max_allowed_packet` 值调整为 200K：
-
-```sql
-SET GLOBAL max_allowed_packet = 20 * 1024 * 10;
-```
+批量执行时，单个批次可能超过 `max_allowed_packet` 限制，导致执行失败。💡为避免这个问题，采用 **分批提交**（如 **500 条/批**）。
 
 ```java
-@Test  
-public void testPreparedStatementBatchAdd2() throws SQLException {  
-    try {  
-        CONNECTION.setAutoCommit(false);  
-        String sql = "INSERT INTO `user`(`name`, `age`, `birthday`, `salary`, `note`) VALUES(?, ?, ?, ?, ?)";  
-        try (PreparedStatement preparedStatement = CONNECTION.prepareStatement(sql)) {  
-            for (int i = 1; i <= 1000000; i++) {  
-                preparedStatement.setString(1, "小白" + i);  
-                preparedStatement.setInt(2, 18);  
-                preparedStatement.setDate(3, new Date(new java.util.Date().getTime()));  
-                preparedStatement.setFloat(4, 18000.0f);  
-                preparedStatement.setString(5, "销售");  
-                preparedStatement.addBatch();  
-            }  
-            int[] counts = preparedStatement.executeBatch();  
-            CONNECTION.commit();  
-            LOGGER.info("【数据更新行数】：{}", counts);  
-        }  
-    } catch (SQLException e) {  
-        e.printStackTrace();  
-        try {  
-            CONNECTION.rollback();  
-        } catch (SQLException ex) {  
-            throw new RuntimeException(ex);  
-        }  
-    }  
-}
-```
-
-插入一百万条数据，点击测试，发现程序报错，报错的信息就和咱们上面提到的一样。
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202140424.png)
-
-那么该怎么优化代码呢？其实很简单，咱们分批次处理，一次处理 500 条数据，代码优化如下：
-
-```java
-@Test  
-public void testPreparedStatementBatchAdd3() {  
-    long start = System.currentTimeMillis();  
-    try {  
-        CONNECTION.setAutoCommit(false);  
-        String sql = "INSERT INTO `user`(`name`, `age`, `birthday`, `salary`, `note`) VALUES(?, ?, ?, ?, ?)";  
-        try (PreparedStatement preparedStatement = CONNECTION.prepareStatement(sql)) {  
-            for (int i = 1; i < 1000000; i++) {  
-                preparedStatement.setString(1, "小白" + i);  
-                preparedStatement.setInt(2, 18);  
-                preparedStatement.setDate(3, new Date(new java.util.Date().getTime()));  
-                preparedStatement.setFloat(4, 18000.0f);  
-                preparedStatement.setString(5, "销售");  
-                preparedStatement.addBatch();  
-                if (i % 500 == 0) {  
-                    preparedStatement.executeBatch();  
-                    preparedStatement.clearBatch();  
-                }  
-            }  
-            preparedStatement.clearBatch();  
-            CONNECTION.commit();  
-            LOGGER.info("百万条数据插入用时：{}【单位：毫秒】", (System.currentTimeMillis() - start));  
-        }  
-    } catch (SQLException e) {  
-        e.printStackTrace();  
-        try {  
-            CONNECTION.rollback();  
-        } catch (SQLException ex) {  
-            throw new RuntimeException(ex);  
-        }  
-    }  
-}
-```
-
-点击测试，等待一段时间后，发现插入成功！测试结果如下所示：
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202140228.png)
-
-查看数据库中用户表的数据，发现已全部成功插入！
-
-## 事务
-
-### MySQL 对事务的支持
-
-> [!tip]
-> 对于 MySQL 中事务的四种隔离级别不清楚的小伙伴的可以查看 [MySQL 四种隔离级别](https://www.yuque.com/xihuanxiaorang/java/uebi2x7whkk44kg1?view=doc_embed) 这篇文章。
-
-### JDBC 事务处理
-
-在 JDBC 中的事务是使用 `Connection` 连接对象中的 `commit ()` 方法和 `rollback ()` 方法来进行管理的。在 JDBC 中事务的默认提交时机，存在如下两种情况：
-
-- 当一个连接对象被创建时，**默认情况下是自动提交事务**，即每次执行一条 SQL 语句时，如果执行成功，就会向数据库自动提交，提交后就不能再进行回滚；
-- 关闭数据库连接，数据就会自动提交。如果多个操作，每个操作使用的是自己单独的连接 (Connection)，则无法保证事务。**同一个事务的多个操作必须在同一个连接下**。
-
-在 JDBC 中使用事务的基本步骤如下：
-
-1. 调用 `Connection` 连接对象的 `setAutoCommit (false)` 方法以取消自动提交事务；
-2. 在所有的 SQL 语句都成功执行后，调用 `commit ()` 方法提交事务；
-3. 在出现异常时，调用 `rollback ()` 方法回滚事务；
-4. 如果 `Connection` 连接对象没有被关闭的话，可以被重复使用，则需要恢复其自动提交状态 `setAutoCommit (true)`；
-
-### 测试
-
-> 为了方便观察运行效果，下面的操作每次执行前都将删除已有的 user 表，并重新创建 user 表，这样自动编号将从 1 开始。然后插入三条初始数据。
-
-```sql
-INSERT INTO `user`(`name`, `age`, `birthday`, `salary`, `note`) VALUES('小让', 18, '1995-07-13', 16000.0, '程序员');  
-INSERT INTO `user`(`name`, `age`, `birthday`, `salary`, `note`) VALUES('小星', 18, '1995-03-20', 20000.0, '幼教');  
-INSERT INTO `user`(`name`, `age`, `birthday`, `salary`, `note`) VALUES('三十', 25, '1995-08-08', 22000.0, '硬件工程师');
-```
-
-可以看到用户 1 的薪资为 16000，用户 2 的薪资为 20000，现在咱们就模拟一个场景，让用户 1 的薪资减 1000，然后让用户 2 的薪资加 1000，两个过程作为一个整体，总的薪资应该不变，其实就是模拟的转账过程。
-
-#### 没有事务的情况
-
-```java
-@Test  
-public void testTransferNonTransaction() {  
-    String sql1 = "UPDATE `user` SET `salary` = `salary` - ? WHERE `uid` = ?;";  
-    String sql2 = "UPDATE `user` SET `salary` = `salary` + ? WHERE `uid` = ?;";  
-    try (PreparedStatement preparedStatement = CONNECTION.prepareStatement(sql1);  
-         PreparedStatement preparedStatement2 = CONNECTION.prepareStatement(sql2)) {  
-        preparedStatement.setFloat(1, 1000.0f);  
-        preparedStatement.setInt(2, 1);  
-        preparedStatement.executeUpdate();  
-        int i = 1 / 0;  
-        preparedStatement2.setFloat(1, 1000.0f);  
-        preparedStatement2.setInt(2, 2);  
-        preparedStatement.executeUpdate();  
-    } catch (SQLException e) {  
-        throw new RuntimeException(e);  
-    }  
-}
-```
-
-测试结果如下所示：出现异常。
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202142759.png)
-
-然后查看数据库用户表中的数据：
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202143410.png)
-
-发现在没有事务并且出现异常的情况下，用户 1 已经扣了 1000，但是用户 2 并没有加 1000，此时就暴露出没有事务的危险性！
-
-#### 存在事务的情况
-
-```java
-@Test  
-public void testTransferWithTransaction() throws SQLException {  
-    connection.setAutoCommit(false);  
-    try {  
-        String sql1 = "UPDATE `user` SET `salary` = `salary` - ? WHERE `uid` = ?;";  
-        PreparedStatement preparedStatement1 = connection.prepareStatement(sql1);  
-        preparedStatement1.setFloat(1, 1000.0f);  
-        preparedStatement1.setInt(2, 1);  
-        preparedStatement1.executeUpdate();  
-        int i = 1 / 0;  
-        String sql2 = "UPDATE `user` SET `salary` = `salary` + ? WHERE `uid` = ?;";  
-        PreparedStatement preparedStatement2 = connection.prepareStatement(sql2);  
-        preparedStatement2.setFloat(1, 1000.0f);  
-        preparedStatement2.setInt(2, 2);  
-        preparedStatement2.executeUpdate();  
-        connection.commit();  
-    } catch (Exception e) {  
-        e.printStackTrace();  
-        connection.rollback();  
-    }  
-}
-```
-
-测试结果如下所示：出现异常。
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202143003.png)
-
-然后查看数据库用户表中的数据：
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202143026.png)
-
-发现在增加事务之后，即使在出现异常的情况下，也不会发生用户 1 已经扣 1000，而用户 2 没有加钱的尴尬情况。
-
-## 数据库连接池
-
-### 为什么需要数据库连接池？
-
-传统的 jdbc 开发形式存在的问题:
-
-- 普通的 JDBC 数据库连接使用【DriverManager】来获取，每次向数据库建立连接的时候都要将 【Connection】加载到内存中，再验证用户名和密码（保守估计需要花费 0.05s～1s 的时间）；
-- 需要【数据库连接】的时候，就向数据库申请一个，执行完成后再【断开连接】。这样的方式将会消耗大量的资源和时间。数据库的连接资源并没有得到很好的重复利用。若同时有几百人甚至几千人在线，频繁的进行数据库连接操作将占用很多的系统资源，严重的甚至会造成服务器的崩溃；
-- 对于每一次数据库连接，使用完后都得断开。否则，如果程序出现异常而未能关闭，将会导致数据库系统中的内存泄漏，最终将导致重启数据库；（回忆：何为 Java 的内存泄漏？）
-- 这种开发方式不能控制【被创建的连接对象数】，系统资源会被毫无顾及的分配出去，如连接过多，也可能导致内存泄漏，服务器崩溃；
-
-为解决传统开发中的数据库连接问题，可以采用数据库连接池技术。
-
-- 数据库连接池的基本思想：就是为数据库连接建立一个"缓冲池"。预先在缓冲池中放入一定数量的连接，当需要建立数据库连接时，只需从"缓冲池"中取出一个，使用完毕之后再放回去；
-- 数据库连接池负责分配、管理和释放数据库连接，它允许应用程序【重复使用一个现有的数据库连接】，而不是重新建立一个；
-- 数据库连接池在初始化时将【创建一定数量】的数据库连接放到连接池中。无论这些连接是否被使用，连接池都将一直保证至少拥有一定量的连接数量。连接池的【最大数据库连接数】限定了这个连接池能占有的最大连接数，当应用程序向连接池请求的连接数超过最大连接数量时，这些请求将被加入到等待队列中；
-
-### 优点
-
-1. 资源重用：由于数据库连接得以重用，避免了频繁创建，释放连接引起的大量性能开销。在减少系统消耗的基础上，另一方面也增加了系统运行环境的平稳性。
-2. 更快的系统反应速度：数据库连接池在初始化过程中，往往已经创建了若干数据库连接置于连接池中备用。此时连接的初始化工作均已完成。对于业务请求处理而言，直接利用现有可用连接，避免了数据库连接初始化和释放过程的时间开销，从而减少了系统的响应时间。
-3. 新的资源分配手段：对于多应用共享同一数据库的系统而言，可在应用层通过数据库连接池的配置，实现某一应用最大可用数据库连接数的限制，避免某一应用独占所有的数据库资源。
-4. 统一的连接管理，避免数据库连接泄漏：在较为完善的数据库连接池实现中，可根据预先的占用超时设定，强制回收被占用连接，从而避免了常规数据库连接操作中可能出现的资源泄漏。
-
-### 常见的开源数据库连接池
-
-【DataSource】通常被称为【数据源】，它包含【连接池】和【连接池管理组件】两个部分，习惯上也经常把 DataSource 称为连接池。【DataSource】用来取代 DriverManager 来获取 Connection，获取速度快，同时可以大幅度提高数据库访问速度。DataSource 同样是 jdbc 的规范，针对不通的连接池技术，我们可以有不同的实现。
-
-特别注意：
-
-- 数据源和数据库连接不同，数据源无需创建多个，它是产生数据库连接的工厂，通常情况下，一个应用只需要一个数据源，当然也会有多数据源的情况。
-- 当数据库访问结束后，程序还是像以前一样关闭数据库连接：`conn.close ()`；但 `conn.close ()` 并没有关闭数据库的物理连接，它仅仅把数据库连接释放，归还给了数据库连接池。
-
-#### Druid（德鲁伊）
-
-Druid 是阿里巴巴开源平台上一个数据库连接池实现，它结合了 C3P0、DBCP、Proxool 等 DB 池的优点，同时加入了【日志监控】，可以很好的监控 DB 池连接和 SQL 的执行情况，可以说是针对监控而生的 DB 连接池，**可以说是目前最好的连接池之一。**
-
-##### 引入依赖
-
-```xml
-<dependency>
-    <groupId>com.alibaba</groupId>
-    <artifactId>druid</artifactId>
-    <version>1.2.8</version>
-</dependency>
-```
-
-##### 编写配置文件
-
-```properties
-druid.url=jdbc:mysql://localhost:3306/atguigudb?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&useServerPrepStmts=true&cachePrepStmts=true&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
-druid.username=root
-druid.password=123456
-druid.initialSize=10
-druid.minIdle=20
-druid.maxActive=50
-druid.maxWait=500
-```
-
-##### 测试用例
-
-```java
-public class DruidDataSourceTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DruidDataSourceTest.class);
-
-    private static DataSource dataSource = null;
-
-    @BeforeAll
-    public static void before() {
-        try {
-            Properties properties = new Properties();
-            properties.load(DruidDataSourceTest.class.getResourceAsStream("/druid.properties"));
-            dataSource = DruidDataSourceFactory.createDataSource(properties);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+@Test
+public void testPrepareStatementBatchUpdate2() {
+  final long start = System.currentTimeMillis();
+  final String sql = "INSERT INTO `t_user`(`username`, `age`, `gender`, `birthday`) VALUES(?, ?, ?, ?)";
+  try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+    // 关闭自动提交，开启事务
+    connection.setAutoCommit(false);
+    for (int i = 0; i < 1000000; i++) {
+      preparedStatement.setString(1, "小让" + i);
+      preparedStatement.setInt(2, 30);
+      preparedStatement.setInt(3, 1);
+      preparedStatement.setDate(4, new Date(System.currentTimeMillis()));
+      preparedStatement.addBatch();
+      // 每 500 条提交一次，防止数据包超限
+      if (i % 500 == 0) {
+        preparedStatement.executeBatch();
+        preparedStatement.clearBatch();
+      }
     }
-
-    @Test
-    public void testAdd() {
-        try (Connection connection = dataSource.getConnection()) {
-            Statement statement = connection.createStatement();
-            String sql = "INSERT INTO `user`(`name`, `age`, `birthday`, `salary`, `note`) VALUES('小让', 18, '1995-07-13', 16000.0, '程序员');";
-            int count = statement.executeUpdate(sql);
-            LOGGER.info("【数据更新行数】：{}", count);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    // 提交剩余的批次
+    preparedStatement.executeBatch();
+    preparedStatement.clearBatch();
+    // 提交事务
+    connection.commit();
+    LOGGER.info("百万条数据插入用时：{} 毫秒", (System.currentTimeMillis() - start));
+  } catch (SQLException e) {
+    try {
+      // 出现异常时回滚
+      connection.rollback();
+    } catch (SQLException ex) {
+      throw new RuntimeException("事务回滚失败", ex);
     }
+    throw new RuntimeException("批处理插入失败", e);
+  }
 }
 ```
 
-点击测试按钮，测试结果如下所示：
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202147334.png)
+测试结果如下所示：
+![[Pasted image 20250321123552.png]]
 
-查询数据库，检验是否真的执行成功：
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202147611.png)
-
-可以发现，数据库 `user` 表中确实增加了一条数据！
-
-#### HiKariCP
-
-`HiKariCP` 是数据库连接池的一个后起之秀，日语中"光"的意思，号称历史上最快的数据库连接池，可以完美地 PK 掉其他连接池，是一个高性能的 `JDBC` 连接池，在后边学习的 **springboot 中默认集成了该连接池**，他是由日本人 [Brett Wooldridge](https://github.com/brettwooldridge) 开发。
-
-##### 引入依赖
-
-```xml
-<dependency>
-    <groupId>com.zaxxer</groupId>
-    <artifactId>HikariCP</artifactId>
-    <version>5.0.1</version>
-</dependency>
-```
-
-##### 编写配置文件
-
-```properties
-jdbcUrl=jdbc:mysql://localhost:3306/atguigudb?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&useServerPrepStmts=true&cachePrepStmts=true&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
-username=root
-password=123456
-dataSource.connectionTimeout=1000
-dataSource.idleTimeout=60000
-dataSource.maximumPoolSize=10
-```
-
-##### 测试用例
-
-```java
-public class HikariDataSourceTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(HikariDataSourceTest.class);
-
-    private static DataSource dataSource = null;
-
-    @BeforeAll
-    public static void before() {
-        HikariConfig config = new HikariConfig("/hikari.properties");
-        dataSource = new HikariDataSource(config);
-    }
-
-    @Test
-    public void testAdd() {
-        try (Connection connection = dataSource.getConnection()) {
-            Statement statement = connection.createStatement();
-            String sql = "INSERT INTO `user`(`name`, `age`, `birthday`, `salary`, `note`) VALUES('小让', 18, '1995-07-13', 16000.0, '程序员');";
-            int count = statement.executeUpdate(sql);
-            LOGGER.info("【数据更新行数】：{}", count);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-}
-```
-
-点击测试按钮，测试结果如下所示：
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202147282.png)
-
-查询数据库，检验是否真的执行成功：
-![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202148155.png)
-
-可以发现，数据库 `user` 表中确实增加了一条数据！
+日志如下所示：
+![[Pasted image 20250321124021.png]]

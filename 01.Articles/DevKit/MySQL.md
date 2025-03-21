@@ -4,7 +4,7 @@ tags:
   - Java
   - DevKit
 create_time: 2024-12-28T17:27:00
-update_time: 2025/03/16 22:41
+update_time: 2025/03/21 12:34
 ---
 
 ## 下载 & 安装
@@ -49,3 +49,35 @@ update_time: 2025/03/16 22:41
 ![](https://img.xiaorang.fun/202502251753632.png)
 
 至此，MySQL 已经成功安装，现在可以愉快地删库跑路啦~🌸🌸🌸
+
+## 设置
+
+### 开启日志功能
+
+修改 `my.ini` 配置文件（位于 MySQL 安装目录，如 `E:\devsoft\MySQL\MySQL Server 8.0`）：
+
+```ini hl:3
+# 开启普通查询日志（General Log）
+log-output=FILE  # 将日志输出到文件  
+general-log=1    # 启用普通查询日志  
+general_log_file="XIAORANG.log"  # 指定日志文件名  
+
+# 开启慢查询日志（Slow Query Log）
+slow-query-log=1  # 启用慢查询日志  
+slow_query_log_file="XIAORANG-slow.log"  # 指定慢查询日志文件名  
+long_query_time=10  # 记录执行时间超过 10 秒的 SQL  
+
+# 错误日志（Error Log）
+log-error="XIAORANG.err"  # 指定错误日志文件  
+```
+
+重启 MySQL 服务使配置生效！
+
+```sh
+# Windows（管理员 CMD 执行）
+net stop MySQL80
+net start MySQL80
+
+# Linux / macOS
+sudo systemctl restart MySQL80
+```
