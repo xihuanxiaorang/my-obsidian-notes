@@ -1,16 +1,16 @@
 ---
 tags:
   - EnvironmentSetup
-  - Java
   - DevKit
+  - MySQL
 create_time: 2024-12-28T17:27:00
-update_time: 2025/03/21 12:34
+update_time: 2025/03/23 22:54
 ---
 
 ## 下载 & 安装
 
 > [!info]
-> 安装 MySQL 之前，确保电脑上原来安装的 MySQL 已经彻底卸载干净（包括应用、数据、注册表和系统环境变量等信息，如果是第一次安装的话，则可以不用管）！可以使用原生的 MySQL Installer 或者第三方卸载工具（如[[软件卸载工具]] 中推荐的[[软件卸载工具#^6ce691]] 👍 推荐使用这种方式）进行卸载。
+> 安装 MySQL 之前，确保电脑上原来安装的 MySQL 已经彻底卸载干净（包括应用、数据、注册表和系统环境变量等信息，如果是第一次安装的话，则可以不用管）！可以使用原生的 MySQL Installer 或者第三方卸载工具（如：[[软件卸载工具#^6ce691|HiBit Uninstaller]]）进行卸载。
 
 访问 [MySQL Community Downloads](https://dev.mysql.com/downloads/installer/) 下载页面，选择版本，如 `8.0.40` 。
 ![](https://img.xiaorang.fun/202502251753627.png)
