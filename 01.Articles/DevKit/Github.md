@@ -4,71 +4,84 @@ tags:
   - Git
   - DevKit
 create_time: 2024-12-28T18:02:00
-update_time: 2025/03/22 23:08
+update_time: 2025/03/24 23:10
 ---
 
 ## 如何提交一个 PR？
 
-在 GitHub 参与开源项目时，除了拉取和调试代码，**提交修改（PR，Pull Request）** 也是关键步骤。
+在 GitHub 参与开源项目时，**提交 Pull Request（PR）** 是关键步骤，可用于贡献代码、修复 Bug 或改进文档。
 
-那么如何提交一个 PR 呢？具体流程如下：
-1. **Fork 仓库**
-	打开目标仓库，点击右上角 **Fork**，将其复制到你的 GitHub 账户。
-2. **克隆仓库**
-	在终端运行以下命令，将 Fork 后的仓库克隆到本地：
+### Fork 仓库
 
-	```bash
-	git clone https://github.com/你的用户名/目标仓库.git
-	cd 目标仓库
-	```
+打开目标仓库，点击右上角 **"Fork"**，将其复制到您的 GitHub 账户。
 
-3. 同步最新代码
-	**每次修改文件前，请先同步上游仓库的最新代码**，以避免冲突：
+### 克隆仓库
 
-	```bash
-	git checkout main
-	git pull upstream main
-	git push origin main
-	```
+在终端执行以下命令，将 Fork 后的仓库克隆到本地：
 
-	如果在 GitHub 网页端修改，请先点击 "**Sync fork**" 按钮，确保你的 Fork 仓库是最新的。
+```bash
+git clone https://github.com/您的用户名/目标仓库.git
+cd 目标仓库
+```
 
-4. 创建新分支
+### 同步上游仓库（避免代码冲突）
 
-	```bash
-	git checkout -b feature-branch
-	```
+每次修改前，先同步上游仓库的最新代码，保持分支干净：
 
-	`feature-branch` 可替换为你的功能分支名称。
+```bash
+git remote add upstream https://github.com/原始仓库/目标仓库.git
+git fetch upstream
+git rebase upstream/main
+git push origin main
+```
 
-5. 修改代码并提交
-	- 进行代码或文档修改。
-	- 提交更改：
+如果在 GitHub 网页端修改，请先点击 "**Sync fork**" 按钮，确保您的 Fork 仓库是最新的。
 
-		```bash
-		git add .
-		git commit -m "你的修改描述"
-		```
+### 创建新分支
 
-6. 推送到 GitHub
+```bash
+git checkout -b feature-branch
+```
+
+`feature-branch` 可替换为您的功能分支名称（如 `fix-bug`、`add-feature`）。
+
+### 修改代码并提交
+
+- 进行代码或文档修改。
+- 提交更改时，建议使用 **规范的 commit 信息**：
 
 	```bash
-	git push origin feature-branch
+	git add .
+	git commit -m "fix: 修复 XX 问题"
+	git commit -m "feat: 添加 XX 功能"
+	git commit -m "docs: 更新 XX 文档"
 	```
 
-7. 创建 Pull Request
-	- 进入 GitHub 你的仓库页面。
-	- 点击 **Compare & pull request** 按钮。
-	- 填写 PR 说明，点击 **Create pull request** 提交。
-8. 等待合并
-	维护者审核后，会合并或请求修改。
+### 推送到 GitHub
+
+```bash
+git push -u origin feature-branch
+```
+
+### 创建 Pull Request
+
+- 进入 GitHub 您的仓库页面。
+- 点击 **"New pull request"** 按钮。
+- 选择 **base 分支**（通常是 `main`），然后选择 **刚刚推送的分支**。
+- 填写 PR 说明，点击 **"Create pull request"** 提交。
+
+### 等待合并
+
+- 维护者审核后，会 **合并** 或 **请求修改**。
+- 如需修改，可 `git commit --amend` 或 `git push --force` 更新 PR。
+- 关注 PR 讨论，**及时回复维护者的反馈**，提高合并速度。
 
 ## 生成 Github Token
 
-Github 的 Token 是一种用于身份验证的密钥，允许你在脚本、命令行工具或应用中安全地访问你的账户。以下是生成 Personal Access Token 的详细步骤：
+Github 的 Token 是一种用于身份验证的密钥，允许您在脚本、命令行工具或应用中安全地访问您的账户。以下是生成 Personal Access Token 的详细步骤：
 
 1. 登录 Github
-	前往 [Github 官网](https://github.com/) 并登录你的账户。
+	前往 [Github 官网](https://github.com/) 并登录您的账户。
 2. 进入 Token 管理页面
 	访问 [Personal Access Tokens (Classic)](https://github.com/settings/tokens) 页面，或按照以下步骤手动进入：
 	- 点击右上角头像，选择 **Settings**。
@@ -80,7 +93,7 @@ Github 的 Token 是一种用于身份验证的密钥，允许你在脚本、命
 	3. 在 **Expiration（过期时间）** 中选择有效期（推荐 90 天或 1 年）。
 	   ![](https://img.xiaorang.fun/202502251859006.png)
 4. 设置权限
-	根据你的需求勾选相应的权限。对于图床配置，需要勾选 `repo`，确保拥有对仓库的完全读写权限。
+	根据您的需求勾选相应的权限。对于图床配置，需要勾选 `repo`，确保拥有对仓库的完全读写权限。
 5. 生成 Token
 	1. 滑到页面底部，点击 **Generate token** 按钮。
 	2. 生成的 Token 会显示在页面上。
@@ -96,7 +109,7 @@ Github 的 Token 是一种用于身份验证的密钥，允许你在脚本、命
 
 世界上的开源许可证，大概有[上百种](https://www.gnu.org/licenses/license-list.html)。很少有人搞得清楚它们的区别。即使在最流行的六种：[GPL](https://www.gnu.org/licenses/gpl-3.0.html)、[BSD](https://en.wikipedia.org/wiki/BSD_licenses)、[MIT](https://en.wikipedia.org/wiki/MIT_License)、[Mozilla](https://www.mozilla.org/en-US/MPL/)、[Apache](https://www.apache.org/licenses/LICENSE-2.0) 和 L [GPL](https://www.gnu.org/licenses/lgpl-3.0.html) 之中做选择，也很复杂。
 
-乌克兰程序员 [Paul Bagwell](https://web.archive.org/web/20110503183702/http://pbagwl.com/post/5078147450/description-of-popular-software-licenses) 画了一张分析图，说明应该怎么选择。这是我见过的最简单的讲解，只用两分钟，你就能搞清楚这六种许可证之间的最大区别。
+乌克兰程序员 [Paul Bagwell](https://web.archive.org/web/20110503183702/http://pbagwl.com/post/5078147450/description-of-popular-software-licenses) 画了一张分析图，说明应该怎么选择。这是我见过的最简单的讲解，只用两分钟，您就能搞清楚这六种许可证之间的最大区别。
 
 ```plantuml
 @startuml
@@ -114,7 +127,7 @@ if (他人修改源码后，是否可以闭源？) then (no)
   endif
 else (yes)
   if (每一个修改过的文件，是否都必须放置版权说明？) then (no)
-    if (衍生软件的广告，是否可以用你的名字促销？) then (no)
+    if (衍生软件的广告，是否可以用您的名字促销？) then (no)
       :BSD许可证;
     else (yes)
       :MIT许可证;
@@ -175,7 +188,7 @@ endif
 
 将下面的代码块复制并粘贴到 README.md 文件中，以添加技能图标元素！
 
-将 `?i=js,html,css` 更改为用","分隔的技能列表！你可以在[此处](https://github.com/tandpfun/skill-icons?tab=readme-ov-file#icons-list)找到完整的图标列表。
+将 `?i=js,html,css` 更改为用","分隔的技能列表！您可以在[此处](https://github.com/tandpfun/skill-icons?tab=readme-ov-file#icons-list)找到完整的图标列表。
 
 ```markdown
 ![My Skills](https://skillicons.dev/icons?i=java,spring,mysql,html,css,js,ts,vue)](https://skillicons.dev)
@@ -193,7 +206,7 @@ endif
 <img align="center" width="400" src="https://github-readme-stats.vercel.app/api?username={YOUR_USERNAME}&theme=transparent&show_icons=true&hide_border=true" />
 ```
 
-将上述代码块中的 `{YOUR_USERNAME}` 替换成你自己的用户名！
+将上述代码块中的 `{YOUR_USERNAME}` 替换成您自己的用户名！
 
 #### 连续贡献数据记录
 
@@ -201,7 +214,7 @@ endif
 
 此效果主要通过 [DenverCoder1/github-readme-streak-stats: 🔥 Stay motivated and show off your contribution streak! 🌟 Display your total contributions, current streak, and longest streak on your GitHub profile README](https://github.com/DenverCoder1/github-readme-streak-stats) 开源项目实现。
 
-该项目还提供一个可以通过实时预览定制你的连胜统计卡的在线工具：[GitHub Readme Streak Stats Demo (demolab.com)](https://streak-stats.demolab.com/demo/)。
+该项目还提供一个可以通过实时预览定制您的连胜统计卡的在线工具：[GitHub Readme Streak Stats Demo (demolab.com)](https://streak-stats.demolab.com/demo/)。
 ![](https://img.xiaorang.fun/202502251903293.png)
 
 #### 贡献图
@@ -216,7 +229,7 @@ endif
 <img width="800" src="https://github-readme-activity-graph.vercel.app/graph?username={YOUR_USERNAME}&theme=github-compact&hide_border=true&area=true" />
 ```
 
-将上述代码块中的 `{YOUR_USERNAME}` 替换成你自己的用户名！
+将上述代码块中的 `{YOUR_USERNAME}` 替换成您自己的用户名！
 
 #### 贪吃蛇效果
 
@@ -291,7 +304,7 @@ endif
 	</picture>
 	```
 
-将上述代码块中的 `{YOUR_USERNAME}` 替换成你自己的用户名，`{YOUR_REPOSITORY_NAME}` 替换成你自己的仓库名称，两者的值其实应该是一样的！
+将上述代码块中的 `{YOUR_USERNAME}` 替换成您自己的用户名，`{YOUR_REPOSITORY_NAME}` 替换成您自己的仓库名称，两者的值其实应该是一样的！
 
 #### 代码编写总时长
 
@@ -302,9 +315,9 @@ endif
 具体实现步骤如下所示：
 
 1. 前往 [https://wakatime.com/](https://wakatime.com/) 并创建一个帐户
-2. 登录后，从 [https://wakatime.com/api-key/](https://wakatime.com/api-key/) 获取你的 WakaTime API 密钥
-3. 在你最喜欢的编辑器（IDE）中安装 [WakaTime 插件](https://wakatime.com/plugins)
-4. 粘贴你的 API 密钥到插件设置中，如下所示：
+2. 登录后，从 [https://wakatime.com/api-key/](https://wakatime.com/api-key/) 获取您的 WakaTime API 密钥
+3. 在您最喜欢的编辑器（IDE）中安装 [WakaTime 插件](https://wakatime.com/plugins)
+4. 粘贴您的 API 密钥到插件设置中，如下所示：
     ![](https://img.xiaorang.fun/202502251906623.png)
 
 5. 为当前仓库创建一个名为 `WAKATIME_API_KEY` 的密钥，值为上一步中拷贝的 API 密钥：前往当前仓库 Settings → Secrets and variables → Actions secrets and variables → New Repository secret。
@@ -492,4 +505,4 @@ jobs:
 + 📺视频
     - [GitHub 个人主页极简美化教程！](https://www.bilibili.com/video/BV1Cp421X7UJ?vd_source=84272a2d7f72158b38778819be5bc6ad)
     - [Github个人主页美化教程](https://www.bilibili.com/video/BV1KT411L7t7?vd_source=84272a2d7f72158b38778819be5bc6ad)
-    - [给Github主页加上贪吃蛇效果，让你的主页与众不同](https://www.bilibili.com/video/BV1W94y1v7cB?vd_source=84272a2d7f72158b38778819be5bc6ad)
+    - [给Github主页加上贪吃蛇效果，让您的主页与众不同](https://www.bilibili.com/video/BV1W94y1v7cB?vd_source=84272a2d7f72158b38778819be5bc6ad)

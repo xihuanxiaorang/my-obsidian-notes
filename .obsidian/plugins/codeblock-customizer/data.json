@@ -281,7 +281,7 @@
         "unwrapcode": false,
         "buttons": {
           "alwaysShowButtons": false,
-          "alwaysShowCopyCodeButton": false,
+          "alwaysShowCopyCodeButton": true,
           "enableSelectCodeButton": false,
           "enableDeleteCodeButton": false,
           "enableWrapCodeButton": false
@@ -299,7 +299,7 @@
       "header": {
         "boldText": false,
         "italicText": false,
-        "collapseIconPosition": "hide",
+        "collapseIconPosition": "right",
         "collapsedCodeText": "",
         "codeblockLangBoldText": true,
         "codeblockLangItalicText": true,
@@ -314,10 +314,10 @@
         "enableHighlight": true
       },
       "inlineCode": {
-        "enableInlineCodeStyling": false
+        "enableInlineCodeStyling": true
       },
       "printing": {
-        "enablePrintToPDFStyling": false,
+        "enablePrintToPDFStyling": true,
         "forceCurrentColorUse": false,
         "uncollapseDuringPrint": true
       },
@@ -400,7 +400,7 @@
   "alternateHighlightColorName": "",
   "languageBorderColorName": "",
   "foldAllCommand": false,
-  "settingsType": "inlineCode",
+  "settingsType": "header",
   "langSpecificSettingsType": "",
   "languageSpecificLanguageName": ""
 }
