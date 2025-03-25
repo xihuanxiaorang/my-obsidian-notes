@@ -1,14 +1,15 @@
 {
   "theme": "system",
   "cssTheme": "AnuPpuccin",
-  "interfaceFontFamily": "HarmonyOS Sans SC",
+  "interfaceFontFamily": "JetBrains Mono,HarmonyOS Sans SC",
   "monospaceFontFamily": "JetBrains Mono",
-  "textFontFamily": "JetBrains Mono NL,未来圆SC",
+  "textFontFamily": "JetBrains Mono,HarmonyOS Sans SC",
   "baseFontSize": 16,
   "baseFontSizeAction": true,
   "enabledCssSnippets": [
     "extended-colorschemes",
-    "ChatBubble"
+    "ChatBubble",
+    "clutter-free-headings"
   ],
   "accentColor": "",
   "showRibbon": true
