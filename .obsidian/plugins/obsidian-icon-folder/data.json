@@ -67,6 +67,6 @@
   "01.Articles/AI": "RiBrainLine",
   "01.Articles/DevKit": "RiToolsLine",
   "01.Articles/Tools": "RiToolsLine",
-  "01.Articles/MySQL": "RiDatabase2Fill",
-  "01.Articles/DesignPattern": "RiLayoutMasonryLine"
+  "01.Articles/DesignPattern": "RiLayoutMasonryLine",
+  "01.Articles/SQL": "RiDatabase2Fill"
 }

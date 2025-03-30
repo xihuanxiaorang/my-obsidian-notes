@@ -3,7 +3,7 @@ tags:
   - Git
   - DevKit
 create_time: 2024-12-29 17:30
-update_time: 2025/03/19 11:12
+update_time: 2025/03/29 18:00
 ---
 
 ## 安装
@@ -175,24 +175,24 @@ git submodule update --remote --merge <子模块路径>
 
 ```bash
 git add <子模块路径>
-git commit -m "Updated submodule to latest commit"
+git commit -m "update submodule to latest commit"
 ```
 
 ### 移除子模块
 
-① **注销子模块**
+#### 注销子模块
 
 ```bash
 git submodule deinit -f <子模块路径>
 ```
 
-② **删除子模块目录**
+#### 删除子模块目录
 
 ```bash
 rm -rf <子模块路径>
 ```
 
-③ **删除 `.gitmodules` 记录**
+#### 删除 `.gitmodules` 记录
 
 删除 `.gitmodules` 中的相关配置行后，移除子模块：
 
@@ -200,10 +200,10 @@ rm -rf <子模块路径>
 git rm --cached <子模块路径>
 ```
 
-④ **提交变更**
+#### 提交变更
 
 ```bash
-git commit -m "Removed submodule"
+git commit -m "remove submodule"
 ```
 
 ### 查看子模块状态
@@ -240,7 +240,7 @@ git checkout main  # 或其他分支
 ```bash
 cd ..
 git add <子模块路径>
-git commit -m "Updated submodule branch"
+git commit -m "update submodule branch"
 ```
 
 ## 其他

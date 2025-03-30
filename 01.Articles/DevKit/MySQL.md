@@ -2,9 +2,9 @@
 tags:
   - EnvironmentSetup
   - DevKit
-  - MySQL
+  - SQL
 create_time: 2024-12-28T17:27:00
-update_time: 2025/03/23 22:54
+update_time: 2025/03/29 18:53
 ---
 
 ## 下载 & 安装

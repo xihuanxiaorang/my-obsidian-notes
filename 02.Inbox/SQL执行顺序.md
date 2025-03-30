@@ -1,11 +1,25 @@
 ---
 tags:
-  - MySQL
+  - SQL
 create_time: 2025-03-27T23:31:00
-update_time: 2025/03/27 23:31
+update_time: 2025/03/30 19:14
+refrence_url:
+  - https://www.bilibili.com/video/BV1o14y1B7Mc?vd_source=84272a2d7f72158b38778819be5bc6ad
 ---
 
-![画板](https://cdn.nlark.com/yuque/0/2023/jpeg/1554080/1681461503967-27c65942-c22b-4c2a-befd-dc4fb8e71e3d.jpeg)
+![[SQL 执行顺序|1500]]
+
+```sql
+SELECT DISTINCT<select_list>
+FROM <left_table> <join_type>JOIN<right_table>
+ON<join_condition>
+WHERE<where_condition>
+GROUP BY <group_by_list>
+WITH {CUBE|ROLLUP}
+HAVING<having_condition>
+ORDER BY<order_by_list>
+LIMIT<limit_number>
+```
 
 结合上图，整理出如下伪SQL查询语句：
 
