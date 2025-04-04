@@ -6,6 +6,8 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiFilePdf2Line",
+      "RiFilePdf2Fill",
       "RiLayoutMasonryLine",
       "RiDatabase2Fill",
       "RiFireLine",
@@ -13,9 +15,7 @@
       "RiToolsLine",
       "RiAlibabaCloudLine",
       "RiFireFill",
-      "RiCloudLine",
-      "LiSparkles",
-      "RiBrainLine"
+      "RiCloudLine"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -68,5 +68,6 @@
   "01.Articles/DevKit": "RiToolsLine",
   "01.Articles/Tools": "RiToolsLine",
   "01.Articles/DesignPattern": "RiLayoutMasonryLine",
-  "01.Articles/SQL": "RiDatabase2Fill"
+  "01.Articles/SQL": "RiDatabase2Fill",
+  "PDF": "RiFilePdf2Line"
 }

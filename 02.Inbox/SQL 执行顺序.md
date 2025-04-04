@@ -2,12 +2,12 @@
 tags:
   - SQL
 create_time: 2025-03-27T23:31:00
-update_time: 2025/03/30 19:14
+update_time: 2025/04/04 19:04
 refrence_url:
   - https://www.bilibili.com/video/BV1o14y1B7Mc?vd_source=84272a2d7f72158b38778819be5bc6ad
 ---
 
-![[SQL 执行顺序|1500]]
+![[03.Excalidraw/SQL 执行顺序|1500]]
 
 ```sql
 SELECT DISTINCT<select_list>
