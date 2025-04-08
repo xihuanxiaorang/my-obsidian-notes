@@ -58,37 +58,22 @@
             }
           },
           {
-            "id": "79970ebfe86d32d9",
+            "id": "a7641ea9da5b3cb3",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "02.Inbox/MySQL 事务.md",
+                "file": "02.Inbox/SQL JOINS.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "MySQL 事务"
-            }
-          },
-          {
-            "id": "c2d1779353c2a22d",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "01.Articles/LeetCode/1097 - 游戏玩法分析 V.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "1097 - 游戏玩法分析 V"
+              "title": "SQL JOINS"
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -216,13 +201,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "01.Articles/LeetCode/1097 - 游戏玩法分析 V.md",
+                "file": "02.Inbox/SQL JOINS.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "1097 - 游戏玩法分析 V 的大纲"
+              "title": "SQL JOINS 的大纲"
             }
           },
           {
@@ -287,13 +272,39 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "01.Articles/SQL/05 - 用户留存率.md",
+    "03.Excalidraw/SQL JOINS.md",
+    "03.Excalidraw/SQL - OUTER EXCLUDING JOIN.md",
+    "03.Excalidraw/SQL - LEFT EXCLUDING JOIN.md",
+    "03.Excalidraw/SQL - RIGHT EXCLUDING JOIN.md",
+    "03.Excalidraw/SQL - RIGHT JOIN.md",
+    "03.Excalidraw/SQL - FULL OUTER JOIN.md",
+    "03.Excalidraw/SQL - LEFT JOIN.md",
+    "02.Inbox/SQL JOINS.md",
+    "03.Excalidraw/SQL - INNER JOIN.md",
+    "03.Excalidraw/SQL - LEFT JOIN.md",
+    "04.Canvas/SQL JOINS.canvas",
+    "03.Excalidraw/SQL - 执行顺序.md",
+    "03.Excalidraw/SQL - 窗口函数 vs 聚合函数.md",
+    "03.Excalidraw/SQL - 窗口函数 - 窗口大小选项.md",
+    "03.Excalidraw/SpringBoot 自动配置.md",
+    "01.Articles/Misc/个人网站备案流程.md",
+    "Zttachments/Pasted image 20250408175349.png",
+    "Zttachments/Pasted image 20250408172349.png",
+    "Zttachments/Pasted image 20250408172206.png",
+    "Zttachments/Pasted image 20250408171712.png",
+    "Zttachments/Pasted image 20250407230949.png",
+    "Zttachments/Pasted image 20250408132040.png",
+    "Zttachments/Pasted image 20250407231017.png",
+    "Zttachments/Pasted image 20250407230934.png",
+    "Zttachments/Pasted image 20250407230857.png",
+    "Zttachments/Pasted image 20250407230147.png",
+    "03.Excalidraw/Scripts/Downloaded/Boolean Operations.md",
     "01.Articles/LeetCode/1097 - 游戏玩法分析 V.md",
+    "02.Inbox/MySQL 事务.md",
+    "01.Articles/SQL/05 - 用户留存率.md",
     "02.Inbox/未命名",
     "01.Articles/LeetCode",
-    "02.Inbox/MySQL 事务.md",
     "01.Articles/SQL/01 - SQL 执行顺序.md",
-    "03.Excalidraw/SQL 执行顺序.md",
     "01.Articles/DevKit/Git.md",
     "02.Inbox/JDBC.md",
     "01.Articles/SQL/03 - 窗口函数.md",
@@ -302,37 +313,11 @@
     "01.Articles/SQL/02 - 通用表表达式.md",
     "PDF/SQL窗口函数速查表.pdf",
     "PDF",
-    "01.Articles/SQL/Index.md",
-    "01.Articles/Misc/个人网站备案流程.md",
-    "02.Inbox/MapStruct.md",
-    "02.Inbox/Nacos-Discovery&Config.md",
-    "Zttachments/Pasted image 20250402164126.png",
-    "Zttachments/Pasted image 20250402163059.png",
-    "Zttachments/Pasted image 20250402162848.png",
-    "Zttachments/Pasted image 20250402162612.png",
-    "Zttachments/Pasted image 20250402162333.png",
-    "00.Overview/01 - 任务清单.md",
-    "03.Excalidraw/sql 窗口函数 窗口大小选项.md",
-    "03.Excalidraw/SQL 窗口函数 vs 聚合函数.md",
-    "00.Overview/02 - 参考资料.md",
     "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
-    "Recommend/Books/MySQL是怎样运行的.md",
-    "Recommend/Books/MySQL是怎样使用的.md",
-    "01.Articles/DevKit/MySQL.md",
-    "02.Inbox/Teleport.md",
-    "02.Inbox/Suspense.md",
     "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
     "01.Articles/Reading/阿里巴巴Java开发手册-嵩山版/分层领域模型规约(DO,PO,BO,DTO,VO).canvas",
-    "02.Inbox/聚合窗口函数.md",
-    "03.Excalidraw/Game 贪吃蛇游戏设计图.md",
-    "Zttachments/Pasted image 20250324185150.png",
-    "Zttachments/Pasted image 20250324185149.png",
-    "Zttachments/Pasted image 20250324183249.png",
-    "Zttachments/Pasted image 20250324183140.png",
-    "Zttachments/Pasted image 20250324182739.png",
     "01.Articles/DesignPattern",
     "01.Articles/SQL",
-    "04.Canvas/未命名.canvas",
     "01.Articles/Reading/阿里巴巴Java开发手册-嵩山版",
     "01.Articles/Java/Other",
     "04.Canvas/未命名 1.canvas",
