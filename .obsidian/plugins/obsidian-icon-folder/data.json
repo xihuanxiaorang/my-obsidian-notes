@@ -6,6 +6,8 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "LiFolderTree",
+      "LiFolderArchive",
       "RiQuillPenFill",
       "RiFilePdf2Line",
       "RiFilePdf2Fill",
@@ -13,9 +15,7 @@
       "RiDatabase2Fill",
       "RiFireLine",
       "RiStarHalfLine",
-      "RiToolsLine",
-      "RiAlibabaCloudLine",
-      "RiFireFill"
+      "RiToolsLine"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -70,5 +70,10 @@
   "01.Articles/DesignPattern": "RiLayoutMasonryLine",
   "01.Articles/SQL": "RiDatabase2Fill",
   "PDF": "RiFilePdf2Line",
-  "01.Articles/LeetCode": "RiQuillPenFill"
+  "01.Articles/LeetCode": "RiQuillPenFill",
+  "01.Articles/Tools/Obsidian": "LiFolderArchive",
+  "01.Articles/Tools/Obsidian/Index.md": "LiFolderTree",
+  "01.Articles/SourceCodeAnalysis/Java/Index.md": "LiFolderTree",
+  "01.Articles/Java/Basic/Index.md": "LiFolderTree",
+  "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/Index.md": "LiFolderTree"
 }

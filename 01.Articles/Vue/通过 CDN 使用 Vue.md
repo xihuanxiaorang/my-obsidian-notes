@@ -3,7 +3,8 @@ tags:
   - Frontend
   - Vue
 create_time: 2024-12-28 22:06
-update_time: 2025/03/13 19:05
+update_time: 2025/04/10 23:47
+priority: 1
 ---
 
 Vue 提供了灵活的使用方式，通过直接在 HTML 文件中引入 CDN 链接，可以快速搭建开发环境，无需复杂的构建工具。以下是详细的指南和示例，展示如何通过 CDN 使用 Vue。

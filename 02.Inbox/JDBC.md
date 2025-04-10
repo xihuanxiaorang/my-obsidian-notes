@@ -93,7 +93,7 @@ public class User {
 
 ![[JDBC 执行流程 | 250]]
 
-1. **加载驱动（Load Driver）**：通过 `Class.forName()` 或 [[04 - SPI 机制|SPI 机制]] 加载数据库驱动程序，并注册到 `DriverManager`。
+1. **加载驱动（Load Driver）**：通过 `Class.forName()` 或 [[SPI 机制|SPI 机制]] 加载数据库驱动程序，并注册到 `DriverManager`。
 2. **创建连接（Open Connection）**：使用 `DriverManager.getConnection()` 建立与数据库的连接。
 3. **创建操作对象（Create Statement）**：通过连接对象创建 `Statement` 或 `PreparedStatement`。
 4. **执行 SQL（Execute Statement）**：使用 `Statement` 中的 `executeQuery()` 或 `executeUpdate()` 执行查询或更新语句。
@@ -147,7 +147,7 @@ Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 ```
 
 🤔 为什么使用 `Class.forName` 就能加载数据库驱动呢？
-🤓 这是因为 JDBC 规范要求每个数据库驱动在类加载时自动注册到 `DriverManager`，通常通过[[01  - 代码块#静态初始化块|静态代码块]]实现。例如，MySQL 的 `Driver` 源码如下：
+🤓 这是因为 JDBC 规范要求每个数据库驱动在类加载时自动注册到 `DriverManager`，通常通过[[代码块#静态初始化块|静态代码块]]实现。例如，MySQL 的 `Driver` 源码如下：
 
 ```java hl:5
 public class Driver extends NonRegisteringDriver implements java.sql.Driver {

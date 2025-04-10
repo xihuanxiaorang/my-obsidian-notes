@@ -3,7 +3,8 @@ tags:
   - Java
 repository: https://github.com/xihuanxiaorang/javase-study/tree/main/spi-study
 create_time: 2024-12-28T17:52:00
-update_time: 2025/03/19 13:46
+update_time: 2025/04/10 23:45
+priority: 30
 ---
 
 ## 简介

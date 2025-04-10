@@ -5,8 +5,9 @@ tags:
   - SourceCodeAnalysis
   - DataStructure
 create_time: 2025-01-02 23:31
-update_time: 2025/03/18 22:17
+update_time: 2025/04/10 23:44
 version: 8
+priority: 20
 ---
 
 ## 基本介绍
@@ -53,7 +54,7 @@ version: 8
 	```
 
 3. `LinkedList` 存取元素是**有序**的；
-4. `LinkedList` 是**非线程安全**的。和 [[01 - ArrayList 源码剖析|ArrayList]] 类似。如果在多线程环境中使用，需借助外部同步机制确保线程安全。
+4. `LinkedList` 是**非线程安全**的。和 [[ArrayList 源码剖析|ArrayList]] 类似。如果在多线程环境中使用，需借助外部同步机制确保线程安全。
 
 ## 底层数据结构（链表）
 

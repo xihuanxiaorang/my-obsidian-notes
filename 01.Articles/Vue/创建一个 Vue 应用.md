@@ -3,7 +3,8 @@ tags:
   - Frontend
   - Vue
 create_time: 2024-12-29 19:03
-update_time: 2025/01/03 11:52
+update_time: 2025/04/10 23:47
+priority: 10
 ---
 
 ## 应用实例✨
@@ -114,7 +115,7 @@ app.mount('#app')
 **当根组件没有设置 [`template`](https://cn.vuejs.org/api/options-rendering.html#template) 和  [`render`](https://cn.vuejs.org/api/options-rendering.html#render) 选项时，Vue 将自动使用容器的 `innerHTML` 作为模板**。 ^c7b9dd
 
 适用场景：
-- 无构建步骤的应用：DOM 内模板常用于简单的 Vue 应用，例如 [[01 - 通过 CDN 使用 Vue]] 的场景。
+- 无构建步骤的应用：DOM 内模板常用于简单的 Vue 应用，例如 [[通过 CDN 使用 Vue]] 的场景。
 - 结合服务器端渲染（SSR）：根模板可能由服务器动态生成并传递给客户端，适合与服务端框架集成使用。
 
 ## 应用配置

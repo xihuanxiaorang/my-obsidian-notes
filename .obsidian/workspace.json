@@ -56,9 +56,24 @@
               "icon": "projects-icon",
               "title": "Projects"
             }
+          },
+          {
+            "id": "854c4f1f369a320e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "01.Articles/Vue/Index.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": false
+              },
+              "icon": "lucide-file",
+              "title": "Index"
+            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -186,12 +201,13 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "01.Articles/Vue/Index.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "大纲"
+              "title": "Index 的大纲"
             }
           },
           {
@@ -231,7 +247,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 375
+    "width": 381
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -256,22 +272,38 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "03.Excalidraw/Java SPI 机制栗子架构图.md",
-    "01.Articles/SQL/01 - SQL JOINS.md",
-    "03.Excalidraw/SQL JOINS.md",
-    "03.Excalidraw/SQL - INNER JOIN.md",
-    "03.Excalidraw/SQL - RIGHT EXCLUDING JOIN.md",
-    "03.Excalidraw/SQL - LEFT EXCLUDING JOIN.md",
-    "03.Excalidraw/SQL - FULL OUTER JOIN.md",
-    "03.Excalidraw/SQL - RIGHT JOIN.md",
-    "03.Excalidraw/SQL - LEFT JOIN.md",
-    "03.Excalidraw/SQL - OUTER EXCLUDING JOIN.md",
+    "01.Articles/Vue/创建一个 Vue 应用.md",
+    "01.Articles/Vue/通过 CDN 使用 Vue.md",
+    "01.Articles/Vue/Index.md",
+    "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/Index.md",
+    "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/快速排序.md",
+    "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/鸡尾酒排序.md",
+    "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/冒泡排序.md",
+    "01.Articles/Java/Basic/Index.md",
+    "01.Articles/Java/Basic/代码块.md",
+    "01.Articles/Java/Basic/嵌套类.md",
+    "01.Articles/Java/Basic/SPI 机制.md",
+    "01.Articles/Java/Basic/Java8 新特性.md",
+    "01.Articles/SourceCodeAnalysis/Java/Index.md",
+    "01.Articles/SourceCodeAnalysis/Java/LinkedList 源码剖析.md",
+    "01.Articles/SourceCodeAnalysis/Java/HashMap 源码剖析.md",
+    "01.Articles/SourceCodeAnalysis/Java/ArrayList 源码剖析.md",
+    "01.Articles/Tools/Obsidian/Index.md",
+    "01.Articles/Tools/Obsidian/Obsidian - 插件篇.md",
+    "01.Articles/Tools/Obsidian/Obsidian - 核心篇.md",
+    "01.Articles/SQL/Index.md",
+    "01.Articles/SQL/用户留存率.md",
+    "01.Articles/SQL/窗口函数.md",
+    "01.Articles/SQL/行列转换.md",
+    "01.Articles/SQL/通用表表达式.md",
+    "01.Articles/SQL/SQL 执行顺序.md",
+    "01.Articles/SQL/SQL JOINS.md",
+    "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
+    "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
+    "01.Articles/Tools/Obsidian",
+    "01.Articles/Tools/Obsidian",
+    "01.Articles/Tools/Obsidian",
     "04.Canvas/SQL JOINS.canvas",
-    "03.Excalidraw/SQL - 执行顺序.md",
-    "03.Excalidraw/SQL - 窗口函数 vs 聚合函数.md",
-    "03.Excalidraw/SQL - 窗口函数 - 窗口大小选项.md",
-    "03.Excalidraw/SpringBoot 自动配置.md",
-    "01.Articles/Misc/个人网站备案流程.md",
     "Zttachments/Pasted image 20250408175349.png",
     "Zttachments/Pasted image 20250408172349.png",
     "Zttachments/Pasted image 20250408172206.png",
@@ -282,31 +314,15 @@
     "Zttachments/Pasted image 20250407230934.png",
     "Zttachments/Pasted image 20250407230857.png",
     "Zttachments/Pasted image 20250407230147.png",
-    "03.Excalidraw/Scripts/Downloaded/Boolean Operations.md",
-    "01.Articles/LeetCode/1097 - 游戏玩法分析 V.md",
-    "02.Inbox/MySQL 事务.md",
-    "01.Articles/SQL/06 - 用户留存率.md",
     "02.Inbox/未命名",
     "01.Articles/LeetCode",
-    "01.Articles/SQL/02 - SQL 执行顺序.md",
-    "01.Articles/DevKit/Git.md",
-    "02.Inbox/JDBC.md",
-    "01.Articles/SQL/04 - 窗口函数.md",
-    "02.Inbox/正则表达式.md",
-    "01.Articles/SQL/05 - 行列转换.md",
-    "01.Articles/SQL/03 - 通用表表达式.md",
     "PDF/SQL窗口函数速查表.pdf",
     "PDF",
-    "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
-    "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
     "01.Articles/Reading/阿里巴巴Java开发手册-嵩山版/分层领域模型规约(DO,PO,BO,DTO,VO).canvas",
     "01.Articles/DesignPattern",
     "01.Articles/SQL",
     "01.Articles/Reading/阿里巴巴Java开发手册-嵩山版",
-    "01.Articles/Java/Other",
     "04.Canvas/未命名 1.canvas",
-    "01.Articles/SpringCloud",
-    "01.Articles/SpringFrameworkEcosystem",
     "01.Articles/AI/本地部署AI大模型.canvas",
     "04.Canvas/冒泡排序.canvas",
     "01.Articles/Reading/Hello 算法/排序/冒泡排序.canvas",

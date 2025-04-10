@@ -4,7 +4,8 @@ tags:
 repository: https://github.com/xihuanxiaorang/javase-study/tree/main/lambda-study
 version: 8
 create_time: 2024-12-28T17:51:00
-update_time: 2025/03/18 22:17
+update_time: 2025/04/10 23:45
+priority: 20
 ---
 
 Lambda 表达式、强大的 Stream API、全新时间日期 API；新特性使得 Java 的运行速度更快、代码更少（Lambda 表达式）、便于并行、最大化减少空指针异常！
@@ -15,7 +16,7 @@ Lambda 表达式、强大的 Stream API、全新时间日期 API；新特性使�
 
 #### 回顾一下匿名内部类
 
-在介绍如何使用 Lambda 表达式之前，我们先来回顾一下[[02  - 嵌套类#匿名类|匿名内部类]]，例如，我们使用匿名内部类的方式来比较两个 Integer 类型数据的大小。
+在介绍如何使用 Lambda 表达式之前，我们先来回顾一下[[嵌套类#匿名类|匿名内部类]]，例如，我们使用匿名内部类的方式来比较两个 Integer 类型数据的大小。
 
 ```java
 final Comparator<Integer> comparator = new Comparator<Integer>() {

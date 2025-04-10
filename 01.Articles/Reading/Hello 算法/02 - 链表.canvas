@@ -182,29 +182,6 @@
       "y": -602
     },
     {
-      "color": "6",
-      "height": 325,
-      "id": "c35268b6efad58e2",
-      "styleAttributes": {
-      },
-      "text": "“[[链表]](linked list)是一种线性数据结构,其中的每个元素都是一个节点对象,各个节点通过“引用”相连接。引用记录了下一个节点的内存地址,通过它可以从当前节点访问到下一个节点。” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=79&annotation=32DKUYB8))\n#DataStructure #ToBeOptimized\n\n",
-      "type": "text",
-      "width": 250,
-      "x": -600,
-      "y": -205
-    },
-    {
-      "height": 140,
-      "id": "10b22884b0c50324",
-      "styleAttributes": {
-      },
-      "text": "“在链表中删除节点也非常方便,只需改变一个节点的引用(指针)即可” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=82&annotation=SQYEZL9S)) \n`pre.next = pre.next.next`",
-      "type": "text",
-      "width": 300,
-      "x": -100,
-      "y": -145
-    },
-    {
       "height": 156,
       "id": "a6cdd3e1c21c28c0",
       "styleAttributes": {
@@ -225,6 +202,51 @@
       "width": 250,
       "x": 235,
       "y": -617
+    },
+    {
+      "height": 192,
+      "id": "ca5f7e67ea7c9591",
+      "styleAttributes": {
+      },
+      "text": "“想在相邻的两个节点之间插入一个新节点 P , 则只需改变两个节点引用(指针)即可” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=81&annotation=6MINS8FK)) \n```java\np.next = pre.next; \npre.next = p;\n```",
+      "type": "text",
+      "width": 380,
+      "x": 170,
+      "y": -445
+    },
+    {
+      "height": 140,
+      "id": "10b22884b0c50324",
+      "styleAttributes": {
+      },
+      "text": "“在链表中删除节点也非常方便,只需改变一个节点的引用(指针)即可” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=82&annotation=SQYEZL9S)) \n`pre.next = pre.next.next`",
+      "type": "text",
+      "width": 300,
+      "x": -100,
+      "y": -145
+    },
+    {
+      "height": 120,
+      "id": "fbedc7163a365f45",
+      "styleAttributes": {
+      },
+      "text": "“从头节点出发,逐个向后遍历,直至找到目标节点” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=82&annotation=KWHTSK56))",
+      "type": "text",
+      "width": 250,
+      "x": 300,
+      "y": -135
+    },
+    {
+      "color": "6",
+      "height": 325,
+      "id": "c35268b6efad58e2",
+      "styleAttributes": {
+      },
+      "text": "“[[链表]](linked list)是一种线性数据结构,其中的每个元素都是一个节点对象,各个节点通过“引用”相连接。引用记录了下一个节点的内存地址,通过它可以从当前节点访问到下一个节点。” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=79&annotation=32DKUYB8))\n#DataStructure #ToBeOptimized\n\n",
+      "type": "text",
+      "width": 250,
+      "x": -600,
+      "y": -205
     },
     {
       "height": 119,
@@ -258,28 +280,6 @@
       "width": 250,
       "x": -600,
       "y": 490
-    },
-    {
-      "height": 192,
-      "id": "ca5f7e67ea7c9591",
-      "styleAttributes": {
-      },
-      "text": "“想在相邻的两个节点之间插入一个新节点 P , 则只需改变两个节点引用(指针)即可” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=81&annotation=6MINS8FK)) \n```java\np.next = pre.next; \npre.next = p;\n```",
-      "type": "text",
-      "width": 380,
-      "x": 170,
-      "y": -445
-    },
-    {
-      "height": 120,
-      "id": "fbedc7163a365f45",
-      "styleAttributes": {
-      },
-      "text": "“从头节点出发,逐个向后遍历,直至找到目标节点” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=82&annotation=KWHTSK56))",
-      "type": "text",
-      "width": 250,
-      "x": 300,
-      "y": -135
     },
     {
       "height": 238,
