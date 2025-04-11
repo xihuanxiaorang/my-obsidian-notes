@@ -55,6 +55,12 @@
     "TQ_show_task_count": "checkbox",
     "TQ_show_tree": "checkbox",
     "TQ_show_urgency": "checkbox",
-    "priority": "number"
+    "priority": "number",
+    "type": "text",
+    "rate": "number",
+    "video_date": "date",
+    "url": "text",
+    "date": "date",
+    "source": "text"
   }
 }

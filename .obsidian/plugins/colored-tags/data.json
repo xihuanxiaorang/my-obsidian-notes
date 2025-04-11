@@ -100,7 +100,11 @@
     "LeetCode": 88,
     "Diff": 89,
     "difficulty": 90,
-    "Difficult": 91
+    "Difficult": 91,
+    "Plugin": 92,
+    "Resource": 93,
+    "Core": 94,
+    "Java/Core": 1
   },
   "_version": 3
 }

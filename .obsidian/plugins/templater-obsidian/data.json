@@ -21,6 +21,10 @@
     {
       "folder": "01.Articles/Tutorial",
       "template": "Templates/Tutorial.md"
+    },
+    {
+      "folder": "Resources",
+      "template": "Templates/Resource.md"
     }
   ],
   "enable_file_templates": false,
