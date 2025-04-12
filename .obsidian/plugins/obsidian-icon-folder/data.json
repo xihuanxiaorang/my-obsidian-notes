@@ -6,16 +6,16 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiMovie2Line",
+      "RiBook2Line",
+      "RiBook3Fill",
       "RiLinksLine",
       "RiPlug2Line",
       "LiFolderTree",
       "LiFolderArchive",
       "RiQuillPenFill",
       "RiFilePdf2Line",
-      "RiFilePdf2Fill",
-      "RiLayoutMasonryLine",
-      "RiDatabase2Fill",
-      "RiFireLine"
+      "RiFilePdf2Fill"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -51,7 +51,6 @@
   "01.Articles/SourceCodeAnalysis": "RiFireLine",
   "01.Articles/SourceCodeAnalysis/Java": "RiJavaLine",
   "00.Overview": "RiDashboardLine",
-  "00.Overview/01 - 任务清单.md": "RiTaskLine",
   "01.Articles/DataStructure & Algorithm": "RiFlowChart",
   "01.Articles/DataStructure & Algorithm/DataStructure": "RiOrganizationChart",
   "01.Articles/DataStructure & Algorithm/Algorithm": "RiFunctions",
@@ -63,7 +62,6 @@
   "Recommend/Movies": "RiMovie2Line",
   "01.Articles/DataStructure & Algorithm/Algorithm/排序算法": "RiSortNumberAsc",
   "01.Articles/Media": "RiVideoOnLine",
-  "00.Overview/02 - 参考资料.md": "RiBookmark3Line",
   "01.Articles/AI": "RiBrainLine",
   "01.Articles/DevKit": "RiToolsLine",
   "01.Articles/Tools": "RiToolsLine",
@@ -75,6 +73,10 @@
   "01.Articles/Java/Basic/Index.md": "LiFolderTree",
   "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/Index.md": "LiFolderTree",
   "01.Articles/Tools/Obsidian/Obsidian - 插件篇": "RiPlug2Line",
-  "00.Overview/03 - 源码剖析.md": "RiFireLine",
-  "Resources": "RiLinksLine"
+  "Resources": "RiLinksLine",
+  "00.Overview/推荐电影.md": "RiMovie2Line",
+  "00.Overview/推荐书籍.md": "RiBook2Line",
+  "00.Overview/源码剖析.md": "RiFireLine",
+  "00.Overview/参考资料.md": "RiBookmark3Line",
+  "00.Overview/任务清单.md": "RiTaskLine"
 }

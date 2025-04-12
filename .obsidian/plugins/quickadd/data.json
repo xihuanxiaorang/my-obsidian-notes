@@ -6,7 +6,7 @@
       "type": "Capture",
       "command": true,
       "appendLink": false,
-      "captureTo": "00.Overview/01 - 任务清单.md",
+      "captureTo": "00.Overview/任务清单.md",
       "captureToActiveFile": false,
       "createFileIfItDoesntExist": {
         "enabled": false,
