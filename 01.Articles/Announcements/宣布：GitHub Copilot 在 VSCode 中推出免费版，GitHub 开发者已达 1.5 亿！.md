@@ -5,9 +5,7 @@ published: 2024-12-19
 description: 加入 GitHub 上的 1.5 亿开发者，现在可在 VS Code 中免费使用 Copilot！
 tags:
   - Announcement
-  - Github
-  - VSCode
-  - GitHubCopilot
+  - GitHub/Copilot
   - DevKit
 ---
 

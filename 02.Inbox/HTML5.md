@@ -1,14 +1,13 @@
 ---
+tags:
+  - HTML/Tutorial
+  - 教育机构/尚硅谷
+  - 教育机构/黑马程序员
 refrence_url:
   - https://www.bilibili.com/video/BV1p84y1P7Z5?p=7&vd_source=84272a2d7f72158b38778819be5bc6ad
   - https://www.bilibili.com/video/BV1kM4y127Li?vd_source=84272a2d7f72158b38778819be5bc6ad
-tags:
-  - Tutorial
-  - HTML
-  - 尚硅谷
-  - 黑马
 create_time: 2025-01-10 18:31
-update_time: 2025/03/18 22:18
+update_time: 2025/04/12 18:19
 ---
 
 ## 什么是 HTML?

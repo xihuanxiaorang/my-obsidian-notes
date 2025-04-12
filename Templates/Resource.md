@@ -2,7 +2,9 @@
 tags:
   - Resource
 type: 
-video_date: 
+source: 
+author: 
+date: 
 url: 
 rate: 10
 create_time: <% tp.file.creation_date() %>

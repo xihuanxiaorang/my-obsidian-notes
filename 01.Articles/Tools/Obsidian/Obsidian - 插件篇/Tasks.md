@@ -1,10 +1,9 @@
 ---
 tags:
-  - Obsidian
-  - Plugin
+  - Obsidian/Plugin
 priority: 10
 create_time: 2025-04-11T18:33:00
-update_time: 2025/04/11 18:47
+update_time: 2025/04/12 18:09
 ---
 
 [Tasks](https://github.com/obsidian-tasks-group/obsidian-tasks) 插件为 Obsidian 提供了更强大的任务管理功能，主要特点包括：

@@ -1,9 +1,8 @@
 ---
 tags:
-  - Obsidian
-  - Plugin
+  - Obsidian/Plugin
 create_time: 2025-04-10 19:12
-update_time: 2025/04/11 18:46
+update_time: 2025/04/12 18:09
 priority: 1
 ---
 
