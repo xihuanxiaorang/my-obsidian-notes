@@ -58,7 +58,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -90,7 +90,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#DataStructure",
+                "query": "tag:#微信开发/微信支付",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": true,
@@ -185,12 +185,13 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "00.Overview/参考资料.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "大纲"
+              "title": "参考资料 的大纲"
             }
           },
           {
@@ -254,34 +255,34 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "00.Overview/任务清单.md",
+    "Resources/SpringCloudAlibaba 零基础入门系统教程全集.md",
     "00.Overview/参考资料.md",
-    "00.Overview/源码剖析.md",
-    "00.Overview/推荐书籍.md",
-    "00.Overview/推荐电影.md",
-    "01.Articles/AI/Index.md",
-    "Resources/Java/品读java经典书籍 effective java(中文 第2版).md",
-    "01.Articles/AI/Open-WebUI.md",
-    "01.Articles/AI/Ollama.md",
-    "Recommend/Movies/肖申克的救赎.md",
-    "Recommend/Movies/寻梦环游记.md",
-    "Recommend/Books/学透Spring.md",
-    "Recommend/Books/图解Java多线程设计模式.md",
-    "Recommend/Books/大话设计模式.md",
+    "Resources/5小时学会 SpringCloudAlibaba 零基础快速上手.md",
+    "Resources/品读java经典书籍 Effective Java（第三版）：活学活用90条编程经验.md",
+    "Resources/小谷充电宝.md",
+    "Resources/尚上优选.md",
+    "Resources/硅谷甄选.md",
+    "Resources/一起玩转微信支付.md",
+    "Resources/智慧园区.md",
+    "Resources/SpringCloudAlibaba 轻松快速入门实战.md",
+    "Resources/尚品甄选.md",
+    "Resources/黑马头条.md",
+    "Resources/SpringCloud 微服务精讲.md",
+    "Resources/SpringCloud 框架开发教程.md",
+    "Resources/Springcloud 微服务技术栈课程.md",
+    "Resources/Springcloud 快速通关.md",
+    "Resources/狂野架构师训练营第四期.md",
+    "Resources/深入剖析 MyBatis 核心原理.md",
+    "01.Articles/Misc/个人网站备案流程.md",
+    "Resources/Mybatis 源码精讲.md",
+    "Resources/【从零开始】SpringCloud 微服务搭建.md",
+    "Resources/硬核，MyBatis 源码解析.md",
+    "Resources/Mybatis 源码分析.md",
+    "Resources/Spring 底层原理概括.md",
+    "Resources/手写 MyBatis 源码.md",
+    "Resources/Java 项目硅谷课堂丨微服务丨在线学习平台.md",
     "Zttachments/图解Java多线程设计模式.jpg",
     "Zttachments/大话设计模式.jpg",
-    "Recommend/Books/ECMAScript 6 入门教程.md",
-    "Recommend/Movies/心灵捕手.md",
-    "Recommend/Movies/这个杀手不太冷.md",
-    "Recommend/Movies/小鞋子.md",
-    "Recommend/Movies/怦然心动.md",
-    "Recommend/Movies/活着 (1994).md",
-    "Recommend/Movies/机器人总动员.md",
-    "Recommend/Movies/绿皮书.md",
-    "Recommend/Movies/飞屋环游记.md",
-    "Recommend/Movies/盗梦空间.md",
-    "Recommend/Movies/阿甘正传.md",
-    "Recommend/Books/Spring 5核心原理与30个类手写实战.md",
     "Resources/Java",
     "Journal/Diary",
     "Journal",
