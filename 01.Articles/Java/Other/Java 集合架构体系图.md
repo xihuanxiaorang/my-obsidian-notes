@@ -1,9 +1,9 @@
 ---
 tags:
   - Java/Collection
-  - Java/Interview
+  - Interview
 create_time: 2024-12-28T17:46:00
-update_time: 2025/04/12 18:32
+update_time: 2025/04/14 18:46
 ---
 
 ```plantuml
