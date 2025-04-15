@@ -1,11 +1,11 @@
 ---
-source: https://blog.jetbrains.com/blog/2024/10/24/webstorm-and-rider-are-now-free-for-non-commercial-use/
-author: The JetBrains Blog
-published: 2024-10-24
-description: WebStorm 和 Rider，JetBrains 的 IDE 现在对非商业用途免费了！
 tags:
   - Announcement
   - DevKit
+author: The JetBrains Blog
+url: https://blog.jetbrains.com/blog/2024/10/24/webstorm-and-rider-are-now-free-for-non-commercial-use/
+date: 2024-10-24
+description: WebStorm 和 Rider，JetBrains 的 IDE 现在对非商业用途免费了！
 ---
 JetBrains 宣布了一项对开发者社区非常有利的许可模型变更：WebStorm 和 Rider 现在对非商业用途免费了！
 
