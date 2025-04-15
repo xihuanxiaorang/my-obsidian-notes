@@ -188,7 +188,15 @@
     "教育机构/达内教育": 17,
     "教育机构/极客时间": 18,
     "教育机构/CoderWhy": 19,
-    "教育机构/coderwhy": 20
+    "教育机构/coderwhy": 20,
+    "教育机构/珠峰教育": 21,
+    "Frontend/Vue/Advanced": 1,
+    "后台管理系统": 106,
+    "中间件/Redis": 2,
+    "Sa-Token": 107,
+    "SpringSecurity": 108,
+    "Project/Game": 1,
+    "Project/后台管理系统": 2
   },
   "_version": 3
 }
