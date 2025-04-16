@@ -209,7 +209,9 @@
     "Bits": 115,
     "SpringCloud/Gatway": 4,
     "教育机构/元动力": 24,
-    "Spring/Transaction": 5
+    "Spring/Transaction": 5,
+    "Obsidian/Plugin/Dataview": 1,
+    "Zetero": 116
   },
   "_version": 3
 }
