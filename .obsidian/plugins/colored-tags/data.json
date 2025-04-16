@@ -200,7 +200,16 @@
     "教育机构/雷欧教育": 22,
     "SpringCloudAlibaba/Nacos": 3,
     "ElasticSearch": 109,
-    "教育机构/沐言优拓": 23
+    "教育机构/沐言优拓": 23,
+    "COLA": 110,
+    "SpringAI": 111,
+    "Jimmer": 112,
+    "Taro": 113,
+    "MongoDB": 114,
+    "Bits": 115,
+    "SpringCloud/Gatway": 4,
+    "教育机构/元动力": 24,
+    "Spring/Transaction": 5
   },
   "_version": 3
 }
