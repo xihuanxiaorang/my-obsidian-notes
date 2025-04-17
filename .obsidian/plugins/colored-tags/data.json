@@ -213,7 +213,14 @@
     "Obsidian/Plugin/Dataview": 1,
     "Zetero": 116,
     "Frontend/CSS": 8,
-    "Demo": 117
+    "Demo": 117,
+    "SpringMVC": 118,
+    "中间件/RocketMQ": 3,
+    "FastFS": 119,
+    "FastDFS": 120,
+    "OSS": 121,
+    "微信开发/微信小程序/云开发": 1,
+    "Frontend/UniCloud": 9
   },
   "_version": 3
 }
