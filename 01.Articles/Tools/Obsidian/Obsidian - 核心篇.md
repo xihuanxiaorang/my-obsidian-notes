@@ -28,7 +28,7 @@ status: 完成
 - 采用 `key: value` 的键值对形式；
 - 支持多种数据类型：字符串、数组、布尔值、数字、日期等；
 - 被广泛用于分类、筛选、排序、自动生成目录、任务管理等场景；
-- 可被如 [[Dataview#Dataview|Dataview]]、Templater、Tasks 等插件读取与操作。
+- 可被如 [[01.Articles/Tools/Obsidian/Obsidian - 插件篇/Dataview#Dataview|Dataview]]、Templater、Tasks 等插件读取与操作。
 
 常见字段：
 
@@ -91,4 +91,4 @@ status: 完成
 - `inlinks` 和 `outlinks` 对知识图谱与双向链接分析非常有用；
 - `file.linked` 与 `file.unlinked` 可用于筛选"孤立笔记"或"无引用文档"。
 
-上述字段大部分由 [[Dataview#Dataview|Dataview]] 或 Templater 插件支持读取。
+上述字段大部分由 [[01.Articles/Tools/Obsidian/Obsidian - 插件篇/Dataview#Dataview|Dataview]] 或 Templater 插件支持读取。

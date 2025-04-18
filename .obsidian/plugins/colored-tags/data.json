@@ -220,7 +220,21 @@
     "FastDFS": 120,
     "OSS": 121,
     "微信开发/微信小程序/云开发": 1,
-    "Frontend/UniCloud": 9
+    "Frontend/UniCloud": 9,
+    "教育机构/算法训练营": 25,
+    "工作流": 122,
+    "工作流/Camunda": 1,
+    "Algorithm/动态规划": 5,
+    "Algorithm/分治": 6,
+    "Algorithm/递归": 7,
+    "Algorithm/双指针": 8,
+    "Algorithm/排序": 9,
+    "微信开发/微信登录": 4,
+    "RuoYi": 123,
+    "考研408": 124,
+    "OAuth": 125,
+    "Frontend/Nodejs": 10,
+    "支付宝支付": 126
   },
   "_version": 3
 }
