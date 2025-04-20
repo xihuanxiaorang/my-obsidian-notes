@@ -2,7 +2,7 @@
 tags:
   - DevKit
 create_time: 2024-12-28T17:27:00
-update_time: 2025/03/19 11:26
+update_time: 2025/04/20 11:58
 ---
 
 ## 快捷键
@@ -168,7 +168,7 @@ TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。
 
 ### 下载补丁
 
-访问 [JETBRA.IN CHECKER | IPFS](https://3.jetbra.in/) 网站，打开后会发现是一个 IPFS Checker 页面，我们在这个页面中选择一个可用的链接打开。，如下所示：
+访问 [JETBRA.IN CHECKER | IPFS](https://3.jetbra.in/) 网站，打开后会发现是一个 IPFS Checker 页面，我们在这个页面中选择一个可用的链接打开。如下所示：
 ![](https://img.xiaorang.fun/202502251743013.png)
 
 点击页面中的 `jetbra.zip` 链接开始下载我们所需的补丁。

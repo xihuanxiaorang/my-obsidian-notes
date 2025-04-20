@@ -1,155 +1,206 @@
 {
-	"edges":[
-		{"fromNode":"081c120d03a8a7d5","fromSide":"right","id":"d4286a57b6ad0383","toNode":"155d2d1418b15bb2","toSide":"left"},
-		{"fromNode":"943b6f824d31861f","fromSide":"bottom","id":"2f953d158501a24c","toNode":"586b62b95a7487c8","toSide":"top"},
-		{"fromNode":"943b6f824d31861f","fromSide":"top","id":"afc64dcc0ae29382","toNode":"170c2dc99dba9966","toSide":"bottom"},
-		{"fromNode":"51cbf77b469c0582","fromSide":"left","id":"621b649debe8cdd6","toNode":"511c9ccc5adc7908","toSide":"right"},
-		{"fromNode":"943b6f824d31861f","fromSide":"left","id":"50f3aa418c3a0c9d","toNode":"774bac007fcfad00","toSide":"right"},
-		{"fromNode":"943b6f824d31861f","fromSide":"left","id":"881c7621b7db60a4","toNode":"26a1be727178c08c","toSide":"right"},
-		{
-			"fromNode":"943b6f824d31861f",
-			"fromSide":"right",
-			"id":"f64ea4e85b98a502",
-			"styleAttributes":{},
-			"toNode":"31929b5f1ed46609",
-			"toSide":"left"
-		}
-	],
-	"metadata":{},
-	"nodes":[
-		{
-			"color":"4",
-			"height":1435,
-			"id":"31929b5f1ed46609",
-			"label":"添加元素",
-			"styleAttributes":{},
-			"type":"group",
-			"width":1520,
-			"x":0,
-			"y":-1020
-		},
-		{
-			"color":"5",
-			"height":860,
-			"id":"26a1be727178c08c",
-			"label":"删除元素",
-			"styleAttributes":{},
-			"type":"group",
-			"width":1050,
-			"x":-1695,
-			"y":-1120
-		},
-		{
-			"color":"2",
-			"height":420,
-			"id":"774bac007fcfad00",
-			"label":"应用场景",
-			"styleAttributes":{},
-			"type":"group",
-			"width":460,
-			"x":-1105,
-			"y":-200
-		},
-		{
-			"height":820,
-			"id":"511c9ccc5adc7908",
-			"styleAttributes":{},
-			"text":"![[ArrayList 源码剖析#删除指定位置元素✨]]",
-			"type":"text",
-			"width":651,
-			"x":-1675,
-			"y":-1100
-		},
-		{
-			"height":130,
-			"id":"51cbf77b469c0582",
-			"styleAttributes":{},
-			"text":"“若想删除索引 i 处的元素,则需要把索引 i 之后的元素都向前移动一位” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=76&annotation=CSF2X4RJ))",
-			"type":"text",
-			"width":250,
-			"x":-915,
-			"y":-755
-		},
-		{
-			"height":60,
-			"id":"170c2dc99dba9966",
-			"styleAttributes":{},
-			"text":"“索引本质上是内存地址的偏移量” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=75&annotation=7FIMKWLT))",
-			"type":"text",
-			"width":250,
-			"x":-375,
-			"y":-500
-		},
-		{
-			"height":143,
-			"id":"586b62b95a7487c8",
-			"styleAttributes":{},
-			"text":"“扩容数组,则需重新建立一个更大的数组,然后把原数组元素依次复制到新数组” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=78&annotation=EAHY2PLN))",
-			"type":"text",
-			"width":250,
-			"x":-375,
-			"y":-171
-		},
-		{
-			"color":"6",
-			"height":129,
-			"id":"943b6f824d31861f",
-			"styleAttributes":{},
-			"text":"“[[数组]](array)是一种线性数据结构,其将相同类型的元素存储在连续的内存空间中” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=74&annotation=D66VGZSD)\n#DataStructure #ToBeOptimized",
-			"type":"text",
-			"width":360,
-			"x":-430,
-			"y":-367
-		},
-		{
-			"height":120,
-			"id":"7815ffdd58811273",
-			"styleAttributes":{},
-			"text":"“随机访问:如果我们想随机抽取一些样本,那么可以用数组存储,并生成一个随机序列,根据索引实现 随机抽样” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=79&annotation=HF5V5KPA))",
-			"type":"text",
-			"width":420,
-			"x":-1085,
-			"y":-180
-		},
-		{
-			"height":100,
-			"id":"79a91ec29cd7b0e0",
-			"styleAttributes":{},
-			"text":"“排序和搜索:数组是排序和搜索算法最常用的数据结构。快速排序、归并排序、二分查找等都主要在数 组上进行” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=79&annotation=MEHVCHNV))",
-			"type":"text",
-			"width":420,
-			"x":-1085,
-			"y":-20
-		},
-		{
-			"height":80,
-			"id":"623812d7737f0454",
-			"styleAttributes":{},
-			"text":"“数据结构实现:数组可以用于实现栈、队列、哈希表、堆、图等数据结构” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=79&annotation=RHIV8NH4))",
-			"type":"text",
-			"width":420,
-			"x":-1085,
-			"y":120
-		},
-		{
-			"height":190,
-			"id":"081c120d03a8a7d5",
-			"styleAttributes":{},
-			"text":"“如果想在数组中间插 入一个元素,则需要将该元素之后的所有元素都向后移动一位,之后再把元素赋值给该索引” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=75&annotation=IZISZD8X))",
-			"type":"text",
-			"width":250,
-			"x":20,
-			"y":-398
-		},
-		{
-			"height":1395,
-			"id":"155d2d1418b15bb2",
-			"styleAttributes":{},
-			"text":"![[ArrayList 源码剖析#在指定位置添加元素✨]]",
-			"type":"text",
-			"width":1120,
-			"x":380,
-			"y":-1000
-		}
-	]
+  "edges": [
+    {
+      "fromNode": "081c120d03a8a7d5",
+      "fromSide": "right",
+      "id": "d4286a57b6ad0383",
+      "toNode": "155d2d1418b15bb2",
+      "toSide": "left"
+    },
+    {
+      "fromNode": "943b6f824d31861f",
+      "fromSide": "bottom",
+      "id": "2f953d158501a24c",
+      "toNode": "586b62b95a7487c8",
+      "toSide": "top"
+    },
+    {
+      "fromNode": "943b6f824d31861f",
+      "fromSide": "top",
+      "id": "afc64dcc0ae29382",
+      "toNode": "170c2dc99dba9966",
+      "toSide": "bottom"
+    },
+    {
+      "fromNode": "51cbf77b469c0582",
+      "fromSide": "left",
+      "id": "621b649debe8cdd6",
+      "toNode": "511c9ccc5adc7908",
+      "toSide": "right"
+    },
+    {
+      "fromNode": "943b6f824d31861f",
+      "fromSide": "left",
+      "id": "50f3aa418c3a0c9d",
+      "toNode": "774bac007fcfad00",
+      "toSide": "right"
+    },
+    {
+      "fromNode": "943b6f824d31861f",
+      "fromSide": "left",
+      "id": "881c7621b7db60a4",
+      "toNode": "26a1be727178c08c",
+      "toSide": "right"
+    },
+    {
+      "fromNode": "943b6f824d31861f",
+      "fromSide": "right",
+      "id": "f64ea4e85b98a502",
+      "styleAttributes": {
+      },
+      "toNode": "31929b5f1ed46609",
+      "toSide": "left"
+    }
+  ],
+  "metadata": {
+  },
+  "nodes": [
+    {
+      "color": "4",
+      "height": 1435,
+      "id": "31929b5f1ed46609",
+      "label": "添加元素",
+      "styleAttributes": {
+      },
+      "type": "group",
+      "width": 1520,
+      "x": 0,
+      "y": -1020
+    },
+    {
+      "color": "5",
+      "height": 860,
+      "id": "26a1be727178c08c",
+      "label": "删除元素",
+      "styleAttributes": {
+      },
+      "type": "group",
+      "width": 1050,
+      "x": -1695,
+      "y": -1120
+    },
+    {
+      "color": "2",
+      "height": 420,
+      "id": "774bac007fcfad00",
+      "label": "应用场景",
+      "styleAttributes": {
+      },
+      "type": "group",
+      "width": 460,
+      "x": -1105,
+      "y": -200
+    },
+    {
+      "height": 820,
+      "id": "511c9ccc5adc7908",
+      "styleAttributes": {
+      },
+      "text": "![[ArrayList 源码剖析#删除指定位置元素✨]]",
+      "type": "text",
+      "width": 651,
+      "x": -1675,
+      "y": -1100
+    },
+    {
+      "height": 130,
+      "id": "51cbf77b469c0582",
+      "styleAttributes": {
+      },
+      "text": "“若想删除索引 i 处的元素,则需要把索引 i 之后的元素都向前移动一位” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=76&annotation=CSF2X4RJ))",
+      "type": "text",
+      "width": 250,
+      "x": -915,
+      "y": -755
+    },
+    {
+      "height": 60,
+      "id": "170c2dc99dba9966",
+      "styleAttributes": {
+      },
+      "text": "“索引本质上是内存地址的偏移量” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=75&annotation=7FIMKWLT))",
+      "type": "text",
+      "width": 250,
+      "x": -375,
+      "y": -500
+    },
+    {
+      "height": 143,
+      "id": "586b62b95a7487c8",
+      "styleAttributes": {
+      },
+      "text": "“扩容数组,则需重新建立一个更大的数组,然后把原数组元素依次复制到新数组” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=78&annotation=EAHY2PLN))",
+      "type": "text",
+      "width": 250,
+      "x": -375,
+      "y": -171
+    },
+    {
+      "color": "6",
+      "height": 129,
+      "id": "943b6f824d31861f",
+      "styleAttributes": {
+      },
+      "text": "“[[数组]](array)是一种线性数据结构,其将相同类型的元素存储在连续的内存空间中” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=74&annotation=D66VGZSD)\n#DataStructure #ToBeOptimized",
+      "type": "text",
+      "width": 360,
+      "x": -430,
+      "y": -367
+    },
+    {
+      "height": 120,
+      "id": "7815ffdd58811273",
+      "styleAttributes": {
+      },
+      "text": "“随机访问:如果我们想随机抽取一些样本,那么可以用数组存储,并生成一个随机序列,根据索引实现 随机抽样” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=79&annotation=HF5V5KPA))",
+      "type": "text",
+      "width": 420,
+      "x": -1085,
+      "y": -180
+    },
+    {
+      "height": 100,
+      "id": "79a91ec29cd7b0e0",
+      "styleAttributes": {
+      },
+      "text": "“排序和搜索:数组是排序和搜索算法最常用的数据结构。快速排序、归并排序、二分查找等都主要在数 组上进行” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=79&annotation=MEHVCHNV))",
+      "type": "text",
+      "width": 420,
+      "x": -1085,
+      "y": -20
+    },
+    {
+      "height": 80,
+      "id": "623812d7737f0454",
+      "styleAttributes": {
+      },
+      "text": "“数据结构实现:数组可以用于实现栈、队列、哈希表、堆、图等数据结构” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=79&annotation=RHIV8NH4))",
+      "type": "text",
+      "width": 420,
+      "x": -1085,
+      "y": 120
+    },
+    {
+      "height": 190,
+      "id": "081c120d03a8a7d5",
+      "styleAttributes": {
+      },
+      "text": "“如果想在数组中间插 入一个元素,则需要将该元素之后的所有元素都向后移动一位,之后再把元素赋值给该索引” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=75&annotation=IZISZD8X))",
+      "type": "text",
+      "width": 250,
+      "x": 20,
+      "y": -398
+    },
+    {
+      "height": 1395,
+      "id": "155d2d1418b15bb2",
+      "styleAttributes": {
+      },
+      "text": "![[ArrayList 源码剖析#在指定位置添加元素✨]]",
+      "type": "text",
+      "width": 1120,
+      "x": 380,
+      "y": -1000
+    }
+  ]
 }

@@ -46,18 +46,18 @@
             }
           },
           {
-            "id": "79c8be2017fd3ac9",
+            "id": "9439d9835e43c9e8",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Resources/数据结构与算法 Python 语言实现.md",
-                "mode": "source",
+                "file": "01.Articles/SourceCodeAnalysis/Java/ArrayList 源码剖析.md",
+                "mode": "preview",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "数据结构与算法 Python 语言实现"
+              "title": "ArrayList 源码剖析"
             }
           }
         ],
@@ -93,7 +93,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:教育机构/马士兵教育",
+                "query": "tag:#RuoYi-Cloud",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": true,
@@ -188,13 +188,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Resources/数据结构与算法 Python 语言实现.md",
+                "file": "01.Articles/SourceCodeAnalysis/Java/ArrayList 源码剖析.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "数据结构与算法 Python 语言实现 的大纲"
+              "title": "ArrayList 源码剖析 的大纲"
             }
           },
           {
@@ -258,32 +258,34 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
+    "00.Overview/源码剖析.md",
+    "01.Articles/SourceCodeAnalysis/Java/ArrayList 源码剖析.md",
+    "01.Articles/SourceCodeAnalysis/Java/LinkedList 源码剖析.md",
+    "01.Articles/SourceCodeAnalysis/Java/HashMap 源码剖析.md",
+    "01.Articles/DataStructure & Algorithm/DataStructure/线性表.md",
+    "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
+    "01.Articles/Java/Basic/Index.md",
     "00.Overview/参考资料.md",
+    "Resources/mini-spring.md",
+    "Resources/small-spring.md",
+    "Resources/tiny-spring.md",
+    "Resources/《重学Java设计模式》- 互联网大厂真实场景案例！.md",
+    "Resources/《手写Mybatis》- 从源码中吸取编码经验、设计原则、设计模式.md",
+    "Resources/若依微服务 PLUS 版本源码详解与二次开发教程！.md",
+    "Resources/基于若依的 Flowable 工作流实战！.md",
+    "Resources/字节大神 mini-spring 源码解读.md",
+    "Resources/手写简易版 MyBatis 框架（深入理解源码）.md",
+    "Resources/【不背八股】手写系列.md",
+    "Resources/手写 MyBatis 源码.md",
+    "01.Articles/Announcements/WebStorm 和 Rider 现在对非商业用途免费了.md",
+    "01.Articles/Announcements/宣布：GitHub Copilot 在 VSCode 中推出免费版，GitHub 开发者已达 1.5 亿！.md",
+    "01.Articles/DevKit/IDEA.md",
+    "Clippings/IntelliJ IDEA 2025.1 Is Out!   The IntelliJ IDEA Blog.md",
+    "Clippings",
     "Resources/数据结构与算法 Python 语言实现.md",
     "Resources/数据结构与算法期末速成课.md",
     "Resources/LeetCode 周赛分析.md",
     "Resources/LeetCode 最热门 100 题.md",
-    "Resources/数据结构：小牛408导图.md",
-    "Resources/《代码随想录》算法公开课.md",
-    "Resources/算法通关.md",
-    "Resources/算法核心.md",
-    "Resources/硬核！一周刷爆 LeetCode，算法大神（左程云）耗时 112 天打造出算法与数据结构基础到高级全家桶教程 + 大厂面试真题详解.md",
-    "Resources/换种风格，学习不一样的 C 语言.md",
-    "Resources/SpringSecurity 入门到精通.md",
-    "Resources/B 树可视化.md",
-    "Resources/Algorithm Visualizer.md",
-    "Resources/VisuAlgo.md",
-    "Resources/“门徒计划” - Web前端方向 - LeetCode 必刷题.md",
-    "Resources/【Java 微服务安全】JWT 实现 SpringCloud 微服务认证与授权.md",
-    "Resources/LeetCode 力扣算法刷题 810集1万套算法刷题实战.md",
-    "Resources/数据结构与算法深度剖析.md",
-    "Resources/BAT 面试官算法 LeetCode 刷题班.md",
-    "Resources/【数据结构与算法】刷题特训.md",
-    "Resources/《算法训练营》进阶篇.md",
-    "Resources/数据结构与算法特训班365天.md",
-    "Resources/最新算法进阶课程 数据结构.md",
-    "Resources/大厂算法特训班.md",
-    "Resources/恋上数据结构与算法（第三季）.md",
     "Resources/未命名",
     "Zttachments/图解Java多线程设计模式.jpg",
     "Zttachments/大话设计模式.jpg",
@@ -294,8 +296,6 @@
     "01.Articles/Tools/Obsidian/Obsidian - 插件篇/Dataview",
     "01.Articles/Tools/Obsidian/Obsidian - 插件篇",
     "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
-    "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
-    "01.Articles/Tools/Obsidian",
     "01.Articles/Tools/Obsidian",
     "01.Articles/Tools/Obsidian",
     "04.Canvas/SQL JOINS.canvas",
