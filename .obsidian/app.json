@@ -20,5 +20,8 @@
   "propertiesInDocument": "visible",
   "useMarkdownLinks": false,
   "newLinkFormat": "shortest",
-  "smartIndentList": true
+  "smartIndentList": true,
+  "strictLineBreaks": true,
+  "showLineNumber": false,
+  "foldIndent": false
 }

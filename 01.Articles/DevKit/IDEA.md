@@ -2,34 +2,46 @@
 tags:
   - DevKit
 create_time: 2024-12-28T17:27:00
-update_time: 2025/04/20 11:58
+update_time: 2025/04/21 18:08
 ---
 
 ## 快捷键
 
-1. 显示快速修复（可用于生成变量、重构代码）：Alt + Enter
-2. 生成（测试方法、构造函数、Getter 和 Setter、equals () 和 hashCode ()、toString ()）：Alt + Ins
-3. 将当前行移动到上一行或者下一行：Shift + Alt + ⬆ / Shift + Alt + ⬇
-4. 复制当前行：Ctrl + D
-5. 删除当前行：Ctrl + Y
-6. 继承体系结构：Ctrl + H
-7. 查看类中的方法：Ctrl + F12
-8. 全局搜索：Shift + Shift
-9. 全局替换：Ctrl + Shift + R
-10. 生成构造方法、getter\setter 方法、重写方法：Alt + Insert
-11. 重命名：Shift + F6
-12. 代码格式化：Ctrl + Alt + L
-13. 调试时计算变量/方法返回值：Alt + F8
-14. 上一步：Ctrl + Alt + ⬅
-15. 下一步：Ctrl + Alt + ➡
-16. 转到方法/接口具体实现，可跳过接口：Ctrl + Alt + B
-17. 前往方法/接口/变量的定义处：Ctrl + B，等价于 Ctrl + 鼠标左键
-18. 最近的文件：Ctrl + E
-19. 包围方式：Ctrl + Alt + T
-20. 大小写转换：Ctrl + Shift + U
-21. 折叠：Ctrl + NumPad-
-22. 展开：Ctrl + NumPad+
-23. 显示图弹出层：Ctrl + Alt + U
+### 常用编辑操作
+
+- **快速修复 / 生成变量、重构代码**：`Alt + Enter`
+- **生成构造方法、Getter/Setter、`equals()`/`hashCode()`、`toString()`、测试方法等**：`Alt + Insert`
+- **复制当前行**：`Ctrl + D`
+- **删除当前行**：`Ctrl + Y`
+- **移动当前行**：`Shift + Alt + ↑ / ↓`
+- **代码包围（如 try-catch、if-else）**：`Ctrl + Alt + T`
+- **大小写切换**：`Ctrl + Shift + U`
+- **代码格式化**：`Ctrl + Alt + L`
+
+### 导航与搜索
+
+- **全局搜索（任何内容）**：`Shift + Shift`
+- **全局替换**：`Ctrl + Shift + R`
+- **跳到定义（方法/接口/变量）**：`Ctrl + B` 或 `Ctrl + 鼠标左键`
+- **跳到方法/接口具体实现**：`Ctrl + Alt + B`
+- **查看继承结构**：`Ctrl + H`
+- **查看类中所有方法/成员**：`Ctrl + F12`
+- **最近打开的文件**：`Ctrl + E`
+- **后退一步**：`Ctrl + Alt + ←`
+- **前进一步**：`Ctrl + Alt + →`
+
+### 重构相关
+
+- **重命名**：`Shift + F6`
+- **提取方法（Extract Method）**：`Ctrl + Alt + M`
+- **重构菜单（Refactor This）**：`Ctrl + Alt + Shift + T`
+
+### 调试与辅助
+
+- **调试时计算表达式**：`Alt + F8`
+- **折叠代码**：`Ctrl + NumPad -`
+- **展开代码**：`Ctrl + NumPad +`
+- **显示类关系图（弹出层）**：`Ctrl + Alt + U`
 
 ## 设置
 

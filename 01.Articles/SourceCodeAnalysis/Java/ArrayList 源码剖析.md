@@ -4,7 +4,7 @@ tags:
   - DataStructure
   - Java/Collection
 create_time: 2024-12-24 17:50
-update_time: 2025/04/12 18:10
+update_time: 2025/04/21 19:12
 version: 8
 priority: 1
 ---
@@ -257,13 +257,13 @@ private void rangeCheckForAdd(int index) {
 
 #### 扩容✨
 
-1. 确定数组所需的最小容量 minCapacity；
-   1. 目前 minCapacity 为方法实参 = size + 1 = 目前数组中的元素个数 + 1；
-   2. 如果 elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA 的话，则取 minCapacity（size + 1） 与 DEFAULT_CAPACITY（10）两者较大的数赋值给 minCapacity；
+1. 确定数组所需的最小容量 `minCapacity`；
+	1. 目前 `minCapacity` 为方法实参 = size + 1 = 目前数组中的元素个数 + 1；
+	2. 如果 `elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA` 的话，则取 `minCapacity = size + 1` 与 `DEFAULT_CAPACITY = 10` 两者较大的数赋值给 `minCapacity`；
 2. 数组所需最小的容量确定之后，需要判断当前数组的容量是否小于所需的最小容量，如果是的话，则需要进行扩容操作；
 3. 扩容操作：
-   1. **确定新数组容量大小**。公式：`newCapacity = oldCapacity + (oldCapacity >> 1)`，其中 oldCapacity >> 1 进行位运算，右移一位，即为 oldCapacity 的一半 => **新数组的容量 = 原数组容量的 1.5 倍** = 原数组容量 + 原数组容量 >> 1；
-   2. **数据拷贝**。新数组容量大小确定之后，则需要进行数据拷贝操作。 `Arrays.copyOf ()` 方法实际上就是创建一个新的数组，然后在方法的内部调用 [[Arrays#System.arraycopy 方法]] 将原数组中的所有数据全部拷贝到新创建的数组中。
+	1. **确定新数组容量大小**。公式：`newCapacity = oldCapacity + (oldCapacity >> 1)`，其中 `oldCapacity >> 1` 进行位运算，右移一位，即为 `oldCapacity` 的一半 => **新数组的容量 = 原数组容量的 1.5 倍** = 原数组容量 + 原数组容量 >> 1；
+	2. **数据拷贝**。新数组容量大小确定之后，则需要进行数据拷贝操作。 `Arrays.copyOf()` 方法实际上就是创建一个新的数组，然后在方法的内部调用 [[Arrays#System.arraycopy 方法]] 将原数组中的所有数据全部拷贝到新创建的数组中。
 
 ```java
 private void ensureCapacityInternal(int minCapacity) {
