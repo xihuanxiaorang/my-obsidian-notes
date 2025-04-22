@@ -4,7 +4,7 @@ tags:
   - DataStructure
   - Java/Collection
 create_time: 2024-12-24 17:50
-update_time: 2025/04/21 19:12
+update_time: 2025/04/22 23:02
 version: 8
 priority: 1
 ---
@@ -12,7 +12,7 @@ priority: 1
 ## 基本介绍
 
 1. ArrayList 是**动态数组**，即"长度可调节的数组"，可以包含任何类型的数据（包括 `null`），并且支持**重复元素**。
-2. ArrayList 继承自 AbstractList，实现了 `List`、[RandomAccess](#randomaccess接口)、`Cloneable` 和 `Serializable` 接口，其继承关系如下图所示：
+2. ArrayList 继承自 AbstractList，实现了 `List`、[[#RandomAccess 接口]]、`Cloneable` 和 `Serializable` 接口，其继承关系如下图所示：
 
 	```plantuml
 	@startuml
@@ -104,9 +104,9 @@ private static final Object[] EMPTY_ELEMENT_DATA = {};
 private static final Object[] DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA = {};
 ```
 
-1. DEFAULT_CAPACITY：**默认初始化容量** = 10。
-2. EMPTY_ELEMENTDATA：如果**使用有参构造器，且指定的初始化容量为 0**，则 `elementData` 会被赋值为该常量，并且**在添加第一个元素时扩容至 1**。
-3. DEFAULTCAPACITY_EMPTY_ELEMENTDATA：如果**使用无参构造器**，则 `elementData` 会被赋值为该常量，并且**在添加第一个元素时扩容至默认容量（10）**。
+1. `DEFAULT_CAPACITY`：**默认初始化容量** = 10。
+2. `EMPTY_ELEMENTDATA`：如果**使用有参构造器，且指定的初始化容量为 0**，则 `elementData` 会被赋值为该常量，并且**在添加第一个元素时扩容至 1**。
+3. `DEFAULTCAPACITY_EMPTY_ELEMENTDATA`：如果**使用无参构造器**，则 `elementData` 会被赋值为该常量，并且**在添加第一个元素时扩容至默认容量（10）**。
 
 ## 主要操作
 
@@ -163,7 +163,7 @@ public ArrayList(Collection<? extends E> c) {
 ```
 
 🤔为什么需要 `Arrays.copyOf`？
-🤓因为在某些情况下，集合中的 `toArray()` 方法返回的数组类型可能不是 `Object[].class`，因此需要通过 ` Arrays.copyOf ` 复制为 Object[] 类型。例如：
+🤓因为在某些情况下，集合中的 `toArray()` 方法返回的数组类型可能不是 `Object[].class`，因此需要通过 `Arrays.copyOf()` 复制为 `Object[]` 类型。例如：
 
 ```java
 Long[] array1 = {1L, 2L};
@@ -175,13 +175,13 @@ List<Long> list2 = new ArrayList<>();
 System.out.println(list2.toArray().getClass() == Object[].class); // true
 ```
 
-在上例中，`list1.toArray()` 返回的数组类型与 `Object[].class` 不一致，导致潜在的类型安全问题。因此，`Arrays.copyOf` 用于确保内部数组的正确类型。
+在上例中，`list1.toArray()` 返回的数组类型与 `Object[].class` 不一致，导致潜在的类型安全问题。因此，`Arrays.copyOf()` 用于确保内部数组的正确类型。
 
 ### 添加元素
 
 #### 在尾部添加元素
 
-1. 先判断当前数组是否已满无法再添加元素，如果已满的话，则说明数组此时容量不足需要先进行[扩容](#扩容)操作；
+1. 先判断当前数组是否已满无法再添加元素，如果已满的话，则说明数组此时容量不足需要先进行[[#扩容✨]]操作；
 2. 然后在数组的末尾添加元素；
 3. 最后元素个数加一 `size++`；
 
@@ -202,7 +202,7 @@ public boolean add(E e) {
 #### 在指定位置添加元素✨
 
 1. **索引合法性检查**，如果索引 `index < 0 || index > size` 的话，则抛出**索引越界异常**！
-2. 判断数组目前是否已满无法再添加元素，如果已满的话，则说明数组此时容量不足需要先进行[扩容](#扩容)操作；
+2. 判断数组目前是否已满无法再添加元素，如果已满的话，则说明数组此时容量不足需要先进行[[#扩容✨]]操作；
 3. 由于数组元素在内存中是"紧挨着的"，它们之间没有空间再存放任何数据，所以在指定的位置添加元素时，需要**将指定位置及其之后的所有元素向后移动一位。也就是用前一个元素的值覆盖后一个元素的值，最后再用新元素的值覆盖指定位置上的值即可**。
 4. 元素个数加一 `size++`；
 
@@ -263,9 +263,9 @@ private void rangeCheckForAdd(int index) {
 2. 数组所需最小的容量确定之后，需要判断当前数组的容量是否小于所需的最小容量，如果是的话，则需要进行扩容操作；
 3. 扩容操作：
 	1. **确定新数组容量大小**。公式：`newCapacity = oldCapacity + (oldCapacity >> 1)`，其中 `oldCapacity >> 1` 进行位运算，右移一位，即为 `oldCapacity` 的一半 => **新数组的容量 = 原数组容量的 1.5 倍** = 原数组容量 + 原数组容量 >> 1；
-	2. **数据拷贝**。新数组容量大小确定之后，则需要进行数据拷贝操作。 `Arrays.copyOf()` 方法实际上就是创建一个新的数组，然后在方法的内部调用 [[Arrays#System.arraycopy 方法]] 将原数组中的所有数据全部拷贝到新创建的数组中。
+	2. **数据拷贝**。新数组容量大小确定之后，则需要进行数据拷贝操作。 `Arrays.copyOf ()` 方法实际上就是创建一个新的数组，然后在方法的内部调用 [[Arrays#System.arraycopy 方法]] 将原数组中的所有数据全部拷贝到新创建的数组中。
 
-```java
+```java hl:9,35
 private void ensureCapacityInternal(int minCapacity) {
   ensureExplicitCapacity(calculateCapacity(elementData, minCapacity));
 }
@@ -374,8 +374,8 @@ public E remove(int index) {
 #### 删除指定元素
 
 1. 遍历数组，找到目标元素的索引位置；
-2. 如果找到目标元素，则调用 `fastRemove (index)` 进行删除。
-3. `fastRemove (index)` 方法的实现方式与 ` remove (index) ` 方法一致，都是采用数组拷贝的方式实现将索引 index 之后的所有元素全部依次向前移动一位，该过程需要移动的元素数量 = size - index - 1;
+2. 如果找到目标元素，则调用 `fastRemove(index)` 进行删除。
+3. `fastRemove(index)` 方法的实现方式与 `remove(index)` 方法一致，都是采用数组拷贝的方式实现将索引 index 之后的所有元素全部依次向前移动一位，该过程需要移动的元素数量 = `size - index - 1`;
 
 ```java
 /**
@@ -485,3 +485,8 @@ public static <T>
     - 次选 **foreach 循环**。
 - 未实现 `RandomAccess` 接口的集合（如 `LinkedList`）：
     - 优先使用**迭代器遍历**（如 `Iterator` 或 `ListIterator`）。
+
+---
+
+- [ ] Iterable 迭代器接口
+- [ ] [[transient]] 修饰符
