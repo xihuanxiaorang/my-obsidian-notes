@@ -4,9 +4,9 @@ tags:
   - DataStructure
   - Java/Collection
 create_time: 2025-01-02 23:31
-update_time: 2025/04/12 18:11
+update_time: 2025/04/28 18:50
 version: 8
-priority: 20
+priority: 10
 ---
 
 ## 基本介绍
@@ -91,17 +91,17 @@ private static class Node<E> {
 
 ```java
 /**
- * 节点个数，默认为 0
+ * 链表长度，即链表中存储的元素个数
  */
 transient int size = 0;
 
 /**
- * 头节点（第一个节点）
+ * 链表的头节点（第一个节点）
  */
 transient Node<E> first;
 
 /**
- * 尾节点（最后一个节点）
+ * 链表的尾节点（最后一个节点）
  */
 transient Node<E> last;
 ```
@@ -265,12 +265,12 @@ void linkBefore(E e, Node<E> succ) {
 
 1. **检查索引合法性**：通过 `checkPositionIndex(index)` 确保索引在有效范围内。
 2. [[#在尾部添加节点]]：若索引等于链表大小，则调用 `linkLast(element)` 将节点添加到链表末尾。
-3. **中间插入**：
-   - 调用 `node(index)` 获取指定位置的节点。[[#获取节点]]
-   - 调用 `linkBefore(element, succ)` 在该节点前插入新节点。
-4. **更新节点连接**：
-   - 创建新节点并将其前驱和后继指针分别指向目标节点和目标节点的前驱节点。
-   - 如果插入位置为头节点，则更新新节点为头节点。
+3. 调用 `node(index)` 获取指定位置的节点。[[#获取节点]]
+4. **在目标节点前插入**：
+   - 获取目标节点的前驱节点 `pred = succ.prev`。
+   - 创建新节点 `newNode`，新节点的前驱指针指向前驱节点 `pred`，新节点的后继指针指向目标节点 `succ`。
+   - 更新目标节点的前驱节点为新节点 `succ.prev = newNode`。
+   - 如果插入位置为头节点，则新节点作为新的头节点，否则更新前驱节点 `pred` 的后继节点为新节点。
 5. **更新状态**：增加链表节点个数 `size` 和结构修改次数 `modCount`。
 
 关键步骤示意图如下所示：

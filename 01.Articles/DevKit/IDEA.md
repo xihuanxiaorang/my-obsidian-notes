@@ -2,26 +2,26 @@
 tags:
   - DevKit
 create_time: 2024-12-28T17:27:00
-update_time: 2025/04/21 18:08
+update_time: 2025/04/23 17:36
 ---
 
 ## 快捷键
 
 ### 常用编辑操作
 
-- **快速修复 / 生成变量、重构代码**：`Alt + Enter`
+- **快速修复 / 生成变量、导入包、重构代码**：`Alt + Enter`
 - **生成构造方法、Getter/Setter、`equals()`/`hashCode()`、`toString()`、测试方法等**：`Alt + Insert`
 - **复制当前行**：`Ctrl + D`
 - **删除当前行**：`Ctrl + Y`
 - **移动当前行**：`Shift + Alt + ↑ / ↓`
 - **代码包围（如 try-catch、if-else）**：`Ctrl + Alt + T`
-- **大小写切换**：`Ctrl + Shift + U`
 - **代码格式化**：`Ctrl + Alt + L`
+- **优化导入（整理并去除无用导包）**：`Ctrl + Alt + O`
+- **大小写切换**：`Ctrl + Shift + U`
 
 ### 导航与搜索
 
 - **全局搜索（任何内容）**：`Shift + Shift`
-- **全局替换**：`Ctrl + Shift + R`
 - **跳到定义（方法/接口/变量）**：`Ctrl + B` 或 `Ctrl + 鼠标左键`
 - **跳到方法/接口具体实现**：`Ctrl + Alt + B`
 - **查看继承结构**：`Ctrl + H`
@@ -29,6 +29,7 @@ update_time: 2025/04/21 18:08
 - **最近打开的文件**：`Ctrl + E`
 - **后退一步**：`Ctrl + Alt + ←`
 - **前进一步**：`Ctrl + Alt + →`
+- **全局替换**：`Ctrl + Shift + R`
 
 ### 重构相关
 
@@ -38,10 +39,10 @@ update_time: 2025/04/21 18:08
 
 ### 调试与辅助
 
+- **显示类关系图（弹出层）**：`Ctrl + Alt + U`
 - **调试时计算表达式**：`Alt + F8`
 - **折叠代码**：`Ctrl + NumPad -`
 - **展开代码**：`Ctrl + NumPad +`
-- **显示类关系图（弹出层）**：`Ctrl + Alt + U`
 
 ## 设置
 

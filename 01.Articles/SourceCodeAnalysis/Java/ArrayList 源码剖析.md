@@ -4,7 +4,7 @@ tags:
   - DataStructure
   - Java/Collection
 create_time: 2024-12-24 17:50
-update_time: 2025/04/22 23:02
+update_time: 2025/04/26 18:26
 version: 8
 priority: 1
 ---
@@ -485,8 +485,3 @@ public static <T>
     - 次选 **foreach 循环**。
 - 未实现 `RandomAccess` 接口的集合（如 `LinkedList`）：
     - 优先使用**迭代器遍历**（如 `Iterator` 或 `ListIterator`）。
-
----
-
-- [ ] Iterable 迭代器接口
-- [ ] [[transient]] 修饰符

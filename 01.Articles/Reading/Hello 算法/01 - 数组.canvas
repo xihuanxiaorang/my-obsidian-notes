@@ -114,6 +114,39 @@
       "y": -755
     },
     {
+      "height": 120,
+      "id": "7815ffdd58811273",
+      "styleAttributes": {
+      },
+      "text": "“随机访问:如果我们想随机抽取一些样本,那么可以用数组存储,并生成一个随机序列,根据索引实现 随机抽样” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=79&annotation=HF5V5KPA))",
+      "type": "text",
+      "width": 420,
+      "x": -1085,
+      "y": -180
+    },
+    {
+      "height": 100,
+      "id": "79a91ec29cd7b0e0",
+      "styleAttributes": {
+      },
+      "text": "“排序和搜索:数组是排序和搜索算法最常用的数据结构。快速排序、归并排序、二分查找等都主要在数 组上进行” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=79&annotation=MEHVCHNV))",
+      "type": "text",
+      "width": 420,
+      "x": -1085,
+      "y": -20
+    },
+    {
+      "height": 80,
+      "id": "623812d7737f0454",
+      "styleAttributes": {
+      },
+      "text": "“数据结构实现:数组可以用于实现栈、队列、哈希表、堆、图等数据结构” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=79&annotation=RHIV8NH4))",
+      "type": "text",
+      "width": 420,
+      "x": -1085,
+      "y": 120
+    },
+    {
       "height": 60,
       "id": "170c2dc99dba9966",
       "styleAttributes": {
@@ -146,39 +179,6 @@
       "width": 360,
       "x": -430,
       "y": -367
-    },
-    {
-      "height": 120,
-      "id": "7815ffdd58811273",
-      "styleAttributes": {
-      },
-      "text": "“随机访问:如果我们想随机抽取一些样本,那么可以用数组存储,并生成一个随机序列,根据索引实现 随机抽样” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=79&annotation=HF5V5KPA))",
-      "type": "text",
-      "width": 420,
-      "x": -1085,
-      "y": -180
-    },
-    {
-      "height": 100,
-      "id": "79a91ec29cd7b0e0",
-      "styleAttributes": {
-      },
-      "text": "“排序和搜索:数组是排序和搜索算法最常用的数据结构。快速排序、归并排序、二分查找等都主要在数 组上进行” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=79&annotation=MEHVCHNV))",
-      "type": "text",
-      "width": 420,
-      "x": -1085,
-      "y": -20
-    },
-    {
-      "height": 80,
-      "id": "623812d7737f0454",
-      "styleAttributes": {
-      },
-      "text": "“数据结构实现:数组可以用于实现栈、队列、哈希表、堆、图等数据结构” ([pdf](zotero://open-pdf/library/items/TELK6EIY?page=79&annotation=RHIV8NH4))",
-      "type": "text",
-      "width": 420,
-      "x": -1085,
-      "y": 120
     },
     {
       "height": 190,

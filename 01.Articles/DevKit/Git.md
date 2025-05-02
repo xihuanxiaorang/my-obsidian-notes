@@ -3,7 +3,7 @@ tags:
   - Git
   - DevKit
 create_time: 2024-12-29 17:30
-update_time: 2025/03/29 18:00
+update_time: 2025/04/26 18:40
 ---
 
 ## 安装
@@ -345,6 +345,6 @@ git commit -m "update submodule branch"
 
 ### 仓库中只有一个提交如何回滚？
 
-```
+``` bash
 git update-ref -d HEAD
 ```
