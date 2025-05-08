@@ -27,7 +27,7 @@ Obsidian 插件能为应用添加新功能和优化工作流程，如任务管�
 
 ```dataview
 TABLE file.ctime AS "创建时间", file.mtime AS "修改时间"
-FROM #Obsidian AND #Plugin 
+FROM #Obsidian/Plugin 
 WHERE contains(file.path, this.file.folder) AND file.name != this.file.name
 SORT priority ASC
 ```

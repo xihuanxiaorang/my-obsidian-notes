@@ -6,7 +6,7 @@
   "spellcheck": false,
   "newFileLocation": "folder",
   "newFileFolderPath": "02.Inbox",
-  "defaultViewMode": "source",
+  "defaultViewMode": "preview",
   "autoConvertHtml": true,
   "showUnsupportedFiles": true,
   "pdfExportSettings": {

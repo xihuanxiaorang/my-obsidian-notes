@@ -4,7 +4,7 @@
   "interfaceFontFamily": "JetBrains Mono,HarmonyOS Sans SC",
   "monospaceFontFamily": "JetBrains Mono",
   "textFontFamily": "JetBrains Mono,HarmonyOS Sans SC",
-  "baseFontSize": 16,
+  "baseFontSize": 14,
   "baseFontSizeAction": true,
   "enabledCssSnippets": [
     "extended-colorschemes",
