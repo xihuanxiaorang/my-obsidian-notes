@@ -46,36 +46,7 @@
             }
           },
           {
-            "id": "5ffe94314d712d3c",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "01.Articles/Misc/个人网站备案流程.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "个人网站备案流程"
-            }
-          },
-          {
-            "id": "01ab6e32257e1de5",
-            "type": "leaf",
-            "state": {
-              "type": "webviewer",
-              "state": {
-                "url": "https://beian.mps.gov.cn/web/business/businessHome/detail",
-                "title": "申请详情 - 全国互联网安全管理服务平台",
-                "mode": "blank"
-              },
-              "icon": "globe-2",
-              "title": "申请详情 - 全国互联网安全管理服务平台"
-            }
-          },
-          {
-            "id": "ddc081196a02217d",
+            "id": "22be2a4cb899c05c",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -90,7 +61,7 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -285,15 +256,16 @@
       "pkmer:Open Pkmer Market": false
     }
   },
-  "active": "ddc081196a02217d",
+  "active": "9bbed510414b75b1",
   "lastOpenFiles": [
+    "01.Articles/CSS/SCSS 与 CSS 变量对比：特性、用法与最佳实践.md",
     "02.Inbox/Vue3 后台管理系统.md",
     "01.Articles/CSS/SCSS 模块引入方式对比：@import 与 @use.md",
+    "00.Overview/参考资料.md",
+    "01.Articles/Misc/个人网站备案流程.md",
     "01.Articles/DevKit/IDEA.md",
     "01.Articles/SQL/行列转换.md",
     "01.Articles/Java/Basic/嵌套类.md",
-    "01.Articles/CSS/SCSS 与 CSS 变量对比：特性、用法与最佳实践.md",
-    "01.Articles/Misc/个人网站备案流程.md",
     "01.Articles/CSS",
     "01.Articles/HTML5",
     "Zttachments/Pasted image 20250508121823.png",
@@ -302,7 +274,6 @@
     "01.Articles/Tools/Obsidian/Obsidian - 插件篇/README.md",
     "01.Articles/Tools/Obsidian/Obsidian - 插件篇/Dataview.md",
     "01.Articles/Tools/Obsidian/Obsidian - 插件篇/Tasks.md",
-    "00.Overview/参考资料.md",
     "Zttachments/Pasted image 20250507235323.png",
     "Zttachments/Pasted image 20250505180707.png",
     "Zttachments/Pasted image 20250505122222.png",

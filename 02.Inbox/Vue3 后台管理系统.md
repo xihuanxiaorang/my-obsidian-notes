@@ -4,7 +4,7 @@ tags:
   - Frontend/TypeScript
   - Project/后台管理系统
 create_time: 2025-05-02 18:56
-update_time: 2025/05/08 22:11
+update_time: 2025/05/10 14:02
 ---
 
 ## 创建项目
@@ -444,6 +444,24 @@ export default {
 	pnpm format:check
 	```
 
+#### 配置 Prettier 忽略文件（避免无效格式化）
+
+在项目根目录新建 `.prettierignore` 文件，用于指定 **不需要被 Prettier 格式化的文件或目录**，避免格式化无效或无关内容（如依赖锁文件、打包产物等）。
+
+```ini
+# 忽略依赖锁文件
+pnpm-lock.yaml
+
+# 忽略打包输出目录
+dist
+
+# 忽略构建配置和临时缓存
+node_modules
+.cache
+```
+
+这样可避免提交时无意义的格式化变更，保持 Git 提交历史整洁。
+
 ### Husky
 
 仅依赖 ESLint 和 Prettier 时，开发者需手动在提交前运行格式化和检查命令，容易遗漏或执行不一致。为实现自动化，可以借助 Git 的 Hook 机制，在代码提交前自动触发校验逻辑。
@@ -746,7 +764,100 @@ app.mount('#app')
 
 ##### 按需导入（推荐）
 
-- [ ] TODO
+###### 安装插件
+
+首先你需要安装 [[#unplugin-vue-components]] 和 [[#unplugin-auto-import]] 这两款插件：
+
+```bash
+pnpm install -D unplugin-vue-components unplugin-auto-import
+```
+
+###### 配置 `vite.config.ts`
+
+```ts hl:5-7,14-35
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import { fileURLToPath, URL } from 'node:url'
+import UnoCSS from 'unocss/vite'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    vue(),
+    UnoCSS(),
+    AutoImport({
+      // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
+      // 自动导入 VueRouter 相关函数，如：useRouter 等
+      // 自动导入 Pinia 相关函数，如：createPinia，defineStore，storeToRefs 等
+      // 参考自： https://github.com/sxzz/element-plus-best-practices/blob/main/vite.config.ts
+      imports: ['vue', 'vue-router', 'pinia'],
+      // 自定义解析器
+      resolvers: [
+        // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
+        ElementPlusResolver(),
+      ],
+      // 指定哪些目录下的文件需要被扫描，并自动导入这些文件中导出的函数、变量等
+      dirs: ['src/composables/**'],
+    }),
+    Components({
+      resolvers: [
+        // 自动导入 Element Plus 组件
+        ElementPlusResolver(),
+      ],
+      // 指定自定义组件位置
+      dirs: ['src/**/components'],
+    }),
+  ],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // 自动注入变量，无需在每个文件中单独引入
+        additionalData: `@use "@/styles/variables.scss" as *;`,
+      },
+    },
+  },
+})
+
+```
+
+###### 解决 ESLint 报错
+
+![[#报错信息]]
+
+![[#方案一：直接禁用 `no-undef` 规则（推荐）]]
+
+###### TypeScript 类型支持
+
+为确保类型提示和自动补全，在 `tsconfig.json` 的 `include` 选项中添加自动生成的 `auto-imports.d.ts` 和 `components.d.ts` 类型声明文件：
+
+```ts file:tsconfig.app.json hl:17
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "auto-imports.d.ts", "components.d.ts"]
+}
+```
 
 ### UnoCSS 集成
 
@@ -957,8 +1068,8 @@ UnoCSS 提供多种功能强大的预设（如 `@unocss/preset-uno`、`@unocss/p
 - **尺寸类**：`w-100`、`h-full`、`min-w-screen`
 - **颜色类**：`text-red-500`、`bg-gray-100`
 - **布局类**：`flex`、`grid`、`items-center`
-- **状态类**：`hover:bg-blue-400`、`dark:text-white`
-- **响应式类**：`md:px-4`、`lg:text-xl`
+- **状态类**：`hover: bg-blue-400`、`dark: text-white`
+- **响应式类**：`md: px-4`、`lg: text-xl`
 
 它是 UnoCSS 的重要构建块，开箱即用，适合追求快速开发和简洁 CSS 的项目。
 
@@ -1086,7 +1197,7 @@ UnoCSS 提供多种转换器，可增强原子类在真实工程中的表达力�
 
 ##### 指令转换器
 
-`@unocss/transformer-directives` 是一个**指令式语法转换器**，支持在 CSS 或 `<style>` 标签中使用类似 Tailwind 的 `@apply`、`@screen`、`theme()` 等指令，极大提升了样式编写的直观性与复用性。
+`@unocss/transformer-directives` 是一个**指令式语法转换器**，支持在 CSS 或 `<style>` 标签中使用类似 Tailwind 的 `@apply`、`@screen`、`theme ()` 等指令，极大提升了样式编写的直观性与复用性。
 
 ###### 安装
 
@@ -1155,9 +1266,7 @@ import 'normalize.css/normalize.css'
 > 若注入的是实际样式内容而非变量，可能会在构建产物中**重复出现**，应避免。
 
 > [!info]- 前置知识
-> ![[SCSS 与 CSS 变量对比：特性、用法与最佳实践]]
->
-> ![[SCSS 模块引入方式对比：@import 与 @use]]
+> [[#SCSS 模块引入方式]] & [[#SCSS 与 CSS 变量]]
 
 #### 创建全局变量文件 `variables.scss`
 
@@ -1262,13 +1371,13 @@ import '@/styles/index.scss'
 | **模块化引入**  | 使用 `@use` 代替旧式 `@import`，防止全局污染和重复编译           |
 | **原生变量输出** | SCSS 编译期变量转换为 CSS 运行时变量，兼容 JS、HTML、UnoCSS 等环境  |
 | **动态响应能力** | 可通过 JavaScript 修改 CSS 变量值，支持响应式布局、主题切换等场景      |
-| **原子类兼容性** | UnoCSS 支持 `w-[var(--xxx)]` 形式，完美结合动态样式         |
+| **原子类兼容性** | UnoCSS 支持 `w-[var (--xxx)]` 形式，完美结合动态样式         |
 | **样式分离清晰** | 样式、变量、逻辑职责明确，便于维护和多人协作开发                       |
 
 > [!warning] 注意事项
 > - 不建议在 `additionalData` 中注入样式内容（如 class 等），否则会导致**重复渲染和样式污染**。
 > - CSS 原生变量建议写在 `:root` 或页面级容器中，确保作用域清晰。
-> - **UnoCSS 不支持 SCSS 编译期变量**（如 `$xx`），必须转为 `var(--xx)` 后配合原子类使用。
+> - **UnoCSS 不支持 SCSS 编译期变量**（如 `$xx`），必须转为 `var (--xx)` 后配合原子类使用。
 
 ## 推荐插件
 
@@ -1294,3 +1403,619 @@ import '@/styles/index.scss'
 ```
 
 这样团队其他小伙伴在拉取代码使用 VSCode 打开之后，在扩展中输入 `@recommended` 就会推荐安装这些插件。
+
+## 扩展 | 补充
+
+### SCSS 模块引入方式
+
+#### `@import`（旧语法）
+
+##### 特点
+
+- 直接引入 SCSS 文件，**所有变量、函数、混入全局可见**
+- **易引发命名冲突，污染全局命名空间**
+- 可重复引入同一文件，可能导致重复编译
+- Sass 官方已不推荐使用
+
+##### 示例
+
+```scss
+// _variables.scss
+$primary-color: blue;
+
+// main.scss
+@import 'variables';
+
+body {
+  color: $primary-color; // 可直接使用
+}
+```
+
+#### `@use`（推荐语法）
+
+##### 特点
+
+- 默认有命名空间，需加前缀访问变量（如 `variables.$primary-color`）
+- 同一文件只会被引入一次，避免重复编译
+- 支持私有变量（变量名前加 `_` 不会被导出）
+- 更符合模块化设计，利于维护与复用
+
+##### 示例
+
+```scss
+@use 'variables';
+
+body {
+  color: variables.$primary-color;
+}
+```
+
+取消命名空间前缀：
+
+```scss
+@use 'variables' as *;
+
+body {
+  color: $primary-color;
+}
+```
+
+### SCSS 与 CSS 变量
+
+#### SCSS 变量（构建时变量）
+
+##### 特点
+
+- 编译时生效，仅在构建阶段有效
+- 不支持运行时动态修改
+- 支持嵌套作用域、运算与函数调用
+
+##### 语法
+
+```scss
+$primary-color: #3498db;
+
+.button {
+  color: $primary-color;
+}
+```
+
+##### 使用方式
+
+- 写在 `.scss` 文件中，使用 `$变量名`
+- 编译后生成 `.css` 文件供浏览器使用
+
+#### CSS 变量（运行时变量）
+
+##### 特点
+
+- 浏览器原生支持，运行时生效
+- 支持作用域继承（如作用于 `:root`、类名、元素）
+- 可通过 JavaScript 动态修改
+- 支持继承与覆盖，适合响应式与主题切换场景
+
+##### 语法
+
+```css
+:root {
+  --primary-color: #3498db;
+}
+
+.button {
+  color: var(--primary-color);
+}
+```
+
+##### 使用方式
+
+- 定义：`--变量名: 值;`
+- 使用：`var(--变量名)`
+
+#### 最佳实践
+
+- **需要响应式、主题切换等运行时行为** → 使用 **CSS 变量**
+- **结构复杂、依赖计算和逻辑的样式体系** → 使用 **SCSS 变量**
+- **推荐混合使用**：用 SCSS 统一管理变量，再输出为 CSS 变量供运行时使用
+
+```scss
+$primary-color: #3498db;
+
+:root {
+  --primary-color: #{$primary-color};
+}
+```
+
+### unplugin-vue-components
+
+> [!quote]
+> [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components#installation) Vue 的 **按需自动导入组件** 插件。
+
+🌟 功能亮点：
+- 💚 **开箱即用地支持 Vue 2 和 Vue 3**
+- ✨ **支持自动导入组件与指令**
+- ⚡ **兼容多种构建工具**：支持 Vite、Webpack、Rspack、Vue CLI、Rollup、esbuild 等（基于 `unplugin` 实现）
+- 🏝 **按需注册，自动 Tree-shaking**：仅注册实际使用的组件
+- 🪐 **支持"文件夹作为命名空间"**，避免组件命名冲突
+- 🦾 **完整的 TypeScript 支持**，自动生成类型声明文件
+- 🌈 **内置常用 UI 库的解析器**（如 Element Plus、Ant Design Vue、Naive UI 等）
+- 😃 **可与 `unplugin-icons` 无缝集成**，自动注册图标组件
+
+#### 安装
+
+```bash
+pnpm install -D unplugin-vue-components
+```
+
+#### 集成
+
+```ts file:vite.config.ts hl:1,5
+import Components from 'unplugin-vue-components/vite'
+
+export default defineConfig({
+  plugins: [
+    Components({ /* options */ }),
+  ],
+})
+```
+
+#### 使用方式
+
+只需像平常一样在模板中使用组件即可，**无需手动导入和注册组件**！插件会自动按需导入组件。
+
+如果你的 **父组件本身是异步加载的**，比如你用 Vue Router 的懒加载语法：
+
+```ts
+{
+  path: '/about',
+  component: () => import('@/views/About.vue'), // 异步加载 About.vue
+}
+```
+
+那么，**`unplugin-vue-components ` 自动导入的子组件**，比如 `ElButton`、`MyCard.vue` 等，**也不会提前打包进主包**，而是和父组件一起，被 Webpack 或 Vite 代码分割（code splitting），**按需加载**。
+
+这可以：
+
+- 减少初始包体积
+- 提高页面加载速度（特别是首屏）
+- 提升整体性能，尤其是组件量大、页面多的项目
+
+换句话说：自动导入的子组件，会"跟着"父组件走，如果父组件是懒加载的，那它们也不会提前被加载，而是懒加载时一起加载。
+
+你写的代码：
+
+```vue
+<template>
+  <div>
+    <HelloWorld msg="Hello Vue 3.0 + Vite" />
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'App',
+}
+</script>
+```
+
+等价于：
+
+```vue hl:8,12-14
+<template>
+  <div>
+    <HelloWorld msg="Hello Vue 3.0 + Vite" />
+  </div>
+</template>
+
+<script>
+import HelloWorld from './src/components/HelloWorld.vue'
+
+export default {
+  name: 'App',
+  components: {
+    HelloWorld,
+  },
+}
+</script>
+```
+
+> [!tip] 默认行为
+> 插件默认会扫描 `src/components` 目录下的组件并进行自动导入。如果你有自定义的组件目录，可以通过 `dirs` 选项进行修改。
+
+#### TypeScript 支持
+
+要为自动导入的组件启用 TypeScript 类型提示，Vue 3 社区已提交相关 PR 来扩展全局组件接口。目前 [Volar](https://github.com/vuejs/language-tools) 已原生支持该特性。
+
+如果你使用 Volar，只需启用 `dts` 选项：
+
+```ts
+Components({
+  dts: true, // 如果项目中已安装 TypeScript，默认会启用
+})
+```
+
+配置完成后，插件会在项目中自动生成并维护一个 `components.d.ts` 文件，其中包含所有自动导入组件的类型定义。
+
+你可以根据项目需求选择是否将该文件提交至 Git 版本控制中。
+
+> [!note]
+> **别忘了将 `components.d.ts` 添加到 `tsconfig.json` 的 `include` 中！**
+
+#### 支持 UI 组件库的自动导入
+
+`unplugin-vue-components` 内置了多个流行 UI 库的解析器（resolvers），可用于按需自动导入对应组件和样式。只需启用相应的解析器即可。
+
+支持的 UI 库包括：
+
+- [Ant Design Vue](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/antdv.ts)
+- [Arco Design Vue](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/arco.ts)
+- [BootstrapVue](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/bootstrap-vue.ts)
+- [Element Plus](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/element-plus.ts)
+- [Element UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/element-ui.ts)
+- [Headless UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/headless-ui.ts)
+- [IDux](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/idux.ts)
+- [Inkline](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/inkline.ts)
+- [Ionic](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/ionic.ts)
+- [Naive UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/naive-ui.ts)
+- [Prime Vue](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/prime-vue.ts)
+- [Quasar](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/quasar.ts)
+- [TDesign](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/tdesign.ts)
+- [Vant](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/vant.ts)
+    - 官方支持自动导入：[`@vant/auto-import-resolver`](https://github.com/youzan/vant/blob/main/packages/vant-auto-import-resolver/README.md)
+- [Varlet UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/varlet-ui.ts)
+    - 官方支持自动导入：[`@varlet/import-resolver`](https://github.com/varletjs/varlet/blob/dev/packages/varlet-import-resolver/README.md)
+- [VEUI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/veui.ts)
+- [View UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/view-ui.ts)
+- [Vuetify](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/vuetify.ts) （建议优先使用其官方插件），支持 [v3 + vite](https://www.npmjs.com/package/vite-plugin-vuetify), [v3 + webpack](https://www.npmjs.com/package/webpack-plugin-vuetify), [v2 + webpack](https://npmjs.com/package/vuetify-loader)
+- [VueUse Components](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/vueuse.ts)
+- [VueUse Directives](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/vueuse-directive.ts)
+- [Dev UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/devui.ts)
+
+使用示例：
+
+```ts hl:2,7
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+
+Components({
+  resolvers: [
+    // 自动导入 Element Plus 组件
+    ElementPlusResolver(),
+  ],
+})
+
+```
+
+自定义解析器示例：你也可以快速编写自定义 resolver。例如手动导入 Vant 组件：
+
+```ts
+Components({
+  resolvers: [
+    (componentName) => {
+      // 所有组件名为 PascalCase（大驼峰）
+      if (componentName.startsWith('Van')) {
+        return {
+          name: componentName.slice(3), // 去除前缀 "Van"
+          from: 'vant',
+        }
+      }
+    },
+  ],
+})
+```
+
+#### 全局组件的类型声明支持
+
+部分库（如 Vue Router）会自动注册一些**全局组件**，例如 `<RouterLink>` 和 `<RouterView>`，你可以在任何地方直接使用它们，无需导入或注册。
+
+但这些全局组件**通常没有自动的 TypeScript 类型支持**，需要你手动声明其类型。为此，`unplugin-vue-components` 提供了 `types` 选项，仅用于**补充全局组件的类型声明**，不会做实际导入。
+
+```ts
+Components({
+  dts: true,
+  types: [
+    {
+      from: 'vue-router',
+      names: ['RouterLink', 'RouterView'],
+    },
+  ],
+})
+```
+
+上例会将 `RouterLink` 和 `RouterView` 的类型写入自动生成的 `components.d.ts` 文件中，提升开发体验和类型提示。
+
+**插件默认会自动检测如 `vue-router` 等已安装的库，并为其全局组件注册类型声明**。如果你想**禁用这一行为**，可以传入空数组：
+
+```ts
+Components({
+  types: [], // 完全关闭全局组件类型注册
+})
+```
+
+#### 配置项说明
+
+以下是 `unplugin-vue-components` 的默认配置及作用说明：
+
+```ts hl:3,16,20,23,26
+Components({
+  // 组件搜索目录（相对路径）
+  dirs: ['src/components'],
+
+  // 组件有效文件扩展名
+  extensions: ['vue'],
+
+  // 使用 Glob 模式匹配组件文件。配置后将忽略 dirs、extensions 和 directoryAsNamespace。
+  // 可使用 `!` 开头的负向匹配排除组件。
+  globs: ['src/components/*.{vue}'],
+
+  // 是否递归搜索子目录
+  deep: true,
+
+  // 自定义组件解析器（如 ElementPlusResolver、VantResolver 等）
+  resolvers: [],
+
+  // 是否生成 components.d.ts 类型声明文件，可设为文件路径（如：'src/typings/components.d.ts'）
+  // 默认在项目安装 TypeScript 时启用
+  dts: false,
+
+  // 使用子目录作为组件命名空间（避免重名组件冲突）
+  directoryAsNamespace: false,
+
+  // 折叠命名空间中组件目录与文件名中重复的前缀（需配合 directoryAsNamespace 使用）
+  collapseSamePrefixes: false,
+
+  // 指定无需作为命名空间前缀的子目录名
+  globalNamespaces: [],
+
+  // 是否自动导入 Vue 指令（Vue 3 默认开启；Vue 2 默认关闭）
+  // Vue 2 需安装 Babel 支持：npm install -D @babel/parser
+  directives: true,
+
+  // 路径转换钩子，可用于自定义路径映射
+  importPathTransform: v => v,
+
+  // 是否允许后注册的组件覆盖之前的同名组件
+  allowOverrides: false,
+
+  // 匹配目标文件（即需要插入组件导入的文件）
+  include: [/\.vue$/, /\.vue\?vue/, /\.vue\.[tj]sx?\?vue/],
+
+  // 排除的文件（不会插入导入）
+  exclude: [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/, /[\\/]\.nuxt[\\/]/],
+
+  // 排除的组件名（不会自动导入）
+  // 可用于排除异步组件或命名冲突的组件
+  excludeNames: [/^Async.+/],
+
+  // Vue 版本，自动检测为默认值
+  // 可显式指定：2 | 2.7 | 3
+  version: 2.7,
+
+  // 为全局注册的组件补充类型声明（不导入）
+  types: [],
+}
+```
+
+### unplugin-auto-import
+
+> [!quote]
+> [`unplugin-auto-import`](https://github.com/unplugin/unplugin-auto-import) 是基于 [`unplugin`](https://github.com/unplugin/unplugin) 构建的插件，支持 Vite、Webpack、Rspack、Rollup、esbuild 等工具，实现 **API 自动按需导入**，并支持 TypeScript 类型提示。
+
+✨ 特性亮点：
+- 💡 自动导入常用函数和 API，无需手动 `import`
+- 🧠 智能分析使用的函数并按需导入
+- 🪄 支持 **Vue**、React、**Pinia**、**Vue Router** 等常见库
+- 🧩 支持 Vue 模板语法中使用（需开启 `vueTemplate: true`）
+- 🧾 支持自动生成 `.d.ts` 类型声明文件
+- 🛠 支持自定义导入源、解析器（resolver）、目录扫描等高级用法
+
+无需手动导入：
+
+```ts
+const count = ref(0)
+const doubled = computed(() => count.value * 2)
+```
+
+等价于传统方式：
+
+```ts
+import { computed, ref } from 'vue'
+
+const count = ref(0)
+const doubled = computed(() => count.value * 2)
+```
+
+#### 安装
+
+```bash
+pnpm install -D unplugin-auto-import
+```
+
+#### 集成
+
+```ts file:vite.config.ts hl:1,5
+import AutoImport from 'unplugin-auto-import/vite'
+
+export default defineConfig({
+  plugins: [
+    AutoImport({ /* options */ }),
+  ],
+})
+```
+
+#### 配置项说明
+
+```ts hl:12-38,48-60,70,85-87,96-106
+AutoImport({
+  // 指定要自动导入的文件类型（即要处理的文件），通过正则表达式匹配
+  include: [
+    /\.[tj]sx?$/,          // 包括 .ts, .tsx, .js, .jsx 文件
+    /\.vue$/,              // .vue 文件
+    /\.vue\?vue/,          // 特殊情况的 .vue 文件，vue-loader 启用 experimentalInlineMatchResource 时生成的文件
+    /\.vue\.[tj]sx?\?vue/, // Vue 中的 <script setup lang="ts">
+    /\.md$/,               // Markdown 文件，常用于文档中写 Vue 示例
+  ],
+
+  // 自动导入的模块（支持预设与自定义）
+  imports: [
+    // 预设支持
+    'vue', // 自动导入 Vue API，如 ref、computed 等
+    'vue-router', // 自动导入路由 API，如 useRoute、useRouter 等
+
+    // 自定义导入
+    {
+      '@vueuse/core': [
+        'useMouse',                   // import { useMouse } from '@vueuse/core'
+        ['useFetch', 'useMyFetch'],   // import { useFetch as useMyFetch } from '@vueuse/core'
+      ],
+      axios: [
+        ['default', 'axios'],         // import axios from 'axios'
+      ],
+      '[package-name]': [							// 示例结构，可根据需要替换
+        '[import-names]',
+        ['[from]', '[alias]'],
+      ],
+    },
+
+    // 类型导入示例（用于全局组件类型提示）
+    {
+      from: 'vue-router',
+      imports: ['RouteLocationRaw'],
+      type: true,
+    },
+  ],
+
+  // 需要忽略自动导入的函数名，即使在 imports 中声明了 useMouse，这里也会过滤掉
+  ignore: ['useMouse', 'useFetch'],
+
+  // 根据文件的文件名，自动导入该文件的默认导出，并且变量名就是文件名本身。
+  defaultExportByFilename: false,
+
+  // 指定哪些目录下的文件需要被扫描，并自动导入这些文件中导出的函数、变量等
+  // 特别适合管理通用工具、hooks、composables 等代码。
+  dirs: [
+    './hooks',                    // 扫描 hooks 根目录
+    './composables',       				// 只扫描 composables 目录下一级模块
+    './composables/**',    				// 深度扫描所有嵌套模块
+    {
+      glob: './hooks',
+      types: true,                // 启用该目录下的类型自动导入
+    },
+    {
+      glob: './composables',
+      types: false,               // 单独关闭此目录的类型导入（即使上面启用了）
+    },
+  ],
+
+  // 控制扫描目录时是否自动导入类型
+  dirsScanOptions: {
+    types: true, // 启用后，自动导入该目录下模块的类型定义
+  },
+
+  // 指定生成自动导入的类型声明文件（.d.ts）的路径（如：'src/typings/auto-imports.d.ts'）。
+  // 如果你的项目中已安装 TypeScript，默认会生成 './auto-imports.d.ts' 文件。
+  // 设置为 false 可关闭类型声明文件的生成。
+  dts: './auto-imports.d.ts',
+
+  // 生成类型声明文件时需要忽略的函数（通过名称或正则）
+  ignoreDts: [
+    'ignoredFunction', // 忽略名为 ignoredFunction 的函数
+    /^ignore_/         // 忽略以 ignore_ 开头的函数
+  ],
+
+  // 是否在 Vue 模板中自动导入（如模板表达式中）
+  vueTemplate: false,
+
+  // 是否在 Vue 模板中自动导入指令（v- 指令）
+  vueDirectives: undefined,
+
+  // 自定义解析器，用于支持一些特定导入逻辑（与 unplugin-vue-components 兼容）
+  resolvers: [
+    /* 例如：自动导入某些 UI 库组件 */
+  ],
+
+  // 是否将自动导入的依赖加入到 Vite 的依赖优化中
+  viteOptimizeDeps: true, // 建议启用，加快构建速度
+
+  // 是否将自动导入语句插入在其他 import 语句后
+  injectAtEnd: true,
+
+  // 用于为 ESLint 自动生成一个包含 全局变量声明 的配置文件 .eslintrc-auto-import.json，避免 ESLint 报 no-undef 错误
+  eslintrc: {
+    enabled: false,                         // 是否启用
+    filepath: './.eslintrc-auto-import.json', // 生成的配置文件路径及文件名
+    // 指定自动导入变量的权限类型，对应 ESLint 的 globals 设置：
+    // true：等价于 'readonly'，变量只能读不能写（推荐）
+    // false：等价于 'writable'，变量可被修改
+    // 'readonly'：明确指定只读
+    // 'writable'：明确指定可写
+    // 推荐使用默认的 true，以确保你不会意外修改这些导入值。
+    globalsPropValue: true,                
+  },
+
+  // 自动生成 Biome Lint 配置文件（适用于 biomejs 代码风格工具）
+  biomelintrc: {
+    enabled: false,
+    filepath: './.biomelintrc-auto-import.json',
+  },
+
+  // 将未导入项保存到指定 JSON 文件，可用于调试或其他工具分析
+  dumpUnimportItems: './auto-imports.json',
+})
+```
+
+#### TypeScript 支持说明（类型提示）
+
+为了让 TypeScript 能够正确识别自动导入的 API，并提供智能提示、类型校验功能，需：
+
+1. 启用类型声明文件生成：这会自动生成一个 `auto-imports.d.ts` 类型声明文件，其中包含所有自动导入函数、变量的声明。这样，TypeScript 才能 "看到" 这些变量的存在。
+
+	```ts
+	AutoImport({
+	  dts: true // 或指定路径，如 './auto-imports.d.ts'
+	})
+	```
+
+2. 确保声明文件没有被 `tsconfig.json` 排除 & **将 `auto-imports.d.ts` 添加到 `tsconfig.json` 的 `include` 中！**
+
+#### ESLint 配置指南
+
+##### 报错信息
+
+在使用自动导入时，你可能会遇到如下 ESLint 报错：
+
+```perl
+'ref' is not defined. (no-undef)
+```
+
+这是因为 ESLint 默认会检查变量是否声明，而它并不知道这些变量其实是自动导入的。
+
+##### 解决方案
+
+###### 方案一：直接禁用 `no-undef` 规则（推荐）
+
+如果你使用的是 TypeScript，建议**直接关闭 ESLint 的 `no-undef` 规则**，因为 TypeScript 本身就能准确检查未声明的变量，无需 ESLint 重复校验。
+
+###### 方案二：自动生成 ESLint 全局变量声明配置
+
+通过自动生成的 `.eslintrc-auto-import.json` 文件，让 ESLint 识别自动导入的全局变量，避免 `no-undef` 报错。
+
+1. 启用自动生成 ESLint 配置文件：
+
+	```ts
+	AutoImport({
+	  eslintrc: {
+	    enabled: true,
+	  }
+	})
+	```
+
+2. 在主 ESLint 配置中引入生成的配置文件：
+
+	```js
+	// .eslintrc.js
+	module.exports = {
+	  extends: [
+	    './.eslintrc-auto-import.json',
+	  ],
+	}
+	```
