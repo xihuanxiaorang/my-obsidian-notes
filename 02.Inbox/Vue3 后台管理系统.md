@@ -4,7 +4,7 @@ tags:
   - Frontend/TypeScript
   - Project/后台管理系统
 create_time: 2025-05-02 18:56
-update_time: 2025/05/10 14:02
+update_time: 2025/05/10 19:12
 ---
 
 ## 创建项目
@@ -1084,7 +1084,7 @@ pnpm add -D @unocss/preset-uno
 ```
 
 > [!tip]
-> 实际上**无需单独安装**，它已内置在 `unocss` 主包中，直接导入即可：
+> 该预设已内置于 `unocss` 包中，通常无需单独安装，直接导入即可：
 >
 > ```ts
 > import { presetUno } from 'unocss'
@@ -1118,7 +1118,7 @@ pnpm add -D @unocss/preset-wind3
 ```
 
 > [!tip]
-> `@unocss/preset-wind3` 已内置在 `unocss` 包中，无需额外安装依赖，直接导入即可：
+> 该预设已内置于 `unocss` 包中，通常无需单独安装，直接导入即可：
 >
 > ```ts
 > import { presetWind3 } from 'unocss'
@@ -1136,7 +1136,7 @@ export default defineConfig({
 
 ##### Attributify 预设 (属性化写法支持)
 
-`@unocss/preset-attributify` 预设支持以 HTML 属性形式书写原子类，提升可读性与结构清晰度，非常适合组件化开发与动态样式绑定。
+`@unocss/preset-attributify` 预设允许以 HTML 属性的方式书写原子类，结构更清晰、语义更直观，特别适合组件化开发与动态样式绑定。
 
 ###### 安装 (可选)
 
@@ -1145,7 +1145,7 @@ pnpm add -D @unocss/preset-attributify
 ```
 
 > [!tip]
-> `@unocss/preset-attributify` 已内置在 `unocss` 包中，无需额外安装依赖，直接导入即可：
+> 该预设已内置于 `unocss` 包中，通常无需单独安装，直接导入即可：
 >
 > ```ts
 > import { presetAttributify } from 'unocss'
@@ -1163,7 +1163,7 @@ export default defineConfig({
 
 ###### 示例对比
 
-想象一下，使用传统 Tailwind CSS 工具类写一个按钮时，HTML 结构可能如下所示：
+传统写法中，样式类集中堆叠在 `class` 属性中，既冗长又不易维护：
 
 ```html
 <button
@@ -1173,9 +1173,7 @@ export default defineConfig({
 </button>
 ```
 
-当类名越来越多时，这种写法将变得冗长、难以维护，阅读体验也较差。
-
-借助 **Attributify 模式**，你可以将原子类以属性形式组织，语义更清晰：
+借助 **Attributify 模式**，你可以将原子类拆分成具备语义的属性：
 
 ```html
 <button
@@ -1189,7 +1187,16 @@ export default defineConfig({
 </button>
 ```
 
-例如 `text-sm text-white` 可以合并写成 `text="sm white"`，无需重复前缀，大幅简化样式结构，提升可读性与维护性。
+例如 `text-sm text-white` 合并为 `text="sm white"`，减少重复前缀，代码更简洁。
+
+> [!tip]
+> 除组合属性写法外，Attributify 也支持将每个原子类直接写作属性名，无需使用 `class=""`：
+>
+> ```html
+> <div h-100px w-100px flex items-center justify-center bg-red-300 text-sm text-white font-600 font-mono border-3 border-red rounded-2xl border-dashed>
+>   小橘猫
+> </div>
+> ```
 
 #### 转换器 (Transformers)
 
@@ -1509,7 +1516,7 @@ $primary-color: #3498db;
 ##### 使用方式
 
 - 定义：`--变量名: 值;`
-- 使用：`var(--变量名)`
+- 使用：`var (--变量名)`
 
 #### 最佳实践
 
