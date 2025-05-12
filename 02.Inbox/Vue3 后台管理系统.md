@@ -4,7 +4,7 @@ tags:
   - Frontend/TypeScript
   - Project/后台管理系统
 create_time: 2025-05-02 18:56
-update_time: 2025/05/10 19:12
+update_time: 2025/05/12 22:59
 ---
 
 ## 创建项目
@@ -766,7 +766,7 @@ app.mount('#app')
 
 ###### 安装插件
 
-首先你需要安装 [[#unplugin-vue-components]] 和 [[#unplugin-auto-import]] 这两款插件：
+首先您需要安装 [[#unplugin-vue-components]] 和 [[#unplugin-auto-import]] 这两款插件：
 
 ```bash
 pnpm install -D unplugin-vue-components unplugin-auto-import
@@ -804,7 +804,7 @@ export default defineConfig({
     }),
     Components({
       resolvers: [
-        // 自动导入 Element Plus 组件
+        // 自动注册 Element Plus 组件
         ElementPlusResolver(),
       ],
       // 指定自定义组件位置
@@ -1166,14 +1166,12 @@ export default defineConfig({
 传统写法中，样式类集中堆叠在 `class` 属性中，既冗长又不易维护：
 
 ```html
-<button
-  class="bg-blue-400 hover:bg-blue-500 text-sm text-white font-mono font-light py-2 px-4 rounded border-2 border-blue-200 dark:bg-blue-500 dark:hover:bg-blue-600"
->
+<button class="bg-blue-400 hover:bg-blue-500 text-sm text-white font-mono font-light py-2 px-4 rounded border-2 border-blue-200 dark:bg-blue-500 dark:hover:bg-blue-600">
   Button
 </button>
 ```
 
-借助 **Attributify 模式**，你可以将原子类拆分成具备语义的属性：
+借助 **Attributify 模式**，您可以将原子类拆分成具备语义的属性：
 
 ```html
 <button
@@ -1204,7 +1202,7 @@ UnoCSS 提供多种转换器，可增强原子类在真实工程中的表达力�
 
 ##### 指令转换器
 
-`@unocss/transformer-directives` 是一个**指令式语法转换器**，支持在 CSS 或 `<style>` 标签中使用类似 Tailwind 的 `@apply`、`@screen`、`theme ()` 等指令，极大提升了样式编写的直观性与复用性。
+`@unocss/transformer-directives` 是一个**指令式语法转换器**，支持在 CSS 或 `<style>` 标签中使用类似 Tailwind 的 `@apply`、`@screen`、`theme()` 等指令，极大提升了样式编写的直观性与复用性。
 
 ###### 安装
 
@@ -1386,6 +1384,328 @@ import '@/styles/index.scss'
 > - CSS 原生变量建议写在 `:root` 或页面级容器中，确保作用域清晰。
 > - **UnoCSS 不支持 SCSS 编译期变量**（如 `$xx`），必须转为 `var (--xx)` 后配合原子类使用。
 
+### 图标集成方案
+
+#### iconify 图标库集成
+
+借助 [[#unplugin-icons]] 配合 [[#unplugin-auto-import]] 与 [[#unplugin-vue-components]] 插件，可实现 [Iconify](https://iconify.design/) 图标的自动导入与组件注册。
+
+##### 安装插件
+
+```bash
+pnpm install -D unplugin-icons unplugin-auto-import unplugin-vue-components
+```
+
+##### 配置 `vite.config.ts`
+
+实现 ElementPlus 图标的自动按需导入与组件自动注册：
+
+```ts hl:8-9,27,37-47,47-50
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import { fileURLToPath, URL } from 'node:url'
+import UnoCSS from 'unocss/vite'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import IconsResolver from 'unplugin-icons/resolver'
+import Icons from 'unplugin-icons/vite'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    vue(),
+    UnoCSS(),
+    AutoImport({
+      // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
+      // 自动导入 VueRouter 相关函数，如：useRouter 等
+      // 自动导入 Pinia 相关函数，如：createPinia，defineStore，storeToRefs 等
+      // 参考自： https://github.com/sxzz/element-plus-best-practices/blob/main/vite.config.ts
+      imports: ['vue', 'vue-router', 'pinia'],
+      // 自定义解析器
+      resolvers: [
+        // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
+        ElementPlusResolver(),
+        // 自动导入图标组件
+        IconsResolver(),
+      ],
+      // 指定哪些目录下的文件需要被扫描，并自动导入这些文件中导出的函数、变量等
+      dirs: ['src/composables/**'],
+    }),
+    Components({
+      resolvers: [
+        // 自动注册 Element Plus 组件
+        ElementPlusResolver(),
+        // 自动注册图标组件
+        IconsResolver({
+          // 限定启用指定图标集（可选）
+          // 若启用多个图标集，可设置为 ['ep', 'mdi', 'tabler'] 等
+          // 不指定时默认启用所有已安装图标集
+          enabledCollections: ['ep'],
+          // 自定义前缀，默认前缀为 'i'，可通过设置为 false | '' 来禁用前缀
+          // 例如：默认情况下，图标组件名称为 <IEpAddLocation />
+          // 例如：设置为 'Icon'，则图标组件名称将变为 <IconEpAddLocation />
+          // 例如：设置为 false，则图标组件名称将变为 <EpAddLocation />
+          // prefix: 'Icon',
+        }),
+      ],
+      // 指定自定义组件位置
+      dirs: ['src/**/components'],
+    }),
+    Icons({
+      // 启用图标集自动安装
+      autoInstall: true,
+    }),
+  ],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // 自动注入变量，无需在每个文件中单独引入
+        additionalData: `@use "@/styles/variables.scss" as *;`,
+      },
+    },
+  },
+})
+```
+
+##### 使用示例
+
+```vue
+<template>
+  <div class="mb-4">
+    <IEpAddLocation />
+    <IEpMapLocation h-48px w-48px text-red />
+    <IEpSetting text-5xl text-cyan />
+  </div>
+</template>
+```
+
+#### 本地 SVG 图标集成
+
+对于需要集成本地自定义图标的团队（如配合设计师工作），推荐使用 [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons) 插件，实现本地 SVG 图标的高效加载与统一管理。
+
+##### 安装插件
+
+```bash
+pnpm install -D vite-plugin-svg-icons
+```
+
+##### 配置 `vite.config.ts`
+
+```ts hl:10-11,53-62
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import { fileURLToPath, URL } from 'node:url'
+import UnoCSS from 'unocss/vite'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import IconsResolver from 'unplugin-icons/resolver'
+import Icons from 'unplugin-icons/vite'
+import path from 'node:path'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    vue(),
+    UnoCSS(),
+    AutoImport({
+      // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
+      // 自动导入 VueRouter 相关函数，如：useRouter 等
+      // 自动导入 Pinia 相关函数，如：createPinia，defineStore，storeToRefs 等
+      // 参考自： https://github.com/sxzz/element-plus-best-practices/blob/main/vite.config.ts
+      imports: ['vue', 'vue-router', 'pinia'],
+      // 自定义解析器
+      resolvers: [
+        // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
+        ElementPlusResolver(),
+        // 自动导入图标组件
+        IconsResolver(),
+      ],
+      // 指定哪些目录下的文件需要被扫描，并自动导入这些文件中导出的函数、变量等
+      dirs: ['src/composables/**'],
+    }),
+    Components({
+      resolvers: [
+        // 自动注册 Element Plus 组件
+        ElementPlusResolver(),
+        // 自动注册图标组件
+        IconsResolver({
+          // 限定启用指定图标集（可选）
+          // 若启用多个图标集，可设置为 ['ep', 'mdi', 'tabler'] 等
+          // 不指定时默认启用所有已安装图标集
+          enabledCollections: ['ep'],
+        }),
+      ],
+      // 指定自定义组件位置
+      dirs: ['src/**/components'],
+    }),
+    Icons({
+      // 启用图标集自动安装
+      autoInstall: true,
+    }),
+    createSvgIconsPlugin({
+      // 指定图标文件目录
+      iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
+      // 定义生成的 symbol ID 格式：默认值为 icon-[dir]-[name]
+      // - [prefix] 表示图标前缀
+      // - [dir] 表示图标所在子目录名称
+      // - [name] 表示图标文件名
+      // 最终生成的 ID 形如：icon-user 或 icon-folder-user
+      symbolId: 'icon-[dir]-[name]',
+    }),
+  ],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // 自动注入变量，无需在每个文件中单独引入
+        additionalData: `@use "@/styles/variables.scss" as *;`,
+      },
+    },
+  },
+})
+```
+
+###### 插件选项说明
+
+| 参数            | 类型                       | 默认值                   | 说明                                                    |
+| ------------- | ------------------------ | --------------------- | ----------------------------------------------------- |
+| `iconDirs`    | `string[]`               | -                     | 指定 SVG 图标所在目录，支持递归收集所有 SVG 文件                         |
+| `symbolId`    | `string`                 | `icon-[dir]-[name]`   | 生成图标的 symbol ID 格式，支持占位符 `[dir]`（目录）和 `[name]`（文件名）   |
+| `svgoOptions` | `boolean \| SvgoOptions` | `true`                | svg 压缩配置，可以是对象 [SVGO 配置](https://github.com/svg/svgo) |
+| `inject`      | `string`                 | `body-last`           | 指定 svgDom 的插入位置：`body-first` 或 `body-last`            |
+| `customDomId` | `string`                 | `__svg__icons__dom__` | svgDom 插入节点的 ID                                       |
+
+symbolId 命名规则：`icon-[dir]-[name]`
+- `[dir]`：子目录名称（用于区分不同文件夹下的同名图标）
+- `[name]`：SVG 文件名
+
+```
+src/assets/icons
+├── icon1.svg              → icon-icon1
+├── icon2.svg              → icon-icon2
+├── icon3.svg              → icon-icon3
+├── dir/
+│   └── icon1.svg          → icon-dir-icon1
+└── dir/dir2/
+    └── icon1.svg          → icon-dir-dir2-icon1
+```
+
+##### 声明虚拟模块
+
+> [!note]
+> **必须执行此步骤**，否则在 `main.ts` 中引入 `virtual:svg-icons-register` 时会报错：找不到模块 `"virtual:svg-icons-register"` 或其相应类型声明。
+> 详见：[vite-plugin-svg-icons#116](https://github.com/vbenjs/vite-plugin-svg-icons/issues/116)
+
+> [!info]
+> 以下内容参考自 `node_modules/vite-plugin-svg-icons/client.d.ts` 类型声明文件，手动添加至项目以通过类型检查。
+
+```ts file:vite-env.d.ts hl:3-15
+/// <reference types="vite/client" />
+
+// 声明 vite-plugin-svg-icons 提供的虚拟模块：用于自动注册 SVG 图标
+declare module 'virtual:svg-icons-register' {
+  // eslint-disable-next-line
+  const component: any
+  export default component
+}
+
+// 声明图标名称数组模块：返回所有已注册的图标名称，适用于图标选择器、预览等功能
+declare module 'virtual:svg-icons-names' {
+  // eslint-disable-next-line
+  const iconsNames: string[]
+  export default iconsNames
+}
+```
+
+- `/// <reference types="vite/client" />`
+	- 引入 Vite 的客户端类型声明，支持如 `import.meta.env` 等特性，是 Vite 项目的标准配置。
+- `declare module 'virtual:svg-icons-register'`
+    - 声明该虚拟模块用于自动将所有 SVG 图标注册为 `<symbol>` 注入到页面 `<body>` 中，使 `<use xlink:href="#icon-name" />` 生效。
+    - 使用方式见：[[#引入注册脚本]]
+- `declare module 'virtual:svg-icons-names'`
+	- 声明图标名称数组模块，导出一个 `string[]` 类型数组，包含所有已收集 SVG 图标的完整 ID（如 `icon-user`, `icon-folder-file`）。
+	- 适用于构建图标选择器、图标预览面板等场景。
+	- 使用示例：
+
+		```ts
+		import iconNames from 'virtual:svg-icons-names'
+		
+		iconNames.forEach(name => {
+		  console.log(name) // 输出 icon-user、icon-home 等
+		})
+		```
+
+##### 引入注册脚本
+
+在项目入口文件 `main.ts` 中引入：
+
+```ts
+import 'virtual:svg-icons-register'
+```
+
+##### 封装 SVG 图标组件
+
+为统一使用方式，建议封装一个通用 SVG 图标组件。
+
+```vue
+<template>
+  <svg class="svg-icon" v-bind="$attrs" aria-hidden="true">
+    <use :xlink:href="`#${symbolId}`" />
+  </svg>
+</template>
+
+<script setup lang="ts">
+const { prefix = 'icon', iconName } = defineProps<{
+  prefix?: string
+  iconName: string
+}>()
+
+const symbolId = computed(() => (iconName.startsWith(prefix) ? iconName : `${prefix}-${iconName}`))
+</script>
+
+<style lang="scss" scoped>
+.svg-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em; /* 因icon大小被设置为和字体大小一致，而span等标签的下边缘会和字体的基线对齐，故需设置一个往下的偏移比例，来纠正视觉上的未对齐效果 */
+  outline: none;
+  overflow: hidden;
+  fill: currentColor; /* 定义元素的颜色，currentColor是一个变量，这个变量的值就表示当前元素的color值，如果当前元素未设置color值，则从父元素继承 */
+}
+</style>
+```
+
+##### 使用示例
+
+```vue
+<template>
+  <svg-icon
+    v-for="iconName in iconNames"
+    :key="iconName"
+    :icon-name="iconName"
+    text-5xl
+    text-purple
+  ></svg-icon>
+</template>
+
+<script setup lang="ts">
+import iconNames from 'virtual:svg-icons-names'
+</script>
+```
+
 ## 推荐插件
 
 - [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
@@ -1394,24 +1714,27 @@ import '@/styles/index.scss'
 - [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 - [Vue - Official](https://marketplace.visualstudio.com/items/?itemName=Vue.volar)
 - [UnoCSS](https://marketplace.visualstudio.com/items/?itemName=antfu.unocss)
+- [Iconify IntelliSense](https://marketplace.visualstudio.com/items?itemName=antfu.iconify)
 
 在项目根目录下创建 `.vscode/extensions.json` 文件，内容如下所示：
 
-```json hl:2-8
+```json hl:3-9
 {
   "recommendations": [
     "Vue.volar",
     "dbaeumer.vscode-eslint",
     "maggie.eslint-rules-zh-plugin",
     "esbenp.prettier-vscode",
-    "editorconfig.editorconfig"
+    "editorconfig.editorconfig",
+    "antfu.unocss",
+    "antfu.iconify"
   ]
 }
 ```
 
 这样团队其他小伙伴在拉取代码使用 VSCode 打开之后，在扩展中输入 `@recommended` 就会推荐安装这些插件。
 
-## 扩展 | 补充
+## 扩展 & 补充
 
 ### SCSS 模块引入方式
 
@@ -1532,282 +1855,13 @@ $primary-color: #3498db;
 }
 ```
 
-### unplugin-vue-components
-
-> [!quote]
-> [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components#installation) Vue 的 **按需自动导入组件** 插件。
-
-🌟 功能亮点：
-- 💚 **开箱即用地支持 Vue 2 和 Vue 3**
-- ✨ **支持自动导入组件与指令**
-- ⚡ **兼容多种构建工具**：支持 Vite、Webpack、Rspack、Vue CLI、Rollup、esbuild 等（基于 `unplugin` 实现）
-- 🏝 **按需注册，自动 Tree-shaking**：仅注册实际使用的组件
-- 🪐 **支持"文件夹作为命名空间"**，避免组件命名冲突
-- 🦾 **完整的 TypeScript 支持**，自动生成类型声明文件
-- 🌈 **内置常用 UI 库的解析器**（如 Element Plus、Ant Design Vue、Naive UI 等）
-- 😃 **可与 `unplugin-icons` 无缝集成**，自动注册图标组件
-
-#### 安装
-
-```bash
-pnpm install -D unplugin-vue-components
-```
-
-#### 集成
-
-```ts file:vite.config.ts hl:1,5
-import Components from 'unplugin-vue-components/vite'
-
-export default defineConfig({
-  plugins: [
-    Components({ /* options */ }),
-  ],
-})
-```
-
-#### 使用方式
-
-只需像平常一样在模板中使用组件即可，**无需手动导入和注册组件**！插件会自动按需导入组件。
-
-如果你的 **父组件本身是异步加载的**，比如你用 Vue Router 的懒加载语法：
-
-```ts
-{
-  path: '/about',
-  component: () => import('@/views/About.vue'), // 异步加载 About.vue
-}
-```
-
-那么，**`unplugin-vue-components ` 自动导入的子组件**，比如 `ElButton`、`MyCard.vue` 等，**也不会提前打包进主包**，而是和父组件一起，被 Webpack 或 Vite 代码分割（code splitting），**按需加载**。
-
-这可以：
-
-- 减少初始包体积
-- 提高页面加载速度（特别是首屏）
-- 提升整体性能，尤其是组件量大、页面多的项目
-
-换句话说：自动导入的子组件，会"跟着"父组件走，如果父组件是懒加载的，那它们也不会提前被加载，而是懒加载时一起加载。
-
-你写的代码：
-
-```vue
-<template>
-  <div>
-    <HelloWorld msg="Hello Vue 3.0 + Vite" />
-  </div>
-</template>
-
-<script>
-export default {
-  name: 'App',
-}
-</script>
-```
-
-等价于：
-
-```vue hl:8,12-14
-<template>
-  <div>
-    <HelloWorld msg="Hello Vue 3.0 + Vite" />
-  </div>
-</template>
-
-<script>
-import HelloWorld from './src/components/HelloWorld.vue'
-
-export default {
-  name: 'App',
-  components: {
-    HelloWorld,
-  },
-}
-</script>
-```
-
-> [!tip] 默认行为
-> 插件默认会扫描 `src/components` 目录下的组件并进行自动导入。如果你有自定义的组件目录，可以通过 `dirs` 选项进行修改。
-
-#### TypeScript 支持
-
-要为自动导入的组件启用 TypeScript 类型提示，Vue 3 社区已提交相关 PR 来扩展全局组件接口。目前 [Volar](https://github.com/vuejs/language-tools) 已原生支持该特性。
-
-如果你使用 Volar，只需启用 `dts` 选项：
-
-```ts
-Components({
-  dts: true, // 如果项目中已安装 TypeScript，默认会启用
-})
-```
-
-配置完成后，插件会在项目中自动生成并维护一个 `components.d.ts` 文件，其中包含所有自动导入组件的类型定义。
-
-你可以根据项目需求选择是否将该文件提交至 Git 版本控制中。
-
-> [!note]
-> **别忘了将 `components.d.ts` 添加到 `tsconfig.json` 的 `include` 中！**
-
-#### 支持 UI 组件库的自动导入
-
-`unplugin-vue-components` 内置了多个流行 UI 库的解析器（resolvers），可用于按需自动导入对应组件和样式。只需启用相应的解析器即可。
-
-支持的 UI 库包括：
-
-- [Ant Design Vue](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/antdv.ts)
-- [Arco Design Vue](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/arco.ts)
-- [BootstrapVue](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/bootstrap-vue.ts)
-- [Element Plus](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/element-plus.ts)
-- [Element UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/element-ui.ts)
-- [Headless UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/headless-ui.ts)
-- [IDux](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/idux.ts)
-- [Inkline](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/inkline.ts)
-- [Ionic](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/ionic.ts)
-- [Naive UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/naive-ui.ts)
-- [Prime Vue](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/prime-vue.ts)
-- [Quasar](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/quasar.ts)
-- [TDesign](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/tdesign.ts)
-- [Vant](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/vant.ts)
-    - 官方支持自动导入：[`@vant/auto-import-resolver`](https://github.com/youzan/vant/blob/main/packages/vant-auto-import-resolver/README.md)
-- [Varlet UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/varlet-ui.ts)
-    - 官方支持自动导入：[`@varlet/import-resolver`](https://github.com/varletjs/varlet/blob/dev/packages/varlet-import-resolver/README.md)
-- [VEUI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/veui.ts)
-- [View UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/view-ui.ts)
-- [Vuetify](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/vuetify.ts) （建议优先使用其官方插件），支持 [v3 + vite](https://www.npmjs.com/package/vite-plugin-vuetify), [v3 + webpack](https://www.npmjs.com/package/webpack-plugin-vuetify), [v2 + webpack](https://npmjs.com/package/vuetify-loader)
-- [VueUse Components](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/vueuse.ts)
-- [VueUse Directives](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/vueuse-directive.ts)
-- [Dev UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/devui.ts)
-
-使用示例：
-
-```ts hl:2,7
-import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-
-Components({
-  resolvers: [
-    // 自动导入 Element Plus 组件
-    ElementPlusResolver(),
-  ],
-})
-
-```
-
-自定义解析器示例：你也可以快速编写自定义 resolver。例如手动导入 Vant 组件：
-
-```ts
-Components({
-  resolvers: [
-    (componentName) => {
-      // 所有组件名为 PascalCase（大驼峰）
-      if (componentName.startsWith('Van')) {
-        return {
-          name: componentName.slice(3), // 去除前缀 "Van"
-          from: 'vant',
-        }
-      }
-    },
-  ],
-})
-```
-
-#### 全局组件的类型声明支持
-
-部分库（如 Vue Router）会自动注册一些**全局组件**，例如 `<RouterLink>` 和 `<RouterView>`，你可以在任何地方直接使用它们，无需导入或注册。
-
-但这些全局组件**通常没有自动的 TypeScript 类型支持**，需要你手动声明其类型。为此，`unplugin-vue-components` 提供了 `types` 选项，仅用于**补充全局组件的类型声明**，不会做实际导入。
-
-```ts
-Components({
-  dts: true,
-  types: [
-    {
-      from: 'vue-router',
-      names: ['RouterLink', 'RouterView'],
-    },
-  ],
-})
-```
-
-上例会将 `RouterLink` 和 `RouterView` 的类型写入自动生成的 `components.d.ts` 文件中，提升开发体验和类型提示。
-
-**插件默认会自动检测如 `vue-router` 等已安装的库，并为其全局组件注册类型声明**。如果你想**禁用这一行为**，可以传入空数组：
-
-```ts
-Components({
-  types: [], // 完全关闭全局组件类型注册
-})
-```
-
-#### 配置项说明
-
-以下是 `unplugin-vue-components` 的默认配置及作用说明：
-
-```ts hl:3,16,20,23,26
-Components({
-  // 组件搜索目录（相对路径）
-  dirs: ['src/components'],
-
-  // 组件有效文件扩展名
-  extensions: ['vue'],
-
-  // 使用 Glob 模式匹配组件文件。配置后将忽略 dirs、extensions 和 directoryAsNamespace。
-  // 可使用 `!` 开头的负向匹配排除组件。
-  globs: ['src/components/*.{vue}'],
-
-  // 是否递归搜索子目录
-  deep: true,
-
-  // 自定义组件解析器（如 ElementPlusResolver、VantResolver 等）
-  resolvers: [],
-
-  // 是否生成 components.d.ts 类型声明文件，可设为文件路径（如：'src/typings/components.d.ts'）
-  // 默认在项目安装 TypeScript 时启用
-  dts: false,
-
-  // 使用子目录作为组件命名空间（避免重名组件冲突）
-  directoryAsNamespace: false,
-
-  // 折叠命名空间中组件目录与文件名中重复的前缀（需配合 directoryAsNamespace 使用）
-  collapseSamePrefixes: false,
-
-  // 指定无需作为命名空间前缀的子目录名
-  globalNamespaces: [],
-
-  // 是否自动导入 Vue 指令（Vue 3 默认开启；Vue 2 默认关闭）
-  // Vue 2 需安装 Babel 支持：npm install -D @babel/parser
-  directives: true,
-
-  // 路径转换钩子，可用于自定义路径映射
-  importPathTransform: v => v,
-
-  // 是否允许后注册的组件覆盖之前的同名组件
-  allowOverrides: false,
-
-  // 匹配目标文件（即需要插入组件导入的文件）
-  include: [/\.vue$/, /\.vue\?vue/, /\.vue\.[tj]sx?\?vue/],
-
-  // 排除的文件（不会插入导入）
-  exclude: [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/, /[\\/]\.nuxt[\\/]/],
-
-  // 排除的组件名（不会自动导入）
-  // 可用于排除异步组件或命名冲突的组件
-  excludeNames: [/^Async.+/],
-
-  // Vue 版本，自动检测为默认值
-  // 可显式指定：2 | 2.7 | 3
-  version: 2.7,
-
-  // 为全局注册的组件补充类型声明（不导入）
-  types: [],
-}
-```
-
 ### unplugin-auto-import
 
 > [!quote]
-> [`unplugin-auto-import`](https://github.com/unplugin/unplugin-auto-import) 是基于 [`unplugin`](https://github.com/unplugin/unplugin) 构建的插件，支持 Vite、Webpack、Rspack、Rollup、esbuild 等工具，实现 **API 自动按需导入**，并支持 TypeScript 类型提示。
+> [`unplugin-auto-import`](https://github.com/unplugin/unplugin-auto-import) 是基于 [`unplugin`](https://github.com/unplugin) 构建的插件，支持 Vite、Webpack、Rspack、Rollup、esbuild 等工具，实现 **API 自动按需导入**，并支持 TypeScript 类型提示。
 
 ✨ 特性亮点：
+
 - 💡 自动导入常用函数和 API，无需手动 `import`
 - 🧠 智能分析使用的函数并按需导入
 - 🪄 支持 **Vue**、React、**Pinia**、**Vue Router** 等常见库
@@ -1919,7 +1973,7 @@ AutoImport({
   },
 
   // 指定生成自动导入的类型声明文件（.d.ts）的路径（如：'src/typings/auto-imports.d.ts'）。
-  // 如果你的项目中已安装 TypeScript，默认会生成 './auto-imports.d.ts' 文件。
+  // 如果您的项目中已安装 TypeScript，默认会生成 './auto-imports.d.ts' 文件。
   // 设置为 false 可关闭类型声明文件的生成。
   dts: './auto-imports.d.ts',
 
@@ -1955,7 +2009,7 @@ AutoImport({
     // false：等价于 'writable'，变量可被修改
     // 'readonly'：明确指定只读
     // 'writable'：明确指定可写
-    // 推荐使用默认的 true，以确保你不会意外修改这些导入值。
+    // 推荐使用默认的 true，以确保您不会意外修改这些导入值。
     globalsPropValue: true,                
   },
 
@@ -1988,7 +2042,7 @@ AutoImport({
 
 ##### 报错信息
 
-在使用自动导入时，你可能会遇到如下 ESLint 报错：
+在使用自动导入时，您可能会遇到如下 ESLint 报错：
 
 ```perl
 'ref' is not defined. (no-undef)
@@ -2000,7 +2054,7 @@ AutoImport({
 
 ###### 方案一：直接禁用 `no-undef` 规则（推荐）
 
-如果你使用的是 TypeScript，建议**直接关闭 ESLint 的 `no-undef` 规则**，因为 TypeScript 本身就能准确检查未声明的变量，无需 ESLint 重复校验。
+如果您使用的是 TypeScript，建议**直接关闭 ESLint 的 `no-undef` 规则**，因为 TypeScript 本身就能准确检查未声明的变量，无需 ESLint 重复校验。
 
 ###### 方案二：自动生成 ESLint 全局变量声明配置
 
@@ -2026,3 +2080,459 @@ AutoImport({
 	  ],
 	}
 	```
+
+### unplugin-vue-components
+
+> [!quote]
+> [`unplugin-vue-components`](https://github.com/antfu/unplugin-vue-components) 是基于 [`unplugin`](https://github.com/unplugin) 构建的插件，用于 Vue 项目的 **自动按需导入组件和指令**，兼容多种构建工具，并提供完善的类型支持。
+
+✨ 特性亮点：
+
+- 💚 **支持 Vue 2 与 Vue 3**：无需额外配置，自动适配
+- ⚡ **自动导入组件与指令**：无需手动注册，直接在模板中使用即可
+- 📦 **构建工具兼容性强**：支持 Vite、Webpack、Rspack、Vue CLI、Rollup、esbuild 等
+- 🌴 **自动 Tree-shaking**：只引入实际使用的组件，构建体积更小
+- 🗂 **支持目录命名空间**：以文件夹名作为组件前缀，有效避免命名冲突
+- 🧾 **自动生成类型声明**：提供 `.d.ts` 文件，TypeScript 支持完善
+- 🧩 **内置主流 UI 库解析器**：如 Element Plus、Ant Design Vue、Naive UI、Vuetify 等，可自动注册其组件
+- 🔗 **与 `unplugin-icons` 无缝集成**：图标组件也可自动按需注册
+- 🛠 **高度可配置**：支持自定义解析器、组件路径、导入规则等高级用法
+
+#### 安装
+
+```bash
+pnpm install -D unplugin-vue-components
+```
+
+#### 集成
+
+```ts file:vite.config.ts hl:1,5
+import Components from 'unplugin-vue-components/vite'
+
+export default defineConfig({
+  plugins: [
+    Components({ /* options */ }),
+  ],
+})
+```
+
+#### 使用方式
+
+只需像平常一样在模板中使用组件即可，**无需手动导入和注册组件**！插件会自动按需导入组件。
+
+如果您的 **父组件本身是异步加载的**，比如您用 Vue Router 的懒加载语法：
+
+```ts
+{
+  path: '/about',
+  component: () => import('@/views/About.vue'), // 异步加载 About.vue
+}
+```
+
+那么，**`unplugin-vue-components ` 自动导入的子组件**，比如 `ElButton`、`MyCard.vue` 等，**也不会提前打包进主包**，而是和父组件一起，被 Webpack 或 Vite 代码分割（code splitting），**按需加载**。
+
+这可以：
+
+- 减少初始包体积
+- 提高页面加载速度（特别是首屏）
+- 提升整体性能，尤其是组件量大、页面多的项目
+
+换句话说：自动导入的子组件，会"跟着"父组件走，如果父组件是懒加载的，那它们也不会提前被加载，而是懒加载时一起加载。
+
+您写的代码：
+
+```vue
+<template>
+  <div>
+    <HelloWorld msg="Hello Vue 3.0 + Vite" />
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'App',
+}
+</script>
+```
+
+等价于：
+
+```vue hl:8,12-14
+<template>
+  <div>
+    <HelloWorld msg="Hello Vue 3.0 + Vite" />
+  </div>
+</template>
+
+<script>
+import HelloWorld from './src/components/HelloWorld.vue'
+
+export default {
+  name: 'App',
+  components: {
+    HelloWorld,
+  },
+}
+</script>
+```
+
+> [!tip] 默认行为
+> 插件默认会扫描 `src/components` 目录下的组件并进行自动导入。如果您有自定义的组件目录，可以通过 `dirs` 选项进行修改。
+
+#### TypeScript 支持
+
+要为自动导入的组件启用 TypeScript 类型提示，Vue 3 社区已提交相关 PR 来扩展全局组件接口。目前 [Volar](https://github.com/vuejs/language-tools) 已原生支持该特性。
+
+如果您使用 Volar，只需启用 `dts` 选项：
+
+```ts
+Components({
+  dts: true, // 如果项目中已安装 TypeScript，默认会启用
+})
+```
+
+配置完成后，插件会在项目中自动生成并维护一个 `components.d.ts` 文件，其中包含所有自动导入组件的类型定义。
+
+您可以根据项目需求选择是否将该文件提交至 Git 版本控制中。
+
+> [!note]
+> **别忘了将 `components.d.ts` 添加到 `tsconfig.json` 的 `include` 中！**
+
+#### 支持 UI 组件库的自动导入
+
+`unplugin-vue-components` 内置了多个流行 UI 库的解析器（resolvers），可用于按需自动导入对应组件和样式。只需启用相应的解析器即可。
+
+支持的 UI 库包括：
+
+- [Ant Design Vue](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/antdv.ts)
+- [Arco Design Vue](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/arco.ts)
+- [BootstrapVue](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/bootstrap-vue.ts)
+- [Element Plus](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/element-plus.ts)
+- [Element UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/element-ui.ts)
+- [Headless UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/headless-ui.ts)
+- [IDux](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/idux.ts)
+- [Inkline](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/inkline.ts)
+- [Ionic](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/ionic.ts)
+- [Naive UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/naive-ui.ts)
+- [Prime Vue](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/prime-vue.ts)
+- [Quasar](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/quasar.ts)
+- [TDesign](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/tdesign.ts)
+- [Vant](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/vant.ts)
+    - 官方支持自动导入：[`@vant/auto-import-resolver`](https://github.com/youzan/vant/blob/main/packages/vant-auto-import-resolver/README.md)
+- [Varlet UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/varlet-ui.ts)
+    - 官方支持自动导入：[`@varlet/import-resolver`](https://github.com/varletjs/varlet/blob/dev/packages/varlet-import-resolver/README.md)
+- [VEUI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/veui.ts)
+- [View UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/view-ui.ts)
+- [Vuetify](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/vuetify.ts) （建议优先使用其官方插件），支持 [v3 + vite](https://www.npmjs.com/package/vite-plugin-vuetify), [v3 + webpack](https://www.npmjs.com/package/webpack-plugin-vuetify), [v2 + webpack](https://npmjs.com/package/vuetify-loader)
+- [VueUse Components](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/vueuse.ts)
+- [VueUse Directives](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/vueuse-directive.ts)
+- [Dev UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/devui.ts)
+
+使用示例：
+
+```ts hl:2,7
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+
+Components({
+  resolvers: [
+    // 自动导入 Element Plus 组件
+    ElementPlusResolver(),
+  ],
+})
+
+```
+
+自定义解析器示例：您也可以快速编写自定义 resolver。例如手动导入 Vant 组件：
+
+```ts
+Components({
+  resolvers: [
+    (componentName) => {
+      // 所有组件名为 PascalCase（大驼峰）
+      if (componentName.startsWith('Van')) {
+        return {
+          name: componentName.slice(3), // 去除前缀 "Van"
+          from: 'vant',
+        }
+      }
+    },
+  ],
+})
+```
+
+#### 全局组件的类型声明支持
+
+部分库（如 Vue Router）会自动注册一些**全局组件**，例如 `<RouterLink>` 和 `<RouterView>`，您可以在任何地方直接使用它们，无需导入或注册。
+
+但这些全局组件**通常没有自动的 TypeScript 类型支持**，需要您手动声明其类型。为此，`unplugin-vue-components` 提供了 `types` 选项，仅用于**补充全局组件的类型声明**，不会做实际导入。
+
+```ts
+Components({
+  dts: true,
+  types: [
+    {
+      from: 'vue-router',
+      names: ['RouterLink', 'RouterView'],
+    },
+  ],
+})
+```
+
+上例会将 `RouterLink` 和 `RouterView` 的类型写入自动生成的 `components.d.ts` 文件中，提升开发体验和类型提示。
+
+**插件默认会自动检测如 `vue-router` 等已安装的库，并为其全局组件注册类型声明**。如果您想**禁用这一行为**，可以传入空数组：
+
+```ts
+Components({
+  types: [], // 完全关闭全局组件类型注册
+})
+```
+
+#### 配置项说明
+
+以下是 `unplugin-vue-components` 的默认配置及作用说明：
+
+```ts hl:3,16,20,23,26
+Components({
+  // 组件搜索目录（相对路径）
+  dirs: ['src/components'],
+
+  // 组件有效文件扩展名
+  extensions: ['vue'],
+
+  // 使用 Glob 模式匹配组件文件。配置后将忽略 dirs、extensions 和 directoryAsNamespace。
+  // 可使用 `!` 开头的负向匹配排除组件。
+  globs: ['src/components/*.{vue}'],
+
+  // 是否递归搜索子目录
+  deep: true,
+
+  // 自定义组件解析器（如 ElementPlusResolver、VantResolver 等）
+  resolvers: [],
+
+  // 是否生成 components.d.ts 类型声明文件，可设为文件路径（如：'src/typings/components.d.ts'）
+  // 默认在项目安装 TypeScript 时启用
+  dts: false,
+
+  // 使用子目录作为组件命名空间（避免重名组件冲突）
+  directoryAsNamespace: false,
+
+  // 折叠命名空间中组件目录与文件名中重复的前缀（需配合 directoryAsNamespace 使用）
+  collapseSamePrefixes: false,
+
+  // 指定无需作为命名空间前缀的子目录名
+  globalNamespaces: [],
+
+  // 是否自动导入 Vue 指令（Vue 3 默认开启；Vue 2 默认关闭）
+  // Vue 2 需安装 Babel 支持：npm install -D @babel/parser
+  directives: true,
+
+  // 路径转换钩子，可用于自定义路径映射
+  importPathTransform: v => v,
+
+  // 是否允许后注册的组件覆盖之前的同名组件
+  allowOverrides: false,
+
+  // 匹配目标文件（即需要插入组件导入的文件）
+  include: [/\.vue$/, /\.vue\?vue/, /\.vue\.[tj]sx?\?vue/],
+
+  // 排除的文件（不会插入导入）
+  exclude: [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/, /[\\/]\.nuxt[\\/]/],
+
+  // 排除的组件名（不会自动导入）
+  // 可用于排除异步组件或命名冲突的组件
+  excludeNames: [/^Async.+/],
+
+  // Vue 版本，自动检测为默认值
+  // 可显式指定：2 | 2.7 | 3
+  version: 2.7,
+
+  // 为全局注册的组件补充类型声明（不导入）
+  types: [],
+}
+```
+
+### unplugin-icons
+
+> [!quote]
+> [`unplugin-icons`](https://github.com/unplugin/unplugin-icons) 是基于 [`unplugin`](https://github.com/unplugin) 构建的插件，支持 Vite、Webpack、Rollup、Rspack、Nuxt 等构建工具，可将 [Iconify](https://iconify.design/) 上的图标自动转换为框架组件，并支持自动导入与 TypeScript 类型提示。
+
+✨ 特性亮点：
+
+- 🌍 **通用支持**：兼容多种构建工具与主流前端框架，跨平台使用无障碍
+- 🎨 **图标资源丰富**：内置 150+ 图标集、20 万+ 图标，包括品牌 Logo、Emoji 等
+- 📦 **构建工具适配**：原生支持 Vite、Webpack、Rollup、Nuxt、Rspack 等
+- ⚙️ **框架广泛兼容**：适用于 Vue 2 / Vue 3、React、Svelte、Solid、Web Components 等
+- 🚀 **自动按需加载**：仅打包实际使用的图标，构建更轻量高效
+- 🖨 **SSR/SSG 友好**：图标以组件形式编译，支持服务端渲染，避免闪烁（FOUC）
+- 🌈 **样式灵活**：可通过类名或 CSS 控制图标大小、颜色、动画等
+- 📥 **支持自定义图标**：支持加载本地或远程 SVG，自定义注册为组件
+- ⚡ **自动导入组件**：无需手动注册，直接使用 `<IconXXX />` 即可
+- 🦾 **TypeScript 支持完善**：自动生成类型声明，拥有完整提示与校验
+- 🔍 **图标浏览器集成**：[Icônes](https://icones.js.org/)，在线查找图标并复制组件名
+
+#### 安装
+
+##### 插件安装
+
+```bash
+pnpm install -D unplugin-icons
+```
+
+##### 图标集安装方式
+
+###### 安装完整图标集
+
+```bash
+pnpm install -D @iconify/json
+```
+
+- 包含全部图标集（约 120MB）
+- 可任意使用所有图标，无需再手动安装
+- **构建产物中只包含实际使用的图标**
+
+###### 安装指定图标集
+
+例如：仅安装 [Material Design Icons](https://icon-sets.iconify.design/mdi/)：
+
+```bash
+pnpm install -D @iconify-json/mdi
+```
+
+您也可以安装其他图标集，包名格式为：`@iconify-json/[图标集 ID]`。
+
+|图标集名称|图标集 ID|
+|---|---|
+|Element Plus| `ep` |
+|Material Design| `mdi` |
+|Tabler Icons| `tabler` |
+
+完整列表见：[Iconify 图标库](https://icon-sets.iconify.design/)
+
+###### 自动安装图标集 (推荐)
+
+通过启用 `autoInstall` 选项，在首次使用图标时会自动安装对应图标集，无需手动操作：
+
+```ts file:vite.config.ts hl:6
+import Icons from 'unplugin-icons/vite'
+
+export default defineConfig({
+  plugins: [
+    Icons({
+      autoInstall: true,
+    })
+  ],
+})
+```
+
+- 根据图标前缀（如 `ep`）自动安装对应图标集
+- 自动识别当前包管理器（npm / yarn / pnpm）
+
+![](https://img.xiaorang.fun/202505112253794.png)
+
+#### 配置自动导入与组件注册
+
+> [!quote]
+> 可配合 [[#unplugin-auto-import]]  和 [[#unplugin-vue-components]] 实现图标组件的自动导入与全局注册。
+
+```ts hl:2-4,12,18-23,26-29
+import { defineConfig } from 'vite'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import IconsResolver from 'unplugin-icons/resolver'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    AutoImport({
+      resolvers: [
+        // 自动导入图标组件
+        IconsResolver(),
+      ],
+    }),
+    Components({
+      resolvers: [
+        // 自动注册图标组件
+        IconsResolver({
+          // 限定启用指定图标集（可选）
+          // 若启用多个图标集，可设置为 ['ep', 'mdi', 'tabler'] 等
+          // 不指定时默认启用所有已安装图标集
+          enabledCollections: ['ep'],
+        }),
+      ],
+    }),
+    Icons({
+      // 启用图标集自动安装
+      autoInstall: true,
+    }),
+  ],
+})
+```
+
+#### 命名规则
+
+使用图标组件解析器（`IconsResolver`）时，**组件名称必须遵循特定的命名规则**，以便正确推断图标来源。
+
+##### 默认命名格式
+
+```text
+[prefix]-[图标集 ID]-[图标名称]
+```
+
+- `prefix`：组件前缀，默认为 `i`，可通过 `prefix` 选项自定义或禁用
+- `图标集 ID`：图标所属图标集，参考 [Iconify 图标集 ID](https://icon-sets.iconify.design/)
+- `图标名称`：图标在图标集中的名称
+
+例如，使用自定义前缀 `Icon` 时：
+
+```ts hl:20
+import { defineConfig } from 'vite'
+import Components from 'unplugin-vue-components/vite'
+import IconsResolver from 'unplugin-icons/resolver'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    Components({
+      resolvers: [
+        // 自动注册图标组件
+        IconsResolver({
+          // 限定启用指定图标集（可选）
+          // 若启用多个图标集，可设置为 ['ep', 'mdi', 'tabler'] 等
+          // 不指定时默认启用所有已安装图标集
+          enabledCollections: ['ep'],
+          // 自定义前缀，默认前缀为 'i'，可通过设置为 false | '' 来禁用前缀
+          // 例如：默认情况下，图标组件名称为 <IEpAddLocation />
+          // 例如：设置为 'Icon'，则图标组件名称将变为 <IconEpAddLocation />
+          // 例如：设置为 false，则图标组件名称将变为 <EpAddLocation />
+          prefix: 'Icon',
+        }),
+      ],
+    }),
+  ],
+})
+```
+
+##### 禁用前缀
+
+若希望组件名称更简洁，可将 `prefix` 显式设置为 `false` 或 `''`，但**建议配合 `enabledCollections` 限定图标集**，以避免与现有组件重名：
+
+```ts
+IconsResolver({
+  prefix: false,
+  enabledCollections: ['ep'], // 建议配合限制使用的图标集，避免命名冲突
+})
+```
+
+> [!tip] 推荐实践
+> 若通过将 `prefix` 显式设为 `false` 或者 `''` 来禁用前缀，请结合 `enabledCollections` 限定图标集范围，以避免与现有组件命名冲突。
+
+#### 使用示例
+
+```vue
+<template>
+  <i-ep-home />
+  <i-mdi-account-box style="font-size: 2em; color: red" />
+</template>
+```
