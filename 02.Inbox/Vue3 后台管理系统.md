@@ -4,7 +4,7 @@ tags:
   - Frontend/TypeScript
   - Project/后台管理系统
 create_time: 2025-05-02 18:56
-update_time: 2025/05/12 22:59
+update_time: 2025/05/15 17:56
 ---
 
 ## 创建项目
@@ -774,11 +774,8 @@ pnpm install -D unplugin-vue-components unplugin-auto-import
 
 ###### 配置 `vite.config.ts`
 
-```ts hl:5-7,14-35
+```ts hl:2-4,9-34
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { fileURLToPath, URL } from 'node:url'
-import UnoCSS from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
@@ -786,8 +783,6 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    vue(),
-    UnoCSS(),
     AutoImport({
       // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
       // 自动导入 VueRouter 相关函数，如：useRouter 等
@@ -801,6 +796,8 @@ export default defineConfig({
       ],
       // 指定哪些目录下的文件需要被扫描，并自动导入这些文件中导出的函数、变量等
       dirs: ['src/composables/**'],
+      // 指定生成的类型声明文件路径
+      dts: 'src/types/auto-imports.d.ts',
     }),
     Components({
       resolvers: [
@@ -809,21 +806,10 @@ export default defineConfig({
       ],
       // 指定自定义组件位置
       dirs: ['src/**/components'],
+	  // 指定生成的类型声明文件路径
+      dts: 'src/types/components.d.ts',
     }),
   ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        // 自动注入变量，无需在每个文件中单独引入
-        additionalData: `@use "@/styles/variables.scss" as *;`,
-      },
-    },
-  },
 })
 
 ```
@@ -836,7 +822,13 @@ export default defineConfig({
 
 ###### TypeScript 类型支持
 
-为确保类型提示和自动补全，在 `tsconfig.json` 的 `include` 选项中添加自动生成的 `auto-imports.d.ts` 和 `components.d.ts` 类型声明文件：
+为了获得完善的类型提示与自动补全，`unplugin-auto-import` 与 `unplugin-vue-components` 会自动生成 `auto-imports.d.ts` 和 `components.d.ts` 类型声明文件。
+
+无需手动将这两个 `.d.ts` 文件显式添加至 `tsconfig.app.json` 的 `include` 中。因为：
+- `"src/**/*.ts"` 会自动匹配 `src` 目录下所有的 `.ts` 和 `.d.ts` 文件；
+- 自动生成的声明文件位于 `src/types/`，已包含在该范围内。
+
+因此，保留默认配置即可，无需额外处理。
 
 ```ts file:tsconfig.app.json hl:17
 {
@@ -855,13 +847,16 @@ export default defineConfig({
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "auto-imports.d.ts", "components.d.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
 }
 ```
 
 ### UnoCSS 集成
 
-[**UnoCSS**](https://github.com/unocss/unocss) 是一个极简、性能极致的原子化 CSS 引擎，灵感来自 [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) 和 [Windi CSS](https://github.com/windicss/windicss)。它通过"按需生成（on-demand generation）"策略，仅构建页面中实际用到的样式，极大地减少了最终 CSS 的体积，并提供高度的可定制性和灵活的扩展机制。
+> [!quote]
+> [重新构想原子化 CSS (antfu.me)](https://antfu.me/posts/reimagine-atomic-css-zh)
+
+[**UnoCSS**](https://unocss.dev/) 是一个极简、性能极致的原子化 CSS 引擎，灵感来自 [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) 和 [Windi CSS](https://github.com/windicss/windicss)。它通过"按需生成（on-demand generation）"策略，仅构建页面中实际用到的样式，极大地减少了最终 CSS 的体积，并提供高度的可定制性和灵活的扩展机制。
 
 - **极速构建**：真正的按需生成，无需构建完整的样式文件，首次构建和热更新速度极快。
 - **原子化设计**：类名即功能，组合灵活，避免冗余类定义。
@@ -891,20 +886,14 @@ pnpm add -D unocss
 
 ###### 配置 `vite.config.ts`
 
-```ts hl:4,8
+```ts hl:3,7
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import { fileURLToPath, URL } from 'node:url'
 import UnoCSS from 'unocss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue(), UnoCSS()],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
-  },
 })
 ```
 
@@ -936,83 +925,13 @@ pnpm add -D @unocss/eslint-config
 
 ###### 配置 `eslint.config.js`
 
-```js hl:7,51
-import js from '@eslint/js' // 官方 JS 推荐规则插件（包含基础语法校验）
-import pluginVue from 'eslint-plugin-vue' // Vue 3 支持插件，提供适配 Vue 文件的规则集
+```js hl:2,6
 import { defineConfig } from 'eslint/config' // 用于类型安全地定义 ESLint 配置（Flat 模式专用）
-import globals from 'globals' // 浏览器 & Node 全局变量定义
-import tseslint from 'typescript-eslint' // TypeScript ESLint 支持插件，含推荐规则与专用解析器
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended' // Prettier 推荐规则集
 import unocss from '@unocss/eslint-config/flat' // UnoCSS 官方 ESLint Flat 模式规则集（包含原子类顺序和 attributify 属性顺序校验等）
 
 export default defineConfig([
-  {
-    // 通用规则：适用于 JS / TS / Vue 文件
-    files: ['**/*.{js,mjs,cjs,ts,vue}'],
-    // 启用官方 JS 插件
-    plugins: { js },
-    // 应用 JS 官方推荐规则集
-    extends: ['js/recommended'],
-  },
-  {
-    // 指定运行环境：支持浏览器和 Node.js 全局变量
-    files: ['**/*.{js,mjs,cjs,ts,vue}'],
-    languageOptions: { globals: { ...globals.browser, ...globals.node } },
-  },
-  // 应用 TypeScript 官方推荐配置（包括类型检查相关规则）
-  tseslint.configs.recommended,
-  // 应用 Vue 官方提供的基础规则（essential，可升级为 strongly-recommended 或 recommended）
-  pluginVue.configs['flat/essential'],
-  {
-    // 为 Vue 文件单独指定 TS 解析器，支持 <script lang="ts"> 正确解析
-    files: ['**/*.vue'],
-    languageOptions: { parserOptions: { parser: tseslint.parser } },
-  },
-  {
-    // 定义忽略的文件路径（不参与 ESLint 检查）
-    name: 'app/files-to-ignore',
-    ignores: [
-      // 忽略 node_modules 目录
-      '**/node_modules/**',
-      // 忽略打包输出目录
-      '**/dist/**',
-      // 忽略测试文件
-      '**/__tests__/**',
-      // 忽略样式文件
-      '**/*.css',
-      // 忽略类型声明文件
-      '**/*.d.ts',
-    ],
-  },
-  // 引入 Prettier 推荐配置（关闭 ESLint 格式冲突规则 + 启用 prettier 检查）
-  eslintPluginPrettierRecommended,
   // 引入 UnoCSS ESLint 插件（默认启用 order/order-attributify）
   unocss,
-  {
-    // 自定义规则
-    rules: {
-      // 变量声明未使用则发出警告（可帮助清理无效代码）
-      'no-unused-vars': 'warn',
-      // 使用 console.log 等输出语句时发出警告（生产环境应避免）
-      'no-console': 'warn',
-      // 使用 debugger 时发出警告
-      'no-debugger': 'warn',
-      // 禁止使用 var，建议使用 let 或 const
-      'no-var': 'error',
-      // 强制使用 === 和 !==，禁止 == 和 !=（避免类型转换引发 bug）
-      eqeqeq: ['error', 'always'],
-      // 强制函数要么总是有返回值，要么总是没有返回值，避免出现在某些分支有返回值、而另一些分支没有返回值的情况（提高代码可读性和稳定性）
-      'consistent-return': 'warn',
-      // 避免多余的分号
-      'no-extra-semi': 'warn',
-      // 属性顺序建议规范书写（增强一致性）
-      'vue/attributes-order': 'warn',
-      // 关闭 Vue HTML 缩进规则（交给 Prettier 等工具处理）
-      'vue/html-indent': 'off',
-      // 关闭 Vue 组件名必须为多词的限制（适用于如 Home.vue、Login.vue 等常见页面组件命名）
-      'vue/multi-word-component-names': 'off',
-    },
-  },
 ])
 ```
 
@@ -1202,19 +1121,25 @@ UnoCSS 提供多种转换器，可增强原子类在真实工程中的表达力�
 
 ##### 指令转换器
 
-`@unocss/transformer-directives` 是一个**指令式语法转换器**，支持在 CSS 或 `<style>` 标签中使用类似 Tailwind 的 `@apply`、`@screen`、`theme()` 等指令，极大提升了样式编写的直观性与复用性。
+`@unocss/transformer-directives` 是一个**指令式语法转换器**，支持在 CSS 或 `<style>` 标签中使用类似 Tailwind 的 `@apply`、`@screen`、`theme ()` 等指令，极大提升了样式编写的直观性与复用性。
 
-###### 安装
+###### 安装 (可选)
 
 ```bash
 pnpm add -D @unocss/transformer-directives
 ```
 
+> [!tip]
+> 该预设已内置于 `unocss` 包中，通常无需单独安装，直接导入即可：
+>
+> ```ts
+> import { transformerDirectives } from 'unocss'
+> ```
+
 ###### 配置 `uno.config.ts`
 
-```ts hl:2,6
-import { defineConfig, presetWind3, presetAttributify } from 'unocss'
-import transformerDirectives from '@unocss/transformer-directives'
+```ts hl:1,5
+import { defineConfig, presetWind3, presetAttributify, transformerDirectives } from 'unocss'
 
 export default defineConfig({
   presets: [presetWind3(), presetAttributify()],
@@ -1231,34 +1156,6 @@ export default defineConfig({
 ```
 
 通过 `@apply` 指令，可以将多个原子类组合应用于一个选择器，提升样式的复用性和可读性。
-
-### Normalize.css 集成
-
-[**Normalize.css**](https://necolas.github.io/normalize.css/) 是一种现代的 CSS 重置替代方案，旨在使浏览器渲染所有元素更加一致，符合现代标准。与传统的 CSS 重置不同，Normalize.css 保留了有用的默认样式，仅对存在差异的部分进行规范化。
-
-它的主要特点包括：
-
-- **保留有用的默认样式**：不像许多 CSS 重置那样完全移除所有默认样式，Normalize.css 保留了有用的默认值，避免了不必要的重复定义。
-- **规范化多种元素的样式**：为广泛的 HTML 元素提供一致的样式，确保在不同浏览器中呈现一致的外观。
-- **修复浏览器的 bug 和常见的不一致性**：解决了各个浏览器之间存在的已知问题和差异，提高了跨浏览器的兼容性。
-- **通过细微的修改提升可用性**：对某些元素进行微调，改善用户体验。
-- **使用详细的注释解释代码的作用**：每一部分代码都有清晰的注释，帮助开发者理解其目的和效果。
-
-通过引入 Normalize.css，可以为项目建立一个一致的基础样式，减少浏览器之间的差异，提高开发效率。
-
-#### 安装
-
-```bash
-pnpm install normalize.css
-```
-
-#### 引入方式
-
-在项目入口文件 `main.ts` 中引入：
-
-```ts
-import 'normalize.css/normalize.css'
-```
 
 ### SCSS 全局变量
 
@@ -1283,20 +1180,11 @@ $tagsViewHeight: 34px;
 
 #### 配置 Vite 自动注入变量
 
-```ts hl:14-21
+```ts hl:5-12
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { fileURLToPath, URL } from 'node:url'
-import UnoCSS from 'unocss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), UnoCSS()],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
-  },
   css: {
     preprocessorOptions: {
       scss: {
@@ -1310,7 +1198,7 @@ export default defineConfig({
 
 #### 生成 CSS 原生变量
 
-```scss hl:1-5
+```scss file:src/styles/index.scss hl:1-5
 :root {
   --sidebar-width: #{$sidebarWidth};
   --navbar-height: #{$navbarHeight};
@@ -1332,8 +1220,8 @@ import '@/styles/index.scss'
   <div class="sidebar-container">侧边导航栏</div>
   <div class="main-wrapper">
     <div class="header-container">
-      <div class="navbar">头部导航栏</div>
-      <div class="tags-view">标签栏</div>
+      <div class="navbar">顶部导航栏</div>
+      <div class="tags-view">标签导航栏</div>
   </div>
     <div class="content-container">
       <router-view></router-view>
@@ -1346,20 +1234,20 @@ import '@/styles/index.scss'
   .app-wrapper {
     @apply flex w-screen h-screen;
     .sidebar-container {
-      @apply w-[var(--sidebar-width)] bg-red;
+      @apply w-[var(--sidebar-width)] bg-red-300;
     }
     .main-wrapper {
       @apply flex flex-col flex-1;
       .header-container {
         .navbar {
-          @apply h-[var(--navbar-height)] bg-yellow;
+          @apply h-[var(--navbar-height)] bg-yellow-300;
         }
         .tags-view {
-          @apply h-[var(--tags-view-height)] bg-blue;
+          @apply h-[var(--tags-view-height)] bg-blue-300;
         }
       }
       .content-container {
-        @apply h-[calc(100vh-var(--navbar-height)-var(--tags-view-height))] bg-cyan;
+        @apply h-[calc(100vh-var(--navbar-height)-var(--tags-view-height))] bg-gray-100;
       }
     }
   }
@@ -1384,6 +1272,32 @@ import '@/styles/index.scss'
 > - CSS 原生变量建议写在 `:root` 或页面级容器中，确保作用域清晰。
 > - **UnoCSS 不支持 SCSS 编译期变量**（如 `$xx`），必须转为 `var (--xx)` 后配合原子类使用。
 
+### Normalize.css 集成
+
+[**Normalize.css**](https://necolas.github.io/normalize.css/) 是一种现代 CSS 重置方案，旨在统一不同浏览器对 HTML 元素的默认样式渲染，并符合当代标准。
+
+相较于传统的 CSS Reset，Normalize.css 具有以下优势：
+
+- **保留有价值的默认样式**：不会盲目清除所有浏览器默认样式，避免重复定义基础样式。
+- **统一不同浏览器的表现**：对多种 HTML 元素进行规范化，确保跨浏览器的一致性。
+- **修复已知兼容性问题**：解决浏览器间已知的样式 bug 和不一致行为。
+- **微调提升可用性**：对部分元素进行细致优化，改善用户体验。
+- **代码注释详尽**：内含丰富注释，便于理解每项规范的目的。
+
+引入 Normalize.css 可为项目建立一致、可靠的样式基础，减少浏览器差异带来的问题，提升开发效率。
+
+#### 安装
+
+```bash
+pnpm install normalize.css
+```
+
+#### 引入
+
+```scss file:src/styles/index.scss
+@use 'normalize.css/normalize.css';
+```
+
 ### 图标集成方案
 
 #### iconify 图标库集成
@@ -1398,44 +1312,27 @@ pnpm install -D unplugin-icons unplugin-auto-import unplugin-vue-components
 
 ##### 配置 `vite.config.ts`
 
-实现 ElementPlus 图标的自动按需导入与组件自动注册：
+实现 ElementPlus 图标的自动按需导入与组件自动注册，您可以参考[此模板](https://github.com/sxzz/element-plus-best-practices/blob/db2dfc983ccda5570033a0ac608a1bd9d9a7f658/vite.config.ts#L21-L58)。
 
-```ts hl:8-9,27,37-47,47-50
+```ts hl:4-5,14,20-30,33-36
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { fileURLToPath, URL } from 'node:url'
-import UnoCSS from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import IconsResolver from 'unplugin-icons/resolver'
 import Icons from 'unplugin-icons/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    vue(),
-    UnoCSS(),
     AutoImport({
-      // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
-      // 自动导入 VueRouter 相关函数，如：useRouter 等
-      // 自动导入 Pinia 相关函数，如：createPinia，defineStore，storeToRefs 等
-      // 参考自： https://github.com/sxzz/element-plus-best-practices/blob/main/vite.config.ts
-      imports: ['vue', 'vue-router', 'pinia'],
       // 自定义解析器
       resolvers: [
-        // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
-        ElementPlusResolver(),
         // 自动导入图标组件
         IconsResolver(),
       ],
-      // 指定哪些目录下的文件需要被扫描，并自动导入这些文件中导出的函数、变量等
-      dirs: ['src/composables/**'],
     }),
     Components({
       resolvers: [
-        // 自动注册 Element Plus 组件
-        ElementPlusResolver(),
         // 自动注册图标组件
         IconsResolver({
           // 限定启用指定图标集（可选）
@@ -1449,27 +1346,12 @@ export default defineConfig({
           // prefix: 'Icon',
         }),
       ],
-      // 指定自定义组件位置
-      dirs: ['src/**/components'],
     }),
     Icons({
       // 启用图标集自动安装
       autoInstall: true,
     }),
   ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        // 自动注入变量，无需在每个文件中单独引入
-        additionalData: `@use "@/styles/variables.scss" as *;`,
-      },
-    },
-  },
 })
 ```
 
@@ -1497,59 +1379,14 @@ pnpm install -D vite-plugin-svg-icons
 
 ##### 配置 `vite.config.ts`
 
-```ts hl:10-11,53-62
+```ts hl:2-3,8-17
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { fileURLToPath, URL } from 'node:url'
-import UnoCSS from 'unocss/vite'
-import AutoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-import IconsResolver from 'unplugin-icons/resolver'
-import Icons from 'unplugin-icons/vite'
 import path from 'node:path'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    vue(),
-    UnoCSS(),
-    AutoImport({
-      // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
-      // 自动导入 VueRouter 相关函数，如：useRouter 等
-      // 自动导入 Pinia 相关函数，如：createPinia，defineStore，storeToRefs 等
-      // 参考自： https://github.com/sxzz/element-plus-best-practices/blob/main/vite.config.ts
-      imports: ['vue', 'vue-router', 'pinia'],
-      // 自定义解析器
-      resolvers: [
-        // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
-        ElementPlusResolver(),
-        // 自动导入图标组件
-        IconsResolver(),
-      ],
-      // 指定哪些目录下的文件需要被扫描，并自动导入这些文件中导出的函数、变量等
-      dirs: ['src/composables/**'],
-    }),
-    Components({
-      resolvers: [
-        // 自动注册 Element Plus 组件
-        ElementPlusResolver(),
-        // 自动注册图标组件
-        IconsResolver({
-          // 限定启用指定图标集（可选）
-          // 若启用多个图标集，可设置为 ['ep', 'mdi', 'tabler'] 等
-          // 不指定时默认启用所有已安装图标集
-          enabledCollections: ['ep'],
-        }),
-      ],
-      // 指定自定义组件位置
-      dirs: ['src/**/components'],
-    }),
-    Icons({
-      // 启用图标集自动安装
-      autoInstall: true,
-    }),
     createSvgIconsPlugin({
       // 指定图标文件目录
       iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
@@ -1561,19 +1398,6 @@ export default defineConfig({
       symbolId: 'icon-[dir]-[name]',
     }),
   ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        // 自动注入变量，无需在每个文件中单独引入
-        additionalData: `@use "@/styles/variables.scss" as *;`,
-      },
-    },
-  },
 })
 ```
 
@@ -1605,7 +1429,7 @@ src/assets/icons
 ##### 声明虚拟模块
 
 > [!note]
-> **必须执行此步骤**，否则在 `main.ts` 中引入 `virtual:svg-icons-register` 时会报错：找不到模块 `"virtual:svg-icons-register"` 或其相应类型声明。
+> **必须执行此步骤**，否则在 `main.ts` 中引入 `virtual: svg-icons-register` 时会报错：找不到模块 `"virtual: svg-icons-register"` 或其相应类型声明。
 > 详见：[vite-plugin-svg-icons#116](https://github.com/vbenjs/vite-plugin-svg-icons/issues/116)
 
 > [!info]
@@ -1631,10 +1455,10 @@ declare module 'virtual:svg-icons-names' {
 
 - `/// <reference types="vite/client" />`
 	- 引入 Vite 的客户端类型声明，支持如 `import.meta.env` 等特性，是 Vite 项目的标准配置。
-- `declare module 'virtual:svg-icons-register'`
+- `declare module 'virtual: svg-icons-register'`
     - 声明该虚拟模块用于自动将所有 SVG 图标注册为 `<symbol>` 注入到页面 `<body>` 中，使 `<use xlink:href="#icon-name" />` 生效。
     - 使用方式见：[[#引入注册脚本]]
-- `declare module 'virtual:svg-icons-names'`
+- `declare module 'virtual: svg-icons-names'`
 	- 声明图标名称数组模块，导出一个 `string[]` 类型数组，包含所有已收集 SVG 图标的完整 ID（如 `icon-user`, `icon-folder-file`）。
 	- 适用于构建图标选择器、图标预览面板等场景。
 	- 使用示例：
@@ -1649,7 +1473,7 @@ declare module 'virtual:svg-icons-names' {
 
 ##### 引入注册脚本
 
-在项目入口文件 `main.ts` 中引入：
+在项目入口文件 `main. ts` 中引入：
 
 ```ts
 import 'virtual:svg-icons-register'
@@ -1705,6 +1529,314 @@ const symbolId = computed(() => (iconName.startsWith(prefix) ? iconName : `${pre
 import iconNames from 'virtual:svg-icons-names'
 </script>
 ```
+
+### VueUse 集成
+
+[VueUse](https://vueuse.org/) 是一组基于 Vue Composition API 的实用工具函数集合。在继续使用前，请确保你已掌握 [Composition API](https://cn.vuejs.org/guide/extras/composition-api-faq) 的基本概念。
+
+#### 安装
+
+```bash
+pnpm install @vueuse/core
+```
+
+#### 配置自动导入
+
+借助 [[#unplugin-auto-import]] 插件可实现自动导入 VueUse 中的常用函数（如 `useStorage`、`useTitle` 等）。
+
+```ts file:vite.config.ts hl:13
+import { defineConfig } from 'vite'
+import AutoImport from 'unplugin-auto-import/vite'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    AutoImport({
+      // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
+      // 自动导入 VueRouter 相关函数，如：useRouter 等
+      // 自动导入 Pinia 相关函数，如：createPinia，defineStore，storeToRefs 等
+      // 自动导入 @vueuse/core 相关函数，如：useStorage、useTitle 等
+      // 参考自： https://github.com/sxzz/element-plus-best-practices/blob/main/vite.config.ts
+      imports: ['vue', 'vue-router', 'pinia', '@vueuse/core'],
+    }),
+})
+```
+
+#### 使用示例
+
+以下是一个结合 [Pinia](https://pinia.vuejs.org/zh/) 状态管理和 [VueUse](https://vueuse.org/) 的 [`useStorage()`](https://vueuse.org/core/useStorage/) 工具函数的计数器示例。通过 `useStorage` 可将状态同步至 `localStorage`，实现本地持久化，页面刷新后依然保留计数值。
+
+```ts file:src/stores/counter.ts hl:2
+export const useCounterStore = defineStore('counter', () => {
+  const count = useStorage('count', 0)
+
+  const increment = () => {
+    count.value++
+  }
+
+  const decrement = () => {
+    count.value--
+  }
+  return { count, increment, decrement }
+})
+```
+
+```vue hl:3,10
+<template>
+  <div class="mb-4">
+    <el-input-number v-model="count" :min="1" :max="10" @change="handleChange" />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useCounterStore } from '@/stores/counter'
+
+const { count } = storeToRefs(useCounterStore())
+const handleChange = (value: number | undefined) => {
+  count.value = value
+}
+</script>
+```
+
+### 暗黑模式支持
+
+#### Element Plus 暗黑模式
+
+> [!quote]
+> 官方文档：
+> - 👉 [主题 | Element Plus](https://element-plus.org/zh-CN/guide/theming.html)
+> - 👉 [暗黑模式 | Element Plus](https://element-plus.org/zh-CN/guide/dark-mode.html)
+
+##### 如何启用？
+
+启用非常简单，只需在 HTML 根节点上添加 `.dark` 类名即可：
+
+```html
+<html class="dark">
+  <head></head>
+  <body></body>
+</html>
+```
+
+如果希望**动态切换明暗模式**，推荐使用 VueUse 提供的 [useDark](https://vueuse.org/core/useDark/) 实现响应式控制。
+
+##### 推荐目录结构
+
+```bash
+src/
+└── styles/
+    ├── element/
+    │   ├── light.scss        # 明亮主题变量（SCSS 变量覆盖）
+    │   ├── dark.scss         # 暗黑主题变量（CSS 变量覆盖）
+    │   └── index.scss        # 汇总统一导出
+    └── index.scss            # 全局样式入口（引入 ElementPlus Dark CSS 变量）
+```
+
+> [!note]
+> `light.scss` 与 `dark.scss` **必须分为两个独立文件**，因为 Sass **不允许在同一文件中多次 `@forward` 相同变量名（如 `$colors`）**，否则将导致变量名冲突和构建失败。
+
+##### 明亮模式变量（`light.scss`）
+
+```scss file:src/styles/element/light.scss
+/* just override what you need */
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: (
+    'primary': (
+      'base': #ff4c20,
+    ),
+  )
+);
+```
+
+##### 暗黑模式变量（`dark.scss`）
+
+```scss file:src/styles/element/dark.scss
+/* just override what you need */
+@forward 'element-plus/theme-chalk/src/dark/var.scss' with (
+  $colors: (
+    'primary': (
+      'base': #67c23a,
+    ),
+  )
+);
+```
+
+##### 变量汇总入口（`index.scss`）
+
+```scss file:src/styles/element/index.scss
+@use './light.scss' as *;
+@use './dark.scss' as *;
+```
+
+##### 全局样式入口（引入暗黑模式 CSS 变量）
+
+```scss file:src/styles/index.scss
+@use 'element-plus/theme-chalk/src/dark/css-vars.scss';
+```
+
+> [!important]
+> 在入口文件 `main.ts` 中引入 `src/styles/index.scss`，以加载变量定义和暗黑样式。
+
+##### Vite 配置：启用 Sass 支持 & 自动注入变量
+
+```ts file:vite.config.ts hl:14,21,25-32
+import { defineConfig } from 'vite'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    AutoImport({
+      // 自定义解析器
+      resolvers: [
+        // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
+        // 采用 SaSS 源文件的方式引入组件样式，以便通过 SCSS 变量覆盖实现主题定制
+        ElementPlusResolver({ importStyle: 'sass' }),
+      ],
+    }),
+    Components({
+      resolvers: [
+        // 自动注册 Element Plus 组件
+        // 采用 SaSS 源文件的方式引入组件样式，以便通过 SCSS 变量覆盖实现主题定制
+        ElementPlusResolver({ importStyle: 'sass' }),
+      ],
+    }),
+  ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // 自动注入变量，无需在每个文件中单独引入
+        additionalData: `@use "@/styles/element/index.scss" as *;`,
+      },
+    },
+  },
+})
+```
+
+#### UnoCSS 暗黑模式
+
+我们使用的是 [[#Wind3 预设 (推荐)|Wind3 预设]]，该预设默认启用[基于类名的暗黑模式](https://unocss.nodejs.cn/presets/wind3#dark-mode)。只需在原子类前加上 `dark:` 前缀，即可定义暗黑样式：
+
+```html
+<div class="dark:bg-red:10" />
+```
+
+编译后将自动生成对应的 CSS：
+
+```css
+.dark .dark\:bg-red\:10 {
+  background-color: rgb(248 113 113 / 0.1);
+}
+```
+
+#### 动态切换明暗模式
+
+使用 VueUse 提供的 [`useDark`](https://vueuse.org/core/useDark/) 和 [`useToggle`](https://vueuse.org/shared/useToggle/)，可轻松实现响应式的明暗主题切换：
+
+```vue
+<template>
+  <div class="h-100px w-150px flex items-center justify-center rounded-lg bg-gray-300 dark:bg-gray-700">
+    <el-button type="primary" @click="toggleDark()">
+      <template #icon>
+        <IEpMoon v-if="isDark" />
+        <IEpSunny v-else />
+      </template>
+    </el-button>
+  </div>
+</template>
+
+<script setup lang="ts">
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
+</script>
+```
+
+#### 明暗模式切换动画效果
+
+> [!quote] 推荐参考
+> - [View Transition API 实现主题切换动画效果](https://www.bilibili.com/video/BV18x4y187op?vd_source=84272a2d7f72158b38778819be5bc6ad)
+> - [B站客户端切换暗黑模式效果还原](https://www.bilibili.com/video/BV1iJ4m1T7CA?vd_source=84272a2d7f72158b38778819be5bc6ad)
+
+下面示例使用原生 [View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API) 实现从鼠标点击位置扩散的动态切换过渡：
+
+```vue hl:14-35
+<template>
+  <div class="h-100px w-150px flex items-center justify-center rounded-lg bg-gray-300 dark:bg-gray-700">
+    <el-button type="primary" @click="toggleDark">
+      <template #icon>
+        <IEpMoon v-if="isDark" />
+        <IEpSunny v-else />
+      </template>
+    </el-button>
+  </div>
+</template>
+
+<script setup lang="ts">
+const isDark = useDark()
+const toggleDark = (event: MouseEvent) => {
+  const x = event.clientX
+  const y = event.clientY
+  const endRadius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))
+  const transition = document.startViewTransition(async () => {
+    isDark.value = !isDark.value
+    await nextTick()
+  })
+  transition.ready.then(() => {
+    const clipPath = [`circle(0px at ${x}px ${y}px)`, `circle(${endRadius}px at ${x}px ${y}px)`]
+    document.documentElement.animate(
+      {
+        clipPath: isDark.value ? [...clipPath].reverse() : clipPath,
+      },
+      {
+        duration: 400,
+        easing: 'ease-out',
+        pseudoElement: isDark.value ? '::view-transition-old(root)' : '::view-transition-new(root)',
+      },
+    )
+  })
+}
+</script>
+```
+
+配套样式（用于控制 View Transition 层级）
+
+```scss hl:1-21
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+  animation: none;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
+.dark::view-transition-old(root) {
+  z-index: 9999;
+}
+
+.dark::view-transition-new(root) {
+  z-index: 1;
+}
+```
+
+### 环境变量与模式
+
+- [ ] TODO
+
+### Axios 封装
+
+- [ ] TODO
+
+### ECharts 封装
+
+- [ ] TODO
 
 ## 推荐插件
 
@@ -1972,9 +2104,9 @@ AutoImport({
     types: true, // 启用后，自动导入该目录下模块的类型定义
   },
 
-  // 指定生成自动导入的类型声明文件（.d.ts）的路径（如：'src/typings/auto-imports.d.ts'）。
-  // 如果您的项目中已安装 TypeScript，默认会生成 './auto-imports.d.ts' 文件。
-  // 设置为 false 可关闭类型声明文件的生成。
+  // 指定生成自动导入 API 的类型声明文件（.d.ts）的路径（如：'src/types/auto-imports.d.ts'）
+  // 如果您的项目中已安装 TypeScript，默认会生成 './auto-imports.d.ts' 文件
+  // 设置为 false 可关闭类型声明文件的生成
   dts: './auto-imports.d.ts',
 
   // 生成类型声明文件时需要忽略的函数（通过名称或正则）
@@ -2293,7 +2425,7 @@ Components({
 
 以下是 `unplugin-vue-components` 的默认配置及作用说明：
 
-```ts hl:3,16,20,23,26
+```ts hl:3,16,21,24,27
 Components({
   // 组件搜索目录（相对路径）
   dirs: ['src/components'],
@@ -2311,8 +2443,9 @@ Components({
   // 自定义组件解析器（如 ElementPlusResolver、VantResolver 等）
   resolvers: [],
 
-  // 是否生成 components.d.ts 类型声明文件，可设为文件路径（如：'src/typings/components.d.ts'）
-  // 默认在项目安装 TypeScript 时启用
+  // 指定生成自动注册组件的类型声明文件（.d.ts）的路径（如：'src/types/components.d.ts'）。
+  // 如果您的项目中已安装 TypeScript，默认会生成 './components.d.ts' 文件。
+  // 设置为 false 可关闭类型声明文件的生成。
   dts: false,
 
   // 使用子目录作为组件命名空间（避免重名组件冲突）
