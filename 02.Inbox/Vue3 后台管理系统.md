@@ -4,7 +4,7 @@ tags:
   - Frontend/TypeScript
   - Project/后台管理系统
 create_time: 2025-05-02 18:56
-update_time: 2025/05/15 17:56
+update_time: 2025/05/16 19:01
 ---
 
 ## 创建项目
@@ -1826,10 +1826,6 @@ const toggleDark = (event: MouseEvent) => {
 }
 ```
 
-### 环境变量与模式
-
-- [ ] TODO
-
 ### Axios 封装
 
 - [ ] TODO
@@ -2668,4 +2664,220 @@ IconsResolver({
   <i-ep-home />
   <i-mdi-account-box style="font-size: 2em; color: red" />
 </template>
+```
+
+### 环境变量与模式
+
+在前端工程中，环境变量常用于根据不同运行模式（如开发环境 `development` 或生产环境 `production`）控制代码行为，实现按环境区分的逻辑处理。
+
+#### 内置常量
+
+Vite 通过 `import.meta.env` 对象提供了一组内置常量，这些常量在开发时作为全局变量使用，在构建时会被静态替换，有助于实现更高效的 tree-shaking。这些常量在任意环境中均可使用：
+![](https://img.xiaorang.fun/202505161900396.png)
+
+- **`import.meta.env.MODE`**: 应用当前的[[#模式|运行模式]]。
+- **`import.meta.env.BASE_URL`**: 应用部署时的基础路径，由 [`base`](https://cn.vite.dev/config/shared-options.html#base) 配置项决定。
+- **`import.meta.env.PROD`**: 应用是否运行在生产环境（使用 `NODE_ENV='production'` 运行开发服务器或构建应用时使用 `NODE_ENV='production'` ）。
+- **`import.meta.env.DEV`**: 应用是否运行在开发环境 (永远与 `import.meta.env.PROD` 相反)。
+- **`import.meta.env.SSR`**: 应用是否运行在[服务端](https://cn.vite.dev/guide/ssr.html#conditional-logic)。
+
+#### 自定义环境变量
+
+Vite 会自动将 `.env` 文件中的环境变量注入至 `import.meta.env` 对象中。不过，为了防止意外将敏感变量暴露到客户端，**只有以 `VITE_` 前缀命名的变量**才会暴露给经过 Vite 处理的代码。该前缀可通过 [`envPrefix`](https://cn.vite.dev/config/shared-options.html#envprefix) 配置项进行自定义。
+
+例如下面这些环境变量：
+
+```env file:.env
+VITE_SOME_KEY=123
+DB_PASSWORD=foobar
+```
+
+上述示例中，只有 `VITE_SOME_KEY` 会被暴露为 `import.meta.env.VITE_SOME_KEY` 供客户端访问，而 `DB_PASSWORD` 则不会。
+
+```js
+console.log(import.meta.env.VITE_SOME_KEY) // "123"
+console.log(import.meta.env.DB_PASSWORD) // undefined
+```
+
+> [!note] 环境变量解析
+> 所有环境变量均以字符串形式注入。如上例所示，尽管 `VITE_SOME_KEY` 是一个数字，但它在解析后仍然会返回一个字符串。布尔类型的变量也同样如此。因此在使用时，请根据需要手动进行类型转换。
+
+##### `.env` 文件
+
+Vite 使用 [dotenv](https://github.com/motdotla/dotenv) 从指定的[环境目录](https://cn.vite.dev/config/shared-options.html#envdir)中加载以下几类环境变量文件：
+
+```text
+.env                # 所有情况下都会加载
+.env.local          # 所有情况下都会加载，但会被 git 忽略
+.env.[mode]         # 只在指定模式下加载
+.env.[mode].local   # 只在指定模式下加载，但会被 git 忽略
+```
+
+> [!tip] 加载优先级说明
+> - 模式特定文件（如 `.env.production`）优先级高于通用文件（如 `.env`）。
+> - `.env` 和 `.env.local` 文件始终加载，模式匹配时会额外加载对应的 `.env.[mode]` 和 `.env.[mode].local` 文件。
+> - 模式文件中的变量会覆盖通用文件中同名变量，但仅在 `.env` 和 `.env.local` 中定义的变量仍然可以在环境中使用。
+> - 启动命令行中声明的环境变量（如 `VITE_SOME_KEY=123 vite build`）具有最高的优先级，不会被 `.env` 类文件覆盖。
+> - `.env` 类文件会在 Vite 启动一开始时被加载，而改动会在重启服务器后生效。
+
+> [!warning] 安全注意事项
+> - `.env.*.local` 文件建议仅用于本地开发，可以包含敏感信息，务必将其加入 `.gitignore` 排除版本控制。
+> - 所有暴露给客户端的 `VITE_*` 变量最终都会打包进客户端代码，因此请勿包含任何敏感数据。
+
+##### TypeScript 的智能提示
+
+默认情况下，Vite 在 [`vite/client.d.ts`](https://github.com/vitejs/vite/blob/main/packages/vite/client.d.ts) 中为 `import.meta.env` 提供了基本类型定义。但若希望为自定义的 `VITE_` 前缀环境变量添加智能提示，可在 `src` 目录下添加 `vite-env.d.ts` 文件，扩展 `ImportMetaEnv` 接口：
+
+```ts file:vite-env.d.ts hl:3-10
+/// <reference types="vite/client" />
+
+interface ImportMetaEnv {
+  readonly VITE_APP_TITLE: string
+  // 更多环境变量...
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv
+}
+```
+
+如需进一步限制环境变量的使用范围，还可以启用严格模式，仅允许访问已声明的变量：
+
+```ts file:vite-env.d.ts hl:1-4
+interface ViteTypeOptions {
+  // 启用严格模式，禁止访问未声明的环境变量
+  strictImportMetaEnv: unknown
+}
+```
+
+#### HTML 中的环境变量替换
+
+Vite 支持在 HTML 文件中使用环境变量。你可以通过 `%CONST_NAME%` 的占位符语法插入 `import.meta.env` 中的任意变量：
+
+```html
+<h1>Vite is running in %MODE%</h1>
+<p>Using data from %VITE_API_URL%</p>
+```
+
+如果某个变量在 `import.meta.env` 中不存在（如 `%NON_EXISTENT%`），该占位符将被忽略，不会进行替换；而在 JavaScript 中访问未定义的 `import.meta.env.NON_EXISTENT` 则会返回 `undefined`。
+
+#### 模式
+
+Vite 通过 "模式" 区分不同的运行环境。默认情况下：
+
+- 执行 `vite` 或 `vite dev` 命令时，使用 `development` 模式；
+- 执行 `vite build` 命令时，使用 `production` 模式。
+
+这意味着当执行 `vite build` 命令时会自动加载 `.env.production` 文件中的环境变量：
+
+```text file:.env.production
+VITE_APP_TITLE=My App
+```
+
+在应用中，可以通过 `import.meta.env.VITE_APP_TITLE` 访问该变量。
+
+如需在构建时使用其他模式（如 `staging`），可通过 `--mode` 参数覆盖默认模式：
+
+```bash
+vite build --mode staging
+```
+
+并创建对应的 `.env.staging` 文件：
+
+```text file:.env.staging
+VITE_APP_TITLE=My App (staging)
+```
+
+由于 `vite build` 默认运行生产模式构建，你也可以通过使用不同的模式和对应的 `.env` 文件配置来改变它，用以运行开发模式的构建：
+
+```text file:.env.testing
+NODE_ENV=development
+```
+
+##### NODE_ENV 和模式的区别
+
+需要注意，`NODE_ENV`（即 `process.env.NODE_ENV`）与 Vite 的 "模式"（`mode`）是两个不同的概念。下表展示了不同命令组合对二者的影响：
+
+| 命令                                                   | NODE_ENV        | 模式（`mode`）      |
+| ---------------------------------------------------- | --------------- | --------------- |
+| `vite build`                                         | `"production"`  | `"production"`  |
+| `vite build --mode development`                      | `"production"`  | `"development"` |
+| `NODE_ENV=development vite build`                    | `"development"` | `"production"`  |
+| `NODE_ENV=development vite build --mode development` | `"development"` | `"development"` |
+
+`NODE_ENV` 和模式的不同值也会反映在相应的 `import.meta.env` 属性上：
+
+| 环境设置                   | `import.meta.env.PROD` | `import.meta.env.DEV` |
+| ---------------------- | ---------------------- | --------------------- |
+| `NODE_ENV=production`  | `true`                 | `false`               |
+| `NODE_ENV=development` | `false`                | `true`                |
+| `NODE_ENV=other`       | `false`                | `true`                |
+
+| 模式设置                 | `import.meta.env.MODE` |
+| -------------------- | ---------------------- |
+| `--mode production`  | `"production"`         |
+| `--mode development` | `"development"`        |
+| `--mode staging`     | `"staging"`            |
+
+> [!tip] `.env` 文件中的 `NODE_ENV`
+> `NODE_ENV=...` 可通过命令行参数或者在 `.env` 文件中指定。若在 `.env.[mode]` 中指定了 `NODE_ENV`，则可以使用模式来控制其值。尽管如此，`NODE_ENV` 与模式（`mode`）仍然是两个不同的概念。
+>
+> 使用命令行设置 `NODE_ENV=...` 的优势在于，它可以在 Vite 配置解析前生效，使你能在 `vite.config.ts` 中通过 `process.env.NODE_ENV` 读取该值，而无需等待 `.env` 文件加载。
+
+### 反向代理
+
+[`server.proxy`](https://cn.vite.dev/config/server-options.html#server-proxy) 选项用于为开发服务器配置自定义代理规则，常用于解决本地开发中的请求跨域问题。
+
+- 类型：`Record<string, string | ProxyOptions>`，即一个以路径前缀为键、代理配置为值的 `{ key: options }` 对象；
+- ✨所有以指定 `key` 开头的请求路径会被代理到对应目标地址；
+- ✨若 `key` 以 `^` 开头，则会被视为正则表达式进行匹配；
+- 可通过 `ProxyOptions.configure` 访问底层代理实例（[`http-proxy`](https://github.com/http-party/node-http-proxy) 对象），实现更细粒度的控制；
+- 匹配代理规则的请求将不会被 Vite 转换；
+- ✨若配置了非相对的基础路径 [`base`](https://cn.vite.dev/config/shared-options.html#base)，则必须在每个 `key` 前加上该 `base` 前缀。
+
+示例：
+
+```ts file:vite.config.ts hl:11-15
+export default defineConfig({
+  server: {
+    proxy: {
+      // 简写形式：
+      // http://localhost:5173/foo → http://localhost:4567/foo
+      '/foo': 'http://localhost:4567',
+
+      // 完整选项形式：
+      // http://localhost:5173/api/bar → http://jsonplaceholder.typicode.com/bar
+      '/api': {
+        target: 'http://jsonplaceholder.typicode.com',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/api/, ''),
+      },
+
+      // 正则匹配形式：
+      // http://localhost:5173/fallback/ → http://jsonplaceholder.typicode.com/...
+      '^/fallback/.*': {
+        target: 'http://jsonplaceholder.typicode.com',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/fallback/, ''),
+      },
+
+      // 使用 configure 自定义代理行为：
+      '/api': {
+        target: 'http://jsonplaceholder.typicode.com',
+        changeOrigin: true,
+        configure: (proxy, options) => {
+          // proxy 为 http-proxy 实例，可进行自定义处理
+        }
+      },
+
+      // WebSocket 代理（如 socket.io）：
+      // ws://localhost:5173/socket.io → ws://localhost:5174/socket.io
+      '/socket.io': {
+        target: 'ws://localhost:5174',
+        ws: true,
+        rewriteWsOrigin: true, // 注意：启用后需防范 CSRF 风险
+      },
+    },
+  },
+})
 ```
