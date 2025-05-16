@@ -4,7 +4,7 @@ tags:
   - Frontend/TypeScript
   - Project/后台管理系统
 create_time: 2025-05-02 18:56
-update_time: 2025/05/16 19:01
+update_time: 2025/05/16 23:46
 ---
 
 ## 创建项目
@@ -1826,9 +1826,35 @@ const toggleDark = (event: MouseEvent) => {
 }
 ```
 
-### Axios 封装
+### Axios 二次封装
 
-- [ ] TODO
+Axios 是一个基于 [promise](https://javascript.info/promise-basics) 的网络请求库，可在浏览器和 [[Node.js]] 环境中使用。它具备同构（[isomorphic](https://www.lullabot.com/articles/what-is-an-isomorphic-application)）特性，即同一套代码可以运行在浏览器和 `node.js` 中。在服务端它使用 [[Node.js]] 的 `http` 模块，在客户端 (浏览器) 则使用原生 `XMLHttpRequest` 实现。
+
+核心特性：
+
+- 支持在浏览器发送 [`XMLHttpRequest`](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) 请求；
+- 支持在 Node.js 中发送 [`http`](http://nodejs.org/api/http.html) 请求；
+- 完全基于 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) API；
+- 支持请求和响应拦截；
+- 请求和响应数据转换；
+- 支持请求取消与超时设置；
+- 查询参数支持嵌套结构序列化；
+- 自动处理请求体格式，支持：
+    - JSON（`application/json`）
+    - 表单数据（`multipart/form-data`）
+    - URL 编码（`application/x-www-form-urlencoded`）
+- 可将 HTML 表单自动转换为 JSON 发送；
+- 自动解析和转换 JSON 响应数据；
+- 提供请求进度信息（包括传输速度与剩余时间）；
+- 在 Node.js 中支持带宽限制；
+- 兼容标准的 FormData 和 Blob（包括 Node.js）；
+- 客户端支持防御 [XSRF](http://en.wikipedia.org/wiki/Cross-site_request_forgery)（跨站请求伪造）攻击。
+
+#### 安装
+
+```bash
+pnpm install axios
+```
 
 ### ECharts 封装
 
