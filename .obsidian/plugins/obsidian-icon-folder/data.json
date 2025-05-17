@@ -6,16 +6,16 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiGitBranchFill",
+      "RiGithubFill",
+      "RiJavaFill",
+      "RiNodejsFill",
+      "RiDatabase2Fill",
+      "RiNodejsLine",
       "RiCss3Line",
       "RiHtml5Line",
       "RiMovie2Line",
-      "RiBook2Line",
-      "RiBook3Fill",
-      "RiLinksLine",
-      "RiPlug2Line",
-      "LiFolderTree",
-      "LiFolderArchive",
-      "RiQuillPenFill"
+      "RiBook2Line"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
