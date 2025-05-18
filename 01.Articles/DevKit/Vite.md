@@ -1,6 +1,6 @@
 ---
 create_time: 2025-05-17T12:59:00
-update_time: 2025/05/18 12:14
+update_time: 2025/05/18 23:36
 tags:
   - Frontend/Vite
   - DevKit
@@ -276,7 +276,7 @@ export default defineConfig({
 })
 ```
 
-#### 配置项说明
+##### 配置项说明
 
 ```ts hl:12-38,48-60,70,85-87,96-106
 AutoImport({
@@ -489,6 +489,69 @@ export default defineConfig({
 })
 ```
 
+##### 配置项说明
+
+```ts hl:3,16,21,24,27
+Components({
+  // 组件搜索目录（相对路径）
+  dirs: ['src/components'],
+
+  // 组件有效文件扩展名
+  extensions: ['vue'],
+
+  // 使用 Glob 模式匹配组件文件。配置后将忽略 dirs、extensions 和 directoryAsNamespace。
+  // 可使用 `!` 开头的负向匹配排除组件。
+  globs: ['src/components/*.{vue}'],
+
+  // 是否递归搜索子目录
+  deep: true,
+
+  // 自定义组件解析器（如 ElementPlusResolver、VantResolver 等）
+  resolvers: [],
+
+  // 指定生成自动注册组件的类型声明文件（.d.ts）的路径（如：'src/types/components.d.ts'）。
+  // 如果您的项目中已安装 TypeScript，默认会生成 './components.d.ts' 文件。
+  // 设置为 false 可关闭类型声明文件的生成。
+  dts: false,
+
+  // 使用子目录作为组件命名空间（避免重名组件冲突）
+  directoryAsNamespace: false,
+
+  // 折叠命名空间中组件目录与文件名中重复的前缀（需配合 directoryAsNamespace 使用）
+  collapseSamePrefixes: false,
+
+  // 指定无需作为命名空间前缀的子目录名
+  globalNamespaces: [],
+
+  // 是否自动导入 Vue 指令（Vue 3 默认开启；Vue 2 默认关闭）
+  // Vue 2 需安装 Babel 支持：npm install -D @babel/parser
+  directives: true,
+
+  // 路径转换钩子，可用于自定义路径映射
+  importPathTransform: v => v,
+
+  // 是否允许后注册的组件覆盖之前的同名组件
+  allowOverrides: false,
+
+  // 匹配目标文件（即需要插入组件导入的文件）
+  include: [/\.vue$/, /\.vue\?vue/, /\.vue\.[tj]sx?\?vue/],
+
+  // 排除的文件（不会插入导入）
+  exclude: [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/, /[\\/]\.nuxt[\\/]/],
+
+  // 排除的组件名（不会自动导入）
+  // 可用于排除异步组件或命名冲突的组件
+  excludeNames: [/^Async.+/],
+
+  // Vue 版本，自动检测为默认值
+  // 可显式指定：2 | 2.7 | 3
+  version: 2.7,
+
+  // 为全局注册的组件补充类型声明（不导入）
+  types: [],
+}
+```
+
 #### 使用方式
 
 只需像平常一样在模板中使用组件即可，**无需手动导入和注册组件**！插件会自动按需导入组件。
@@ -660,71 +723,6 @@ Components({
 Components({
   types: [], // 完全关闭全局组件类型注册
 })
-```
-
-#### 配置项说明
-
-以下是 `unplugin-vue-components` 的默认配置及作用说明：
-
-```ts hl:3,16,21,24,27
-Components({
-  // 组件搜索目录（相对路径）
-  dirs: ['src/components'],
-
-  // 组件有效文件扩展名
-  extensions: ['vue'],
-
-  // 使用 Glob 模式匹配组件文件。配置后将忽略 dirs、extensions 和 directoryAsNamespace。
-  // 可使用 `!` 开头的负向匹配排除组件。
-  globs: ['src/components/*.{vue}'],
-
-  // 是否递归搜索子目录
-  deep: true,
-
-  // 自定义组件解析器（如 ElementPlusResolver、VantResolver 等）
-  resolvers: [],
-
-  // 指定生成自动注册组件的类型声明文件（.d.ts）的路径（如：'src/types/components.d.ts'）。
-  // 如果您的项目中已安装 TypeScript，默认会生成 './components.d.ts' 文件。
-  // 设置为 false 可关闭类型声明文件的生成。
-  dts: false,
-
-  // 使用子目录作为组件命名空间（避免重名组件冲突）
-  directoryAsNamespace: false,
-
-  // 折叠命名空间中组件目录与文件名中重复的前缀（需配合 directoryAsNamespace 使用）
-  collapseSamePrefixes: false,
-
-  // 指定无需作为命名空间前缀的子目录名
-  globalNamespaces: [],
-
-  // 是否自动导入 Vue 指令（Vue 3 默认开启；Vue 2 默认关闭）
-  // Vue 2 需安装 Babel 支持：npm install -D @babel/parser
-  directives: true,
-
-  // 路径转换钩子，可用于自定义路径映射
-  importPathTransform: v => v,
-
-  // 是否允许后注册的组件覆盖之前的同名组件
-  allowOverrides: false,
-
-  // 匹配目标文件（即需要插入组件导入的文件）
-  include: [/\.vue$/, /\.vue\?vue/, /\.vue\.[tj]sx?\?vue/],
-
-  // 排除的文件（不会插入导入）
-  exclude: [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/, /[\\/]\.nuxt[\\/]/],
-
-  // 排除的组件名（不会自动导入）
-  // 可用于排除异步组件或命名冲突的组件
-  excludeNames: [/^Async.+/],
-
-  // Vue 版本，自动检测为默认值
-  // 可显式指定：2 | 2.7 | 3
-  version: 2.7,
-
-  // 为全局注册的组件补充类型声明（不导入）
-  types: [],
-}
 ```
 
 ### unplugin-icons
@@ -910,3 +908,154 @@ IconsResolver({
   <i-mdi-account-box style="font-size: 2em; color: red" />
 </template>
 ```
+
+### vite-plugin-mock
+
+> [!quote]
+> [`vite-plugin-mock`](https://github.com/vbenjs/vite-plugin-mock) 是专为 Vite 开发环境设计的模拟接口插件，内置 [mockjs](https://github.com/nuysoft/Mock) 支持，提供强大的数据生成与接口模拟能力，适用于本地开发、前后端分离联调、无后端环境下调试等场景。
+
+✨ 特性亮点：
+
+- ⚡ **即开即用**：开发时无需依赖真实后端，快速模拟接口响应
+- 🔥 **热更新支持**：修改 mock 文件实时生效，无需重启
+- 🧠 **动态响应**：根据请求参数返回不同结果
+- 🎲 **mockjs 集成**：结构化随机数据生成，模拟分页、列表等复杂接口
+- 📁 **目录灵活**：支持自定义 mock 文件路径与匹配规则
+- 🌐 **生产可选启用**：可配置为仅在开发环境启用，或生产环境临时联调使用
+
+#### 安装
+
+```bash
+pnpm add mockjs
+pnpm add vite-plugin-mock @types/mockjs -D
+```
+
+#### 集成
+
+```ts file:vite.config.ts hl:3,10-13
+import { defineConfig, loadEnv } from 'vite'
+import { processEnv } from './vite/util'
+import { viteMockServe } from 'vite-plugin-mock'
+
+// https://vite.dev/config/
+export default defineConfig(({ mode, command }) => {
+  const env = processEnv(loadEnv(mode, './env'))
+  return {
+    plugins: [
+      viteMockServe({
+        mockPath: 'mock',
+        enable: command === 'build',
+      }),
+    ],
+  }
+})
+```
+
+##### 配置项说明
+
+```ts
+interface ViteMockOptions {
+    mockPath?: string;
+    configPath?: string;
+    ignore?: RegExp | ((fileName: string) => boolean);
+    watchFiles?: boolean;
+    enable?: boolean;
+    logger?: boolean;
+    cors?: boolean;
+}
+```
+
+| 选项名          | 类型                                          | 默认值                     | 说明                                                                                    |
+| ------------ | ------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------- |
+| `mockPath`   | `string`                                    | `'mock'`                | 指定 mock 接口文件所在目录。若 `watchFiles: true`，将监听此目录下的文件变更并实时同步到请求结果。若设置了 `configPath`，此项则无效。 |
+| `configPath` | `string`                                    | `'vite.mock.config.ts'` | 指定 mock 配置文件路径，优先级高于 `mockPath` 选项。配置文件需导出一个 mock 配置数组。                               |
+| `ignore`     | `RegExp` \| `(fileName: string) => boolean` | `undefined`             | 忽略匹配的文件，通常用于排除特定 mock 文件。                                                             |
+| `watchFiles` | `boolean`                                   | `true`                  | 监听文件变更并自动热更新。                                                                         |
+| `enable`     | `boolean`                                   | `true`                  | 是否启用 mock 功能。                                                                         |
+| `logger`     | `boolean`                                   | `true`                  | 是否在控制台输出 mock 请求日志，便于调试。                                                              |
+| `cors`       | `boolean`                                   | `false`                 | 是否为 mock 接口开启 CORS 跨域支持。                                                              |
+
+#### 创建 Mock 接口
+
+在 `mock/` 目录下新建 `.ts` 文件，导出一个 `MockMethod[]` 类型的接口数组：
+
+```ts file:user.ts
+import type { MockMethod } from 'vite-plugin-mock'
+import Mock from 'mockjs'
+
+export default [
+  {
+    url: '/api/system/user/list',
+    method: 'get',
+    response: ({ query }: { query: Partial<Record<'page' | 'pageSize', number>> }) => {
+      const page = Number(query.page || 1)
+      const pageSize = Number(query.pageSize || 10)
+      const total = 100
+      const list = Mock.mock({
+        [`items|${pageSize}`]: [
+          {
+            id: '@id',
+            name: '@cname',
+            age: '@integer(18, 30)',
+            avatar: '@image("50*50", "#4A7BF7", "User")',
+            address: '@county(true)',
+          },
+        ],
+      }).items
+
+      return {
+        code: '00000',
+        message: '一切ok',
+        data: {
+          page,
+          pageSize,
+          total,
+          list,
+        },
+      }
+    },
+  },
+] as MockMethod[]
+```
+
+##### `Mock.mock()`
+
+`Mock.mock()` 可用于快速生成结构化的随机数据，适合模拟分页接口、用户列表、表格数据等开发场景。其强大的模板语法支持多种数据类型与格式，是开发阶段替代真实后端的理想工具。
+
+| 字段        | 占位符                                  | 描述                                          |
+| --------- | ------------------------------------ | ------------------------------------------- |
+| `id`      | `@id`                                | 生成随机唯一标识符（UUID 格式）                          |
+| `name`    | `@cname`                             | 生成随机中文姓名                                    |
+| `age`     | `@integer(18, 30)`                   | 生成 18 到 30 之间的随机整数                          |
+| `address` | `@county(true)`                      | 生成包含省市的中国县级地址，如：`江苏省 南京市 玄武区`               |
+| `avatar`  | `@image("50x50", "#4A7BF7", "User")` | 生成指定尺寸 50×50 的占位图，背景色为 `#4A7BF7`，文字为 `User` |
+
+更多 Mock.js 语法请参考[官方文档](https://github.com/nuysoft/Mock/wiki/Syntax-Specification)。
+
+##### `MockMethod` 类型定义
+
+```ts
+{
+  // 请求地址（支持字符串或正则）
+  url: string;
+  // 请求方式，如 GET、POST、PUT 等
+  method?: MethodType;
+  // 模拟响应延迟（单位：毫秒）
+  timeout?: number;
+  // 响应状态码（默认 200）
+  statusCode?:number;
+  // 响应数据，可为对象或函数（支持获取请求参数）
+  response?: ((opt: { [key: string]: string; body: Record<string,any>; query:  Record<string,any>, headers: Record<string, any>; }) => any) | any;
+  // 返回非 JSON 响应（原始响应）
+  rawResponse?: (req: IncomingMessage, res: ServerResponse) => void;
+}
+```
+
+#### 测试
+
+在浏览器中访问以下地址，即可测试用户列表的 Mock 接口效果：
+
+📎 [http://localhost:3000/api/system/user/list?page=2&pageSize=5](http://localhost:3000/api/system/user/list?page=2&pageSize=5)
+
+请求参数表示获取第 2 页、每页 5 条数据。返回结果如下所示：
+![](https://img.xiaorang.fun/202505181904083.png)

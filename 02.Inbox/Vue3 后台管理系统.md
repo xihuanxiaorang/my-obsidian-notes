@@ -4,7 +4,7 @@ tags:
   - Frontend/TypeScript
   - Project/后台管理系统
 create_time: 2025-05-02 18:56
-update_time: 2025/05/18 15:49
+update_time: 2025/05/18 23:36
 ---
 
 ## 创建项目
@@ -1832,14 +1832,6 @@ const toggleDark = (event: MouseEvent) => {
 
 Vite 会自动加载环境目录中的 `.env` 文件，并将所有以 `VITE_` 开头的变量注入到 `import.meta.env` 中。[[Vite#^595cb7]]
 
-```text file:.env hl:2,5
-# 应用名称
-VITE_APP_TITLE = "Vue3 Admin"
-
-# 应用端口
-VITE_APP_PORT = 3000
-```
-
 > [!note]
 > `.env` 文件中所有值默认以字符串形式注入。若需使用布尔或数字类型，请手动转换，详见下方的[类型转换工具](#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%B7%A5%E5%85%B7)。
 
@@ -1939,8 +1931,6 @@ export function processEnv(env: Record<string, string>) {
 }
 ```
 
-### Mock 集成
-
 ### Axios 二次封装
 
 Axios 是一个基于 [promise](https://javascript.info/promise-basics) 的网络请求库，可在浏览器和 [[Node.js]] 环境中使用。它具备同构（[isomorphic](https://www.lullabot.com/articles/what-is-an-isomorphic-application)）特性，即同一套代码可以运行在浏览器和 `node.js` 中。在服务端它使用 [[Node.js]] 的 `http` 模块，在客户端 (浏览器) 则使用原生 `XMLHttpRequest` 实现。
@@ -1969,6 +1959,33 @@ Axios 是一个基于 [promise](https://javascript.info/promise-basics) 的网
 
 ```bash
 pnpm install axios
+```
+
+#### 准备工作
+
+推荐先阅读 [[Vite#环境变量与模式]] & [[Vite#vite-plugin-mock]]
+
+##### 自定义环境变量
+
+###### 定义 `.env` 文件
+
+```text file:.env hl:2,5
+# 应用名称
+VITE_APP_TITLE = "Vue3 Admin"
+
+# 应用端口
+VITE_APP_PORT = 3000
+```
+
+```text file:.env.development
+# 代理前缀
+VITE_APP_BASE_API = "/api"
+
+# 接口地址
+VITE_APP_API_URL = "http://localhost:8080"
+
+# 请求超时时间（单位：ms），为 0 表示不超时
+VITE_APP_API_TIMEOUT = 0
 ```
 
 ### ECharts 封装
