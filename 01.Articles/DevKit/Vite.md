@@ -1,6 +1,6 @@
 ---
 create_time: 2025-05-17T12:59:00
-update_time: 2025/05/17 13:12
+update_time: 2025/05/18 12:14
 tags:
   - Frontend/Vite
   - DevKit
@@ -23,7 +23,7 @@ Vite 通过 `import.meta.env` 对象提供了一组内置常量，这些常量�
 
 ### 自定义环境变量
 
-Vite 会自动将 `.env` 文件中的环境变量注入至 `import.meta.env` 对象中。不过，为了防止意外将敏感变量暴露到客户端，**只有以 `VITE_` 前缀命名的变量**才会暴露给经过 Vite 处理的代码。该前缀可通过 [`envPrefix`](https://cn.vite.dev/config/shared-options.html#envprefix) 配置项进行自定义。
+Vite 会自动将 `.env` 文件中的环境变量注入至 `import.meta.env` 对象中。不过，为了防止意外将敏感变量暴露到客户端，**只有以 `VITE_` 前缀命名的变量**才会暴露给经过 Vite 处理的代码。该前缀可通过 [`envPrefix`](https://cn.vite.dev/config/shared-options.html#envprefix) 配置项进行自定义。 ^595cb7
 
 例如下面这些环境变量：
 
@@ -40,7 +40,9 @@ console.log(import.meta.env.DB_PASSWORD) // undefined
 ```
 
 > [!note] 环境变量解析
-> 所有环境变量均以字符串形式注入。如上例所示，尽管 `VITE_SOME_KEY` 是一个数字，但它在解析后仍然会返回一个字符串。布尔类型的变量也同样如此。因此在使用时，请根据需要手动进行类型转换。
+> **所有环境变量均以字符串形式注入**。如上例所示，尽管 `VITE_SOME_KEY` 是一个数字，但它在解析后仍然会返回一个字符串。布尔类型的变量也同样如此。因此在使用时，请根据需要手动进行类型转换。
+
+^bfe456
 
 #### `.env` 文件
 
