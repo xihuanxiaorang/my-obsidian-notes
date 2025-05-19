@@ -4,7 +4,7 @@ tags:
   - Frontend/TypeScript
   - Project/后台管理系统
 create_time: 2025-05-02 18:56
-update_time: 2025/05/18 23:36
+update_time: 2025/05/19 22:34
 ---
 
 ## 创建项目
@@ -1828,16 +1828,27 @@ const toggleDark = (event: MouseEvent) => {
 
 ### 自定义环境变量
 
+> [!quote]
+> [[Vite#环境变量与模式]]
+
 #### 定义 `.env` 文件
 
-Vite 会自动加载环境目录中的 `.env` 文件，并将所有以 `VITE_` 开头的变量注入到 `import.meta.env` 中。[[Vite#^595cb7]]
+Vite 会自动加载环境目录中的 `.env` 文件，并将所有以 `VITE_` 开头的变量注入到 `import.meta.env` 中。
+
+```text file:.env hl:2,5
+# 应用名称
+VITE_APP_TITLE = "Vue3 Admin"
+
+# 应用端口
+VITE_APP_PORT = 3000
+```
 
 > [!note]
-> `.env` 文件中所有值默认以字符串形式注入。若需使用布尔或数字类型，请手动转换，详见下方的[类型转换工具](#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%B7%A5%E5%85%B7)。
+> **`.env` 文件中所有值默认以字符串形式注入**。若需使用布尔或数字类型，请手动转换。
 
 #### 类型提示支持
 
-为获得 TypeScript 智能提示，可扩展 `ImportMetaEnv` 接口。[[Vite#TypeScript 的智能提示]]
+为获得 TypeScript 智能提示，可扩展 `ImportMetaEnv` 接口。
 
 ```ts file:vite-env.d.ts hl:3-6,8-12,14-16
 /// <reference types="vite/client" />
@@ -1862,73 +1873,50 @@ interface ImportMeta {
 
 ##### 动态替换页面标题
 
-在 HTML 中使用 `%VITE_APP_TITLE%` 占位符动态替换页面标题。[[Vite#HTML 中的环境变量替换]]
+在 HTML 中使用 `%VITE_APP_TITLE%` 占位符动态替换页面标题。
 
 ```html file:index.html hl:7
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>%VITE_APP_TITLE%</title>
+	<meta charset="UTF-8" />
+	<link rel="icon" type="image/svg+xml" href="/vite.svg" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>%VITE_APP_TITLE%</title>
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
+	<div id="app"></div>
+	<script type="module" src="/src/main.ts"></script>
   </body>
 </html>
 ```
 
 ##### 设置开发服务器端口
 
-通过 `loadEnv()` 加载 `.env` 文件，并使用工具函数对类型进行处理。
-
-```ts file:vite.config.ts hl:2,6,9,15
+```ts file:vite.config.ts hl:5,8,14
 import { defineConfig, loadEnv } from 'vite'
-import { processEnv } from './vite/util'
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
-  const env = processEnv(loadEnv(mode, './env'))
+  const env = loadEnv(mode, './env')
   return {
-    // 环境目录
-    envDir: './env',
-    // 开发环境服务器配置
-    server: {
-      // 服务器主机名（允许通过局域网访问）
-      host: '0.0.0.0',
-      // 服务器端口
-      port: +env.VITE_APP_PORT,
-      // 启动后自动打开浏览器
-      open: true,
-      // 启用跨域请求支持（CORS）
-      cors: true,
-      // 启用热模块替换（Hot Module Replacement）
-      hmr: true,
-    },
+	// 环境目录
+	envDir: './env',
+	// 开发环境服务器配置
+	server: {
+	  // 服务器主机名（允许通过局域网访问）
+	  host: '0.0.0.0',
+	  // 服务器端口
+	  port: +env.VITE_APP_PORT,
+	  // 启动后自动打开浏览器
+	  open: true,
+	  // 启用跨域请求支持（CORS）
+	  cors: true,
+	  // 启用热模块替换（Hot Module Replacement）
+	  hmr: true,
+	},
   }
 })
-```
-
-###### 类型转换工具
-
-用于将 `.env` 文件中字符串类型的值转换为对应的布尔或数字等实际类型。[[Vite#^bfe456]]
-
-```ts file:util.ts
-export function processEnv(env: Record<string, string>) {
-  const parsedEnv: Record<string, string | boolean | number> = {}
-  Object.entries(env).forEach(([key, value]) => {
-    if (value === 'true' || value === 'false') {
-      parsedEnv[key] = value === 'true'
-    } else if (/^[-+]?\d*\.?\d+$/.test(value)) {
-      parsedEnv[key] = Number(value)
-    } else {
-      parsedEnv[key] = value
-    }
-  })
-  return parsedEnv
-}
 ```
 
 ### Axios 二次封装
@@ -1959,33 +1947,6 @@ Axios 是一个基于 [promise](https://javascript.info/promise-basics) 的网
 
 ```bash
 pnpm install axios
-```
-
-#### 准备工作
-
-推荐先阅读 [[Vite#环境变量与模式]] & [[Vite#vite-plugin-mock]]
-
-##### 自定义环境变量
-
-###### 定义 `.env` 文件
-
-```text file:.env hl:2,5
-# 应用名称
-VITE_APP_TITLE = "Vue3 Admin"
-
-# 应用端口
-VITE_APP_PORT = 3000
-```
-
-```text file:.env.development
-# 代理前缀
-VITE_APP_BASE_API = "/api"
-
-# 接口地址
-VITE_APP_API_URL = "http://localhost:8080"
-
-# 请求超时时间（单位：ms），为 0 表示不超时
-VITE_APP_API_TIMEOUT = 0
 ```
 
 ### ECharts 封装
