@@ -4,7 +4,7 @@ tags:
   - Frontend/TypeScript
   - Project/后台管理系统
 create_time: 2025-05-02 18:56
-update_time: 2025/05/26 12:40
+update_time: 2025/05/26 22:37
 ---
 
 ## 创建项目
@@ -1990,7 +1990,7 @@ interface ImportMeta {
 }
 ```
 
-#### 基础封装
+#### Axios 基础封装
 
 ##### 统一响应结构体
 
@@ -2045,7 +2045,7 @@ const ERROR_HANDLERS: {
 }
 ```
 
-##### 会话过期处理函数
+##### 会话过期处理
 
 ```ts file:request.ts
 const handleTokenExpired = () => {
@@ -2058,6 +2058,8 @@ const handleTokenExpired = () => {
 ```
 
 ##### Http 封装类
+
+###### 核心实现
 
 ```ts file:request.ts
 import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from 'axios'
@@ -2284,7 +2286,7 @@ delete = <T = any>(url: string, config?: AxiosRequestConfig) => {
 }
 ```
 
-##### 导出统一接口
+###### 导出请求实例
 
 ```ts file:request.ts
 const http = new Http()
@@ -2292,320 +2294,93 @@ export const { request, get, post, put, delete: del } = http
 export default http
 ```
 
-#### 全局 Loading 状态控制 (可选)
+#### API 模块封装
 
-##### Hook 函数 `useGlobalLoading()`
+##### 用户模块
 
-```
-composables
-|___ loading
-     |___ adapters
-     |    |___ elementplus.ts
-     |___ index.ts
-     |___ useLoading.ts
-```
+```ts file:api/modules/system/user/index.ts hl:10-12
+import { get } from '@/utils/request'
+import type { UserInfo } from './types'
 
-```ts file:composables/loading/useLoading.ts
-interface LoadingOptions {
-  /**
-   * 延迟显示的时间（ms），默认 200ms
-   */
-  delay?: number
-  /**
-   * 触发显示时的回调（如启动动画或加载遮罩）
-   */
-  onOpen?: () => void
-  /**
-   * 触发隐藏时的回调（如关闭动画或移除遮罩）
-   */
-  onClose?: () => void
-}
+const USER_BASE_URL = '/system/user'
 
 /**
- * 全局 loading 状态管理 Hook
- * - 支持延迟显示（防止短操作闪烁）
- * - 支持多请求叠加控制
- * @param delay 延迟显示的时间（默认 200ms）
- * @param onOpen 触发显示时的回调（如启动动画或加载遮罩）
- * @param onClose 触发隐藏时的回调（如关闭动画或移除遮罩）
+ * 获取当前登录用户信息
+ * @returns {Promise<UserInfo>} 当前登录用户信息
  */
-export const useLoading = ({
-  delay = 200,
-  onOpen = () => {},
-  onClose = () => {},
-}: LoadingOptions = {}) => {
-  /**
-   * 延迟触发的定时器引用
-   */
-  const delayTimer = ref<ReturnType<typeof setTimeout> | null>(null)
-
-  /**
-   * 活跃中的 loading 请求数量（支持并发叠加）
-   */
-  const activeCount = ref(0)
-
-  /**
-   * 当前是否处于 loading 状态
-   */
-  const isLoading = computed(() => activeCount.value > 0)
-
-  /**
-   * 清除延迟定时器（避免重复触发）
-   */
-  const clearDelayTimer = () => {
-    if (delayTimer.value) {
-      clearTimeout(delayTimer.value)
-      delayTimer.value = null
-    }
-  }
-
-  /**
-   * 显示 loading（触发外部 onOpen 回调）
-   */
-  const openLoading = () => {
-    onOpen()
-  }
-
-  /**
-   * 隐藏 loading（触发外部 onClose 回调）
-   */
-  const closeLoading = () => {
-    clearDelayTimer()
-    onClose()
-  }
-
-  /**
-   * 设置 loading 状态
-   * @param visible {true} 表示显示，{false} 表示隐藏
-   */
-  const setLoading = (visible: boolean) => {
-    // 更新计数器并限制最小值为 0
-    activeCount.value += visible ? 1 : -1
-    activeCount.value = Math.max(0, activeCount.value)
-
-    if (visible && activeCount.value === 1) {
-      // 清理可能存在的旧定时器（防抖处理）
-      clearDelayTimer()
-      // 延迟显示 loading（200ms 后触发，避免短期操作闪烁）
-      delayTimer.value = setTimeout(() => {
-        // 双重验证当前仍需显示 loading（防止状态过期）
-        if (activeCount.value > 0) {
-          openLoading()
-        }
-        delayTimer.value = null
-      }, delay)
-    }
-
-    if (!visible && activeCount.value === 0) {
-      closeLoading()
-    }
-  }
-
-  /**
-   * 显示 loading
-   */
-  const show = () => {
-    setLoading(true)
-  }
-
-  /**
-   * 隐藏 loading
-   */
-  const hide = () => {
-    setLoading(false)
-  }
-
-  return { isLoading, setLoading, show, hide }
+export const getUserInfo = (): Promise<UserInfo> => {
+  return get<UserInfo>(`${USER_BASE_URL}/me`)
 }
 ```
 
-```ts file:composables/loading/adapters/elementplus.ts
+##### 登录用户类型定义
+
+```ts file:api/modules/system/user/types.ts
 /**
- * 创建 Element Plus 的 loading 适配器
- * @returns { onOpen, onClose } 供 useLoading 使用
+ * 当前登录用户信息
  */
-export function createElementPlusLoadingAdapter(): {
-  onOpen: () => void
-  onClose: () => void
-} {
-  let instance: ReturnType<typeof ElLoading.service> | null = null
-
-  const onOpen = () => {
-    if (instance) return
-    instance = ElLoading.service({
-      lock: true,
-      text: '加载中...',
-      background: 'rgba(0, 0, 0, 0.5)',
-    })
-  }
-
-  const onClose = () => {
-    instance?.close()
-    instance = null
-  }
-
-  return { onOpen, onClose }
+export type UserInfo = {
+  /**
+   * 用户ID
+   */
+  userId: number
+  /**
+   * 用户名
+   */
+  username: string
+  /**
+   * 昵称
+   */
+  nickname: string
+  /**
+   * 头像URL
+   */
+  avatar: string
+  /**
+   * 角色集合
+   */
+  roles: string[]
+  /**
+   * 权限集合
+   */
+  permissions: string[]
 }
 ```
 
-```ts file:composables/loading/index.ts
-export const useGlobalLoading = () => {
-  return useLoading(createElementPlusLoadingAdapter())
-}
+##### 模块统一导出
+
+```ts file:api/index.ts
+export * as userApi from './modules/system/user'
 ```
 
-##### 扩展 Axios 请求配置
-
-```ts file:axios.d.ts
-import 'axios'
-
-declare module 'axios' {
-  export interface AxiosRequestConfig {
-    /**
-     * 是否显示 Loading 遮罩层
-     */
-    showLoading?: boolean
-  }
-}
+```ts file:api/types.ts
+export * from './modules/system/user/types'
 ```
 
-##### 完善 Http 封装类
+#### 使用示例：获取当前登录用户信息
 
-```ts request.ts hl:9,32,51-53,79-82,105-108
-class Http {
-  /**
-   * Axios 实例对象，封装所有请求的基础配置
-   */
-  private readonly axiosInstance: AxiosInstance
-  /**
-   * 全局 loading 控制器，用于统一管理请求 loading 状态
-   */
-  private readonly loadingControl = useGlobalLoading()
+```vue hl:3-7,12,14
+<template>
+  <div class="mb-4 flex gap-4">
+    <div v-loading="isLoading" class="box">
+      <el-avatar :src="userInfo?.avatar">
+        <SvgIcon icon-name="user" />
+      </el-avatar>
+    </div>
+  </div>
+</template>
 
-  constructor() {
-    this.axiosInstance = axios.create({
-      /**
-       * API 基础路径（从环境变量获取）
-       * @default import.meta.env.VITE_APP_BASE_API
-       */
-      baseURL: import.meta.env.VITE_APP_BASE_API,
-      /**
-       * 请求超时时间（单位：毫秒）
-       * @default Number(import.meta.env.VITE_APP_API_TIMEOUT)
-       */
-      timeout: Number(import.meta.env.VITE_APP_API_TIMEOUT),
-      /**
-       * 默认请求头配置
-       * @property Content-Type - 默认使用 JSON 格式
-       */
-      headers: { 'Content-Type': 'application/json;charset=utf-8' },
-      /**
-       * 自定义扩展配置：是否显示全局 loading
-       * @default true - 可通过请求配置覆盖
-       */
-      showLoading: true,
-    })
-    // 设置请求和响应拦截器
-    this.setupInterceptors()
-  }
+<script setup lang="ts">
+import { userApi } from '@/api'
 
-  /**
-   * 设置请求和响应拦截器
-   */
-  private setupInterceptors() {
-    // 添加请求拦截器
-    this.axiosInstance.interceptors.request.use(
-      (config) => {
-        // 在发送请求之前做些什么
-        const token = localStorage.getItem(ACCESS_TOKEN)
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`
-        }
+const { isLoading, state: userInfo } = useAsyncState(userApi.getUserInfo, null)
+</script>
 
-        if (config.showLoading) {
-          this.loadingControl.show()
-        }
-
-        return config
-      },
-      (error) => {
-        // 对请求错误做些什么
-        return Promise.reject(error)
-      },
-    )
-
-    // 添加响应拦截器
-    this.axiosInstance.interceptors.response.use(
-      (response: AxiosResponse<Result>) => this.handleSuccessResponse(response),
-      (error) => this.handleErrorResponse(error),
-    )
-  }
-
-  /**
-   * 处理成功响应（状态码 2xx）
-   * @param response - 原始响应对象
-   * @returns 业务数据 或 二进制响应对象
-   * @throws 当业务码非成功时抛出错误
-   */
-  private handleSuccessResponse(response: AxiosResponse<Result>) {
-    // 2xx 范围内的状态码都会触发该函数。
-    // 对响应数据做点什么
-    const config = response.config
-    if (config.showLoading) {
-      this.loadingControl.hide()
-    }
-
-    if (this.isBinaryResponse(response)) {
-      return response
-    }
-
-    const { code, message, data } = response.data
-    if (code === ResultCode.SUCCESS) {
-      return data
-    }
-
-    this.handleBusinessError(code)
-    return Promise.reject(new Error(message || '请求失败'))
-  }
-
-  /**
-   * 处理失败响应（状态码非 2xx 或网络错误、取消请求等）
-   * @param error - 错误对象
-   * @returns 始终返回 rejected 状态的 Promise
-   */
-  private handleErrorResponse(error: any) {
-    // 超出 2xx 范围的状态码都会触发该函数。
-    // 对响应错误做点什么
-    const config = error.config as AxiosRequestConfig
-    if (config?.showLoading) {
-      this.loadingControl.hide()
-    }
-
-    if (axios.isCancel(error)) {
-      return Promise.reject(new Error('请求被取消'))
-    }
-
-    if (!error.response) {
-      if (!navigator.onLine) {
-        ElMessage.error('网络已断开，请检查您的网络连接')
-        return Promise.reject(new Error('网络断开'))
-      }
-
-      if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
-        ElMessage.error('请求超时，请稍后重试')
-        return Promise.reject(new Error('请求超时'))
-      }
-
-      ElMessage.error('网络异常，请检查您的连接')
-      return Promise.reject(new Error('网络异常'))
-    }
-
-    this.handleHttpError(error.response?.status)
-    return Promise.reject(error)
-  }
-  
-  // ...
+<style lang="scss" scoped>
+.box {
+  @apply h-100px w-150px flex items-center justify-center rounded-lg bg-gray-300 dark:bg-gray-700;
 }
+</style>
 ```
 
 ### ECharts 封装
