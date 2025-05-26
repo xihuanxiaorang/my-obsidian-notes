@@ -4,7 +4,7 @@ tags:
   - Frontend/TypeScript
   - Project/后台管理系统
 create_time: 2025-05-02 18:56
-update_time: 2025/05/19 22:34
+update_time: 2025/05/26 12:40
 ---
 
 ## 创建项目
@@ -1921,13 +1921,13 @@ export default defineConfig(({ mode }) => {
 
 ### Axios 二次封装
 
-Axios 是一个基于 [promise](https://javascript.info/promise-basics) 的网络请求库，可在浏览器和 [[Node.js]] 环境中使用。它具备同构（[isomorphic](https://www.lullabot.com/articles/what-is-an-isomorphic-application)）特性，即同一套代码可以运行在浏览器和 `node.js` 中。在服务端它使用 [[Node.js]] 的 `http` 模块，在客户端 (浏览器) 则使用原生 `XMLHttpRequest` 实现。
+Axios 是一个基于 [promise](https://javascript.info/promise-basics) 的网络请求库，适用于浏览器和 [[Node.js]] 环境，具备同构（[isomorphic](https://www.lullabot.com/articles/what-is-an-isomorphic-application)）特性，即相同代码可运行于前后端。在服务端基于 `http` 模块，在客户端则使用原生 `XMLHttpRequest`。
 
 核心特性：
 
-- 支持在浏览器发送 [`XMLHttpRequest`](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) 请求；
-- 支持在 Node.js 中发送 [`http`](http://nodejs.org/api/http.html) 请求；
-- 完全基于 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) API；
+- 支持浏览器端发送 [`XMLHttpRequest`](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) 请求；
+- 支持 Node.js 中发送 [`http`](http://nodejs.org/api/http.html) 请求；
+- 基于原生 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)；
 - 支持请求和响应拦截；
 - 请求和响应数据转换；
 - 支持请求取消与超时设置；
@@ -1947,6 +1947,665 @@ Axios 是一个基于 [promise](https://javascript.info/promise-basics) 的网
 
 ```bash
 pnpm install axios
+```
+
+#### 添加环境变量
+
+```text file:.env hl:2
+# 请求超时时间（单位：ms）
+VITE_APP_API_TIMEOUT = 10000
+```
+
+```text file:.env.development hl:2,5,8
+# 代理前缀
+VITE_APP_BASE_API = "/api"
+
+# 接口地址
+VITE_APP_API_URL = "http://localhost:8080"
+
+# 请求超时时间（单位：ms），为 0 表示不超时
+VITE_APP_API_TIMEOUT = 0
+```
+
+```ts file:vite-env.d.ts hl:11-14
+/// <reference types="vite/client" />
+
+interface ViteTypeOptions {
+  // 启用严格模式，禁止访问未声明的环境变量
+  strictImportMetaEnv: unknown
+}
+
+interface ImportMetaEnv {
+  readonly VITE_APP_TITLE: string
+  readonly VITE_APP_PORT: number
+  readonly VITE_APP_BASE_API: string
+  readonly VITE_APP_API_URL: string
+  readonly VITE_APP_API_TIMEOUT: number
+  // 更多环境变量...
+}
+
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv
+}
+```
+
+#### 基础封装
+
+##### 统一响应结构体
+
+```ts file:request.ts
+interface Result<T = any> {
+  /**
+   * 响应码
+   */
+  code: string
+  /**
+   * 响应消息
+   */
+  message: string
+  /**
+   * 响应数据
+   */
+  data: T
+}
+```
+
+##### 错误处理映射表
+
+```ts file:request.ts
+const ERROR_HANDLERS: {
+  /**
+   * 业务错误处理器集合
+   * @key string - 业务错误码（对应 ResultCode 枚举值）
+   * @value () => void - 对应的错误处理函数
+   * @property default - 未匹配错误码时的默认处理器
+   */
+  business: Record<string, () => void> & { default: () => void }
+  /**
+   * HTTP 错误消息映射
+   * @key number - HTTP 状态码（如 400、500）
+   * @value string - 对应的友好错误提示
+   * @property default - 未匹配状态码时的默认提示
+   */
+  http: Record<number, string> & { default: string }
+} = {
+  business: {
+    [ResultCode.TOKEN_INVALID]: () => handleTokenExpired(),
+    default: () => ElMessage.error('未知业务错误'),
+  },
+  http: {
+    400: '请求参数错误',
+    401: '会话已过期，请重新登录',
+    403: '权限不足，请联系管理员',
+    404: '资源不存在，请联系管理员',
+    500: '服务器内部错误，请联系管理员',
+    default: '未知错误，请联系管理员',
+  },
+}
+```
+
+##### 会话过期处理函数
+
+```ts file:request.ts
+const handleTokenExpired = () => {
+  ElMessageBox.confirm('会话已过期，是否重新登录？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => location.reload())
+}
+```
+
+##### Http 封装类
+
+```ts file:request.ts
+import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from 'axios'
+import { ACCESS_TOKEN } from './constants'
+import ResultCode from '@/enums/ResultCode'
+
+/*******************************Http 请求封装*********************************/
+class Http {
+  /**
+   * Axios 实例对象，封装所有请求的基础配置
+   */
+  private readonly axiosInstance: AxiosInstance
+
+  constructor() {
+    this.axiosInstance = axios.create({
+      /**
+       * API 基础路径（从环境变量获取）
+       * @default import.meta.env.VITE_APP_BASE_API
+       */
+      baseURL: import.meta.env.VITE_APP_BASE_API,
+      /**
+       * 请求超时时间（单位：毫秒）
+       * @default Number(import.meta.env.VITE_APP_API_TIMEOUT)
+       */
+      timeout: Number(import.meta.env.VITE_APP_API_TIMEOUT),
+      /**
+       * 默认请求头配置
+       * @property Content-Type - 默认使用 JSON 格式
+       */
+      headers: { 'Content-Type': 'application/json;charset=utf-8' },
+    })
+    // 设置请求和响应拦截器
+    this.setupInterceptors()
+  }
+
+  /**
+   * 设置请求和响应拦截器
+   */
+  private setupInterceptors() {
+    // 添加请求拦截器
+    this.axiosInstance.interceptors.request.use(
+      (config) => {
+        // 在发送请求之前做些什么
+        const token = localStorage.getItem(ACCESS_TOKEN)
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`
+        }
+
+        return config
+      },
+      (error) => {
+        // 对请求错误做些什么
+        return Promise.reject(error)
+      },
+    )
+
+    // 添加响应拦截器
+    this.axiosInstance.interceptors.response.use(
+      (response: AxiosResponse<Result>) => this.handleSuccessResponse(response),
+      (error) => this.handleErrorResponse(error),
+    )
+  }
+
+  /**
+   * 处理成功响应（状态码 2xx）
+   * @param response - 原始响应对象
+   * @returns 业务数据 或 二进制响应对象
+   * @throws 当业务码非成功时抛出错误
+   */
+  private handleSuccessResponse(response: AxiosResponse<Result>) {
+    // 2xx 范围内的状态码都会触发该函数。
+    // 对响应数据做点什么
+    if (this.isBinaryResponse(response)) {
+      return response
+    }
+
+    const { code, message, data } = response.data
+    if (code === ResultCode.SUCCESS) {
+      return data
+    }
+
+    this.handleBusinessError(code)
+    return Promise.reject(new Error(message || '请求失败'))
+  }
+
+  /**
+   * 处理失败响应（状态码非 2xx 或网络错误、取消请求等）
+   * @param error - 错误对象
+   * @returns 始终返回 rejected 状态的 Promise
+   */
+  private handleErrorResponse(error: any) {
+    // 超出 2xx 范围的状态码都会触发该函数。
+    // 对响应错误做点什么
+    if (axios.isCancel(error)) {
+      return Promise.reject(new Error('请求被取消'))
+    }
+
+    if (!error.response) {
+      if (!navigator.onLine) {
+        ElMessage.error('网络已断开，请检查您的网络连接')
+        return Promise.reject(new Error('网络断开'))
+      }
+
+      if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+        ElMessage.error('请求超时，请稍后重试')
+        return Promise.reject(new Error('请求超时'))
+      }
+
+      ElMessage.error('网络异常，请检查您的连接')
+      return Promise.reject(new Error('网络异常'))
+    }
+
+    this.handleHttpError(error.response?.status)
+    return Promise.reject(error)
+  }
+
+  this.handleHttpError(error.response?.status)
+return Promise.reject(error)
+}
+
+/**
+   * 判断是否为二进制类型的响应（如文件下载）
+   *
+   * 用于跳过业务状态码解析，直接返回响应体。
+   * 通常 responseType 为 'blob' 或 'arraybuffer' 时，
+   * 表示服务端返回的是文件流（如导出 Excel、下载 PDF 等）。
+   *
+   * @param response - Axios 响应对象
+   * @returns 是否为二进制响应类型
+   */
+private isBinaryResponse(response: AxiosResponse) {
+  return response.config.responseType === 'blob' || response.config.responseType === 'arraybuffer'
+}
+
+/**
+   * 处理业务错误码
+   * @param code - 后端定义的错误码
+   */
+private handleBusinessError(code: string) {
+  const handler = ERROR_HANDLERS.business[code] || ERROR_HANDLERS.business.default
+  handler()
+}
+
+/**
+   * 处理 HTTP 状态码错误
+   * @param status - HTTP 状态码（如 401、500 等）
+   */
+private handleHttpError(status: number) {
+  const message = ERROR_HANDLERS.http[status] ?? ERROR_HANDLERS.http.default
+  ElMessage.error(message)
+}
+
+/**
+   * 发起通用请求
+   * @template T - 响应数据类型
+   * @param config - Axios 请求配置
+   * @returns Promise<T> - 返回处理后的业务数据 Promise
+   *
+   * @example
+   * request<{ list: [] }>({ url: '/api/list' })
+   */
+request = <T = any>(config: AxiosRequestConfig): Promise<T> => {
+  return this.axiosInstance.request(config)
+}
+
+/**
+   * GET 请求快捷方法
+   * @template T - 响应数据类型
+   * @param url - 请求地址
+   * @param params - 查询参数（拼接到 URL）
+   * @param config - 额外请求配置（可选）
+   */
+get = <T = any>(url: string, params?: any, config?: AxiosRequestConfig) => {
+  return this.request<T>({
+    ...config,
+    url,
+    method: 'GET',
+    params,
+  })
+}
+/**
+   * POST 请求方法
+   * @param url 请求地址
+   * @param data 请求参数
+   * @param config 请求配置
+   * @returns Promise<T>
+   */
+post = <T = any>(url: string, data?: any, config?: AxiosRequestConfig) => {
+  return this.request<T>({
+    ...config,
+    method: 'POST',
+    url,
+    data,
+  })
+}
+/**
+   * PUT 请求方法
+   * @param url 请求地址
+   * @param data 请求参数
+   * @param config 配置项
+   * @returns Promise<T>
+   */
+put = <T = any>(url: string, data?: any, config?: AxiosRequestConfig) => {
+  return this.request<T>({
+    ...config,
+    method: 'PUT',
+    url,
+    data,
+  })
+}
+/**
+   * DELETE 请求方法
+   * @param url 请求地址
+   * @param config 配置项
+   * @returns Promise<T>
+   */
+delete = <T = any>(url: string, config?: AxiosRequestConfig) => {
+  return this.request<T>({
+    ...config,
+    method: 'DELETE',
+    url,
+  })
+}
+}
+```
+
+##### 导出统一接口
+
+```ts file:request.ts
+const http = new Http()
+export const { request, get, post, put, delete: del } = http
+export default http
+```
+
+#### 全局 Loading 状态控制 (可选)
+
+##### Hook 函数 `useGlobalLoading()`
+
+```
+composables
+|___ loading
+     |___ adapters
+     |    |___ elementplus.ts
+     |___ index.ts
+     |___ useLoading.ts
+```
+
+```ts file:composables/loading/useLoading.ts
+interface LoadingOptions {
+  /**
+   * 延迟显示的时间（ms），默认 200ms
+   */
+  delay?: number
+  /**
+   * 触发显示时的回调（如启动动画或加载遮罩）
+   */
+  onOpen?: () => void
+  /**
+   * 触发隐藏时的回调（如关闭动画或移除遮罩）
+   */
+  onClose?: () => void
+}
+
+/**
+ * 全局 loading 状态管理 Hook
+ * - 支持延迟显示（防止短操作闪烁）
+ * - 支持多请求叠加控制
+ * @param delay 延迟显示的时间（默认 200ms）
+ * @param onOpen 触发显示时的回调（如启动动画或加载遮罩）
+ * @param onClose 触发隐藏时的回调（如关闭动画或移除遮罩）
+ */
+export const useLoading = ({
+  delay = 200,
+  onOpen = () => {},
+  onClose = () => {},
+}: LoadingOptions = {}) => {
+  /**
+   * 延迟触发的定时器引用
+   */
+  const delayTimer = ref<ReturnType<typeof setTimeout> | null>(null)
+
+  /**
+   * 活跃中的 loading 请求数量（支持并发叠加）
+   */
+  const activeCount = ref(0)
+
+  /**
+   * 当前是否处于 loading 状态
+   */
+  const isLoading = computed(() => activeCount.value > 0)
+
+  /**
+   * 清除延迟定时器（避免重复触发）
+   */
+  const clearDelayTimer = () => {
+    if (delayTimer.value) {
+      clearTimeout(delayTimer.value)
+      delayTimer.value = null
+    }
+  }
+
+  /**
+   * 显示 loading（触发外部 onOpen 回调）
+   */
+  const openLoading = () => {
+    onOpen()
+  }
+
+  /**
+   * 隐藏 loading（触发外部 onClose 回调）
+   */
+  const closeLoading = () => {
+    clearDelayTimer()
+    onClose()
+  }
+
+  /**
+   * 设置 loading 状态
+   * @param visible {true} 表示显示，{false} 表示隐藏
+   */
+  const setLoading = (visible: boolean) => {
+    // 更新计数器并限制最小值为 0
+    activeCount.value += visible ? 1 : -1
+    activeCount.value = Math.max(0, activeCount.value)
+
+    if (visible && activeCount.value === 1) {
+      // 清理可能存在的旧定时器（防抖处理）
+      clearDelayTimer()
+      // 延迟显示 loading（200ms 后触发，避免短期操作闪烁）
+      delayTimer.value = setTimeout(() => {
+        // 双重验证当前仍需显示 loading（防止状态过期）
+        if (activeCount.value > 0) {
+          openLoading()
+        }
+        delayTimer.value = null
+      }, delay)
+    }
+
+    if (!visible && activeCount.value === 0) {
+      closeLoading()
+    }
+  }
+
+  /**
+   * 显示 loading
+   */
+  const show = () => {
+    setLoading(true)
+  }
+
+  /**
+   * 隐藏 loading
+   */
+  const hide = () => {
+    setLoading(false)
+  }
+
+  return { isLoading, setLoading, show, hide }
+}
+```
+
+```ts file:composables/loading/adapters/elementplus.ts
+/**
+ * 创建 Element Plus 的 loading 适配器
+ * @returns { onOpen, onClose } 供 useLoading 使用
+ */
+export function createElementPlusLoadingAdapter(): {
+  onOpen: () => void
+  onClose: () => void
+} {
+  let instance: ReturnType<typeof ElLoading.service> | null = null
+
+  const onOpen = () => {
+    if (instance) return
+    instance = ElLoading.service({
+      lock: true,
+      text: '加载中...',
+      background: 'rgba(0, 0, 0, 0.5)',
+    })
+  }
+
+  const onClose = () => {
+    instance?.close()
+    instance = null
+  }
+
+  return { onOpen, onClose }
+}
+```
+
+```ts file:composables/loading/index.ts
+export const useGlobalLoading = () => {
+  return useLoading(createElementPlusLoadingAdapter())
+}
+```
+
+##### 扩展 Axios 请求配置
+
+```ts file:axios.d.ts
+import 'axios'
+
+declare module 'axios' {
+  export interface AxiosRequestConfig {
+    /**
+     * 是否显示 Loading 遮罩层
+     */
+    showLoading?: boolean
+  }
+}
+```
+
+##### 完善 Http 封装类
+
+```ts request.ts hl:9,32,51-53,79-82,105-108
+class Http {
+  /**
+   * Axios 实例对象，封装所有请求的基础配置
+   */
+  private readonly axiosInstance: AxiosInstance
+  /**
+   * 全局 loading 控制器，用于统一管理请求 loading 状态
+   */
+  private readonly loadingControl = useGlobalLoading()
+
+  constructor() {
+    this.axiosInstance = axios.create({
+      /**
+       * API 基础路径（从环境变量获取）
+       * @default import.meta.env.VITE_APP_BASE_API
+       */
+      baseURL: import.meta.env.VITE_APP_BASE_API,
+      /**
+       * 请求超时时间（单位：毫秒）
+       * @default Number(import.meta.env.VITE_APP_API_TIMEOUT)
+       */
+      timeout: Number(import.meta.env.VITE_APP_API_TIMEOUT),
+      /**
+       * 默认请求头配置
+       * @property Content-Type - 默认使用 JSON 格式
+       */
+      headers: { 'Content-Type': 'application/json;charset=utf-8' },
+      /**
+       * 自定义扩展配置：是否显示全局 loading
+       * @default true - 可通过请求配置覆盖
+       */
+      showLoading: true,
+    })
+    // 设置请求和响应拦截器
+    this.setupInterceptors()
+  }
+
+  /**
+   * 设置请求和响应拦截器
+   */
+  private setupInterceptors() {
+    // 添加请求拦截器
+    this.axiosInstance.interceptors.request.use(
+      (config) => {
+        // 在发送请求之前做些什么
+        const token = localStorage.getItem(ACCESS_TOKEN)
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`
+        }
+
+        if (config.showLoading) {
+          this.loadingControl.show()
+        }
+
+        return config
+      },
+      (error) => {
+        // 对请求错误做些什么
+        return Promise.reject(error)
+      },
+    )
+
+    // 添加响应拦截器
+    this.axiosInstance.interceptors.response.use(
+      (response: AxiosResponse<Result>) => this.handleSuccessResponse(response),
+      (error) => this.handleErrorResponse(error),
+    )
+  }
+
+  /**
+   * 处理成功响应（状态码 2xx）
+   * @param response - 原始响应对象
+   * @returns 业务数据 或 二进制响应对象
+   * @throws 当业务码非成功时抛出错误
+   */
+  private handleSuccessResponse(response: AxiosResponse<Result>) {
+    // 2xx 范围内的状态码都会触发该函数。
+    // 对响应数据做点什么
+    const config = response.config
+    if (config.showLoading) {
+      this.loadingControl.hide()
+    }
+
+    if (this.isBinaryResponse(response)) {
+      return response
+    }
+
+    const { code, message, data } = response.data
+    if (code === ResultCode.SUCCESS) {
+      return data
+    }
+
+    this.handleBusinessError(code)
+    return Promise.reject(new Error(message || '请求失败'))
+  }
+
+  /**
+   * 处理失败响应（状态码非 2xx 或网络错误、取消请求等）
+   * @param error - 错误对象
+   * @returns 始终返回 rejected 状态的 Promise
+   */
+  private handleErrorResponse(error: any) {
+    // 超出 2xx 范围的状态码都会触发该函数。
+    // 对响应错误做点什么
+    const config = error.config as AxiosRequestConfig
+    if (config?.showLoading) {
+      this.loadingControl.hide()
+    }
+
+    if (axios.isCancel(error)) {
+      return Promise.reject(new Error('请求被取消'))
+    }
+
+    if (!error.response) {
+      if (!navigator.onLine) {
+        ElMessage.error('网络已断开，请检查您的网络连接')
+        return Promise.reject(new Error('网络断开'))
+      }
+
+      if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+        ElMessage.error('请求超时，请稍后重试')
+        return Promise.reject(new Error('请求超时'))
+      }
+
+      ElMessage.error('网络异常，请检查您的连接')
+      return Promise.reject(new Error('网络异常'))
+    }
+
+    this.handleHttpError(error.response?.status)
+    return Promise.reject(error)
+  }
+  
+  // ...
+}
 ```
 
 ### ECharts 封装
