@@ -4,7 +4,7 @@ tags:
   - Frontend/TypeScript
   - Project/后台管理系统
 create_time: 2025-05-02 18:56
-update_time: 2025/05/26 22:37
+update_time: 2025/05/27 22:30
 ---
 
 ## 创建项目
@@ -1733,66 +1733,100 @@ export default defineConfig({
 
 #### 动态切换明暗模式
 
-使用 VueUse 提供的 [`useDark`](https://vueuse.org/core/useDark/) 和 [`useToggle`](https://vueuse.org/shared/useToggle/)，可轻松实现响应式的明暗主题切换：
+借助 VueUse 提供的 [`useColorMode`](https://vueuse.org/core/useColorMode/) 和 [`usePreferredDark`](https://vueuse.org/core/usePreferredDark/)，可以轻松实现响应系统主题、支持手动切换的明暗模式：
 
 ```vue
 <template>
-  <div class="h-100px w-150px flex items-center justify-center rounded-lg bg-gray-300 dark:bg-gray-700">
-    <el-button type="primary" @click="toggleDark()">
-      <template #icon>
-        <IEpMoon v-if="isDark" />
-        <IEpSunny v-else />
-      </template>
-    </el-button>
-  </div>
+  <el-icon class="cursor-pointer" @click="toggle">
+    <template v-if="mode === 'dark'">
+      <i-ep-moon />
+    </template>
+    <template v-else-if="mode === 'light'">
+      <i-ep-sunny />
+    </template>
+  </el-icon>
 </template>
 
 <script setup lang="ts">
-const isDark = useDark()
-const toggleDark = useToggle(isDark)
+const mode = useColorMode()
+const isSystemDark = usePreferredDark()
+
+// 若当前模式与系统主题一致，则回退为自动模式（'auto'），以便后续继续跟随系统
+const maybeResetMode = () => {
+  const matchesSystem = mode.value === (isSystemDark.value ? 'dark' : 'light')
+  if (matchesSystem) {
+    mode.value = 'auto'
+  }
+}
+
+// 当系统主题变化时，尝试回退为自动模式
+watch(isSystemDark, maybeResetMode)
+
+const toggle = async () => {
+  mode.value = mode.value === 'dark' ? 'light' : 'dark'
+  await nextTick()
+  maybeResetMode()
+}
 </script>
 ```
 
-#### 明暗模式切换动画效果
+#### 切换动效（View Transition）
 
 > [!quote] 推荐参考
 > - [View Transition API 实现主题切换动画效果](https://www.bilibili.com/video/BV18x4y187op?vd_source=84272a2d7f72158b38778819be5bc6ad)
 > - [B站客户端切换暗黑模式效果还原](https://www.bilibili.com/video/BV1iJ4m1T7CA?vd_source=84272a2d7f72158b38778819be5bc6ad)
 
-下面示例使用原生 [View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API) 实现从鼠标点击位置扩散的动态切换过渡：
+通过原生 [View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API) 可以为主题切换添加点击扩散动画，让体验更自然：
 
-```vue hl:14-35
+```vue hl:27-52
 <template>
-  <div class="h-100px w-150px flex items-center justify-center rounded-lg bg-gray-300 dark:bg-gray-700">
-    <el-button type="primary" @click="toggleDark">
-      <template #icon>
-        <IEpMoon v-if="isDark" />
-        <IEpSunny v-else />
-      </template>
-    </el-button>
-  </div>
+  <el-icon class="cursor-pointer" @click="toggle">
+    <template v-if="mode === 'dark'">
+      <i-ep-moon />
+    </template>
+    <template v-else-if="mode === 'light'">
+      <i-ep-sunny />
+    </template>
+  </el-icon>
 </template>
 
 <script setup lang="ts">
-const isDark = useDark()
-const toggleDark = (event: MouseEvent) => {
+const mode = useColorMode()
+const isSystemDark = usePreferredDark()
+
+// 若当前模式与系统主题一致，则回退为自动模式（'auto'），以便后续继续跟随系统
+const maybeResetMode = () => {
+  const matchesSystem = mode.value === (isSystemDark.value ? 'dark' : 'light')
+  if (matchesSystem) {
+    mode.value = 'auto'
+  }
+}
+
+// 当系统主题变化时，尝试回退为自动模式
+watch(isSystemDark, maybeResetMode)
+
+const toggle = (event: MouseEvent) => {
   const x = event.clientX
   const y = event.clientY
   const endRadius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))
   const transition = document.startViewTransition(async () => {
-    isDark.value = !isDark.value
+    // 手动切换主题，暂时中断系统跟随
+    mode.value = mode.value === 'dark' ? 'light' : 'dark'
     await nextTick()
+    // 如果当前主题切换后与系统一致，则恢复为自动模式
+    maybeResetMode()
   })
   transition.ready.then(() => {
+    const isDark = mode.value === 'dark'
     const clipPath = [`circle(0px at ${x}px ${y}px)`, `circle(${endRadius}px at ${x}px ${y}px)`]
     document.documentElement.animate(
       {
-        clipPath: isDark.value ? [...clipPath].reverse() : clipPath,
+        clipPath: isDark ? [...clipPath].reverse() : clipPath,
       },
       {
         duration: 400,
         easing: 'ease-out',
-        pseudoElement: isDark.value ? '::view-transition-old(root)' : '::view-transition-new(root)',
+        pseudoElement: isDark ? '::view-transition-old(root)' : '::view-transition-new(root)',
       },
     )
   })
@@ -1800,7 +1834,7 @@ const toggleDark = (event: MouseEvent) => {
 </script>
 ```
 
-配套样式（用于控制 View Transition 层级）
+配套样式（确保 View Transition 动画正常叠加并支持暗黑模式反转时的过渡层优先级）：
 
 ```scss hl:1-21
 ::view-transition-old(root),
@@ -2358,6 +2392,8 @@ export * from './modules/system/user/types'
 ```
 
 #### 使用示例：获取当前登录用户信息
+
+结合 VueUse 的 [`useAsyncState()`](https://vueuse.org/core/useAsyncState/) 实现异步请求与加载状态管理：
 
 ```vue hl:3-7,12,14
 <template>
