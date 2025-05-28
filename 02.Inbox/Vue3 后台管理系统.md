@@ -4,7 +4,7 @@ tags:
   - Frontend/TypeScript
   - Project/后台管理系统
 create_time: 2025-05-02 18:56
-update_time: 2025/05/27 22:30
+update_time: 2025/05/28 12:11
 ---
 
 ## 创建项目
@@ -1735,7 +1735,7 @@ export default defineConfig({
 
 借助 VueUse 提供的 [`useColorMode`](https://vueuse.org/core/useColorMode/) 和 [`usePreferredDark`](https://vueuse.org/core/usePreferredDark/)，可以轻松实现响应系统主题、支持手动切换的明暗模式：
 
-```vue
+```vue hl:13-14,17-22,25,27-31
 <template>
   <el-icon class="cursor-pointer" @click="toggle">
     <template v-if="mode === 'dark'">
@@ -1770,7 +1770,7 @@ const toggle = async () => {
 </script>
 ```
 
-#### 切换动效（View Transition）
+#### 主题切换动画
 
 > [!quote] 推荐参考
 > - [View Transition API 实现主题切换动画效果](https://www.bilibili.com/video/BV18x4y187op?vd_source=84272a2d7f72158b38778819be5bc6ad)
@@ -1913,14 +1913,14 @@ interface ImportMeta {
 <!doctype html>
 <html lang="en">
   <head>
-	<meta charset="UTF-8" />
-	<link rel="icon" type="image/svg+xml" href="/vite.svg" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>%VITE_APP_TITLE%</title>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>%VITE_APP_TITLE%</title>
   </head>
   <body>
-	<div id="app"></div>
-	<script type="module" src="/src/main.ts"></script>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
 ```
@@ -1934,21 +1934,21 @@ import { defineConfig, loadEnv } from 'vite'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, './env')
   return {
-	// 环境目录
-	envDir: './env',
-	// 开发环境服务器配置
-	server: {
-	  // 服务器主机名（允许通过局域网访问）
-	  host: '0.0.0.0',
-	  // 服务器端口
-	  port: +env.VITE_APP_PORT,
-	  // 启动后自动打开浏览器
-	  open: true,
-	  // 启用跨域请求支持（CORS）
-	  cors: true,
-	  // 启用热模块替换（Hot Module Replacement）
-	  hmr: true,
-	},
+    // 环境目录
+    envDir: './env',
+    // 开发环境服务器配置
+    server: {
+      // 服务器主机名（允许通过局域网访问）
+      host: '0.0.0.0',
+      // 服务器端口
+      port: +env.VITE_APP_PORT,
+      // 启动后自动打开浏览器
+      open: true,
+      // 启用跨域请求支持（CORS）
+      cors: true,
+      // 启用热模块替换（Hot Module Replacement）
+      hmr: true,
+    },
   }
 })
 ```
@@ -2391,6 +2391,38 @@ export * as userApi from './modules/system/user'
 export * from './modules/system/user/types'
 ```
 
+#### 反向代理解决跨域问题
+
+出于安全考虑，浏览器采用**同源策略**：只有协议、域名和端口完全一致的请求才被视为同源，非同源请求将无法访问响应内容。
+
+开发环境中，可通过 [[Vite#反向代理]] 配置实现跨域转发；生产环境则通常使用 `nginx` 配置反向代理，以解决跨域问题。
+
+```ts file:vite.config.ts hl:10-21
+import { defineConfig, loadEnv } from 'vite'
+
+// https://vite.dev/config/
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, './env')
+  return {
+    // 开发环境服务器配置
+    server: {
+      // 代理配置对象，用于开发服务器请求转发
+      proxy: {
+        // 将请求路径以 VITE_APP_BASE_API 开头的请求，代理到后端 API 地址
+        [env.VITE_APP_BASE_API]: {
+          // 目标服务器地址，需要代理到的后端 API 地址
+          target: env.VITE_APP_API_URL,
+          // 是否修改请求源，设置为 true 以正确传递跨域 Cookie
+          changeOrigin: true,
+          // 重写路径，将请求路径的前缀替换为空
+          rewrite: (path) => path.replace(new RegExp('^' + env.VITE_APP_BASE_API), ''),
+        },
+      },
+    },
+  }
+})
+```
+
 #### 使用示例：获取当前登录用户信息
 
 结合 VueUse 的 [`useAsyncState()`](https://vueuse.org/core/useAsyncState/) 实现异步请求与加载状态管理：
@@ -2422,6 +2454,8 @@ const { isLoading, state: userInfo } = useAsyncState(userApi.getUserInfo, null)
 ### ECharts 封装
 
 - [ ] TODO
+
+### 国际化支持
 
 ## 推荐插件
 
