@@ -22,5 +22,6 @@
   "anuppuccin-theme-settings@@anp-header-margin-toggle": false,
   "anuppuccin-theme-settings@@anp-decoration-toggle": true,
   "anuppuccin-theme-settings@@anp-toggle-preview": false,
-  "anuppuccin-theme-settings@@anp-hide-external-link-icon": false
+  "anuppuccin-theme-settings@@anp-hide-external-link-icon": false,
+  "minimal-advanced@@cursor": "default"
 }

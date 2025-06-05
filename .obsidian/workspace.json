@@ -46,33 +46,18 @@
             }
           },
           {
-            "id": "42cfd78d5d77e384",
+            "id": "23ac4f0d661df96d",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "02.Inbox/Vue3 后台管理系统.md",
+                "file": "01.Articles/Projects/vue3-element-template/README.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "Vue3 后台管理系统"
-            }
-          },
-          {
-            "id": "416743272d4468f6",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "01.Articles/DevKit/Vite.md",
-                "mode": "preview",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "Vite"
+              "title": "README"
             }
           }
         ],
@@ -108,7 +93,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "LICENSE",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": true,
@@ -203,13 +188,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "02.Inbox/Vue3 后台管理系统.md",
+                "file": "01.Articles/Projects/vue3-element-template/README.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Vue3 后台管理系统 的大纲"
+              "title": "README 的大纲"
             }
           },
           {
@@ -271,11 +256,25 @@
       "pkmer:Open Pkmer Market": false
     }
   },
-  "active": "42cfd78d5d77e384",
+  "active": "9bbed510414b75b1",
   "lastOpenFiles": [
-    "01.Articles/DevKit/Vite.md",
-    "02.Inbox/Vue3 后台管理系统.md",
     "00.Overview/参考资料.md",
+    "01.Articles/Projects/vue3-element-template/README.md",
+    "01.Articles/Projects/vue3-element-template/创建项目.md",
+    "Templates/Resource.md",
+    "01.Articles/Projects/vue3-element-template/准备工作.md",
+    "01.Articles/Projects/vue3-element-template/协作规范.md",
+    "02.Inbox/Vue3 后台管理系统.md",
+    "00.Overview/任务清单.md",
+    "00.Overview/推荐电影.md",
+    "00.Overview/推荐书籍.md",
+    "00.Overview/源码剖析.md",
+    "01.Articles/Vue/README.md",
+    "01.Articles/Vue/通过 CDN 使用 Vue.md",
+    "01.Articles/Projects/vue3-element-template/section",
+    "01.Articles/Projects/vue3-element-template",
+    "01.Articles/Projects",
+    "01.Articles/DevKit/Vite.md",
     "Resources/Go+Gorm+Gin+TypeScript+Vite+Vue3 通用开发框架实战.md",
     "Resources/手把手带你实现 Axios.md",
     "01.Articles/CSS/SCSS 与 CSS 变量最佳实践.md",
@@ -289,28 +288,16 @@
     "01.Articles/JavaScript/reduce.md",
     "01.Articles/DevKit/MySQL.md",
     "01.Articles/DevKit/JDK.md",
-    "01.Articles/未命名",
     "02.Inbox/Teleport.md",
-    "01.Articles/DevKit/Git.md",
     "sh-keygen -t rsa -b 4096 -C 15019474951@163.com",
     "Zttachments/Pasted image 20250515190723.png",
     "Zttachments/Pasted image 20250515191024.png",
     "Zttachments/Pasted image 20250515190613.png",
-    "02.Inbox/JDBC.md",
-    "02.Inbox/正则表达式.md",
     "Zttachments/Pasted image 20250511225324.png",
-    "01.Articles/CSS/SCSS 与 CSS 变量对比：特性、用法与最佳实践.md",
-    "01.Articles/CSS/SCSS 模块引入方式对比：@import 与 @use.md",
-    "01.Articles/Misc/个人网站备案流程.md",
-    "01.Articles/DevKit/IDEA.md",
-    "01.Articles/SQL/行列转换.md",
-    "01.Articles/Java/Basic/嵌套类.md",
     "01.Articles/CSS",
     "01.Articles/HTML5",
     "Zttachments/Pasted image 20250508121823.png",
     "Zttachments/Pasted image 20250508112523.png",
-    "01.Articles/Tools/Obsidian/Obsidian - 核心篇.md",
-    "01.Articles/Tools/Obsidian/Obsidian - 插件篇/README.md",
     "Zttachments/Pasted image 20250507235323.png",
     "Zttachments/Pasted image 20250505180707.png",
     "PDF/SQL窗口函数速查表.pdf",
@@ -319,8 +306,6 @@
     "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
     "Clippings",
     "Resources/未命名",
-    "Resources/Java",
-    "Journal/Diary",
     "04.Canvas/SQL JOINS.canvas",
     "01.Articles/Reading/阿里巴巴Java开发手册-嵩山版/分层领域模型规约(DO,PO,BO,DTO,VO).canvas",
     "04.Canvas/未命名 1.canvas",

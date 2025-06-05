@@ -6,6 +6,8 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiVuejsLine",
+      "RiBriefcase2Line",
       "RiGitBranchFill",
       "RiGithubFill",
       "RiJavaFill",
@@ -13,9 +15,7 @@
       "RiDatabase2Fill",
       "RiNodejsLine",
       "RiCss3Line",
-      "RiHtml5Line",
-      "RiMovie2Line",
-      "RiBook2Line"
+      "RiHtml5Line"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -78,5 +78,7 @@
   "00.Overview/任务清单.md": "RiTaskLine",
   "01.Articles/JavaScript": "RiJavascriptFill",
   "01.Articles/HTML5": "RiHtml5Line",
-  "01.Articles/CSS": "RiCss3Line"
+  "01.Articles/CSS": "RiCss3Line",
+  "01.Articles/Projects": "RiBriefcase2Line",
+  "01.Articles/Projects/vue3-element-template": "RiVuejsLine"
 }
