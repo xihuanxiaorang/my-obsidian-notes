@@ -51,13 +51,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "01.Articles/Projects/vue3-element-template/README.md",
+                "file": "02.Inbox/侧边栏之动态路由菜单递归渲染.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "侧边栏之动态路由菜单递归渲染"
             }
           }
         ],
@@ -188,13 +188,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "01.Articles/Projects/vue3-element-template/README.md",
+                "file": "02.Inbox/侧边栏之动态路由菜单递归渲染.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "README 的大纲"
+              "title": "侧边栏之动态路由菜单递归渲染 的大纲"
             }
           },
           {
@@ -258,19 +258,26 @@
   },
   "active": "9bbed510414b75b1",
   "lastOpenFiles": [
+    "00.Overview/源码剖析.md",
+    "01.Articles/Java/SourceCodeAnalysis/ArrayList 源码剖析.md",
+    "01.Articles/Java/SourceCodeAnalysis/HashMap 源码剖析.md",
+    "01.Articles/Java/SourceCodeAnalysis/LinkedList 源码剖析.md",
+    "02.Inbox/侧边栏之动态路由菜单递归渲染.md",
+    "01.Articles/Java/SourceCodeAnalysis",
     "00.Overview/参考资料.md",
+    "02.Inbox/反射.md",
     "01.Articles/Projects/vue3-element-template/README.md",
-    "01.Articles/Projects/vue3-element-template/创建项目.md",
-    "Templates/Resource.md",
     "01.Articles/Projects/vue3-element-template/准备工作.md",
+    "01.Articles/Vue/README.md",
+    "01.Articles/Vue/通过 CDN 使用 Vue.md",
+    "01.Articles/Vue/创建一个 Vue 应用.md",
+    "01.Articles/Projects/vue3-element-template/创建项目.md",
     "01.Articles/Projects/vue3-element-template/协作规范.md",
+    "Templates/Resource.md",
     "02.Inbox/Vue3 后台管理系统.md",
     "00.Overview/任务清单.md",
     "00.Overview/推荐电影.md",
     "00.Overview/推荐书籍.md",
-    "00.Overview/源码剖析.md",
-    "01.Articles/Vue/README.md",
-    "01.Articles/Vue/通过 CDN 使用 Vue.md",
     "01.Articles/Projects/vue3-element-template/section",
     "01.Articles/Projects/vue3-element-template",
     "01.Articles/Projects",
@@ -283,12 +290,6 @@
     "Zttachments/Pasted image 20250518190216.png",
     "Zttachments/Pasted image 20250518185940.png",
     "01.Articles/DevKit/Node.js.md",
-    "02.Inbox/响应式状态.md",
-    "01.Articles/DevKit/Cursor.md",
-    "01.Articles/JavaScript/reduce.md",
-    "01.Articles/DevKit/MySQL.md",
-    "01.Articles/DevKit/JDK.md",
-    "02.Inbox/Teleport.md",
     "sh-keygen -t rsa -b 4096 -C 15019474951@163.com",
     "Zttachments/Pasted image 20250515190723.png",
     "Zttachments/Pasted image 20250515191024.png",
@@ -305,7 +306,6 @@
     "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
     "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
     "Clippings",
-    "Resources/未命名",
     "04.Canvas/SQL JOINS.canvas",
     "01.Articles/Reading/阿里巴巴Java开发手册-嵩山版/分层领域模型规约(DO,PO,BO,DTO,VO).canvas",
     "04.Canvas/未命名 1.canvas",

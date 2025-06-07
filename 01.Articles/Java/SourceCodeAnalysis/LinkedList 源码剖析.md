@@ -4,8 +4,8 @@ tags:
   - DataStructure
   - Java/Collection
 create_time: 2025-01-02 23:31
-update_time: 2025/04/28 18:50
-version: 8
+update_time: 2025/06/07 11:45
+version: JDK8
 priority: 10
 ---
 

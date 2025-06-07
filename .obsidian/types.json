@@ -25,7 +25,7 @@
     "excalidraw-open-md": "checkbox",
     "update_time": "datetime",
     "create_time": "datetime",
-    "version": "number",
+    "version": "text",
     "author": "text",
     "Creator": "text",
     "status": "multitext",
