@@ -4,11 +4,11 @@ tags:
   - Frontend/TypeScript
   - Project/后台管理系统
 create_time: 2025-06-05T22:37:00
-update_time: 2025/06/06 22:24
+update_time: 2025/06/07 13:17
 ---
 
 ```dataview
-TABLE file.ctime AS "创建时间", file.mtime AS "修改时间" 
+TABLE file.ctime AS "📅 创建时间", file.mtime AS "🕓 修改时间" 
 FROM ""
 WHERE contains(file.path, this.file.folder) AND file.name != this.file.name
 SORT priority ASC

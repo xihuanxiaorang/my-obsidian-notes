@@ -97,7 +97,7 @@
   "devMode": false,
   "templateFolderPath": "Templates",
   "announceUpdates": true,
-  "version": "1.13.2",
+  "version": "1.13.3",
   "disableOnlineFeatures": true,
   "enableRibbonIcon": false,
   "ai": {

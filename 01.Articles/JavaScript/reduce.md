@@ -2,7 +2,7 @@
 tags:
   - Frontend/JavaScript
 create_time: 2024-12-28T17:59:00
-update_time: 2025/04/12 18:22
+update_time: 2025/06/09 11:58
 ---
 
 ## 简介
@@ -27,7 +27,7 @@ arr.reduce(callbackFn(accumulator, currentValue[, currentIndex[, array]])[, init
 ## 常见用法
 
 > [!tip]
-> 可以将代码直接拷贝到浏览器的控制台中运行以便快速查看执行结果！
+> 可以将以下代码示例直接拷贝到浏览器的控制台中运行以便快速查看执行结果！
 
 #CodeSnippet
 
