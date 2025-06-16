@@ -120,16 +120,17 @@
             }
           },
           {
-            "id": "76335a251dadd2c3",
+            "id": "7f3f8e206c183eb2",
             "type": "leaf",
             "state": {
-              "type": "bookmarks",
+              "type": "git-view",
               "state": {},
-              "icon": "lucide-bookmark",
-              "title": "书签"
+              "icon": "git-pull-request",
+              "title": "Source Control"
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
@@ -242,11 +243,13 @@
       "improved-random-note:Open improved random note": false,
       "obsidian-projects:打开项目": true,
       "daily-notes:打开/创建今天的日记": true,
-      "pkmer:Open Pkmer Market": true
+      "pkmer:Open Pkmer Market": true,
+      "obsidian-git:Open Git source control": true
     }
   },
-  "active": "cd440ffabd7c79fa",
+  "active": "7f3f8e206c183eb2",
   "lastOpenFiles": [
+    "Zttachments/Pasted image 20250616231354.png",
     "01.Articles/Media/Cursor - 初体验.md",
     "00.Overview/参考资料.md",
     "01.Articles/DevKit/Cloudflare.md",
@@ -275,7 +278,6 @@
     "03.Excalidraw/汉诺塔.md",
     "01.Articles/DataStructure & Algorithm/DataStructure/线性表.md",
     "01.Articles/Java/Basic/嵌套类.md",
-    "01.Articles/Java/Basic/Java8 新特性.md",
     "Zttachments/Pasted image 20250614233506.png",
     "01.Articles/Vue/自定义组件",
     "01.Articles/Vue/内置组件",

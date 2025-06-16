@@ -23,5 +23,6 @@
   "anuppuccin-theme-settings@@anp-decoration-toggle": true,
   "anuppuccin-theme-settings@@anp-toggle-preview": false,
   "anuppuccin-theme-settings@@anp-hide-external-link-icon": false,
-  "minimal-advanced@@cursor": "default"
+  "minimal-advanced@@cursor": "default",
+  "blue-topaz-theme@@obsidian-default-image": true
 }
