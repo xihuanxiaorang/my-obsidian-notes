@@ -2,7 +2,7 @@
 tags:
   - Java/DesignPattern
 create_time: 2025-02-28T18:42:00
-update_time: 2025/06/14 23:54
+update_time: 2025/06/16 18:02
 priority: 1
 ---
 
@@ -70,12 +70,12 @@ class Teacher {
 
 ## 接口
 
-与类的表示法不同的是，**接口**在类图中的**第一层顶端用构造型 `<<interface>>` 表示，下面是接口的名字，第二层是方法**。如下图所示，在 `List` 接口中，存在以下方法 `size()` 和 `isEmpty()`。在 [PlantUML](https://plantuml.com/zh/class-diagram) 中接口的表现形式与前面描述的有点不一样，不过没关系。
+与类的表示法不同的是，**接口**在类图中的**第一层顶端用构造型 `<<interface>>` 表示，下面是接口的名字，第二层是方法**。如下图所示，在 `List` 接口中，存在以下方法 `size()` 和 `isEmpty()`。
 
 ```plantuml
 @startuml
 
-interface List {
+interface List <<interface>> {
   + size(): int
   + isEmpty(): boolean
 }

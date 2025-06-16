@@ -39,6 +39,70 @@
   "groqApiKey": "",
   "activeModels": [
     {
+      "name": "copilot-plus-flash",
+      "provider": "copilot-plus",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "plusExclusive": true,
+      "projectEnabled": false,
+      "capabilities": [
+        "vision"
+      ]
+    },
+    {
+      "name": "gpt-4.1",
+      "provider": "openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ]
+    },
+    {
+      "name": "gpt-4.1-mini",
+      "provider": "openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ]
+    },
+    {
+      "name": "gpt-4.1-nano",
+      "provider": "openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "capabilities": [
+        "vision"
+      ]
+    },
+    {
+      "name": "o4-mini",
+      "provider": "openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "capabilities": [
+        "reasoning"
+      ]
+    },
+    {
+      "name": "claude-3-5-sonnet-latest",
+      "provider": "anthropic",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "capabilities": [
+        "vision"
+      ]
+    },
+    {
       "name": "gpt-4o",
       "provider": "openai",
       "enabled": true,
@@ -48,13 +112,6 @@
     {
       "name": "gpt-4o-mini",
       "provider": "openai",
-      "enabled": true,
-      "isBuiltIn": true,
-      "core": true
-    },
-    {
-      "name": "claude-3-5-sonnet-latest",
-      "provider": "anthropic",
       "enabled": true,
       "isBuiltIn": true,
       "core": true
@@ -121,7 +178,19 @@
       "enabled": true,
       "isBuiltIn": true,
       "isEmbeddingModel": true,
-      "core": true
+      "core": true,
+      "plusExclusive": true
+    },
+    {
+      "name": "copilot-plus-large",
+      "provider": "copilot-plus-jina",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "core": true,
+      "plusExclusive": true,
+      "believerExclusive": true,
+      "dimensions": 1024
     },
     {
       "name": "copilot-plus-multilingual",
@@ -129,7 +198,9 @@
       "enabled": true,
       "isBuiltIn": true,
       "isEmbeddingModel": true,
-      "core": true
+      "core": true,
+      "plusExclusive": true,
+      "dimensions": 512
     },
     {
       "name": "text-embedding-3-small",
@@ -174,5 +245,14 @@
   "showRelevantNotes": true,
   "numPartitions": 1,
   "enabledCommands": {},
-  "promptUsageTimestamps": {}
+  "promptUsageTimestamps": {},
+  "userId": "f441815c-eec5-4a1e-a4e1-954850b25078",
+  "embeddingRequestsPerMin": 90,
+  "embeddingBatchSize": 16,
+  "includeActiveNoteAsContext": true,
+  "passMarkdownImages": true,
+  "enableCustomPromptTemplating": true,
+  "allowAdditionalContext": true,
+  "enableWordCompletion": false,
+  "isPlusUser": false
 }
