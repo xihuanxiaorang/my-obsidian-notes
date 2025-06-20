@@ -40,5 +40,6 @@
   "highlightr-plugin",
   "dataview",
   "obsidian-text-format",
-  "obsidian-git"
+  "obsidian-git",
+  "obsidian-minimal-settings"
 ]

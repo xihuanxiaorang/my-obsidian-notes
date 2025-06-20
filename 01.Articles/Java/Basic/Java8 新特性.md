@@ -4,7 +4,7 @@ tags:
 repository: https://github.com/xihuanxiaorang/javase-study/tree/main/lambda-study
 version: 8
 create_time: 2024-12-28T17:51:00
-update_time: 2025/04/10 23:45
+update_time: 2025/06/18 23:21
 ---
 
 Lambda 表达式、强大的 Stream API、全新时间日期 API；新特性使得 Java 的运行速度更快、代码更少（Lambda 表达式）、便于并行、最大化减少空指针异常！
@@ -81,43 +81,43 @@ final TreeSet<Integer> treeSet = new TreeSet<>(((o1, o2) -> Integer.compare (o1,
 
 1. 定义 Employee 实体类，用于存在员工的姓名、年龄、工资等属性。
 
-   ```java
-   @Data
-   @Builder
-   @NoArgsConstructor
-   @AllArgsConstructor
-   public class Employee {
-    /**
-     * 姓名
-     */
-    private String name;
-    /**
-     * 年龄
-     */
-    private Integer age;
-    /**
-     * 工资
-     */
-    private Double salary;
-   }
-   ```
+	 ```java
+	 @Data
+	 @Builder
+	 @NoArgsConstructor
+	 @AllArgsConstructor
+	 public class Employee {
+		/**
+		 * 姓名
+		 */
+		private String name;
+		/**
+		 * 年龄
+		 */
+		private Integer age;
+		/**
+		 * 工资
+		 */
+		private Double salary;
+	 }
+	 ```
 
 2. 创建一个用于存储员工信息的集合。
 
-   ```java
-   public class ApiTest2 {
-    private final List<Employee> employees = new ArrayList<>();
-
-    @BeforeEach
-    public void before() {
-      employees.add(new Employee("张三", 18, 9999.99));
-      employees.add(new Employee("李四", 38, 5555.55));
-      employees.add(new Employee("王五", 60, 6666.66));
-      employees.add(new Employee("赵六", 16, 7777.77));
-      employees.add(new Employee("田七", 18, 3333.33));
-    }
-   }
-   ```
+	 ```java
+	 public class ApiTest2 {
+		private final List<Employee> employees = new ArrayList<>();
+	
+		@BeforeEach
+		public void before() {
+			employees.add(new Employee("张三", 18, 9999.99));
+			employees.add(new Employee("李四", 38, 5555.55));
+			employees.add(new Employee("王五", 60, 6666.66));
+			employees.add(new Employee("赵六", 16, 7777.77));
+			employees.add(new Employee("田七", 18, 3333.33));
+		}
+	 }
+	 ```
 
 ##### 普通的遍历集合 & if 判断
 
@@ -325,40 +325,40 @@ Java8 中引入了一个新的操作符 "->"，该操作符称为箭头操作符
 
 - 无参数并且无返回值；
 
-  ```java
-  () -> System.out.println ("Hello Lambda!");
-  ```
+	```java
+	() -> System.out.println ("Hello Lambda!");
+	```
 
 - 只有一个参数（参数列表的小括号可以省略）但是无返回值；
 
-  ```java
-  x -> System.out.println (x);
-  ```
+	```java
+	x -> System.out.println (x);
+	```
 
 - 有两个以上参数并且有返回值，Lambda 体中有多条语句（只有一条语句时，return 和大括号可以省略）
 
-  ```java
-  Comparator<Integer> com = (x, y) -> {
-    System.out.println("函数式接口");
-    return Integer.compare(x, y);
-  }
-  ```
+	```java
+	Comparator<Integer> com = (x, y) -> {
+		System.out.println("函数式接口");
+		return Integer.compare(x, y);
+	}
+	```
 
 - Lambda 表达式的**参数列表的数据类型可以省略不写**，因为 JVM 编译器通过上下文可以推断出数据类型，即类型推断
 
-  ```java
-  (Integer x,Integer y)-> Integer.compare(x, y);
-  ```
+	```java
+	(Integer x,Integer y)-> Integer.compare(x, y);
+	```
 
 ### 方法引用
 
 方法引用 Method Reference，引用一个<u>现有的方法</u>来代替 Lambda 表达式。
 
-基本语法：使用 ":: " 双冒号分隔，左边是具体的类（或对象），右边是需要调用的现有方法。
+基本语法：使用 "::" 双冒号分隔，左边是具体的类（或对象），右边是需要调用的现有方法。
 
 使用条件：**Lambda 表达式体中调用方法的<u>参数列表</u>、<u>返回值类型</u>必须与函数式接口中的抽象方法保持一致**！！！
 
-#### 对象:: 实例方法
+#### 对象::实例方法
 
 ```java hl:8
 public class MethodReferenceTest {
@@ -377,7 +377,7 @@ public class MethodReferenceTest {
 当我们将鼠标放到 Lambda 表达式上时，IDEA 会提示 "Lambda 可被替换为方法引用"。
 ![](https://img.xiaorang.fun/202502251812771.png)
 
-#### 类:: 静态方法
+#### 类::静态方法
 
 ```java hl:6
 @Test
@@ -390,10 +390,10 @@ public void test02(){
 }
 ```
 
-#### 类:: 实例方法
+#### 类::实例方法
 
 > [!tip]
-> 当 Lambda 参数列表中的第一个参数作为方法的调用者，第二个参数作为方法的参数时，才能使用 ClassName:: Method。
+> 当 Lambda 参数列表中的第一个参数作为方法的调用者，第二个参数作为方法的参数时，才能使用 ClassName::Method。
 
 ```java hl:6
 @Test
@@ -527,24 +527,24 @@ interface IFormula {
 
 - 在匿名内部类中我们可以很方便的访问此方法
 
-  ```java
-  @Test
-  public void test3() {
-    IFormula formula = new IFormula() {
-      @Override
-      public double calculate(final int a) {
-        return sqrt(a * a);
-      }
-    };
-    System.out.println(formula.calculate(4)); // 4
-  }
-  ```
+	```java
+	@Test
+	public void test3() {
+		IFormula formula = new IFormula() {
+			@Override
+			public double calculate(final int a) {
+				return sqrt(a * a);
+			}
+		};
+		System.out.println(formula.calculate(4)); // 4
+	}
+	```
 
 - 但是在 Lambda 表达式中无法直接访问此默认方法，这样的代码没法通过编译；
 
-  ```java
-  IFormula formula = (a) -> sqrt(a * a);
-  ```
+	```java
+	IFormula formula = (a) -> sqrt(a * a);
+	```
 
 带有默认实现的接口方法，是无法直接在 Lambda 表达式中访问的！其实**接口中的默认方法相当于类中的一个普通方法，而不是静态方法，必须使用实例对象调用方法才行**！所以上面这段代码将无法编译通过。
 
@@ -678,7 +678,7 @@ public void test4() {
 #### 其他函数式接口
 
 | 函数式接口                           | 参数类型 | 返回类型 | 用途                                                                                    |
-| :----------------------------------- | -------- | -------- | --------------------------------------------------------------------------------------- |
+|:----------------------------------- | -------- | -------- | --------------------------------------------------------------------------------------- |
 | `BiFunction<T,U,R>`                  | T, U     | R        | 对类型为 T, U 参数应用操作，返回 R 类型的结果。包含方法为： `R apply (T t, U u)`        |
 | `UnaryOperator` (Function 子接口)    | T        | T        | 对类型为 T 的对象进行一元运算，并返回 T 类型的结果。包含方法为： `T apply (T t)`        |
 | `BinaryOperator` (BiFunction 子接口) | T, T     | T        | 对类型为 T 的对象进行二元运算，并返回 T 类型的结果。包含方法为： `T apply (T t1, T t2)` |
@@ -1446,11 +1446,11 @@ public void collectStreamTest() {
 - `Supplier<R> supplier`
   - 描述：提供一个新的结果容器（R）的方法。
     - 作用：用于初始化一个空的容器，收集的结果将存储在这个容器中。
-    - 通常是工厂方法，例如 ArrayList:: new、HashSet:: new 等。
+    - 通常是工厂方法，例如 ArrayList::new、HashSet::new 等。
 - `BiConsumer<R, ? super T> accumulator`
   - 描述：定义如何将流中的元素逐个添加到结果容器中的方法。
   - 作用：流中的每个元素（T）会通过这个方法被放入到容器（R）中。
-  - 通常实现为对容器进行修改的操作，例如 List:: add。
+  - 通常实现为对容器进行修改的操作，例如 List::add。
 - `BiConsumer<R, R> combiner`
   - 描述：定义如何将两个部分结果容器（R 和 R）合并的方法。
   - 作用：在并行流中，多个线程可能会产生多个部分结果容器，这个方法定义了如何合并这些容器。

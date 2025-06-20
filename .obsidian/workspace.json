@@ -46,18 +46,18 @@
             }
           },
           {
-            "id": "7e69c604de03aa4b",
+            "id": "3368aa5322fd15b9",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "02.Inbox/单例模式（Singleton）.md",
+                "file": "01.Articles/DesignPattern/创建型/单例模式.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "单例模式（Singleton）"
+              "title": "单例模式"
             }
           }
         ],
@@ -128,6 +128,16 @@
               "icon": "git-pull-request",
               "title": "Source Control"
             }
+          },
+          {
+            "id": "8474240d46910655",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
           }
         ],
         "currentTab": 3
@@ -179,13 +189,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "02.Inbox/单例模式（Singleton）.md",
+                "file": "01.Articles/DesignPattern/创建型/单例模式.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "单例模式（Singleton） 的大纲"
+              "title": "单例模式 的大纲"
             }
           },
           {
@@ -249,35 +259,39 @@
   },
   "active": "7f3f8e206c183eb2",
   "lastOpenFiles": [
+    "01.Articles/DesignPattern/README.md",
+    "01.Articles/DesignPattern/七大设计原则.md",
+    "01.Articles/DesignPattern/UML 类图.md",
+    "01.Articles/DesignPattern/创建型/单例模式.md",
+    "00.Overview/参考资料.md",
+    "01.Articles/Vue/README.md",
+    "01.Articles/Java/Basic/Java8 新特性.md",
+    "01.Articles/Java/javase/枚举.md",
+    "00.Overview/任务清单.md",
+    "Zttachments/Pasted image 20250620172545.png",
+    "Resources/Springsecurity6 从入门到案例.md",
+    "Resources/SpringSecurity6 实现 RBAC 动态鉴权.md",
+    "02.Inbox/枚举单例.md",
+    "01.Articles/JavaScript/reduce.md",
+    "01.Articles/DevKit/Git.md",
+    "01.Articles/Tools/FFmpeg.md",
+    "01.Articles/Tools/Auto Dark Mode.md",
+    "01.Articles/Java/Basic/SPI 机制.md",
+    "01.Articles/Java/javase",
+    "Resources/SpringCloudAlibaba 参考文档.md",
+    "Resources/JavaSE 基础.md",
+    "Resources/JavaSE 零基础入门.md",
+    "Resources/26考研408全程班开课啦(使用王道书，全程持续更新，目前数据结构，组成原理已更新完毕).md",
+    "Resources/设计模式实战.md",
+    "Resources/Java 设计模式.md",
+    "Resources/23 种 Java 设计模式（图解 + 框架源码分析 + 实战）.md",
+    "Resources/Java 设计模式（图解 + 框架源码剖析）.md",
+    "Zttachments/Pasted image 20250617183631.png",
     "Zttachments/Pasted image 20250616231354.png",
     "01.Articles/Media/Cursor - 初体验.md",
-    "00.Overview/参考资料.md",
-    "01.Articles/DevKit/Cloudflare.md",
-    "Resources/设计模式快速入门.md",
-    "01.Articles/DesignPattern/README.md",
     "01.Articles/DesignPattern/行为型",
     "01.Articles/DesignPattern/结构型",
     "01.Articles/DesignPattern/创建型",
-    "01.Articles/DesignPattern/七大设计原则.md",
-    "01.Articles/DesignPattern/UML 类图.md",
-    "01.Articles/Java/Basic/代码块.md",
-    "00.Overview/源码剖析.md",
-    "00.Overview/任务清单.md",
-    "01.Articles/Tools/Obsidian/Obsidian - 核心篇.md",
-    "01.Articles/Tools/Obsidian/Obsidian - 插件篇/README.md",
-    "01.Articles/Tools/Obsidian/Obsidian - 插件篇/Tasks.md",
-    "01.Articles/Tools/Obsidian/Obsidian - 插件篇/Dataview.md",
-    "01.Articles/Projects/vue3-element-template/README.md",
-    "01.Articles/Projects/vue3-element-template/协作规范.md",
-    "01.Articles/Projects/vue3-element-template/创建项目.md",
-    "01.Articles/Misc/个人网站备案流程.md",
-    "01.Articles/LeetCode/1097 - 游戏玩法分析 V.md",
-    "01.Articles/Java/SourceCodeAnalysis/HashMap 源码剖析.md",
-    "01.Articles/Java/SourceCodeAnalysis/LinkedList 源码剖析.md",
-    "03.Excalidraw/通用表表达式-粉丝关系示例图.md",
-    "03.Excalidraw/汉诺塔.md",
-    "01.Articles/DataStructure & Algorithm/DataStructure/线性表.md",
-    "01.Articles/Java/Basic/嵌套类.md",
     "Zttachments/Pasted image 20250614233506.png",
     "01.Articles/Vue/自定义组件",
     "01.Articles/Vue/内置组件",
@@ -285,16 +299,12 @@
     "01.Articles/Java/SourceCodeAnalysis",
     "01.Articles/Projects/vue3-element-template/section",
     "01.Articles/Projects/vue3-element-template",
-    "01.Articles/Projects",
     "Zttachments/Pasted image 20250518190216.png",
     "Zttachments/Pasted image 20250518185940.png",
     "Zttachments/Pasted image 20250515190723.png",
     "Zttachments/Pasted image 20250515191024.png",
     "Zttachments/Pasted image 20250515190613.png",
     "Zttachments/Pasted image 20250511225324.png",
-    "Zttachments/Pasted image 20250508121823.png",
-    "Zttachments/Pasted image 20250508112523.png",
-    "Zttachments/Pasted image 20250507235323.png",
     "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
     "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
     "04.Canvas/SQL JOINS.canvas",
