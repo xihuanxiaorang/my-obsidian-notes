@@ -1,8 +1,8 @@
 ---
 tags:
   - Java/DesignPattern
-create_time: 2025-06-14T17:34:00
-update_time: 2025/06/20 19:19
+create_time: 2025/06/14 17:34
+update_time: 2025/06/20 22:00
 ---
 
 ```dataview
