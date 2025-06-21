@@ -2,7 +2,7 @@
 tags:
   - Java
 create_time: 2025-03-09T23:40:00
-update_time: 2025/03/21 17:52
+update_time: 2025/06/21 22:45
 ---
 
 ## 简介
@@ -147,6 +147,7 @@ Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 ```
 
 🤔 为什么使用 `Class.forName` 就能加载数据库驱动呢？
+
 🤓 这是因为 JDBC 规范要求每个数据库驱动在类加载时自动注册到 `DriverManager`，通常通过[[代码块#静态初始化块|静态代码块]]实现。例如，MySQL 的 `Driver` 源码如下：
 
 ```java hl:5
@@ -169,7 +170,7 @@ public class Driver extends NonRegisteringDriver implements java.sql.Driver {
 
 > [!chat-bubble]+ 看着这些硬编码的类名，作为一名有追求的程序员，脑海中自然会冒出这样的念头：
 >
-> - 🤔 咦！？这些类名是不是可以写到配置文件中呢？这样更换数据库驱动时，就不用修改代码了。比如：`driver-name: com.mysql.cj.jdbc.Driver`。
+> - 🤔 咦！？这些类名是不是可以写到配置文件中呢？这样更换数据库驱动时，就不用修改代码了。比如：`driver-name:com.mysql.cj.jdbc.Driver`。
 > - 😩 不过，这样还是不够完美……我还得记住不同数据库厂商提供的 `Driver` 类名！这也太麻烦了吧！头发本来就不多了，换驱动还得查文档，太不友好了。
 > - 🧐 能不能和数据库厂商商量一下，让他们直接把配置文件也一并提供？程序员省事，厂商也省事！程序员不用了解驱动类名，厂商还能方便地升级驱动。
 >
@@ -183,11 +184,12 @@ public class Driver extends NonRegisteringDriver implements java.sql.Driver {
 
 JDBC 通过 SPI（Service Provider Interface） 机制自动完成驱动加载和注册。通过这种机制：
 
-✅ 程序员无需手动调用 `Class.forName()` 加载驱动
-✅ 引入驱动 jar 包后，JDBC 会自动完成驱动加载
-✅ 更换数据库时，仅需替换 jar 包，无需修改代码
+- 程序员无需手动调用 `Class.forName()` 加载驱动
+- 引入驱动 jar 包后，JDBC 会自动完成驱动加载
+- 更换数据库时，仅需替换 jar 包，无需修改代码
 
 🤔 那么 JDBC 是如何实现自动加载驱动的呢？
+
 🤓 以 MySQL 驱动为例，当你第一次调用 `DriverManager.getConnection(url, user, password)` 方法时，系统会首先调用 `DriverManager` 类中的 `ensureDriversInitialized()` 静态方法，该方法负责加载数据库驱动。具体实现流程如下：
 
 1. 第 601 行代码：使用 SPI 机制动态加载驱动。
