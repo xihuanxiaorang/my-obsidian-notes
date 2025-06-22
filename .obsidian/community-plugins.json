@@ -31,7 +31,6 @@
   "advanced-canvas",
   "better-export-pdf",
   "colored-tags",
-  "pkmer",
   "calendar",
   "obsidian-tasks-plugin",
   "obsidian-reminder-plugin",
@@ -41,5 +40,6 @@
   "dataview",
   "obsidian-text-format",
   "obsidian-git",
-  "obsidian-minimal-settings"
+  "obsidian-minimal-settings",
+  "pdf-plus"
 ]

@@ -46,18 +46,18 @@
             }
           },
           {
-            "id": "5cd071a3b61c70a7",
+            "id": "efb2ce3405344ede",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "01.Articles/DesignPattern/创建型/单例模式.md",
+                "file": "01.Articles/DesignPattern/README.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "单例模式"
+              "title": "README"
             }
           }
         ],
@@ -189,13 +189,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "01.Articles/DesignPattern/创建型/单例模式.md",
+                "file": "01.Articles/DesignPattern/README.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "单例模式 的大纲"
+              "title": "README 的大纲"
             }
           },
           {
@@ -235,7 +235,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 381
+    "width": 381,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -254,38 +255,42 @@
       "obsidian-projects:打开项目": true,
       "daily-notes:打开/创建今天的日记": true,
       "pkmer:Open Pkmer Market": true,
-      "obsidian-git:Open Git source control": true
+      "obsidian-git:Open Git source control": true,
+      "pdf-plus:PDF++: Toggle auto-copy": true,
+      "pdf-plus:PDF++: Toggle auto-focus": true,
+      "pdf-plus:PDF++: Toggle auto-paste": true
     }
   },
   "active": "7f3f8e206c183eb2",
   "lastOpenFiles": [
+    "01.Articles/DesignPattern/创建型/单例模式.md",
     "01.Articles/DesignPattern/README.md",
+    "PDF/SQL窗口函数速查表.pdf",
+    "Projects - Demo Project/5 Mistakes I Made When I Started Using Obsidian.md",
+    "Projects - Demo Project/What I Learned From Taking 15,000 Notes.md",
+    "Projects - Demo Project/Why You Should Be Taking More Notes.md",
+    "Projects - Demo Project/The Easiest Way to Start Taking Notes.md",
+    "Projects - Demo Project/The Best Notes You'll Ever Make.md",
+    "Projects - Demo Project",
     "01.Articles/DesignPattern/七大设计原则.md",
+    "01.Articles/DesignPattern/UML 类图.md",
+    "00.Overview/参考资料.md",
     "01.Articles/Java/javase/SPI 机制.md",
     "02.Inbox/JDBC.md",
+    "01.Articles/Java/Basic/Java8 新特性.md",
+    "03.Excalidraw/SpringBoot 自动配置核心流程.md",
+    "00.Overview/任务清单.md",
+    "01.Articles/Java/javase/枚举.md",
+    "02.Inbox/简单工厂模式.md",
+    "Templates/Resource.md",
+    "Templates/Tutorial.md",
+    "Templates/Recommend Movie.md",
+    "Templates/Basic.md",
+    "Templates/Diary.md",
+    "01.Articles/SQL/SQL JOINS.md",
     "03.Excalidraw/Java SPI & SpringBoot 自动配置设计思想.md",
     "03.Excalidraw/SpringBoot 自动配置.md",
-    "02.Inbox/反射.md",
-    "01.Articles/DesignPattern/创建型/单例模式.md",
-    "03.Excalidraw/SpringBoot 自动配置核心流程.md",
-    "03.Excalidraw/Java SPI 机制栗子.md",
-    "03.Excalidraw/Java SPI 运行流程.md",
-    "00.Overview/参考资料.md",
-    "Resources/游戏优化与设计模式.md",
-    "Resources/JavaSE 进阶.md",
-    "Resources/JavaSE 基础.md",
-    "Resources/最全面且简单的 Java 基础教程.md",
-    "01.Articles/DevKit/Git.md",
-    "01.Articles/Java/javase/枚举.md",
-    "02.Inbox/模板语法.md",
-    "02.Inbox/策略模式.md",
-    "01.Articles/DesignPattern/UML 类图.md",
-    "01.Articles/Vue/README.md",
-    "01.Articles/Java/Basic/Java8 新特性.md",
-    "00.Overview/任务清单.md",
     "Zttachments/Pasted image 20250620172545.png",
-    "Resources/Springsecurity6 从入门到案例.md",
-    "Resources/SpringSecurity6 实现 RBAC 动态鉴权.md",
     "01.Articles/Java/javase",
     "Zttachments/Pasted image 20250617183631.png",
     "Zttachments/Pasted image 20250616231354.png",
@@ -297,8 +302,6 @@
     "01.Articles/Vue/内置组件",
     "01.Articles/Vue/基础",
     "01.Articles/Java/SourceCodeAnalysis",
-    "01.Articles/Projects/vue3-element-template/section",
-    "01.Articles/Projects/vue3-element-template",
     "Zttachments/Pasted image 20250518190216.png",
     "Zttachments/Pasted image 20250518185940.png",
     "Zttachments/Pasted image 20250515190723.png",

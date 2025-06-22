@@ -2,7 +2,7 @@
 tags:
   - Java
 create_time: 2025-03-09T23:40:00
-update_time: 2025/06/21 22:45
+update_time: 2025/06/22 16:34
 ---
 
 ## 简介
@@ -93,7 +93,7 @@ public class User {
 
 ![[JDBC 执行流程 | 250]]
 
-1. **加载驱动（Load Driver）**：通过 `Class.forName()` 或 [[SPI 机制|SPI 机制]] 加载数据库驱动程序，并注册到 `DriverManager`。
+1. **加载驱动（Load Driver）**：通过 `Class.forName()` 或 [[SPI 机制|SPI 机制]] 加载数据库驱动，并注册到 `DriverManager`。
 2. **创建连接（Open Connection）**：使用 `DriverManager.getConnection()` 建立与数据库的连接。
 3. **创建操作对象（Create Statement）**：通过连接对象创建 `Statement` 或 `PreparedStatement`。
 4. **执行 SQL（Execute Statement）**：使用 `Statement` 中的 `executeQuery()` 或 `executeUpdate()` 执行查询或更新语句。
@@ -102,7 +102,9 @@ public class User {
 
 ### 加载驱动
 
-在 SPI 机制出现之前，加载数据库驱动的典型示例如下：
+#### 传统方式
+
+在 [[SPI 机制]]出现前，程序员需要手动加载数据库驱动：
 
 ```java hl:9
 public class ApiTest {
@@ -112,17 +114,17 @@ public class ApiTest {
 
   @Test
   public void test() throws ClassNotFoundException {
-    // 加载驱动（使用 Class.forName() 方法）
+    // 显式加载数据库驱动
     Class.forName("com.mysql.cj.jdbc.Driver");
     // 使用 try-catch-resources 语句块来确保资源被正确关闭
     try (
-      // 创建连接
+      // 获取连接
       final Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
       // 创建 Statement 对象
       final Statement statement = connection.createStatement();
-      // 执行 SQL 查询
+      // 执行查询
       final ResultSet resultSet = statement.executeQuery("select * from t_user")) {
-      // 处理查询结果
+      // 遍历结果集
       while (resultSet.next()) {
         System.out.println(resultSet.getString("username"));
       }
@@ -133,7 +135,7 @@ public class ApiTest {
 }
 ```
 
-在 SPI 机制出现之前，程序员通常需要通过 `Class.forName()` 手动加载数据库驱动，例如：
+常见驱动加载方式如下：
 
 ```java
 // 加载 MySQL8 数据库驱动
@@ -146,9 +148,9 @@ Class.forName("oracle.jdbc.driver.OracleDriver");
 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 ```
 
-🤔 为什么使用 `Class.forName` 就能加载数据库驱动呢？
+#### 为什么调用 `Class.forName()` 就能加载驱动？
 
-🤓 这是因为 JDBC 规范要求每个数据库驱动在类加载时自动注册到 `DriverManager`，通常通过[[代码块#静态初始化块|静态代码块]]实现。例如，MySQL 的 `Driver` 源码如下：
+因为 JDBC 规范规定：**驱动类在加载时必须自动注册到 `DriverManager` 中**。厂商通常在[[代码块#静态初始化块|静态代码块]]中完成注册：
 
 ```java hl:5
 public class Driver extends NonRegisteringDriver implements java.sql.Driver {
@@ -163,50 +165,57 @@ public class Driver extends NonRegisteringDriver implements java.sql.Driver {
 }
 ```
 
-🔎**原理**：
+##### 原理解析
 
-1. **类加载阶段**：驱动类加载时，静态代码块会调用 `DriverManager.registerDriver()` 方法，自动完成驱动注册。
-2. **`Class.forName()` 触发注册**：调用 `Class.forName()` 方法时，JVM 会执行静态代码块，从而完成驱动的注册与加载。
+- **类加载阶段**：当驱动类被加载时，静态代码块会自动执行，调用 `DriverManager.registerDriver()` 完成注册。
+- `Class.forName()` 用于**触发类的加载和初始化**，间接完成注册流程。
 
-> [!chat-bubble]+ 看着这些硬编码的类名，作为一名有追求的程序员，脑海中自然会冒出这样的念头：
+##### 自动加载的演进：SPI 机制
+
+> [!chat-bubble]+ 面对硬编码的驱动类名，作为一名有追求的程序员难免会想：
 >
-> - 🤔 咦！？这些类名是不是可以写到配置文件中呢？这样更换数据库驱动时，就不用修改代码了。比如：`driver-name:com.mysql.cj.jdbc.Driver`。
+> - 🤔 咦！？能不能通过配置文件指定驱动类呢？这样更换数据库驱动时，就不用修改代码了。例如：`driver-name:com.mysql.cj.jdbc.Driver`。
 > - 😩 不过，这样还是不够完美……我还得记住不同数据库厂商提供的 `Driver` 类名！这也太麻烦了吧！头发本来就不多了，换驱动还得查文档，太不友好了。
 > - 🧐 能不能和数据库厂商商量一下，让他们直接把配置文件也一并提供？程序员省事，厂商也省事！程序员不用了解驱动类名，厂商还能方便地升级驱动。
->
 > * 😎 听起来是个好主意！不过，如果厂商提供配置文件，程序如何读取它呢？
->
-> - 🏆 还记得 `ClassLoader` 吗？它不仅可以加载类，还能通过 `getResource()` 或 `getResources()` 读取 classpath 下的文件。👉 只要和厂商**事先约定好配置文件的路径和格式**，就能通过它读取配置！
->
+> - 🏆 还记得 `ClassLoader` 吗？它不仅可以加载类，还能通过 `getResource()` 或 `getResources()` 读取 classpath 下的文件。只要和厂商**事先约定好配置文件的路径和格式**，就能通过它读取配置！
 > * 🎉 你 TN 的还真是个天才！！！这套机制，我们就叫它 **SPI** 吧！
 
 这种设计既简化了开发，又提升了代码的可维护性，堪称一举两得！
 
-JDBC 通过 SPI（Service Provider Interface） 机制自动完成驱动加载和注册。通过这种机制：
+#### JDBC 的自动加载机制（基于 SPI）
 
-- 程序员无需手动调用 `Class.forName()` 加载驱动
-- 引入驱动 jar 包后，JDBC 会自动完成驱动加载
-- 更换数据库时，仅需替换 jar 包，无需修改代码
+自 Java 6 起，JDBC 开始支持 [[SPI 机制]]。驱动 jar 包中需提供如下配置文件：
 
-🤔 那么 JDBC 是如何实现自动加载驱动的呢？
+```
+META-INF/services/java.sql.Driver
+```
 
-🤓 以 MySQL 驱动为例，当你第一次调用 `DriverManager.getConnection(url, user, password)` 方法时，系统会首先调用 `DriverManager` 类中的 `ensureDriversInitialized()` 静态方法，该方法负责加载数据库驱动。具体实现流程如下：
+文件内容为驱动类的全限定类名：
 
-1. 第 601 行代码：使用 SPI 机制动态加载驱动。
+```
+com.mysql.cj.jdbc.Driver
+```
+
+当首次调用 `DriverManager.getConnection()` 时，JDBC 会执行以下流程：
+
+1. **通过 SPI 加载驱动实现类**：
 
 	```java
 	ServiceLoader<Driver> loadedDrivers = ServiceLoader.load(Driver.class);
 	```
 
-2. 第 635 行代码：通过反射实例化驱动类。
+2. **通过反射触发类加载并注册驱动**：
 
 	```java
 	Class.forName(aDriver, true, ClassLoader.getSystemClassLoader());
 	```
 
-	`Class.forName()` 方法通过反射动态加载驱动类，并调用无参构造方法实例化对象，完成驱动注册。
+通过这种机制：
 
-通过这两个步骤，JDBC 在运行时即可动态加载驱动。程序员只需引入驱动 jar 包，JDBC 便能自动完成驱动的加载与注册。
+- 无需手动调用 `Class.forName()`；
+- 引入驱动依赖即可自动完成加载与注册；
+- 更换数据库仅需替换依赖，无需修改任何代码。
 
 ### 创建连接
 
@@ -474,7 +483,7 @@ public void testSQLInjection() {
 
 ##### PreparedStatement✨
 
-在 Java 中，可以通过 `Connection` 连接对象的 `prepareStatement(sql)` 方法获取 `PreparedStatement` 实例对象。其中，`PreparedStatement` 接口继承自 `Statement` 接口，方法中的参数 `sql` 表示一条预编译 SQL 语句，SQL 语句中的参数值用占位符 `?` 来表示，之后可以使用 `setXxx()` 或者 `setObject()` 方法来设置这些参数。
+在 Java 中，可以通过 `Connection` 连接对象的 `prepareStatement (sql)` 方法获取 `PreparedStatement` 实例对象。其中，`PreparedStatement` 接口继承自 `Statement` 接口，方法中的参数 `sql` 表示一条预编译 SQL 语句，SQL 语句中的参数值用占位符 `?` 来表示，之后可以使用 `setXxx ()` 或者 `setObject ()` 方法来设置这些参数。
 
 > [!note]
 > **占位符索引从 1 开始**。
@@ -588,7 +597,7 @@ SET GLOBAL log_timestamps = SYSTEM;
 SHOW GLOBAL VARIABLES LIKE '%datadir%';
 ```
 
-执行 `testPreparedStatementQuery()` 测试方法后，查看日志文件（位于 MySQL 数据目录下），发现执行的 SQL 语句依然是普通 SQL：
+执行 `testPreparedStatementQuery ()` 测试方法后，查看日志文件（位于 MySQL 数据目录下），发现执行的 SQL 语句依然是普通 SQL：
 ![](https://img.xiaorang.fun/202503211715629.png)
 
 🔍 **验证**：在 URL 上添加 `useServerPrepStmts=true&cachePrepStmts=true` 参数，再次执行，发现 SQL 语句已被成功预编译：
@@ -632,7 +641,7 @@ public void testPreparedStatementSQLInjection() {
 
 ### 批处理支持检测
 
-部分 JDBC 驱动可能不支持批处理，可使用 `DatabaseMetaData.supportsBatchUpdates()` 方法进行检测。
+部分 JDBC 驱动可能不支持批处理，可使用 `DatabaseMetaData.supportsBatchUpdates ()` 方法进行检测。
 
 ```java
 @Test
@@ -650,20 +659,20 @@ public void testSupportsBatchUpdates() throws SQLException {
 
 | 方法               | 作用             |
 | ---------------- | -------------- |
-| `addBatch()`     | 添加 SQL 语句到批处理中 |
-| `executeBatch()` | 执行批处理          |
-| `clearBatch()`   | 清空批处理，无法删除特定语句 |
+| `addBatch ()`     | 添加 SQL 语句到批处理中 |
+| `executeBatch ()` | 执行批处理          |
+| `clearBatch ()`   | 清空批处理，无法删除特定语句 |
 
 ### 使用 PreparedStatement 进行批处理
 
 批处理执行流程：
 1. 创建 SQL 语句，使用占位符
 2. 创建 `PreparedStatement`
-3. 关闭自动提交 (`setAutoCommit(false)`)
+3. 关闭自动提交 (`setAutoCommit (false)`)
 4. 🔄设置 SQL 语句，占位符替换参数
-5. 🔄添加 SQL 语句到批处理中，调用 `addBatch()`
-6. 执行批处理，调用 `executeBatch()`
-7. 成功提交 `commit()`，失败回滚 `rollback()`
+5. 🔄添加 SQL 语句到批处理中，调用 `addBatch ()`
+6. 执行批处理，调用 `executeBatch ()`
+7. 成功提交 `commit ()`，失败回滚 `rollback ()`
 
 ```java hl:12,15,17,21
 @Test
@@ -788,7 +797,7 @@ public void testPrepareStatementBatchUpdate2() {
 
 ### JDBC 事务处理
 
-在 JDBC 中的事务是使用 `Connection` 连接对象中的 `commit()` 方法和 `rollback()` 方法来进行管理的。在 JDBC 中事务的默认提交时机，存在如下两种情况：
+在 JDBC 中的事务是使用 `Connection` 连接对象中的 `commit ()` 方法和 `rollback ()` 方法来进行管理的。在 JDBC 中事务的默认提交时机，存在如下两种情况：
 
 - 当一个连接对象被创建时，**默认情况下是自动提交事务**，即每次执行一条 SQL 语句时，如果执行成功，就会向数据库自动提交，提交后就不能再进行回滚；
 - 关闭数据库连接，数据就会自动提交。如果多个操作，每个操作使用的是自己单独的连接 (Connection)，则无法保证事务。**同一个事务的多个操作必须在同一个连接下**。

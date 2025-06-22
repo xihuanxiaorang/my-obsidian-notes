@@ -28,7 +28,7 @@
     "version": "text",
     "author": "text",
     "Creator": "text",
-    "status": "multitext",
+    "status": "text",
     "rating": "number",
     "Director": "multitext",
     "Stars": "multitext",

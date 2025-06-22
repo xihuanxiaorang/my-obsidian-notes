@@ -3,18 +3,18 @@ tags:
   - Java
 repository: https://github.com/xihuanxiaorang/javase-study/tree/main/spi-study
 create_time: 2024-12-28T17:52:00
-update_time: 2025/06/21 22:44
+update_time: 2025/06/22 16:39
 ---
 
 ## 简介
 
-**SPI（Service Provider Interface）** 是 Java 自 Java 6 起提供的一种**基于 `ClassLoader` 的服务发现与加载机制**，**通过标准化配置, 可在运行时动态加载服务实现**。
+**SPI（Service Provider Interface）** 是 Java 自 6 开始引入的一种**基于 `ClassLoader` 的服务发现与加载机制**，**通过标准化配置实现运行时动态加载服务实现**。
 
 SPI 主要由以下三部分组成：
 
 - **Service**：服务接口，定义服务规范；
-- **Service Provider**：接口实现类，提供具体服务；
-- **ServiceLoader**：**负责在运行时根据配置动态加载服务实现**，实现模块解耦。
+- **Service Provider**：服务提供者，接口实现类，提供具体服务；；
+- **ServiceLoader**：**负责在运行时根据配置动态加载服务实现**，实现模块间解耦。
 
 该机制提升了模块间的解耦性与扩展性，使程序**无需修改代码即可动态切换或扩展实现**。
 
@@ -22,7 +22,7 @@ SPI 主要由以下三部分组成：
 
 ![[Java SPI 运行流程| 800]]
 
-应用程序**通过调用 `ServiceLoader.load()` 方法，可在运行时动态加载指定接口的所有实现类**。这些实现可能来自多个第三方 Jar 包，**ServiceLoader 会将它们统一封装为接口实例返回**，应用程序**无需关心具体实现，只需面向接口编程**。
+应用程序**通过调用 `ServiceLoader.load()` 方法，可在运行时动态加载指定接口的所有实现类**。这些实现类可能来自多个第三方 Jar 包，**ServiceLoader 会将它们统一封装为接口实例返回**，应用程序**只需面向接口编程，无需关心具体实现**。
 
 ## 三项规范
 
@@ -42,9 +42,9 @@ SPI 通过配置文件声明服务接口的实现类，规范如下：
 
 ![](https://img.xiaorang.fun/202502251814555.png)
 
-### 实现类必须具备无参构造方法
+### 实现类必须提供无参构造方法
 
-由于 SPI 依赖[[反射]]（如 `Class.forName()`）实例化服务实现，因此要求**实现类必须提供无参构造方法**：
+由于 SPI 通过[[反射]]（如 `Class.forName()`）创建服务实例，因此要求**实现类必须提供无参构造方法**：
 
 ```java hl:2-4
 public class Driver extends NonRegisteringDriver implements java.sql.Driver {  
@@ -53,8 +53,6 @@ public class Driver extends NonRegisteringDriver implements java.sql.Driver {  
   }  
 }
 ```
-
-正是借助该无参构造方法，SPI 才能成功通过反射创建服务实例。
 
 ### 保证配置文件和实现类可被加载
 
@@ -232,16 +230,16 @@ SpringBoot 启动时**默认只会扫描当前项目的包结构，并将其中�
 	```
 
 	上述配置的含义是：
-	- 以 `EnableAutoConfiguration` 为键（Key）
-	- 将两个 MyBatis 自动配置类作为值（Value）
-	- 在 SpringBoot 启动过程中，框架会扫描 `spring.factories`，并根据该映射关系自动加载这些配置类
+	- `K`：`EnableAutoConfiguration`
+	- `V`：MyBatis 两个自动配置类的全限定类名
+	- 在 SpringBoot 启动过程中，框架会扫描 `spring.factories` 文件，并根据该映射关系自动加载这两个配置类
 
 ### 总结：SpringBoot 自动配置机制的核心流程
 
 ![[SpringBoot 自动配置核心流程| 1300]]
 
-本质上，Spring Boot 借鉴了 Java SPI 的设计思想，通过类似的机制，**将外部依赖中的配置类自动注册到 IoC 容器中**，实现模块之间的解耦与功能的自动扩展。  这两者的核心思路高度一致，都是通过**约定好的配置文件 + 类加载器**，**在运行时动态加载并注入需要的组件**。
+本质上，Spring Boot 借鉴了 Java SPI 的设计思想，通过类似的机制，**将外部依赖中的配置类自动注册到 IoC 容器中**，实现模块之间的解耦与功能的自动扩展。这两者的核心思路高度一致，都是通过**约定好的配置文件 + 类加载器**，**在运行时动态加载并注入需要的组件**。
 
 ## 在 JDBC 中的应用
 
-![[JDBC#加载驱动]]
+![[JDBC#JDBC 的自动加载机制（基于 SPI）]]
