@@ -2,37 +2,8 @@
 tags:
   - Java/DesignPattern
 create_time: 2025/06/14 17:34
-update_time: 2025/06/22 18:16
+update_time: 2025/06/24 19:19
 ---
-
-```dataviewjs
-const pages = dv.pages("#Java/DesignPattern")
-  .where(p => p.file.path.includes(dv.current().file.folder) && p.file.name !== dv.current().file.name);
-
-// 获取分组字段（章节）
-function getGroup(folder) {
-  const match = folder.match(/^.*?\/DesignPattern(?:\/([^/]+))?.*/);
-  return match && match[1] ? match[1] : "";
-}
-
-// 按分组聚合
-const grouped = new Map();
-for (const page of pages) {
-  const groupKey = getGroup(page.file.folder);
-  if (!grouped.has(groupKey)) grouped.set(groupKey, []);
-  grouped.get(groupKey).push(page);
-}
-
-// 排序并输出
-for (const [group, items] of grouped.entries()) {
-  dv.header(3, `📁 ${group || "未分组"}`);
-  dv.table(["📄 文件", "📅 创建时间", "🕓 修改时间"],
-    items
-      .sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999))
-      .map(p => [p.file.link, p.file.ctime, p.file.mtime ?? "无"])
-  );
-}
-```
 
 ## 定义
 
@@ -69,7 +40,7 @@ for (const [group, items] of grouped.entries()) {
 
 对于这三个阶段，简单点来说就是，**基本入门级**就是套用使用，相当于能够**依葫芦画瓢，很机械**；**基本掌握级**就是能够变形使用，比基本入门级灵活一些，**会适当变形使用**；**深入理解和掌握级**才算是真正将设计模式的精髓吸收了，是**从思想和方法的层面去理解和掌握设计模式**，就犹如武功练到最高境界，"无招胜有招"。要像达到这个境界，没有足够的开发和设计经验，没有足够深入的思考，是不太可能达到的。
 
-## 如何学习？🚀
+## 如何学习？
 
 1. 首先要**调整好心态**，**不要指望一蹴而就**，**不可浮躁**。学习和掌握设计模式需要一个过程，不同阶段看这些设计模式会有不同的领悟和感受，有点像**人生三重境界：看山是山，看山不是山，看山还是山**。
 2. 方法论：要想真正理解和掌握设计模式，**必须要上升到一定的难度和深度（比如说看源码，spring、mybatis...在这些项目中对设计模式运用的可以说非常巧妙）**，**让你看完后思考**，**思考后应用**，**然后再看**、**再思考**、**再应用**，**如此反复**，**方能成就**。
@@ -82,3 +53,38 @@ for (const [group, items] of grouped.entries()) {
 > [!important]
 >
 > **我亦无他， 惟手熟尔**<br />事实上，到了基本掌握设计模式的水平后，只有一个建议，那就是**反复地**、**深入地思考**，**别无他法**。到了思想的层面，就得靠 " 悟 " 了。
+
+## 23 种设计模式
+
+> [!ATTENTION]
+> [[简单工厂模式]]由于违反[[七大设计原则#开闭原则|开闭原则]]，因此并不属于 "GoF" 提出的 23 种经典设计模式！
+
+```dataviewjs
+const pages = dv.pages("#Java/DesignPattern")
+  .where(p => p.file.path.includes(dv.current().file.folder) && p.file.name !== dv.current().file.name);
+
+// 获取分组字段（章节）
+function getGroup(folder) {
+  const match = folder.match(/^.*?\/DesignPattern(?:\/([^/]+))?.*/);
+  return match && match[1] ? match[1] : "";
+}
+
+// 按分组聚合
+const grouped = new Map();
+for (const page of pages) {
+  const groupKey = getGroup(page.file.folder);
+  if (!groupKey) continue; // 跳过未分组的记录
+  if (!grouped.has(groupKey)) grouped.set(groupKey, []);
+  grouped.get(groupKey).push(page);
+}
+
+// 排序并输出
+for (const [group, items] of grouped.entries()) {
+  dv.header(3, `📁 ${group || "未分组"}`);
+  dv.table(["📄 文件", "📅 创建时间", "🕓 修改时间"],
+    items
+      .sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999))
+      .map(p => [p.file.link, p.file.ctime, p.file.mtime ?? "无"])
+  );
+}
+```

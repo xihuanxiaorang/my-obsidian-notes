@@ -2,7 +2,6 @@
 tags:
   - DevKit
   - Java
-repository: https://github.com/xihuanxiaorang/mapstruct-study
 update_time: 2025/03/19 11:13
 create_time: 2025-02-28T18:46:00
 ---

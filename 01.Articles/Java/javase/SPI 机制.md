@@ -1,9 +1,8 @@
 ---
 tags:
   - Java
-repository: https://github.com/xihuanxiaorang/javase-study/tree/main/spi-study
 create_time: 2024-12-28T17:52:00
-update_time: 2025/06/22 16:39
+update_time: 2025/06/24 15:57
 ---
 
 ## 简介
@@ -190,6 +189,10 @@ public class ApiTest {
 2. 替换为 `simple-isp-unicom` 模块，无需修改任何代码：
    ![](https://img.xiaorang.fun/202502251814557.png)
 
+## 在 JDBC 中的应用
+
+![[JDBC#JDBC 的自动加载机制（基于 SPI）]]
+
 ## SPI 思想的延伸：SpringBoot 自动配置机制
 
 SpringBoot 的**自动配置（Auto-Configuration）** 实质上是 SPI 思想在 Spring 体系内的延伸，用于**在引入依赖后自动完成相关配置**。具备该能力的依赖被称为 **Starter**，如官方的 `spring-boot-starter-redis`，或第三方的 `mybatis-spring-boot-starter`。
@@ -239,7 +242,3 @@ SpringBoot 启动时**默认只会扫描当前项目的包结构，并将其中�
 ![[SpringBoot 自动配置核心流程| 1300]]
 
 本质上，Spring Boot 借鉴了 Java SPI 的设计思想，通过类似的机制，**将外部依赖中的配置类自动注册到 IoC 容器中**，实现模块之间的解耦与功能的自动扩展。这两者的核心思路高度一致，都是通过**约定好的配置文件 + 类加载器**，**在运行时动态加载并注入需要的组件**。
-
-## 在 JDBC 中的应用
-
-![[JDBC#JDBC 的自动加载机制（基于 SPI）]]
