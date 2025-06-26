@@ -1,6 +1,7 @@
 ---
 tags:
   - DevKit
+  - EnvironmentSetup
 create_time: 2024-12-28T17:30:00
 update_time: 2025/06/26 18:15
 ---
