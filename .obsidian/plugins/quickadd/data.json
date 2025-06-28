@@ -41,6 +41,34 @@
       "type": "Macro",
       "command": true,
       "macroId": "b61ed318-8685-442b-873c-50164f25fc42"
+    },
+    {
+      "id": "8695d6df-6f42-44ff-b40d-891fdc18120b",
+      "name": "template - add resource",
+      "type": "Template",
+      "command": true,
+      "templatePath": "Templates/Resource.md",
+      "fileNameFormat": {
+        "enabled": false,
+        "format": ""
+      },
+      "folder": {
+        "enabled": true,
+        "folders": [],
+        "chooseWhenCreatingNote": false,
+        "createInSameFolderAsActiveFile": false,
+        "chooseFromSubfolders": false
+      },
+      "appendLink": false,
+      "openFileInNewTab": {
+        "enabled": false,
+        "direction": "vertical",
+        "focus": true
+      },
+      "openFile": true,
+      "openFileInMode": "default",
+      "fileExistsMode": "Increment the file name",
+      "setFileExistsBehavior": false
     }
   ],
   "macros": [

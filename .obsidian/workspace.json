@@ -51,21 +51,6 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "01.Articles/DesignPattern/创建型/简单工厂模式.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "简单工厂模式"
-            }
-          },
-          {
-            "id": "c20529059790bf31",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
                 "file": "02.Inbox/工厂方法模式.md",
                 "mode": "source",
                 "source": false,
@@ -74,24 +59,9 @@
               "icon": "lucide-file",
               "title": "工厂方法模式"
             }
-          },
-          {
-            "id": "38ad35296806f509",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "01.Articles/DevKit/Docker/README.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "README"
-            }
           }
         ],
-        "currentTab": 4
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -219,13 +189,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "01.Articles/DevKit/Docker/Docker 实例/Docker 安装 Redis.md",
+                "file": "02.Inbox/工厂方法模式.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Docker 安装 Redis 的大纲"
+              "title": "工厂方法模式 的大纲"
             }
           },
           {
@@ -265,8 +235,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 381,
-    "collapsed": true
+    "width": 381
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -292,42 +261,42 @@
   },
   "active": "7f3f8e206c183eb2",
   "lastOpenFiles": [
-    "01.Articles/DevKit/Docker/Docker 实例/Docker 安装 MySQL.md",
-    "01.Articles/DevKit/Docker/README.md",
-    "01.Articles/DevKit/Docker/Docker 实例/Docker 安装 Redis.md",
-    "02.Inbox/工厂方法模式.md",
-    "Zttachments/Pasted image 20250626233140.png",
     "01.Articles/DevKit/WSL2.md",
-    "01.Articles/DesignPattern/README.md",
-    "01.Articles/DevKit/Docker/Docker 实例",
-    "01.Articles/DevKit/IDEA.md",
-    "01.Articles/DevKit/Docker",
-    "01.Articles/DevKit/MySQL.md",
+    "02.Inbox/工厂方法模式.md",
+    "01.Articles/DevKit/Docker/Docker 实例/Docker 安装 Redis.md",
+    "01.Articles/DevKit/Docker/Docker 实例/Docker 安装 MySQL.md",
     "00.Overview/参考资料.md",
-    "01.Articles/DevKit/Windows Terminal.md",
+    "最新 Docker 实战 + 微服务打包 Docker 容器.md",
+    "Docker 视频教程从入门到进阶，docker 视频教程详解.md",
+    "01.Articles/DesignPattern/创建型/简单工厂模式.md",
+    "01.Articles/DevKit/Docker/README.md",
+    "01.Articles/DevKit/Docker/Docker 实例/Docker 安装 MinIO.md",
+    "Docker 从入门到实战.md",
+    "Window 下玩转 Docker Desktop.md",
+    "Docker 容器技术，从零入门全面掌握.md",
+    "Docker 从入门到实战教程，1 套精通 docker.md",
+    "40 分钟的 Docker 实战攻略，一期视频精通 Docker.md",
+    "Docker 教程.md",
+    "Docker 入门教学.md",
+    "docker 一小时入门精讲课程.md",
+    "Docker 零基础入门.md",
+    "Docker 容器技术.md",
+    "从零开启学习之路 Docker 基础篇 & Docker 高级篇精讲.md",
+    "由浅入深吃透 Docker.md",
+    "Docker 实战教程（docker 教程天花板）.md",
+    "Docker & Docker-Compose 实战!.md",
+    "docker 实战教程.md",
+    "Resources/Docker Docs.md",
+    "Zttachments/Pasted image 20250626233140.png",
+    "01.Articles/DevKit/Docker/Docker 实例",
+    "01.Articles/DevKit/Docker",
     "Zttachments/Pasted image 20250626131116.png",
     "Zttachments/Pasted image 20250626125405.png",
     "Zttachments/Pasted image 20250626124929.png",
-    "01.Articles/DevKit/Navicat.md",
     "Zttachments/Pasted image 20250625220112.png",
-    "01.Articles/DesignPattern/创建型/简单工厂模式.md",
-    "02.Inbox/抽象工厂模式.md",
     "PDF/SQL窗口函数速查表.pdf",
     "03.Excalidraw/fonts/杨任东竹石体.ttf",
-    "Projects - Demo Project/The Best Notes You'll Ever Make.md",
-    "Projects - Demo Project/5 Mistakes I Made When I Started Using Obsidian.md",
     "Zttachments/Pasted image 20250625123446.png",
-    "02.Inbox/策略模式.md",
-    "01.Articles/Java/javase/SPI 机制.md",
-    "02.Inbox/Maven.md",
-    "02.Inbox/MapStruct.md",
-    "02.Inbox/Java9 新特性.md",
-    "01.Articles/Java/Basic/Java8 新特性.md",
-    "01.Articles/SQL/行列转换.md",
-    "01.Articles/SQL/通用表表达式.md",
-    "01.Articles/Java/Basic/嵌套类.md",
-    "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/冒泡排序.md",
-    "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/快速排序.md",
     "Projects - Demo Project",
     "Zttachments/Pasted image 20250620172545.png",
     "01.Articles/Java/javase",
