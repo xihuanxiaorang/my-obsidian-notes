@@ -1,8 +1,9 @@
 ---
 tags:
   - Tool
+  - EnvironmentSetup
 create_time: 2025-03-01 12:48
-update_time: 2025/03/13 19:04
+update_time: 2025/06/28 23:33
 ---
 
 ## 手动切换浅色/深色模式

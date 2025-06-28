@@ -1,10 +1,10 @@
 ---
 tags:
-  - EnvironmentSetup
   - Frontend
   - DevKit
+  - EnvironmentSetup
 create_time: 2024-12-28T17:21:00
-update_time: 2025/03/13 21:55
+update_time: 2025/06/28 23:28
 ---
 
 [Node.js®](https://nodejs.org/zh-cn) 是一个免费、开源、跨平台的 JavaScript 运行时环境, 它让开发人员能够创建服务器 Web 应用、命令行工具和脚本。

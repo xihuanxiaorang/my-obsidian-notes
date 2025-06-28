@@ -2,7 +2,7 @@
 tags:
   - Tool
 create_time: 2025-03-07 18:14
-update_time: 2025/03/13 19:02
+update_time: 2025/06/28 23:32
 refrence_url:
   - https://curl.se/docs/tutorial.html
   - https://www.ruanyifeng.com/blog/2019/09/curl-reference.html
@@ -58,7 +58,7 @@ curl -X POST https://jsonplaceholder.typicode.com/posts -H "Content-Type: applic
 
 说明：
 - `-X`（或 `--request`）参数用于指定 HTTP 请求方法，如 `-X POST` 发送 POST 请求。
-- `-H`（或 `--header`）参数用于添加 HTTP 请求头，如 `-H "Content-Type: application/json"` 声明请求体格式为 JSON。
+- `-H`（或 `--header`）参数用于添加 HTTP 请求头，如 `-H "Content-Type:application/json"` 声明请求体格式为 JSON。
 - `-d`（或 `--data`）用于发送请求体数据，通常用于 POST 和 PUT 请求。
 
 ## 进阶用法

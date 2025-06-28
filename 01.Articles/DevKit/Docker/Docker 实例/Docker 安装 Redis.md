@@ -2,8 +2,8 @@
 tags:
   - DevKit/Docker
 create_time: 2025-06-27T19:08:00
-update_time: 2025/06/27 23:51
-priority: 10
+update_time: 2025/06/28 23:25
+priority: 21
 ---
 
 [Redis](https://redis.io/) 是全球最快的数据平台。它为缓存、向量搜索和 NoSQL 数据库提供云和本地解决方案，可以无缝集成到任何技术栈中——使数字客户能够轻松构建、扩展和部署我们世界中使用的快速应用程序。

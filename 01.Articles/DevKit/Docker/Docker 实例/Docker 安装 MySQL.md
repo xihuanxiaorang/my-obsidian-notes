@@ -2,8 +2,8 @@
 tags:
   - DevKit/Docker
 create_time: 2025-06-26 19:20
-update_time: 2025/06/27 23:49
-priority: 1
+update_time: 2025/06/28 23:25
+priority: 20
 ---
 
 **MySQL** 是全球最受欢迎的开源**关系型数据库管理系统**（RDBMS），凭借出色的性能、可靠性与易用性，广泛应用于各类 Web 应用场景。

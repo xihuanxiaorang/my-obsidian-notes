@@ -1,8 +1,9 @@
 ---
 tags:
   - DevKit
+  - EnvironmentSetup
 create_time: 2024-12-28T17:27:00
-update_time: 2025/04/23 17:36
+update_time: 2025/06/28 23:28
 ---
 
 ## 快捷键

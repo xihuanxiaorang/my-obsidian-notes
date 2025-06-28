@@ -1,10 +1,10 @@
 ---
 tags:
-  - EnvironmentSetup
   - Frontend
   - DevKit
+  - EnvironmentSetup
 create_time: 2024-12-28T17:29:00
-update_time: 2025/05/02 18:16
+update_time: 2025/06/28 23:29
 ---
 
 [nvm](https://github.com/nvm-sh/nvm) (Node Version Manager) 是一个用于管理 Node.js 版本的工具，可以让用户在同一台机器上安装和切换多个 Node.js 版本，非常适合开发环境中需要兼容不同 Node.js 版本的场景。

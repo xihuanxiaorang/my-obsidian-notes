@@ -1,13 +1,14 @@
 ---
 tags:
   - DevKit
+  - EnvironmentSetup
 create_time: 2024-12-28T17:29:00
-update_time: 2025/03/13 19:02
+update_time: 2025/06/28 23:28
 ---
 
 ## Navicat 16
 
-1. 访问分享链接：[https://www.alipan.com/s/ZhCUh7rc9ug](https://www.alipan.com/s/ZhCUh7rc9ug) 提取码: `j40o`。
+1. 访问分享链接：[https://www.alipan.com/s/ZhCUh7rc9ug](https://www.alipan.com/s/ZhCUh7rc9ug) 提取码:`j40o`。
 2. 将文件夹下载到本地，在该文件夹中包含一个 Navicat16 安装文件和一个用于激活的文件夹。
 3. 安装：双击运行 Navicat 16 安装文件 `navicat160_premium_cs_x64.exe` ，指定安装目录，如：`E:\devsoft\Navicat Premium 16`，安装完成之后关闭 Navicat。
 4. 激活：
@@ -24,7 +25,7 @@ update_time: 2025/03/13 19:02
 
 ## Navicat 17
 
-1. 访问分享链接：[https://www.alipan.com/s/RjQMRFkP7tj](https://www.alipan.com/s/RjQMRFkP7tj) 提取码: `s16w`。
+1. 访问分享链接：[https://www.alipan.com/s/RjQMRFkP7tj](https://www.alipan.com/s/RjQMRFkP7tj) 提取码:`s16w`。
 2. 将文件夹下载到本地，在该文件夹中包含一个 Navicat 17 安装文件和一个破解补丁。
 3. 安装：双击运行 Navicat 17 安装文件 `navicat17_premium_cs_x64.exe` ，指定安装目录，如：`E:\devsoft\Navicat Premium 17`，安装完成之后关闭 Navicat。
 4. 激活：将破解补丁拷贝到 Navicat 安装目录，重新打开 Navicat，可以看到已经激活成功（没有提示咱们需要进行注册即表示激活成功）🎉🎉🎉

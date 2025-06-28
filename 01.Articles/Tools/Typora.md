@@ -1,13 +1,14 @@
 ---
 tags:
   - Tool
+  - EnvironmentSetup
 create_time: 2024-12-28T17:30:00
-update_time: 2025/03/19 11:14
+update_time: 2025/06/28 23:33
 ---
 
 ## 安装与激活🚀
 
-1. 访问分享链接： [https://www.alipan.com/s/GiSkwuRMgVQ](https://www.alipan.com/s/GiSkwuRMgVQ) 提取码: `t3j3` 。
+1. 访问分享链接： [https://www.alipan.com/s/GiSkwuRMgVQ](https://www.alipan.com/s/GiSkwuRMgVQ) 提取码:`t3j3` 。
 2. 将文件夹下载到本地，在该文件夹中包含三个文件： `typora-setup-x64-1.8.10.exe` 、 `node_inject.exe` 和 `license-gen.exe` 。
 3. 安装：双击运行 typora 安装文件 `typora-setup-x64-1.8.10.exe` ，指定安装目录，如： `E:\Typora` ，安装完成之后关闭 Typora 软件。
 4. 激活：

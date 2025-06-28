@@ -1,44 +1,20 @@
 ---
 tags:
-  - DevKit
-create_time: 2024-12-28T17:25:00
-update_time: 2025/03/23 13:35
+  - DevKit/内网穿透工具
+update_time: 2025/06/28 23:42
+create_time: 2025-06-28T23:39:00
+priority: 1
 ---
 
-## 钉钉
-
 > [!quote]
-> [内网穿透（测试版）--已废弃 - 开放平台](https://open.dingtalk.com/document/resourcedownload/http-intranet-penetration)
-
-1. 下载客户端 `git clone https://github.com/open-dingtalk/dingtalk-pierced-client.git `
-2. 启动客户端 `ding.exe -config=ding.cfg -subdomain=abcde 8080`
-    1. -subdomain：你需要使用的域名前缀，该前缀将会匹配到 "vaiwan.com" 前面，例如你的 subdomain 是 abcde，启动工具后会将 abcde.vaiwan.com 映射到本地
-    2. port：你需要代理的本地服务 http-server 端口，例如你本地端口为 8080 等
-3. 注意事项：
-    1. 需要访问的域名是 [http://abcde.vaiwan.com/xxxxx](http://abcde.vaiwan.com/xxxxx) 而不是 [http://abcde.vaiwan.com:8080/xxxxx](http://abcde.vaiwan.com:8080/xxxxx)
-    2. 启动命令的 subdomain 参数有可能被别人占用，尽量不要用常用字符，可以用自己公司名的拼音，例如：alibaba、dingding 等
-    3. 可以在本地起个 http-server 服务，放置一个 index.html 文件，然后访问 [http://abcde.vaiwan.com/index.html](http://abcde.vaiwan.com/index.html) 测试一下
-
-## NATAPP
-
-> [!quote]
-> [NATAPP-内网穿透 基于ngrok的国内高速内网映射工具](https://natapp.cn/)
-
-1. 注册并登陆账号，开通一个免费隧道（每次启动域名会发生变化）
-2. 填写配置信息，修改你需要映射到本地的哪个端口
-3. 在我的隧道列表中可以查看刚才开通的隧道
-4. 下载[客户端](https://cdn.natapp.cn/assets/downloads/clients/2_3_9/natapp_windows_amd64_2_3_9.zip?version=20230407) &解压
-5. 启动客户端，需要先下载一份配置文件[使用本地配置文件config.ini](https://natapp.cn/article/config_ini)，将该文件放置于 natapp 同级目录，修改配置文件中的 authtoken 为刚才开通隧道中的 authtoken
-
-## nps✨
-
-### 介绍
-
-> [!quote]
-> Github 仓库地址： [一款轻量级、高性能、功能强大的内网穿透代理服务器](https://github.com/ehang-io/nps) 🚀
-> 项目文档地址： [https://ehang-io.github.io/nps/#/](https://ehang-io.github.io/nps/#/)
+> - Github 仓库地址： [一款轻量级、高性能、功能强大的内网穿透代理服务器](https://github.com/ehang-io/nps) 🚀
+> - 项目文档地址： [https://ehang-io.github.io/nps/#/](https://ehang-io.github.io/nps/#/)
+> - 参考资料
+> 	- [超轻量级NPS内网穿透自带后台设置界面，超好用FRP可以下台了](https://www.bilibili.com/video/BV11t411K7Cg?vd_source=84272a2d7f72158b38778819be5bc6ad)
+> 	- [一键实现内网穿透：NPS内网穿透工具的完整使用指南](https://www.bilibili.com/video/BV1Ed4y1f7jZ?vd_source=84272a2d7f72158b38778819be5bc6ad)
 
 nps 是一款高性能、功能丰富的内网穿透代理服务器，支持 **TCP / UDP 流量转发**，可用于：
+
 - 访问内网网站、本地支付接口调试
 - SSH 远程访问、远程桌面
 - 内网 DNS 解析、HTTP / SOCKS5 代理
@@ -158,8 +134,3 @@ sudo nps restart   # 重启服务
 	![](https://img.xiaorang.fun/202502222239168.png)
 
 访问 `mp.fun.xiaorang` 即可成功映射至 `127.0.0.1:8888`！🎉🎉🎉
-
-### 📺资料
-
-+ [超轻量级NPS内网穿透自带后台设置界面，超好用FRP可以下台了](https://www.bilibili.com/video/BV11t411K7Cg?vd_source=84272a2d7f72158b38778819be5bc6ad)
-+ [一键实现内网穿透：NPS内网穿透工具的完整使用指南](https://www.bilibili.com/video/BV1Ed4y1f7jZ?vd_source=84272a2d7f72158b38778819be5bc6ad)

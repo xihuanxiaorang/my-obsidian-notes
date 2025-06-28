@@ -1,10 +1,9 @@
 ---
 tags:
-  - EnvironmentSetup
   - DevKit
   - Frontend/Python
 create_time: 2024-12-28T17:30:00
-update_time: 2025/04/12 18:30
+update_time: 2025/06/28 23:29
 ---
 
 > [!tip]

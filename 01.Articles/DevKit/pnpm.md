@@ -1,10 +1,10 @@
 ---
 tags:
-  - EnvironmentSetup
   - Frontend
   - DevKit
+  - EnvironmentSetup
 create_time: 2024-12-28T17:29:00
-update_time: 2025/03/13 22:18
+update_time: 2025/06/28 23:29
 ---
 
 前期准备：『 [[nvm]] | [[Node.js]] 』& [[nrm]]

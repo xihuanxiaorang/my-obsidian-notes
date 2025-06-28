@@ -1,10 +1,10 @@
 ---
 tags:
-  - EnvironmentSetup
   - Java
   - DevKit
+  - EnvironmentSetup
 create_time: 2024-12-28T17:27:00
-update_time: 2025/03/13 19:02
+update_time: 2025/06/28 23:28
 ---
 
 因为在工作中可能会遇到不同的项目需要使用不同版本的 JDK，所以需要在一台电脑上安装多个版本的 JDK，如 JDK8，JDK17 等。按照下面这种方式我们可以实现安装两个或者更多版本的 JDK，并且多个版本之间的 JDK 可以自由切换。

@@ -1,12 +1,11 @@
 ---
 tags:
-  - DevKit
-  - EnvironmentSetup
   - Java
+  - DevKit
 refrence_url:
   - https://www.bilibili.com/video/BV16u4m1c7YX?vd_source=84272a2d7f72158b38778819be5bc6ad
 create_time: 2025-02-20 11:57
-update_time: 2025/03/13 22:21
+update_time: 2025/06/28 23:29
 ---
 
 ## 简介

@@ -1,8 +1,9 @@
 ---
 tags:
   - DevKit
+  - EnvironmentSetup
 create_time: 2024-12-31 19:00
-update_time: 2025/05/04 18:37
+update_time: 2025/06/28 23:29
 ---
 
 > [!quote]
@@ -54,8 +55,8 @@ update_time: 2025/05/04 18:37
 
 - 打开设置界面，搜索 `cursor`。
 - 修改以下两项：
-    - `Editor: Cursor Blinking` → `smooth`
-    - `Editor: Cursor Smooth Caret Animation` → `on`
+    - `Editor:Cursor Blinking` → `smooth`
+    - `Editor:Cursor Smooth Caret Animation` → `on`
 
 ![](https://img.xiaorang.fun/202505031236880.png)
 

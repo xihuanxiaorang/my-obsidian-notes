@@ -1,8 +1,9 @@
 ---
 tags:
   - DevKit
+  - EnvironmentSetup
 create_time: 2024-12-28T17:30:00
-update_time: 2025/03/13 22:42
+update_time: 2025/06/28 23:30
 ---
 
 对于没有安装 Windows Terminal 终端的小伙伴，可以在 Microsoft Store 中进行下载安装。

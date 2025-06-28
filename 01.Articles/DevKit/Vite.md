@@ -1,9 +1,9 @@
 ---
-create_time: 2025-05-17T12:59:00
-update_time: 2025/05/19 22:35
 tags:
   - Frontend/Vite
   - DevKit
+create_time: 2025-05-17T12:59:00
+update_time: 2025/06/28 23:29
 ---
 
 ## 环境变量与模式
@@ -15,11 +15,11 @@ tags:
 Vite 通过 `import.meta.env` 对象提供了一组内置常量，这些常量在开发时作为全局变量使用，在构建时会被静态替换，有助于实现更高效的 tree-shaking。这些常量在任意环境中均可使用：
 ![](https://img.xiaorang.fun/202505161900396.png)
 
-- **`import.meta.env.MODE`**: 应用当前的[[#模式|运行模式]]。
-- **`import.meta.env.BASE_URL`**: 应用部署时的基础路径，由 [`base`](https://cn.vite.dev/config/shared-options.html#base) 配置项决定。
-- **`import.meta.env.PROD`**: 应用是否运行在生产环境（使用 `NODE_ENV='production'` 运行开发服务器或构建应用时使用 `NODE_ENV='production'` ）。
-- **`import.meta.env.DEV`**: 应用是否运行在开发环境 (永远与 `import.meta.env.PROD` 相反)。
-- **`import.meta.env.SSR`**: 应用是否运行在[服务端](https://cn.vite.dev/guide/ssr.html#conditional-logic)。
+- **`import.meta.env.MODE`**:应用当前的[[#模式|运行模式]]。
+- **`import.meta.env.BASE_URL`**:应用部署时的基础路径，由 [`base`](https://cn.vite.dev/config/shared-options.html#base) 配置项决定。
+- **`import.meta.env.PROD`**:应用是否运行在生产环境（使用 `NODE_ENV='production'` 运行开发服务器或构建应用时使用 `NODE_ENV='production'` ）。
+- **`import.meta.env.DEV`**:应用是否运行在开发环境 (永远与 `import.meta.env.PROD` 相反)。
+- **`import.meta.env.SSR`**:应用是否运行在[服务端](https://cn.vite.dev/guide/ssr.html#conditional-logic)。
 
 ### 自定义环境变量
 
@@ -172,7 +172,7 @@ NODE_ENV=development
 
 [`server.proxy`](https://cn.vite.dev/config/server-options.html#server-proxy) 选项用于为开发服务器配置自定义代理规则，常用于解决本地开发中的请求跨域问题。
 
-- 类型：`Record<string, string | ProxyOptions>`，即一个以路径前缀为键、代理配置为值的 `{ key: options }` 对象；
+- 类型：`Record<string, string | ProxyOptions>`，即一个以路径前缀为键、代理配置为值的 `{ key:options }` 对象；
 - ✨所有以指定 `key` 开头的请求路径会被代理到对应目标地址；
 - ✨若 `key` 以 `^` 开头，则会被视为正则表达式进行匹配；
 - 可通过 `ProxyOptions.configure` 访问底层代理实例（[`http-proxy`](https://github.com/http-party/node-http-proxy) 对象），实现更细粒度的控制；
@@ -238,7 +238,7 @@ export default defineConfig({
 - 💡 自动导入常用函数和 API，无需手动 `import`
 - 🧠 智能分析使用的函数并按需导入
 - 🪄 支持 **Vue**、React、**Pinia**、**Vue Router** 等常见库
-- 🧩 支持 Vue 模板语法中使用（需开启 `vueTemplate: true`）
+- 🧩 支持 Vue 模板语法中使用（需开启 `vueTemplate:true`）
 - 🧾 支持自动生成 `.d.ts` 类型声明文件
 - 🛠 支持自定义导入源、解析器（resolver）、目录扫描等高级用法
 

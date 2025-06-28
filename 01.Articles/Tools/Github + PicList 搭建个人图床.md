@@ -1,8 +1,9 @@
 ---
 tags:
   - Tool
+  - EnvironmentSetup
 create_time: 2024-12-28T17:34:00
-update_time: 2025/04/12 18:12
+update_time: 2025/06/28 23:34
 ---
 
 ## PicList

@@ -6,6 +6,7 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiComputerLine",
       "RiBox3Line",
       "RiFireLine",
       "RiVuejsLine",
@@ -14,8 +15,7 @@
       "RiGithubFill",
       "RiJavaFill",
       "RiNodejsFill",
-      "RiDatabase2Fill",
-      "RiNodejsLine"
+      "RiDatabase2Fill"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -79,5 +79,6 @@
   "01.Articles/Projects": "RiBriefcase2Line",
   "01.Articles/Projects/vue3-element-template": "RiVuejsLine",
   "01.Articles/Java/SourceCodeAnalysis": "RiFireLine",
-  "01.Articles/DevKit/Docker": "RiBox3Line"
+  "01.Articles/DevKit/Docker": "RiBox3Line",
+  "01.Articles/DevKit/内网穿透工具": "RiComputerLine"
 }
