@@ -1,6 +1,6 @@
 ---
 create_time: 2025-06-28T11:42:00
-update_time: 2025/06/28 11:43
+update_time: 2025/06/28 22:23
 ---
 
 ```dataviewjs
@@ -17,7 +17,6 @@ function getGroup(folder) {
 const grouped = new Map();
 for (const page of pages) {
   const groupKey = getGroup(page.file.folder);
-  if (!groupKey) continue; // 跳过未分组的记录
   if (!grouped.has(groupKey)) grouped.set(groupKey, []);
   grouped.get(groupKey).push(page);
 }

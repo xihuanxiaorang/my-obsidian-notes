@@ -3,7 +3,7 @@ tags:
   - DevKit
   - EnvironmentSetup
 create_time: 2024-12-28T17:30:00
-update_time: 2025/06/26 18:15
+update_time: 2025/06/28 22:51
 ---
 
 > [!quote]
@@ -254,78 +254,6 @@ echo $ZSH
 	```bash
 	sed -i 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting)/g' ~/.zshrc
 	```
-
-## Step 8 - 安装 Docker Desktop
-
-> 👉 官方教程：[WSL 上的 Docker 容器入门 | Microsoft Learn](https://learn.microsoft.com/zh-cn/windows/wsl/tutorials/wsl-containers)
-
-借助 **Docker Desktop for Windows** 对 WSL2 的支持，你可以：
-
-- 在基于 Linux 的环境中开发和运行容器；
-- 使用 Visual Studio Code 进行调试；
-- 在 Windows 的 Microsoft Edge 浏览器中直接访问容器服务。
-
-### 安装 Docker Desktop
-
-下载并安装 [Docker Desktop](https://docs.docker.com/docker-for-windows/wsl/#download)，根据提示完成安装流程。
-
-### 启用 WSL2 后端支持
-
-确保在 "设置（Settings）" → "常规（General）" → 勾选"使用基于 WSL2 的引擎"
-![](https://img.xiaorang.fun/202502252159304.png)
-
-### 启用特定 WSL 分发版的 Docker 集成
-
-通过转到 "设置" → "资源" → "WSL 集成 "，从要启用 Docker 集成的已安装 WSL2 分发版中进行选择
-![](https://img.xiaorang.fun/202502252159305.png)
-
-### 验证是否安装成功
-
-若要确认已安装 Docker，请打开 WSL 分发版（例如 Ubuntu），并通过输入 `docker --version` 来显示版本和内部版本号
-![](https://img.xiaorang.fun/202502252159306.png)
-
-通过使用 `docker run hello-world` 运行简单的内置 Docker 映像，测试安装是否正常工作
-![](https://img.xiaorang.fun/202502252159307.png)
-
-### 配置国内加速镜像源
-
-为了提升拉取镜像的速度，可配置镜像加速源。通过转到 "设置" → "Docker 引擎"，增加 `registry-mirrors` 键值配置国内镜像源，如下所示：
-
-```json hl:9-14
- {
-	 "builder": {
-		 "gc": {
-			 "defaultKeepStorage": "20GB",
-			 "enabled": true
-		 }
-	 },
-	 "experimental": false,
-	 "registry-mirrors": [
-		 "http://hub-mirror.c.163.com",
-		 "https://docker.mirrors.ustc.edu.cn",
-		 "https://registry.docker-cn.com", 
-		 "https://mirror.ccs.tencentyun.com"
-	 ]
- }
- ```
-
-![](https://img.xiaorang.fun/202502252159308.png)
-
-修改后点击 **Apply & Restart** 重启 Docker Desktop。
-
-### 更改镜像存储位置（可选）
-
-默认情况下，Docker Desktop 会在 `C:\Users\<用户名>\AppData\Local\Docker\wsl` 下创建两个 `.vhdx` 文件用于存储：
-
-- `docker-desktop`
-- `docker-desktop-data`
-
-![](https://img.xiaorang.fun/202502252159309.png)
-
-若希望将其迁移到非系统盘（如 D 盘），可点击 `Browse` 更改镜像存储路径，例如：`D:\devsoft\WSL\DockerDesktopWSL`
-![](https://img.xiaorang.fun/202502252159310.png)
-
-修改后再次点击 **Apply & Restart** 以使更改生效。
 
 ## 问题合集
 
