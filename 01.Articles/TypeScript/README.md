@@ -1,0 +1,63 @@
+---
+tags:
+  - Frontend/TypeScript
+create_time: 2025-06-29T13:25:00
+update_time: 2025/06/29 13:27
+---
+
+## 参考资料
+
+- 📃文档
+    - [TypeScript 教程 - 阮一峰](https://wangdoc.com/typescript/) 👍👍 **/** [阮一峰 TypeScript 教程](https://typescript.p6p.net/)
+    - [TypeScript 入门教程](https://ts.xcatliu.com/)
+    - [深入理解 TypeScript](https://jkchao.github.io/typescript-book-chinese/)
+    - [TypeScript 使用指南手册](https://www.patrickzhong.com/TypeScript/)
+    - [TypeScript 全面进阶指南](https://github.com/lm-rebooter/NuggetsBooklet/tree/master/TypeScript%20%E5%85%A8%E9%9D%A2%E8%BF%9B%E9%98%B6%E6%8C%87%E5%8D%97)
+    - [TypeScript 类型体操通关秘籍](https://github.com/lm-rebooter/NuggetsBooklet/tree/master/TypeScript%20%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D%E9%80%9A%E5%85%B3%E7%A7%98%E7%B1%8D)
+    - [TypeScript进阶手册 - 《📚 技术修行》 - 极客文档](https://geekdaxue.co/read/nardo@goi5e0/zGt03cVcpL5c-djS)
+    - [TypeScript 中文网](https://ts.nodejs.cn/)
+    - [TypeScript | 珠峰架构师课](https://html.feyoudao.cn/jg-vue/typescript/1.html)
+    - [可能是中国最好的 TypeScript 从入门到进阶系统教程](https://github.com/mqyqingfeng/learn-typescript?tab=readme-ov-file)
+- 📺视频
+    - 基础
+        - [【2025最新】前端TypeScript入门视频教程，无废话速成TS（已完结）- 慕课网](https://www.bilibili.com/video/BV1j5ctewEJS?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TypeScript完全解读入门进阶课程](https://www.bilibili.com/video/BV1F7411c7m5/?share_source=copy_web&vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TypeScript](https://www.bilibili.com/video/BV1nE421A7oo?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TypeScript](https://www.bilibili.com/video/BV1wV4y1v73v?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TypeScript 学习](https://www.bilibili.com/video/BV1zi421e7Qc/?spm_id_from=333.999.section.playall&vd_source=bf3d4320498e90d36e1361cc18b45e48)
+        - [typescript手册从零3天全面通](https://www.bilibili.com/video/BV1MZ4y157EP/?share_source=copy_web&vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TS速通教程-禹神](https://www.bilibili.com/video/BV1YS411w7Bf?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TypeScript 学习笔记](https://www.bilibili.com/video/BV1rT411T7JN?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TypeScript-珠峰](https://www.bilibili.com/video/BV1wV4y1v73v/?share_source=copy_web&vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TypeScript零基础入门到实战-黑马](https://www.bilibili.com/video/BV14Z4y1u7pi/?share_source=copy_web&vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TypeScript入门视频教程-千锋教育](https://www.bilibili.com/video/BV1H44y157gq?p=9&vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TypeScript入门实战笔记-拉勾](https://www.bilibili.com/video/BV1K94y1k7PV/?share_source=copy_web&vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TypeScript系列课程-徐老师](https://www.bilibili.com/video/BV1mJ4m1T7c4?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [小满TypeScript基础教程全集](https://www.bilibili.com/video/BV1wR4y1377K?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TS学习笔记](https://www.bilibili.com/video/BV1aC4y1e7Y4?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [Typescript 教程](https://www.bilibili.com/video/BV1mu411G7Uy?p=5&vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TS基础](https://www.bilibili.com/video/BV1mm421j7sw?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TypeScript-后盾人编程](https://www.bilibili.com/video/BV1MQ4y1B7fs?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TS学习笔记](https://www.bilibili.com/video/BV1aC4y1e7Y4?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TypeScript入门](https://www.bilibili.com/video/BV1UY4y1z7W7?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [跟山地人学TypeScript](https://www.bilibili.com/video/BV1Et411e7RB?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [布鲁斯的TypeScript入門攻略|輕打造實時聊天室](https://www.bilibili.com/video/BV1xw411D7cM/?share_source=copy_web&vd_source=84272a2d7f72158b38778819be5bc6ad)
+    - 进阶
+        - [TypeScript](https://www.bilibili.com/video/BV1Bb4y1M7Dk?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TypeScript 进阶教程](https://www.bilibili.com/video/BV1WN411e7hb?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TypeScript 全面解析](https://www.bilibili.com/video/BV1ig411k7pf/?share_source=copy_web&vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [typescript 类型体操-阿崔cxr](https://www.bilibili.com/video/BV1vY41187Tx/?spm_id_from=333.999.0.0)
+    - 零散知识点
+        - [TypeScript速成](https://www.bilibili.com/video/BV1gX4y177Kf?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TypeScript 技术开发](https://www.bilibili.com/video/BV1DvaEeCE3c?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [轻松学TypeScript](https://www.bilibili.com/video/BV1sY4y1H7vk/?spm_id_from=333.999.0.0&vd_source=bf3d4320498e90d36e1361cc18b45e48)
+        - [TypeScript 小细节](https://www.bilibili.com/video/BV1Ap421d7xy?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TypeScript 系列教程](https://www.bilibili.com/video/BV1TV4y1r7yH?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [『TypeScript』综合训练合集-小野森森](https://www.bilibili.com/video/BV1Jt4y1k7dS?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [颠覆认知的『设计模式实战』【TypeScript + JavaScript】](https://www.bilibili.com/video/BV1Py4y1D7TA?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TypeScript官方文档教程阅读](https://www.bilibili.com/video/BV1Xe4y127Pe?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [TS面试题](https://www.bilibili.com/video/BV1rC411p7sR?vd_source=84272a2d7f72158b38778819be5bc6ad)
+        - [结合业务的TypeScript](https://space.bilibili.com/29191310/channel/collectiondetail?sid=299924)
+- 🛠️工具
+    - [TypeScript: 演练场 - 一个用于 TypeScript 和 JavaScript 的在线编辑器](https://www.typescriptlang.org/zh/play)
+    - [TypeScript 类型体操](https://github.com/type-challenges/type-challenges)

@@ -6,6 +6,7 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiCodepenLine",
       "RiJavaLine",
       "RiWechat2Line",
       "RiComputerLine",
@@ -14,8 +15,7 @@
       "RiVuejsLine",
       "RiBriefcase2Line",
       "RiGitBranchFill",
-      "RiGithubFill",
-      "RiJavaFill"
+      "RiGithubFill"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -82,5 +82,6 @@
   "01.Articles/DevKit/内网穿透工具": "RiComputerLine",
   "01.Articles/WxMiniProgram": "RiWechat2Line",
   "01.Articles/SourceCodeAnalysis": "RiFireLine",
-  "01.Articles/SourceCodeAnalysis/Java": "RiJavaLine"
+  "01.Articles/SourceCodeAnalysis/Java": "RiJavaLine",
+  "01.Articles/TypeScript": "RiCodepenLine"
 }

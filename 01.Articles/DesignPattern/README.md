@@ -2,7 +2,7 @@
 tags:
   - Java/DesignPattern
 create_time: 2025/06/14 17:34
-update_time: 2025/06/24 19:19
+update_time: 2025/06/29 13:28
 ---
 
 ## 定义
@@ -87,4 +87,24 @@ for (const [group, items] of grouped.entries()) {
       .map(p => [p.file.link, p.file.ctime, p.file.mtime ?? "无"])
   );
 }
+```
+
+## 参考资料
+
+```dataview
+TABLE 
+  source AS "🌐 来源", 
+  author AS "👤 up主 / 讲师", 
+  type AS "📁 类型", 
+  elink(url, 
+    choice(
+      type = "📺 Video", "▶ 播放", 
+      choice(type = "🛠️ 工具", "🧰 使用", "📖 跳转") 
+    )
+  ) AS "🔗 链接", 
+  join(filter(file.tags, (x) => x != "#Resource" and x != "#Java/DesignPattern"), " ") AS "🏷️ 标签", 
+  rate AS "⭐ 评分", 
+  date AS "📅 日期"
+FROM #Resource AND #Java/DesignPattern
+SORT type, rate DESC, date DESC
 ```
