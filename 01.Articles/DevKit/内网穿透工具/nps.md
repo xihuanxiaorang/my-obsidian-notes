@@ -1,7 +1,7 @@
 ---
 tags:
   - DevKit/内网穿透工具
-update_time: 2025/06/28 23:42
+update_time: 2025/06/29 12:22
 create_time: 2025-06-28T23:39:00
 priority: 1
 ---
@@ -9,9 +9,6 @@ priority: 1
 > [!quote]
 > - Github 仓库地址： [一款轻量级、高性能、功能强大的内网穿透代理服务器](https://github.com/ehang-io/nps) 🚀
 > - 项目文档地址： [https://ehang-io.github.io/nps/#/](https://ehang-io.github.io/nps/#/)
-> - 参考资料
-> 	- [超轻量级NPS内网穿透自带后台设置界面，超好用FRP可以下台了](https://www.bilibili.com/video/BV11t411K7Cg?vd_source=84272a2d7f72158b38778819be5bc6ad)
-> 	- [一键实现内网穿透：NPS内网穿透工具的完整使用指南](https://www.bilibili.com/video/BV1Ed4y1f7jZ?vd_source=84272a2d7f72158b38778819be5bc6ad)
 
 nps 是一款高性能、功能丰富的内网穿透代理服务器，支持 **TCP / UDP 流量转发**，可用于：
 

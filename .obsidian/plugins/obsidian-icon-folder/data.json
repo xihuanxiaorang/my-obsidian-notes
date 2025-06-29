@@ -6,6 +6,8 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiJavaLine",
+      "RiWechat2Line",
       "RiComputerLine",
       "RiBox3Line",
       "RiFireLine",
@@ -13,9 +15,7 @@
       "RiBriefcase2Line",
       "RiGitBranchFill",
       "RiGithubFill",
-      "RiJavaFill",
-      "RiNodejsFill",
-      "RiDatabase2Fill"
+      "RiJavaFill"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -78,7 +78,9 @@
   "01.Articles/CSS": "RiCss3Line",
   "01.Articles/Projects": "RiBriefcase2Line",
   "01.Articles/Projects/vue3-element-template": "RiVuejsLine",
-  "01.Articles/Java/SourceCodeAnalysis": "RiFireLine",
   "01.Articles/DevKit/Docker": "RiBox3Line",
-  "01.Articles/DevKit/内网穿透工具": "RiComputerLine"
+  "01.Articles/DevKit/内网穿透工具": "RiComputerLine",
+  "01.Articles/WxMiniProgram": "RiWechat2Line",
+  "01.Articles/SourceCodeAnalysis": "RiFireLine",
+  "01.Articles/SourceCodeAnalysis/Java": "RiJavaLine"
 }
