@@ -1,10 +1,9 @@
 ---
 tags:
-  - Git
-  - DevKit
+  - DevKit/Git
   - EnvironmentSetup
 create_time: 2024-12-29 17:30
-update_time: 2025/06/28 23:28
+update_time: 2025/06/29 22:01
 ---
 
 ## 安装

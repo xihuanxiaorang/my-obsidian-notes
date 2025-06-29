@@ -2,8 +2,8 @@
 tags:
   - Obsidian/Plugin
 create_time: 2025-04-10 19:12
-update_time: 2025/04/12 18:09
-priority: 1
+update_time: 2025/06/29 22:47
+priority: 10
 ---
 
 [Dataview](https://blacksmithgu.github.io/obsidian-dataview/) 插件为 Obsidian 带来了强大的**数据查询与可视化功能**，让你的 Markdown 笔记像数据库一样灵活处理与分析。其核心功能包括：
@@ -18,7 +18,7 @@ priority: 1
 - **动态内容面板**：可用于生成自动更新的阅读清单、项目进度、笔记索引、任务追踪等视图，提高 Obsidian 的信息组织能力。
 - **脚本模式（DataviewJS）**：使用 JavaScript 编写更复杂的查询和自定义渲染逻辑，适合有编程基础的高级用户。
 
-📌 _适用于：知识库整理、任务管理、读书笔记索引、项目追踪等多场景数据驱动的内容管理需求。_
+📌_适用于：知识库整理、任务管理、读书笔记索引、项目追踪等多场景数据驱动的内容管理需求。_
 
 ## 查询方式
 

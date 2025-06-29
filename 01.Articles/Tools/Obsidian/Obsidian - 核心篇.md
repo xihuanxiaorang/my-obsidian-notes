@@ -3,7 +3,8 @@ tags:
   - Tool
   - Obsidian
 create_time: 2025-02-07 18:42
-update_time: 2025/04/11 18:46
+update_time: 2025/06/29 22:47
+priority: 1
 ---
 
 ## 元数据（Metadata）
@@ -25,7 +26,7 @@ status: 完成
 ```
 
 - 必须置于文件顶部；
-- 采用 `key: value` 的键值对形式；
+- 采用 `key:value` 的键值对形式；
 - 支持多种数据类型：字符串、数组、布尔值、数字、日期等；
 - 被广泛用于分类、筛选、排序、自动生成目录、任务管理等场景；
 - 可被如 [[01.Articles/Tools/Obsidian/Obsidian - 插件篇/Dataview#Dataview|Dataview]]、Templater、Tasks 等插件读取与操作。
@@ -49,7 +50,7 @@ status: 完成
 
 ### Inline Fields（内联字段）
 
-在笔记正文中以 `键:: 值` 形式直接嵌入：
+在笔记正文中以 `键::值` 形式直接嵌入：
 
 ```markdown
 学习主题:: 数据库基础  
