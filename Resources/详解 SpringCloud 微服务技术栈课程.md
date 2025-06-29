@@ -6,7 +6,7 @@ tags:
   - SpringCloud
   - 中间件/Redis
   - 中间件/RabbitMQ
-  - Docker
+  - DevKit/Docker
   - ElasticSearch
   - Tutorial
 type: 📺 Video
