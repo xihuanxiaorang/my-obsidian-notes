@@ -260,7 +260,11 @@
     "note-taking": 135,
     "pkm": 136,
     "DevKit/Docker": 1,
-    "DevKit/内网穿透工具": 2
+    "DevKit/内网穿透工具": 2,
+    "SQL/MySQL": 1,
+    "SQL/MySQL/MVCC": 1,
+    "SQL/MySQL/Transaction": 2,
+    "SQL/MySQL/Index": 3
   },
   "_version": 3
 }

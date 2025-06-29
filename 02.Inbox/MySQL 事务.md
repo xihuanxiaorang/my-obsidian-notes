@@ -1,6 +1,6 @@
 ---
 tags:
-  - SQL
+  - SQL/MySQL/Transaction
 create_time: 2025-03-21 18:52
 update_time: 2025/04/07 11:43
 ---

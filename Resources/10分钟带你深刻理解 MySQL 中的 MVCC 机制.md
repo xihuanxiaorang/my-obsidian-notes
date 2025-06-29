@@ -1,7 +1,7 @@
 ---
 tags:
   - Resource
-  - MySQL/MVCC
+  - SQL/MySQL/MVCC
 type: 📺 Video
 source: B站
 author: 雯ww63

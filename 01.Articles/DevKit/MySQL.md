@@ -1,7 +1,7 @@
 ---
 tags:
   - DevKit
-  - SQL
+  - SQL/MySQL
   - EnvironmentSetup
 create_time: 2024-12-28T17:27:00
 update_time: 2025/06/28 23:28

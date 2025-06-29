@@ -2,7 +2,7 @@
 tags:
   - Resource
   - 教育机构/尚硅谷
-  - MySQL
+  - SQL/MySQL
   - Tutorial
 type: 📺 Video
 source: B站

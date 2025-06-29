@@ -1,6 +1,6 @@
 ---
 tags:
-  - SQL
+  - SQL/MySQL
 create_time: 2025-04-08 19:11
 update_time: 2025/04/26 18:45
 ---

@@ -6,6 +6,8 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiDatabase2Line",
+      "RiFireFill",
       "RiCodepenLine",
       "RiJavaLine",
       "RiWechat2Line",
@@ -13,9 +15,7 @@
       "RiBox3Line",
       "RiFireLine",
       "RiVuejsLine",
-      "RiBriefcase2Line",
-      "RiGitBranchFill",
-      "RiGithubFill"
+      "RiBriefcase2Line"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -63,7 +63,6 @@
   "01.Articles/DevKit": "RiToolsLine",
   "01.Articles/Tools": "RiToolsLine",
   "01.Articles/DesignPattern": "RiLayoutMasonryLine",
-  "01.Articles/SQL": "RiDatabase2Fill",
   "PDF": "RiFilePdf2Line",
   "01.Articles/LeetCode": "RiQuillPenFill",
   "01.Articles/Tools/Obsidian": "LiFolderArchive",
@@ -75,7 +74,6 @@
   "00.Overview/参考资料.md": "RiBookmark3Line",
   "00.Overview/任务清单.md": "RiTaskLine",
   "01.Articles/JavaScript": "RiJavascriptFill",
-  "01.Articles/CSS": "RiCss3Line",
   "01.Articles/Projects": "RiBriefcase2Line",
   "01.Articles/Projects/vue3-element-template": "RiVuejsLine",
   "01.Articles/DevKit/Docker": "RiBox3Line",
@@ -83,5 +81,12 @@
   "01.Articles/WxMiniProgram": "RiWechat2Line",
   "01.Articles/SourceCodeAnalysis": "RiFireLine",
   "01.Articles/SourceCodeAnalysis/Java": "RiJavaLine",
-  "01.Articles/TypeScript": "RiCodepenLine"
+  "01.Articles/TypeScript": "RiCodepenLine",
+  "01.Articles/Spring": "RiFireFill",
+  "01.Articles/SpringBoot": "RiFireFill",
+  "01.Articles/SpringCloud": "RiFireFill",
+  "01.Articles/SpringSecurity": "RiFireFill",
+  "01.Articles/HTML & CSS": "RiCss3Line",
+  "01.Articles/MySQL": "RiDatabase2Fill",
+  "01.Articles/Mybatis": "RiDatabase2Line"
 }

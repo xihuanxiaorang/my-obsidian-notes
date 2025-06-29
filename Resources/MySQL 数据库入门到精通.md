@@ -2,7 +2,7 @@
 tags:
   - Resource
   - 教育机构/黑马程序员
-  - MySQL
+  - SQL/MySQL
   - Tutorial
 type: 📺 Video
 source: B站

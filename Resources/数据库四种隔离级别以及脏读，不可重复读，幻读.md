@@ -1,7 +1,7 @@
 ---
 tags:
   - Resource
-  - MySQL/Transaction
+  - SQL/MySQL/Transaction
 type: 📺 Video
 source: B站
 author: 

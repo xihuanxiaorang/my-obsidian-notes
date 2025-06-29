@@ -1,7 +1,7 @@
 ---
 tags:
   - Resource
-  - MySQL/Index
+  - SQL/MySQL/Index
   - Interview
 type: 📺 Video
 source: B站

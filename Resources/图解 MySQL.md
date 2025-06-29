@@ -1,7 +1,7 @@
 ---
 tags:
   - Resource
-  - MySQL
+  - SQL/MySQL
   - Tutorial
 type: 📃 文档
 source: 

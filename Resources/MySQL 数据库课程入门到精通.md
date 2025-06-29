@@ -2,7 +2,7 @@
 tags:
   - Resource
   - 教育机构/十指波课堂
-  - MySQL
+  - SQL/MySQL
   - Tutorial
 type: 📺 Video
 source: B站

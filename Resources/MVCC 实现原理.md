@@ -1,7 +1,7 @@
 ---
 tags:
   - Resource
-  - MySQL/MVCC
+  - SQL/MySQL/MVCC
   - Interview
 type: 📺 Video
 source: B站
