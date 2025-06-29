@@ -46,13 +46,13 @@
             }
           },
           {
-            "id": "43bb4f051c379736",
+            "id": "53cd8379dbef6000",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "01.Articles/MySQL/README.md",
-                "mode": "preview",
+                "file": "01.Articles/SpringBoot/README.md",
+                "mode": "source",
                 "source": false,
                 "backlinks": false
               },
@@ -189,7 +189,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "01.Articles/MySQL/README.md",
+                "file": "01.Articles/SpringBoot/README.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
@@ -235,7 +235,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 381
+    "width": 381,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -261,32 +262,32 @@
   },
   "active": "7f3f8e206c183eb2",
   "lastOpenFiles": [
+    "01.Articles/SpringBoot/README.md",
+    "Resources/Springboot + Vue3 健身房管理系统视频教程.md",
+    "Resources/SpringBoot + Vue3 前后端分离工程化最佳实践(后端篇).md",
+    "Resources/SpringBoot3 + Vue3 前后端分离项目，轻松掌控从零构建到华为云上线.md",
+    "Resources/【RBAC权限管理系统实战教程】从零构建企业级权限管理.md",
+    "Resources/权限管理系统.md",
+    "Resources/基于 SpringBoot 的 RBAC 权限管理系统.md",
+    "Resources/SpringBoot 到分布式学习.md",
+    "Resources/基于 SpringBoot 精讲微信支付开发.md",
+    "Resources/SpringBoot3 与 AI 协同开发教程.md",
+    "Resources/SpringBoot 开发实战.md",
+    "Resources/SpringBoot2 全套视频教程.md",
+    "Resources/SpringBoot2 零基础入门教程.md",
+    "Resources/SpringBoot3 零基础教程.md",
     "01.Articles/Mybatis/README.md",
-    "01.Articles/Java/README.md",
-    "01.Articles/MySQL/README.md",
-    "Resources/10分钟带你深刻理解 MySQL 中的 MVCC 机制.md",
-    "Resources/15分钟彻底搞懂 MVCC 核心原理！面试必问的数据库事务隔离实现方案.md",
-    "01.Articles/LeetCode/1097 - 游戏玩法分析 V.md",
-    "Resources/彻底搞懂 MySQL 联合索引+最左前缀原则.md",
-    "01.Articles/MySQL/窗口函数.md",
-    "Resources/十分钟掌握MySQL原理和使用（索引、事务隔离级别、MVCC、共享锁排他锁）.md",
-    "Resources/数据库事务原理 ACID 事务隔离级别 脏读 不可重复读 幻读 实战详解.md",
-    "Resources/数据库四种隔离级别以及脏读，不可重复读，幻读.md",
-    "01.Articles/MySQL/通用表表达式.md",
-    "Resources/图解 MySQL.md",
-    "01.Articles/MySQL/行列转换.md",
-    "01.Articles/MySQL/用户留存率.md",
-    "Resources/MVCC 实现原理.md",
-    "01.Articles/DevKit/MySQL.md",
-    "Resources/MySQL 从菜鸟到大牛.md",
-    "02.Inbox/MySQL 事务.md",
-    "Resources/MySQL 调优杀手锏！EXPLAIN 执行计划拆解到实战优化（索引下推-覆盖索引-连接优化全解析）.md",
-    "Resources/MySQL 数据库课程入门到精通.md",
-    "Resources/MySQL 数据库入门到精通.md",
-    "Recommend/Books/MySQL是怎样运行的.md",
-    "Recommend/Books/MySQL是怎样使用的.md",
+    "01.Articles/Spring/README.md",
+    "01.Articles/TypeScript/README.md",
+    "Resources/SpringBoot 实战开发技巧.md",
     "00.Overview/参考资料.md",
-    "01.Articles/MySQL/SQL 执行顺序.md",
+    "Resources/工作流 Camunda.md",
+    "Resources/SpringCloud 微服务架构开发.md",
+    "Resources/SpringBoot 企业级开发教程.md",
+    "Resources/基于 AI 的全新 ssm 框架实战.md",
+    "Resources/Vue.js & Vue3 快速入门到精通.md",
+    "Resources/SpringBoot 深入浅出来一发.md",
+    "Resources/SpringMVC & SpringBoot 入门到精通.md",
     "01.Articles/Mybatis",
     "01.Articles/SpringSecurity",
     "01.Articles/SpringCloud",

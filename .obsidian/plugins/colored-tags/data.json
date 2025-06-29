@@ -264,7 +264,8 @@
     "SQL/MySQL": 1,
     "SQL/MySQL/MVCC": 1,
     "SQL/MySQL/Transaction": 2,
-    "SQL/MySQL/Index": 3
+    "SQL/MySQL/Index": 3,
+    "教育机构/艾编程": 32
   },
   "_version": 3
 }
