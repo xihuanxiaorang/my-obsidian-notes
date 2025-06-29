@@ -44,24 +44,9 @@
               "icon": "lucide-file",
               "title": "参考资料"
             }
-          },
-          {
-            "id": "53cd8379dbef6000",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "01.Articles/SpringBoot/README.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "README"
-            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -189,13 +174,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "01.Articles/SpringBoot/README.md",
+                "file": "00.Overview/参考资料.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "README 的大纲"
+              "title": "参考资料 的大纲"
             }
           },
           {
@@ -235,8 +220,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 381,
-    "collapsed": true
+    "width": 381
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -263,6 +247,14 @@
   "active": "7f3f8e206c183eb2",
   "lastOpenFiles": [
     "01.Articles/SpringBoot/README.md",
+    "01.Articles/未命名",
+    "Resources/大模型接口后端服务（流式返回）.md",
+    "Resources/SpringBoot 微服务授权中心设计.md",
+    "Resources/SpringBoot微服务授权中心设计.md",
+    "Resources/SpringBoot3 文件上传最佳实践.md",
+    "Resources/基于 Springboot2 + Vue3 整合微信支付 V3 版本.md",
+    "Resources/Springboot3.0 实战项目 - 微信小程序接口开发 - 微信登录.md",
+    "Resources/微信支付 & 支付宝支付，一套搞定 Java 在线支付开发教程.md",
     "Resources/Springboot + Vue3 健身房管理系统视频教程.md",
     "Resources/SpringBoot + Vue3 前后端分离工程化最佳实践(后端篇).md",
     "Resources/SpringBoot3 + Vue3 前后端分离项目，轻松掌控从零构建到华为云上线.md",
@@ -280,14 +272,6 @@
     "01.Articles/Spring/README.md",
     "01.Articles/TypeScript/README.md",
     "Resources/SpringBoot 实战开发技巧.md",
-    "00.Overview/参考资料.md",
-    "Resources/工作流 Camunda.md",
-    "Resources/SpringCloud 微服务架构开发.md",
-    "Resources/SpringBoot 企业级开发教程.md",
-    "Resources/基于 AI 的全新 ssm 框架实战.md",
-    "Resources/Vue.js & Vue3 快速入门到精通.md",
-    "Resources/SpringBoot 深入浅出来一发.md",
-    "Resources/SpringMVC & SpringBoot 入门到精通.md",
     "01.Articles/Mybatis",
     "01.Articles/SpringSecurity",
     "01.Articles/SpringCloud",
@@ -297,7 +281,6 @@
     "01.Articles/SourceCodeAnalysis/Java",
     "01.Articles/WxMiniProgram",
     "01.Articles/DevKit/内网穿透工具",
-    "01.Articles/DevKit/Docker/Docker 安装",
     "Zttachments/Pasted image 20250626233140.png",
     "Zttachments/Pasted image 20250626131116.png",
     "Zttachments/Pasted image 20250626125405.png",

@@ -2,7 +2,7 @@
 tags:
   - SpringBoot
 create_time: 2025-06-29T13:46:00
-update_time: 2025/06/29 19:04
+update_time: 2025/06/29 19:18
 ---
 
 ## 参考资料
@@ -48,13 +48,3 @@ SORT type, rate DESC, date DESC
 		- [springboot文件上传下载](https://www.bilibili.com/video/BV1m1421B7Ja?vd_source=84272a2d7f72158b38778819be5bc6ad)
 		- [超详细的SpringBoot Minio大文件上传业务，看了这个视频，你绝对不会后悔](https://www.bilibili.com/video/BV1vC4y1X7UR?vd_source=84272a2d7f72158b38778819be5bc6ad)
 		- [vue+springboot文件分片上传与边放边播实现](https://www.bilibili.com/video/BV1Sh4y1k7Xi?vd_source=84272a2d7f72158b38778819be5bc6ad)
-	- 零散
-		- [JAVA接大模型接口到后端服务（流式返回）](https://www.bilibili.com/video/BV1n9AGeKEPL?vd_source=84272a2d7f72158b38778819be5bc6ad)
-		- [基于Springboot2+vue3整合微信扫码登录](https://www.bilibili.com/video/BV1K34y1R79Q?vd_source=84272a2d7f72158b38778819be5bc6ad)
-		- [基于Springboot2+vue3整合微信支付V3版本](https://www.bilibili.com/video/BV1eb4y187Qy?vd_source=84272a2d7f72158b38778819be5bc6ad)
-		- [基于Springboot2.x+vue3.x整合支付宝支付](https://www.bilibili.com/video/BV1N44y1k7aE?vd_source=84272a2d7f72158b38778819be5bc6ad)
-		- [Spring Boot 3.x 文件上传最佳实践](https://www.bilibili.com/video/BV1eoWPe9EBR?vd_source=84272a2d7f72158b38778819be5bc6ad)
-		- [Swagger3新玩法 - OpenAPI生成器工具演示](https://www.bilibili.com/video/BV1KZ4UekENx?vd_source=84272a2d7f72158b38778819be5bc6ad)
-		- [springboot3.0实战项目-微信小程序接口开发-微信登录](https://www.bilibili.com/video/BV1UD4y1a7dU?vd_source=84272a2d7f72158b38778819be5bc6ad)
-		- [基于openApi3的API开发最佳实践](https://www.bilibili.com/video/BV18N4y1e74U?vd_source=84272a2d7f72158b38778819be5bc6ad)
-		- [【飞网课堂】SpringBoot微服务授权中心设计 - （JWT、RSA、无状态登录、JWT存储）](https://www.bilibili.com/video/BV1APRsYSEcc?vd_source=84272a2d7f72158b38778819be5bc6ad)

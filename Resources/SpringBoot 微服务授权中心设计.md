@@ -2,7 +2,6 @@
 tags:
   - Resource
   - 教育机构/飞网课堂
-  - Java
   - SpringBoot
   - SpringCloud
   - Tutorial
