@@ -1,8 +1,8 @@
 ---
 tags:
   - Mybatis
-create_time: 2025-06-29T13:56:00
-update_time: 2025/06/29 13:56
+create_time: 2025/06/29 13:56
+update_time: 2025/06/30 12:07
 ---
 
 ## 参考资料

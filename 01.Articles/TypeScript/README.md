@@ -1,8 +1,8 @@
 ---
 tags:
   - Frontend/TypeScript
-create_time: 2025-06-29T13:25:00
-update_time: 2025/06/29 13:27
+create_time: 2025/06/29 13:25
+update_time: 2025/06/30 12:10
 ---
 
 ## 参考资料
