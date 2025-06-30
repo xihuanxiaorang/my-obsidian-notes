@@ -3,7 +3,7 @@ tags:
   - Resource
   - Frontend/Vue
   - SpringBoot
-  - Sa-Token
+  - SaToken
   - Project/后台管理系统
 type: 📺 Video
 source: B站

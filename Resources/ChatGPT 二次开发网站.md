@@ -4,7 +4,7 @@ tags:
   - Java
   - SpringBoot
   - MongoDB
-  - Sa-Token
+  - SaToken
   - Frontend/Vue
   - Project
 type: 📺 Video

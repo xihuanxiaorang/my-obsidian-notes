@@ -6,16 +6,16 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiCloudLine",
+      "RiShieldLine",
+      "RiGithubLine",
       "RiFilePdf2Line",
       "RiRouteLine",
       "RiGitBranchLine",
       "RiFireLine",
       "RiMiniProgramFill",
       "RiMiniProgramLine",
-      "RiBook3Line",
-      "RiDatabase2Line",
-      "RiFireFill",
-      "RiCodepenLine"
+      "RiBook3Line"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -68,7 +68,6 @@
   "01.Articles/Tools/Obsidian": "LiFolderArchive",
   "01.Articles/Tools/Obsidian/Obsidian - 插件篇": "RiPlug2Line",
   "Resources": "RiLinksLine",
-  "00.Overview/参考资料.md": "RiBookmark3Line",
   "00.Overview/任务清单.md": "RiTaskLine",
   "01.Articles/JavaScript": "RiJavascriptFill",
   "01.Articles/Projects": "RiBriefcase2Line",
@@ -81,8 +80,8 @@
   "01.Articles/TypeScript": "RiCodepenLine",
   "01.Articles/Spring": "RiFireFill",
   "01.Articles/SpringBoot": "RiFireFill",
-  "01.Articles/SpringCloud": "RiFireFill",
-  "01.Articles/SpringSecurity": "RiFireFill",
+  "01.Articles/SpringCloud": "RiCloudLine",
+  "01.Articles/SpringSecurity": "RiShieldLine",
   "01.Articles/HTML & CSS": "RiCss3Line",
   "01.Articles/MySQL": "RiDatabase2Fill",
   "01.Articles/Mybatis": "RiDatabase2Line",
@@ -91,5 +90,7 @@
   "01.Articles/SourceCodeHandwritten": "RiFireLine",
   "01.Articles/DevKit/Git": "RiGitBranchLine",
   "01.Articles/DevKit/Maven": "RiRouteLine",
-  "01.Articles/Tools/Zetero": "RiFilePdf2Line"
+  "01.Articles/Tools/Zetero": "RiFilePdf2Line",
+  "01.Articles/DevKit/GithubActions": "RiGithubLine",
+  "01.Articles/SaToken": "RiShieldLine"
 }
