@@ -1,7 +1,7 @@
 ---
 tags:
   - Resource
-  - Zetero
+  - Tool/Zetero
   - Tutorial
 type: 📺 Video
 source: B站

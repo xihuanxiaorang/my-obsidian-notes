@@ -2,7 +2,7 @@
 tags:
   - SpringBoot
 create_time: 2025/06/29 13:46
-update_time: 2025/06/30 12:09
+update_time: 2025/06/30 12:37
 ---
 
 ## 参考资料
@@ -48,3 +48,8 @@ SORT type, rate DESC, date DESC
 		- [springboot文件上传下载](https://www.bilibili.com/video/BV1m1421B7Ja?vd_source=84272a2d7f72158b38778819be5bc6ad)
 		- [超详细的SpringBoot Minio大文件上传业务，看了这个视频，你绝对不会后悔](https://www.bilibili.com/video/BV1vC4y1X7UR?vd_source=84272a2d7f72158b38778819be5bc6ad)
 		- [vue+springboot文件分片上传与边放边播实现](https://www.bilibili.com/video/BV1Sh4y1k7Xi?vd_source=84272a2d7f72158b38778819be5bc6ad)
+		- [【新手向】答读者问：文件上传那些事儿（杂谈）](https://www.bilibili.com/video/BV1BXmwYwE3u?vd_source=84272a2d7f72158b38778819be5bc6ad)
+		- [minio实现断点续传，并提供现成starter](https://www.bilibili.com/video/BV1me4y1K75M?vd_source=84272a2d7f72158b38778819be5bc6ad)
+		- [SpringBoot大文件上传(大小文件上传皆可)](https://www.bilibili.com/video/BV1KU4y1F71D?vd_source=84272a2d7f72158b38778819be5bc6ad)
+		- [超详细的SpringBoot Minio大文件上传业务](https://www.bilibili.com/video/BV1vC4y1X7UR?vd_source=84272a2d7f72158b38778819be5bc6ad)
+		- [大文件分片上传](https://www.bilibili.com/video/BV18h41137J9?vd_source=84272a2d7f72158b38778819be5bc6ad)
