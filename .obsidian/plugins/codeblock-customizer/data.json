@@ -278,7 +278,7 @@
         "highlightNonMatchingBrackets": true,
         "inverseFold": false,
         "enableSelectionMatching": false,
-        "unwrapcode": false,
+        "unwrapcode": true,
         "buttons": {
           "alwaysShowButtons": false,
           "alwaysShowCopyCodeButton": true,
@@ -400,7 +400,7 @@
   "alternateHighlightColorName": "",
   "languageBorderColorName": "",
   "foldAllCommand": false,
-  "settingsType": "gutter",
+  "settingsType": "codeblock",
   "langSpecificSettingsType": "",
   "languageSpecificLanguageName": ""
 }

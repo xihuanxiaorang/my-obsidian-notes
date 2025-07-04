@@ -24,5 +24,7 @@
   "anuppuccin-theme-settings@@anp-toggle-preview": false,
   "anuppuccin-theme-settings@@anp-hide-external-link-icon": false,
   "minimal-advanced@@cursor": "default",
-  "blue-topaz-theme@@obsidian-default-image": true
+  "blue-topaz-theme@@obsidian-default-image": true,
+  "Appearance-light@@card-layout-open-light": false,
+  "Appearance-light@@theme-light-style-select": "theme-light-background-default"
 }

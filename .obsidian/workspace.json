@@ -27,24 +27,8 @@
               "icon": "lucide-trello",
               "title": "任务清单"
             }
-          },
-          {
-            "id": "57e954b19188d949",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "01.Articles/DevKit/Docker/Docker 使用/Docker 镜像.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "Docker 镜像"
-            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -172,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "01.Articles/DevKit/Docker/Docker 使用/Docker 镜像.md",
+                "file": "00.Overview/任务清单.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Docker 镜像 的大纲"
+              "title": "任务清单 的大纲"
             }
           },
           {
@@ -244,19 +228,25 @@
   },
   "active": "7f3f8e206c183eb2",
   "lastOpenFiles": [
+    "01.Articles/DevKit/GithubActions/README.md",
+    "01.Articles/DevKit/Docker/README.md",
+    "01.Articles/DevKit/Docker/Docker 核心/Docker 容器.md",
+    "01.Articles/DevKit/Docker/Docker 核心/Docker 镜像.md",
     "00.Overview/任务清单.md",
-    "Zttachments/Pasted image 20250630221520.png",
-    "01.Articles/DevKit/Docker/Docker 使用/Docker 镜像.md",
+    "Resources/Docker 教程.md",
+    "Resources/Docker 教程1.md",
+    "01.Articles/DevKit/Docker/Docker 实例/Docker 安装 Redis.md",
     "01.Articles/DevKit/Docker/Docker 实例/Docker 安装 MySQL.md",
+    "Resources/Docker 零基础入门.md",
+    "03.Excalidraw/Drawing 2025-07-01 13.02.35.excalidraw.md",
+    "Zttachments/Pasted image 20250630221520.png",
     "01.Articles/DevKit/Docker/Docker 安装/Windows Docker 安装.md",
     "Zttachments/Pasted image 20250630225126.png",
     "Zttachments/Pasted image 20250630224951.png",
     "Zttachments/Pasted image 20250630224812.png",
     "Zttachments/Pasted image 20250630224343.png",
     "Zttachments/Pasted image 20250630224142.png",
-    "01.Articles/DevKit/Docker/README.md",
-    "01.Articles/DevKit/Docker/Docker 实例/Docker 安装 Redis.md",
-    "01.Articles/DevKit/Docker/Docker 使用",
+    "01.Articles/DevKit/Docker/Docker 核心",
     "Resources/Window 下玩转 Docker Desktop.md",
     "Resources/Docker 1小时快速上手教程，无废话纯干货.md",
     "Resources/docker 一小时入门精讲课程.md",
@@ -271,11 +261,6 @@
     "Resources/SaToken 最牛X的权限框架.md",
     "Resources/SaToken 轻松搞定微服务安全认证与鉴权.md",
     "Resources/第三方登录是如何与 SaToken 权限合作的.md",
-    "Resources/使用 SaToken 实现 OAuth2.md",
-    "Resources/SaToken 在 OAuth2 的简化流程解析.md",
-    "Resources/SaToken 认证授权快速上手.md",
-    "Resources/SaToken 实现企业权限系统.md",
-    "01.Articles/SourceCodeHandwritten/README.md",
     "01.Articles/SaToken",
     "01.Articles/DevKit/GithubActions",
     "01.Articles/Tools/Zetero",

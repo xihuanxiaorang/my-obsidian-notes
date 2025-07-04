@@ -1,8 +1,8 @@
 ---
 tags:
   - DevKit/Docker
-create_time: 2025-06-27T19:08:00
-update_time: 2025/06/28 23:25
+create_time: 2025/06/27 19:07
+update_time: 2025/07/01 23:12
 priority: 21
 ---
 
@@ -69,7 +69,7 @@ docker pull redis
 
 输出示例：
 
-```bash hl:1,12
+```bash hl:1,13
 ➜  ~ docker pull redis
 Using default tag: latest
 latest: Pulling from library/redis

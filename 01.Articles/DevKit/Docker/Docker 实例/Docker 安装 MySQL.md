@@ -1,8 +1,8 @@
 ---
 tags:
   - DevKit/Docker
-create_time: 2025-06-26 19:20
-update_time: 2025/06/28 23:25
+create_time: 2025/06/26 19:20
+update_time: 2025/07/02 16:13
 priority: 20
 ---
 
@@ -71,7 +71,7 @@ docker pull mysql
 
 输出示例：
 
-```bash hl:1,15
+```bash hl:1,16
 ➜  ~ docker pull mysql
 Using default tag: latest
 latest: Pulling from library/mysql
@@ -225,22 +225,6 @@ docker run -d \
 	- `/data/mysql/data:/var/lib/mysql`：数据目录挂载，确保数据库数据不会因容器删除而丢失。
 	- `/data/mysql/conf/my.cnf:/etc/my.cnf`：主配置文件挂载，支持自定义配置。
 	- `/data/mysql/conf/conf.d:/etc/mysql/conf.d`：配置目录挂载，可额外添加 `.cnf` 子配置文件。
-
-输出示例：
-
-```bash hl:1-9
-➜  ~ docker run -d \
-  --restart always \
-	--name mysql \
-	-p 3306:3306 \
-  -e MYSQL_ROOT_PASSWORD=123456 \
-  -v /data/mysql/data:/var/lib/mysql \
-  -v /data/mysql/conf/my.cnf:/etc/my.cnf \
-  -v /data/mysql/conf/conf.d:/etc/mysql/conf.d \
-  mysql
-b86ff6ddca782a981982e6bd0b3b89e2eaf29fe90406ca6c8f8124065140f4a9
-➜  ~                                                                                                      
-```
 
 ## 验证容器是否启动成功
 
