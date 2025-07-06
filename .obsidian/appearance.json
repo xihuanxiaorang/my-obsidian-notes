@@ -1,15 +1,16 @@
 {
   "theme": "system",
   "cssTheme": "Border",
-  "interfaceFontFamily": "JetBrains Mono,HarmonyOS Sans SC",
+  "interfaceFontFamily": "仓耳今楷01",
   "monospaceFontFamily": "JetBrains Mono",
-  "textFontFamily": "JetBrains Mono,HarmonyOS Sans SC",
+  "textFontFamily": "仓耳今楷01",
   "baseFontSize": 14,
   "baseFontSizeAction": true,
   "enabledCssSnippets": [
     "extended-colorschemes",
     "ChatBubble",
-    "clutter-free-headings"
+    "clutter-free-headings",
+    "dark-image"
   ],
   "accentColor": "",
   "showRibbon": true

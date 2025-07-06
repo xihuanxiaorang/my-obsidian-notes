@@ -26,5 +26,8 @@
   "minimal-advanced@@cursor": "default",
   "blue-topaz-theme@@obsidian-default-image": true,
   "Appearance-light@@card-layout-open-light": false,
-  "Appearance-light@@theme-light-style-select": "theme-light-background-default"
+  "Appearance-light@@theme-light-style-select": "theme-light-background-default",
+  "Editor@@heading-indicator-off": true,
+  "Editor@@img-darken": false,
+  "Editor@@collapse-icon-restore": false
 }

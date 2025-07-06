@@ -2,8 +2,8 @@
 tags:
   - DevKit/Docker
 create_time: 2025/06/28 22:21
-update_time: 2025/06/30 22:54
-priority: 1
+update_time: 2025/07/06 19:14
+priority: 2
 ---
 
 前期准备：『 [[WSL2]] 』
@@ -101,7 +101,7 @@ E:\devsoft\Docker\DockerDesktopWSL
 
 点击 **Apply & Restart** 应用更改并重启 Docker。
 
-## 配置镜像加速（可选）
+## 配置镜像加速器（可选）
 
 为提升镜像拉取速度，建议配置国内加速源：
 

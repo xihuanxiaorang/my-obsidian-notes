@@ -2,7 +2,7 @@
 tags:
   - DevKit/Docker
 create_time: 2025/07/02 12:21
-update_time: 2025/07/04 19:22
+update_time: 2025/07/05 22:02
 priority: 11
 ---
 
@@ -256,7 +256,7 @@ docker container rm [OPTIONS] CONTAINER [CONTAINER...]
 - `-f, --force`：**强制删除容器**
 	- 可用于删除运行中的容器。
 	- 等同于发送 `SIGKILL` 信号终止容器后再删除。
-- `-v, --volumes`：**同时删除挂载的匿名卷**
+- `-v, --volumes`：**同时删除挂载的匿名数据卷**
 	- 默认不会删除与容器关联的数据卷。
 	- 指定该参数可在删除容器时一并清理数据卷，防止遗留无用数据。
 

@@ -2,16 +2,18 @@
 tags:
   - DevKit/Git
   - EnvironmentSetup
-create_time: 2024-12-29 17:30
-update_time: 2025/06/29 22:01
+create_time: 2024/12/29 17:30
+update_time: 2025/07/04 22:38
 ---
 
 ## 安装
 
 访问 [Git - Downloading Package (git-scm.com)](https://git-scm.com/download/win)，下载 Windows 版本（需要根据自己的系统进行选择）
 ![](https://img.xiaorang.fun/202502281752504.png)
+
 下载完成之后，以管理员身份运行 `Git-2.42.0.2-64-bit.exe` 文件，然后点击 Next 进行下一步；
 ![](https://img.xiaorang.fun/202502281752135.png)
+
 勾选 `Add a Git Bash Profile to Windows Terminal`，然后一直点击 Next 下一步直至安装完成即可！
 ![](https://img.xiaorang.fun/202502281753282.png)
 
@@ -53,6 +55,7 @@ git config --global core. editor emacs
 
 要检查已有的配置信息，可以使用 `git config --list` 命令；
 ![](https://img.xiaorang.fun/202502281754493.png)
+
 有时候会看到重复的变量名，那就说明它们来自不同的配置文件（比如 `/etc/gitconfig` 和 `~/.gitconfig`），不过最终 Git 实际采用的是最后一个。
 也可以直接查阅某个环境变量的设定，只要把特定的名字跟在后面即可，如下所示：`git config user.name`。
 ![](https://img.xiaorang.fun/202502281754317.png)
@@ -255,34 +258,34 @@ git commit -m "update submodule branch"
 1. 打开 Git Bash 或者 Windows Terminal 终端；
 2. 粘贴以下文本（替换为本人的 Github 邮件地址）；
 
-   ```bash
-     ssh-keygen -t ed25519 -C "your_email@example.com"
-   ```
+	```bash
+	ssh-keygen -t ed25519 -C "your_email@example.com"
+	```
 
    当系统提示您"Enter a file in which to save the key（输入要保存密钥的文件）"时，可以按 Enter 键接受默认文件位置。
    ![](https://img.xiaorang.fun/202502281755840.png)
 
-   > [!note]
-   > 如果以前创建了 SSH 密钥，则 ssh-keygen 可能会要求重写另一个密钥，在这种情况下，我们建议创建自定义命名的 SSH 密钥。为此，请键入默认文件位置，并将 id_ssh_keyname 替换为自定义密钥名称。
+> [!note]
+> 如果以前创建了 SSH 密钥，则 ssh-keygen 可能会要求重写另一个密钥，在这种情况下，我们建议创建自定义命名的 SSH 密钥。为此，请键入默认文件位置，并将 id_ssh_keyname 替换为自定义密钥名称。
 
-   ```bash
-   Enter a file in which to save the key (/c/Users/YOU/. ssh/id_ALGORITHM):[Press enter]
-   ```
+```bash
+Enter a file in which to save the key (/c/Users/YOU/. ssh/id_ALGORITHM):[Press enter]
+```
 
-3. 在提示符下，键入安全密码；为了后续使用方便此处不设置密码，直接回车即可；
+1. 在提示符下，键入安全密码；为了后续使用方便此处不设置密码，直接回车即可；
 
     ```bash
     > Enter passphrase (empty for no passphrase): [Type a passphrase]
     > Enter same passphrase again: [Type passphrase again]
     ```
 
-4. [将 SSH 密钥添加到 ssh-agent](https://docs.github.com/zh/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#adding-your-ssh-key-to-the-ssh-agent)
+2. [将 SSH 密钥添加到 ssh-agent](https://docs.github.com/zh/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#adding-your-ssh-key-to-the-ssh-agent)
     1. 使用 `eval "$(ssh-agent -s)"` 命令确保 ssh-agent 正在运行；
        ![](https://img.xiaorang.fun/202502281755820.png)
     2. 使用 `ssh-add ~/.ssh/id_ed25519` 命令将 SSH 私钥添加到 ssh-agent；
         如果使用其他名称创建了密钥或要添加具有其他名称的现有密钥，请将命令中的 ided25519 替换为私钥文件的名称。
         ![](https://img.xiaorang.fun/202502281755454.png)
-5. [新增 SSH 密钥到 GitHub 帐户](https://docs.github.com/zh/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+3. [新增 SSH 密钥到 GitHub 帐户](https://docs.github.com/zh/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
     1. 使用 `clip < ~/.ssh/id_ed25519.pub` 命令将 SSH 公钥复制到剪贴板；如果您的 SSH 公钥文件与示例代码不同，请修改文件名以匹配您当前的设置。
        ![](https://img.xiaorang.fun/202502281756937.png)
         在复制密钥时，请勿添加任何新行或空格！
@@ -292,7 +295,7 @@ git commit -m "update submodule branch"
        ![](https://img.xiaorang.fun/202502281756139.png)
     4. **填写标题**（为新密钥添加描述性标签，例如，如果使用的是个人笔记本电脑，则可以将此密钥称为"个人笔记本电脑"） → **粘贴公钥** → **添加 SSH 密钥**；
        ![](https://img.xiaorang.fun/202502281757913.png)
-6. 使用 `ssh -T git@github.com` 命令[测试 SSH 连接](https://docs.github.com/zh/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection) ；
+4. 使用 `ssh -T git@github.com` 命令[测试 SSH 连接](https://docs.github.com/zh/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection) ；
    ![](https://img.xiaorang.fun/202502281757005.png)
     验证生成的消息中包含您的用户名。
 
@@ -310,6 +313,7 @@ git commit -m "update submodule branch"
    ![](https://img.xiaorang.fun/202502281757305.png)
 3. 在文件名字段中，填写 LICENSE 或 LICENSE.md（**全部大写**） ；
 4. 在文件名下，点击**选择许可证模板**；
+
    ![](https://img.xiaorang.fun/202502281757745.png)
 5. 在页面左边的 [Add a license to your project](https://github.com/xihuanxiaorang/java-study/community/license/new)（**添加许可到项目**）下，检查可用的许可，然后从列表中选择许可 → **查看并提交**；此处选择 MIT 开源协议，对于各个开源协议不懂的小伙伴可以参考[[如何选择开源协议]]这篇文章；
    ![](https://img.xiaorang.fun/202502281758417.png)
@@ -331,14 +335,19 @@ git commit -m "update submodule branch"
 解决方案：更改当前 git 仓库文件夹的所有者！具体步骤如下所示：
 
 1. 鼠标右键文件夹→属性→安全→高级
+
    ![](https://img.xiaorang.fun/202502281812576.png)
 2. 更改所有者
+
    ![](https://img.xiaorang.fun/202502281813418.png)
 3. 选择用户或组→高级
+
    ![](https://img.xiaorang.fun/202502281813491.png)
 4. 立即查找→选择当前登陆用户为所有者
+
    ![](https://img.xiaorang.fun/202502281813300.png)
 5. 应用于当前文件夹下的子文件夹和文件
+
    ![](https://img.xiaorang.fun/202502281813736.png)
    ![](https://img.xiaorang.fun/202502281814505.png)
 6. 查看是否已解决
