@@ -2,7 +2,7 @@
 tags:
   - DevKit/Docker
 create_time: 2025/07/05 22:03
-update_time: 2025/07/06 22:03
+update_time: 2025/07/06 22:07
 priority: 1
 ---
 
@@ -210,7 +210,7 @@ Docker Engine 提供多种安装方式，根据实际需求选择适合的安装
 	如果下载镜像时遇到超时问题，请先[[#配置镜像加速器 ]]。
 
 > [!tip]
-> 如需升级 Docker，只需重新执行步骤 2 的安装命令，系统将会自动安装可用的更新版本。
+> 如需升级 Docker，只需重新运行第 2 步安装命令，系统就会自动安装可用的更新版本，无需手动卸载旧版本。
 
 ### Install using the convenience script
 

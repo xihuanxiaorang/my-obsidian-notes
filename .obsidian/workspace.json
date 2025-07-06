@@ -21,24 +21,8 @@
               "icon": "lucide-file",
               "title": "Docker 容器"
             }
-          },
-          {
-            "id": "fd525d6c27361395",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "01.Articles/DevKit/Docker/Docker 安装/Install Docker Desktop on Windows.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "Install Docker Desktop on Windows"
-            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -166,13 +150,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "01.Articles/DevKit/Docker/Docker 安装/Install Docker Desktop on Windows.md",
+                "file": "01.Articles/DevKit/Docker/Docker 核心/Docker 容器.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Install Docker Desktop on Windows 的大纲"
+              "title": "Docker 容器 的大纲"
             }
           },
           {
@@ -238,10 +222,12 @@
   },
   "active": "7f3f8e206c183eb2",
   "lastOpenFiles": [
-    "01.Articles/DevKit/Docker/Docker 核心/Docker 容器.md",
     "01.Articles/DevKit/Docker/Docker 安装/Install Docker Desktop on Windows.md",
-    "01.Articles/DevKit/Docker/README.md",
+    "Zttachments/Pasted image 20250706224029.png",
     "01.Articles/DevKit/Docker/Docker 安装/Install Docker Engine on Ubuntu.md",
+    "01.Articles/DevKit/WSL2.md",
+    "01.Articles/DevKit/Docker/Docker 核心/Docker 容器.md",
+    "01.Articles/DevKit/Docker/README.md",
     "01.Articles/DevKit/Docker/Docker 核心/Docker 数据卷.md",
     "01.Articles/DevKit/Docker/Docker 核心/Docker 镜像.md",
     "Resources/详解 SpringCloud 微服务技术栈课程.md",
@@ -269,8 +255,6 @@
     "Zttachments/Pasted image 20250630224142.png",
     "01.Articles/DevKit/Docker/Docker 核心",
     "Resources/Window 下玩转 Docker Desktop.md",
-    "Resources/Docker 1小时快速上手教程，无废话纯干货.md",
-    "Resources/docker 一小时入门精讲课程.md",
     "01.Articles/SaToken",
     "01.Articles/DevKit/GithubActions",
     "01.Articles/Tools/Zetero",
@@ -283,7 +267,6 @@
     "01.Articles/Mybatis",
     "Zttachments/Pasted image 20250626233140.png",
     "Zttachments/Pasted image 20250626131116.png",
-    "Zttachments/Pasted image 20250626125405.png",
     "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
     "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
     "04.Canvas/SQL JOINS.canvas",
