@@ -231,8 +231,8 @@
     },
     "remove-space-before-or-after-characters": {
       "enabled": true,
-      "characters-to-remove-space-before": "_::",
-      "characters-to-remove-space-after": "_.::"
+      "characters-to-remove-space-before": "_",
+      "characters-to-remove-space-after": "_. "
     },
     "space-after-list-markers": {
       "enabled": true
