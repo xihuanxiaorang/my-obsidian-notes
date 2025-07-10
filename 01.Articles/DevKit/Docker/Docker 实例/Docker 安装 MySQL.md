@@ -2,7 +2,7 @@
 tags:
   - DevKit/Docker
 create_time: 2025/06/26 19:20
-update_time: 2025/07/02 16:13
+update_time: 2025/07/10 23:23
 priority: 20
 ---
 
@@ -69,32 +69,26 @@ mysql/mysql-operator   MySQL Operator for Kubernetes                   1
 docker pull mysql
 ```
 
-输出示例：
+输出示例：拉取指定版本（推荐明确版本号避免未来升级导致兼容问题）
 
 ```bash hl:1,16
-➜  ~ docker pull mysql
-Using default tag: latest
-latest: Pulling from library/mysql
-4657dc0fd6ee: Pull complete
-7af7a034b8b9: Pull complete
-10cecf14f09b: Pull complete
-d20478bf3bbf: Pull complete
-028720beb240: Pull complete
-ead6a62c24e9: Pull complete
-bfba8db0f2bd: Pull complete
-87129af36c90: Pull complete
-ed0a8990cecb: Pull complete
-7a26ee8a4dfe: Pull complete
-Digest: sha256:9a084cc73e7186283c564875e08d8af2c0e5c925333ad0a713f02fb1d826f78a
-Status: Downloaded newer image for mysql:latest
-docker.io/library/mysql:latest
+➜  ~ docker pull mysql：8.0.29	
+8.0.29: Pulling from library/mysql
+4e93c6fd777f: Pull complete 
+d48f3c15cb80: Pull complete 
+327840d38cb2: Pull complete 
+94c3d7b2c9ae: Pull complete 
+e12b159b2a12: Pull complete 
+cbf214d981a6: Pull complete 
+e54b73e95ef3: Pull complete 
+7d1cc1ea1b3d: Pull complete 
+f6cfbf240ed7: Pull complete 
+e077469d560d: Pull complete 
+642077275f5f: Pull complete 
+Digest: sha256:152cf187a3efc56afb0b3877b4d21e231d1d6eb828ca9221056590b0ac834c75
+Status: Downloaded newer image for mysql:8.0.29
+docker.io/library/mysql:8.0.29
 ➜  ~    
-```
-
-如需拉取指定版本（推荐明确版本号避免未来升级导致兼容问题）：
-
-```bash
-docker pull mysql:8.0.29
 ```
 
 > [!tip]
@@ -110,8 +104,8 @@ docker images
 
 ```bash hl:1,3
 ➜  ~ docker images
-REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
-mysql        latest    9a084cc73e71   2 months ago   1.17GB
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+mysql        8.0.29    152cf187a3ef   2 years ago   609MB
 ➜  ~ 
 ```
 
@@ -123,20 +117,24 @@ mysql        latest    9a084cc73e71   2 months ago   1.17GB
 
 ## 准备工作
 
-### 创建专用目录
+### 创建挂载目录
 
-创建 MySQL 专用目录，用于挂载配置文件与数据文件：
+为 MySQL 容器准备专用目录，用于挂载配置文件、数据文件及日志文件：
 
 ```bash
-sudo mkdir -p /data/mysql/{conf,data}
+sudo mkdir -p /data/mysql8029/{conf,data,log}
 ```
 
+- `conf`：用于挂载自定义配置文件（`.cnf`），实现参数覆盖或功能扩展；
+- `data`：用于挂载数据库数据目录，实现数据持久化；
+- `log`：用于挂载日志目录，便于记录错误日志、慢查询日志等；
+
 > [!tip]
-> 建议将数据与配置集中管理，便于备份、迁移和版本控制。
+> 建议将所有相关目录集中在统一路径下，便于统一备份、版本控制与迁移操作。
 
-### 启动临时容器提取默认配置
+### 提取默认配置文件（可选）
 
-运行临时容器，从中提取官方默认配置文件：
+若需参考官方默认配置以进行定制，可先启动一个临时容器并提取其配置文件：
 
 ```bash
 docker run -d \
@@ -144,45 +142,46 @@ docker run -d \
 	--restart unless-stopped \
 	-e MYSQL_ROOT_PASSWORD=123456 \
 	-p 3306:3306 \
-	mysql
+	mysql:8.0.29
 ```
 
-各参数说明详见[[#^f912d3|参数说明]]
-
-### 复制配置文件至宿主机
-
-从容器中拷贝配置文件至宿主机指定目录：
+将默认配置文件复制到宿主机指定目录：
 
 ```bash
-sudo docker cp mysql-temp:/etc/my.cnf /data/mysql/conf/
-sudo docker cp mysql-temp:/etc/mysql/conf.d /data/mysql/conf/
+sudo docker cp mysql-temp:/etc/my.cnf /data/mysql8029/conf/
 ```
 
-### 删除临时容器
-
-配置文件提取完成后，删除该临时容器：
+然后删除临时容器：
 
 ```bash
 docker rm -f mysql-temp
 ```
 
+> [!important] MySQL 配置文件加载机制
+> 容器启动时，MySQL 会加载默认配置文件（路径依镜像不同），并可能包含如下语句：
+> ```ini
+> !includedir /etc/mysql/conf.d/
+> ```
+> 它表示：**将 `/etc/mysql/conf.d/` 目录下的所有 `.cnf` 文件一并加载**，且这些文件中的配置项**会覆盖默认配置中的同名项**。
+> ✨**推荐做法**：挂载自定义配置文件到至 `/etc/mysql/conf.d/`，以实现灵活、非侵入式的定制配置，而非直接覆盖主配置文件。
+
 ## 启动 MySQL 容器
 
-使用以下命令启动一个**后台运行**的 MySQL 容器，支持**系统重启自动启动**，并**挂载本地数据与配置文件**：
+使用以下命令启动一个**后台运行**的 MySQL 容器，支持**系统重启自动启动**，并挂载本地的**数据、配置以及日志目录**：
 
 ```bash
 docker run -d \
   --restart always \
-	--name mysql \
+	--name mysql8029 \
 	-p 3306:3306 \
   -e MYSQL_ROOT_PASSWORD=123456 \
-  -v /data/mysql/data:/var/lib/mysql \
-  -v /data/mysql/conf/my.cnf:/etc/my.cnf \
-  -v /data/mysql/conf/conf.d:/etc/mysql/conf.d \
-  mysql
+  -v /data/mysql8029/data:/var/lib/mysql \
+  -v /data/mysql8029/log:/var/log/mysql \
+  -v /data/mysql8029/conf:/etc/mysql/conf.d \
+  mysql:8.0.29
 ```
 
-参数说明： ^f912d3
+参数说明：
 - `-d`：**后台运行容器**
 	- 启用 **"detached 模式"**，容器在**后台运行**，终端不被阻塞。
 	- 执行后会返回容器 ID，而非实时日志。
@@ -197,9 +196,9 @@ docker run -d \
 	- 指定自定义名称，便于管理和引用，例如：
 
 		```bash
-		docker stop mysql
-		docker logs mysql
-		docker exec -it mysql /bin/bash
+		docker stop mysql8029
+		docker logs mysql8029
+		docker exec -it mysql8029 /bin/bash
 		```
 
 	- 名称需唯一，仅支持字母、数字、短横线（`-`），不能包含空格或特殊字符。
@@ -222,9 +221,9 @@ docker run -d \
 	- `MYSQL_ROOT_PASSWORD`：该变量是 **官方 MySQL 镜像所必须提供的配置项**，缺失将导致容器启动失败。
 	- 建议生产环境使用强密码（如 `MySQL_8@2025`）。
 - `-v`：**挂载本地目录实现数据持久化**
-	- `/data/mysql/data:/var/lib/mysql`：数据目录挂载，确保数据库数据不会因容器删除而丢失。
-	- `/data/mysql/conf/my.cnf:/etc/my.cnf`：主配置文件挂载，支持自定义配置。
-	- `/data/mysql/conf/conf.d:/etc/mysql/conf.d`：配置目录挂载，可额外添加 `.cnf` 子配置文件。
+	- `/data/mysql8029/data:/var/lib/mysql`：挂载数据目录，确保数据库数据持久化，不会因容器删除而丢失。
+	- `/data/mysql8029/log:/var/log/mysql`：挂载日志目录，便于日志持久化与查看（如开启 slow log、general log 等日志功能时非常重要）。
+	- `/data/mysql8029/conf:/etc/mysql/conf.d`：挂载配置目录，支持添加自定义 `.cnf` 文件；
 
 ## 验证容器是否启动成功
 
@@ -238,8 +237,8 @@ docker ps
 
 ```bash hl:1,3
 ➜  ~ docker ps
-CONTAINER ID   IMAGE     COMMAND                  CREATED              STATUS              PORTS                                         NAMES
-b86ff6ddca78   mysql     "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:3306->3306/tcp, [::]:3306->3306/tcp   mysql
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS                                         NAMES
+4f9a5bac9bcd   mysql:8.0.29   "docker-entrypoint.s…"   5 seconds ago   Up 5 seconds   0.0.0.0:3306->3306/tcp, [::]:3306->3306/tcp   mysql8029
 ➜  ~     
 ```
 
@@ -249,14 +248,11 @@ b86ff6ddca78   mysql     "docker-entrypoint.s…"   About a minute ago   Up Abou
 - **CREATED**：容器的创建时间。
 - **STATUS**：容器的当前运行状态（如 `Up` 表示正在运行）。
 - **PORTS**：端口映射详情（例如将容器的 3306 端口映射到宿主机的 3306）。
-- **NAMES**：容器的自定义名称（此例为 `mysql`）。
-
-> [!tip]
-> 如果未看到任何输出，说明没有正在运行的容器。可以使用 `docker ps -a` 命令查看所有容器，包括已停止的。
+- **NAMES**：容器的自定义名称（此例为 `mysql8029`）。
 
 ## 测试连接
 
 参数配置完成后，点击 "测试连接" 按钮，验证是否成功连接数据库。若连接成功，将弹出提示，说明配置无误，MySQL 服务已正常运行。
-![](https://img.xiaorang.fun/202506262331996.png)
+![](https://img.xiaorang.fun/202507102323657.png)
 
 至此，Docker 版 MySQL 服务安装成功！🎉🎉🎉

@@ -2,7 +2,7 @@
 tags:
   - DevKit/Docker
 create_time: 2025/06/27 19:07
-update_time: 2025/07/01 23:12
+update_time: 2025/07/10 23:16
 priority: 21
 ---
 
@@ -118,7 +118,7 @@ redis        latest    1b835e5a8d5d   4 weeks ago    188MB
 
 ## 准备工作
 
-### 创建专用目录
+### 创建挂载目录
 
 创建 Redis 专用目录，用于挂载配置文件与数据文件：
 

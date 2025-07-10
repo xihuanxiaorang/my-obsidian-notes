@@ -2,7 +2,7 @@
 tags:
   - DevKit/Docker
 create_time: 2025/07/04 22:48
-update_time: 2025/07/09 23:42
+update_time: 2025/07/10 17:24
 priority: 12
 ---
 
@@ -281,6 +281,8 @@ Total reclaimed space: 0B
 
 ### 匿名卷挂载
 
+示例：
+
 ```bash
 docker run -d --name my-nginx -p 80:80 -v /usr/share/nginx/html nginx
 ```
@@ -290,6 +292,8 @@ docker run -d --name my-nginx -p 80:80 -v /usr/share/nginx/html nginx
 - 匿名卷默认不共享，如需共享可通过其卷 ID 手动挂载至其他容器。
 
 ### 具名卷挂载
+
+示例：
 
 ```bash
 docker run -d --name my-nginx -p 80:80 -v nginx_html:/usr/share/nginx/html nginx
@@ -303,6 +307,8 @@ docker run -d --name my-nginx -p 80:80 -v nginx_html:/usr/share/nginx/html nginx
 ### 绑定挂载
 
 绑定挂载可将宿主机上指定路径的文件或目录直接挂载至容器内，适用于本地开发调试、配置加载、日志持久化等场景。
+
+示例：
 
 ```bash
 docker run -d --name my-nginx -p 80:80 -v /data/nginx/html:/usr/share/nginx/html nginx
