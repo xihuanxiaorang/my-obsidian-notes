@@ -2,7 +2,7 @@
 tags:
   - DevKit/Docker
 create_time: 2025/06/27 19:07
-update_time: 2025/07/10 23:16
+update_time: 2025/07/10 23:29
 priority: 21
 ---
 
@@ -135,7 +135,7 @@ sudo mkdir -p /data/redis/{conf,data}
 sudo vim /data/redis/conf/redis.conf
 ```
 
-```text file:/data/redis/conf/redis.conf
+```text
 bind 0.0.0.0
 daemonize no
 protected-mode yes
@@ -219,9 +219,6 @@ f0c22226fe72   redis     "docker-entrypoint.s…"   6 minutes ago       Up 6 min
 - **STATUS**：容器的当前运行状态（如 `Up` 表示正在运行）。
 - **PORTS**：端口映射详情（例如将容器的 6379 端口映射到宿主机的 6379）。
 - **NAMES**：容器的自定义名称（此例为 `redis`）。
-
-> [!tip]
-> 如果未看到任何输出，说明没有正在运行的容器。可以使用 `docker ps -a` 命令查看所有容器，包括已停止的。
 
 ## 测试连接
 
