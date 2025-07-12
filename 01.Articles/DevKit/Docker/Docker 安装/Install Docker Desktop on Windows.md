@@ -2,7 +2,7 @@
 tags:
   - DevKit/Docker
 create_time: 2025/06/28 22:21
-update_time: 2025/07/06 22:40
+update_time: 2025/07/12 22:42
 priority: 2
 ---
 
@@ -102,30 +102,3 @@ E:\devsoft\Docker\DockerDesktopWSL
 ![](https://img.xiaorang.fun/202506302253833.png)
 
 点击 **Apply & Restart** 应用更改并重启 Docker。
-
-## 配置镜像加速器（可选）
-
-为提升镜像拉取速度，建议配置国内加速源：
-
-1. 依次进入："设置" → "Docker 引擎"
-2. 添加 `registry-mirrors` 字段：
-
-	```json hl:9-12
-	{
-	  "builder": {
-	    "gc": {
-	      "defaultKeepStorage": "20GB",
-	      "enabled": true
-	    }
-	  },
-	  "experimental": false,
-	  "registry-mirrors": [
-	    "https://docker.1ms.run",
-	    "https://docker.xuanyuan.me"
-	  ]
-	}
-	```
-
-	![](https://img.xiaorang.fun/202507062240015.png)
-
-3. 点击 **Apply & Restart** 应用更改并重启 Docker。

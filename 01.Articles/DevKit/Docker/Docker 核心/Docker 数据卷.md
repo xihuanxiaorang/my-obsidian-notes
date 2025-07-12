@@ -2,7 +2,7 @@
 tags:
   - DevKit/Docker
 create_time: 2025/07/04 22:48
-update_time: 2025/07/10 17:24
+update_time: 2025/07/11 19:26
 priority: 12
 ---
 
@@ -311,10 +311,10 @@ docker run -d --name my-nginx -p 80:80 -v nginx_html:/usr/share/nginx/html nginx
 示例：
 
 ```bash
-docker run -d --name my-nginx -p 80:80 -v /data/nginx/html:/usr/share/nginx/html nginx
+docker run -d --name my-nginx -p 80:80 -v /mydata/nginx/html:/usr/share/nginx/html nginx
 ```
 
-- 将宿主机的 `/data/nginx/html` 目录挂载至容器内的 `/usr/share/nginx/html` 目录；
+- 将宿主机的 `/mydata/nginx/html` 目录挂载至容器内的 `/usr/share/nginx/html` 目录；
 - 容器或宿主机对该目录中数据的修改会双向同步，即时生效；
 - 默认以读写模式（`rw`）挂载，若需只读挂载，可在路径后添加 `:ro`，如：`-v /path:/path:ro`。
 - 宿主机与容器路径需为绝对路径，即以 `/` 开头；

@@ -2,7 +2,7 @@
 tags:
   - DevKit/Docker
 create_time: 2025/06/26 19:20
-update_time: 2025/07/10 23:23
+update_time: 2025/07/11 19:24
 priority: 20
 ---
 
@@ -119,10 +119,10 @@ mysql        8.0.29    152cf187a3ef   2 years ago   609MB
 
 ### 创建挂载目录
 
-为 MySQL 容器准备专用目录，用于挂载配置文件、数据文件及日志文件：
+为 MySQL 容器准备专用目录，用于挂载配置文件、数据文件以及日志文件：
 
 ```bash
-sudo mkdir -p /data/mysql8029/{conf,data,log}
+sudo mkdir -p /mydata/mysql8029/{conf,data,log}
 ```
 
 - `conf`：用于挂载自定义配置文件（`.cnf`），实现参数覆盖或功能扩展；
@@ -148,7 +148,7 @@ docker run -d \
 将默认配置文件复制到宿主机指定目录：
 
 ```bash
-sudo docker cp mysql-temp:/etc/my.cnf /data/mysql8029/conf/
+sudo docker cp mysql-temp:/etc/my.cnf /mydata/mysql8029/conf/
 ```
 
 然后删除临时容器：
@@ -163,6 +163,7 @@ docker rm -f mysql-temp
 > !includedir /etc/mysql/conf.d/
 > ```
 > 它表示：**将 `/etc/mysql/conf.d/` 目录下的所有 `.cnf` 文件一并加载**，且这些文件中的配置项**会覆盖默认配置中的同名项**。
+>
 > ✨**推荐做法**：挂载自定义配置文件到至 `/etc/mysql/conf.d/`，以实现灵活、非侵入式的定制配置，而非直接覆盖主配置文件。
 
 ## 启动 MySQL 容器
@@ -175,9 +176,9 @@ docker run -d \
 	--name mysql8029 \
 	-p 3306:3306 \
   -e MYSQL_ROOT_PASSWORD=123456 \
-  -v /data/mysql8029/data:/var/lib/mysql \
-  -v /data/mysql8029/log:/var/log/mysql \
-  -v /data/mysql8029/conf:/etc/mysql/conf.d \
+  -v /mydata/mysql8029/data:/var/lib/mysql \
+  -v /mydata/mysql8029/log:/var/log/mysql \
+  -v /mydata/mysql8029/conf:/etc/mysql/conf.d \
   mysql:8.0.29
 ```
 
@@ -221,9 +222,9 @@ docker run -d \
 	- `MYSQL_ROOT_PASSWORD`：该变量是 **官方 MySQL 镜像所必须提供的配置项**，缺失将导致容器启动失败。
 	- 建议生产环境使用强密码（如 `MySQL_8@2025`）。
 - `-v`：**挂载本地目录实现数据持久化**
-	- `/data/mysql8029/data:/var/lib/mysql`：挂载数据目录，确保数据库数据持久化，不会因容器删除而丢失。
-	- `/data/mysql8029/log:/var/log/mysql`：挂载日志目录，便于日志持久化与查看（如开启 slow log、general log 等日志功能时非常重要）。
-	- `/data/mysql8029/conf:/etc/mysql/conf.d`：挂载配置目录，支持添加自定义 `.cnf` 文件；
+	- `/mydata/mysql8029/data:/var/lib/mysql`：挂载数据目录，确保数据库数据持久化，不会因容器删除而丢失。
+	- `/mydata/mysql8029/log:/var/log/mysql`：挂载日志目录，便于日志持久化与查看（如开启 slow log、general log 等日志功能时非常重要）。
+	- `/mydata/mysql8029/conf:/etc/mysql/conf.d`：挂载配置目录，支持添加自定义 `.cnf` 文件；
 
 ## 验证容器是否启动成功
 

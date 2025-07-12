@@ -2,7 +2,7 @@
 tags:
   - DevKit/Docker
 create_time: 2025/07/05 22:03
-update_time: 2025/07/06 22:07
+update_time: 2025/07/12 22:47
 priority: 1
 ---
 
@@ -167,7 +167,7 @@ Docker Engine 提供多种安装方式，根据实际需求选择适合的安装
 
 3. 验证是否成功安装
 
-   运行测试容器，验证 Docker 是否成功安装：
+	 运行测试容器，验证 Docker 是否成功安装：
 
 	```bash
 	sudo docker run hello-world
@@ -207,7 +207,7 @@ Docker Engine 提供多种安装方式，根据实际需求选择适合的安装
 	root@lavm-z2u1k533p1:~# 
 	```
 
-	如果下载镜像时遇到超时问题，请先[[#配置镜像加速器 ]]。
+	如果下载镜像时遇到超时问题，请先[[Docker 镜像加速#Ubuntu|配置镜像加速器]]。
 
 > [!tip]
 > 如需升级 Docker，只需重新运行第 2 步安装命令，系统就会自动安装可用的更新版本，无需手动卸载旧版本。
@@ -309,27 +309,6 @@ root@lavm-z2u1k533p1:~#
 在 Debian 系 Linux 发行版（如 Ubuntu）中，Docker 服务会自动启动。而在 RPM 系发行版（如 CentOS、Fedora、RHEL、SLES）中，需使用 `systemctl` 或 `service` 命令手动启动 Docker 服务。默认情况下，非 root 用户无法运行 Docker 命令。
 
 若通过便捷脚本安装 Docker，请使用软件包管理器（如 `apt` 或 `yum`）进行后续升级。不建议重复运行脚本进行更新，避免覆盖源配置或产生依赖冲突。
-
-## 配置镜像加速器
-
-```bash
-# 创建配置目录（如果不存在）
-sudo mkdir -p /etc/docker
-
-# 写入镜像加速配置文件（可根据需要替换为你自己的镜像地址）
-sudo tee /etc/docker/daemon.json > /dev/null <<EOF
-{
-  "registry-mirrors": [
-    "https://docker.1ms.run",
-    "https://docker.xuanyuan.me"
-  ]
-}
-EOF
-
-# 重载并重启 Docker 服务使配置生效
-sudo systemctl daemon-reload
-sudo systemctl restart docker
-```
 
 ## 卸载 Docker Engine
 

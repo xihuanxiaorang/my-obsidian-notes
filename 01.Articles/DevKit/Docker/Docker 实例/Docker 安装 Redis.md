@@ -2,7 +2,7 @@
 tags:
   - DevKit/Docker
 create_time: 2025/06/27 19:07
-update_time: 2025/07/10 23:29
+update_time: 2025/07/11 19:25
 priority: 21
 ---
 
@@ -123,7 +123,7 @@ redis        latest    1b835e5a8d5d   4 weeks ago    188MB
 创建 Redis 专用目录，用于挂载配置文件与数据文件：
 
 ```bash
-sudo mkdir -p /data/redis/{conf,data}
+sudo mkdir -p /mydata/redis/{conf,data}
 ```
 
 > [!tip]
@@ -132,7 +132,7 @@ sudo mkdir -p /data/redis/{conf,data}
 ### 创建配置文件
 
 ```bash
-sudo vim /data/redis/conf/redis.conf
+sudo vim /mydata/redis/conf/redis.conf
 ```
 
 ```text
@@ -159,8 +159,8 @@ docker run -d \
   --restart always \
 	--name redis \
 	-p 6379:6379 \
-	-v /data/redis/conf/redis.conf:/etc/redis/redis.conf \
-	-v /data/redis/data:/data \
+	-v /mydata/redis/conf/redis.conf:/etc/redis/redis.conf \
+	-v /mydata/redis/data:/data \
   redis \
   redis-server /etc/redis/redis.conf
 ```
@@ -190,8 +190,8 @@ docker run -d \
 	- 语法格式：`-p <宿主机端口>:<容器端口>`。
 	- 将**容器内部的 6379 端口**映射到**宿主机（物理机或主系统）的 6379 端口**，允许你从宿主机或其他主机访问 Redis 服务。
 - `-v`：**挂载本地目录实现数据持久化**
-	- `/data/redis/data:/data`：挂载数据目录，**持久化存储键值数据**，防止容器删除后数据丢失。
-	- `/data/redis/conf/redis.conf:/etc/redis/redis.conf`：挂载配置文件，**支持自定义参数（如访问密码、监听地址等）**，满足灵活配置需求。
+	- `/mydata/redis/data:/data`：挂载数据目录，**持久化存储键值数据**，防止容器删除后数据丢失。
+	- `/mydata/redis/conf/redis.conf:/etc/redis/redis.conf`：挂载配置文件，**支持自定义参数（如访问密码、监听地址等）**，满足灵活配置需求。
 - `redis-server /etc/redis/redis.conf`：**启动命令**
 	- 指定 Redis 启动时加载自定义配置文件，替代默认内置配置。
 

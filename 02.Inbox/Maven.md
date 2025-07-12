@@ -3,20 +3,20 @@ tags:
   - DevKit
   - EnvironmentSetup
   - Java
-create_time: 2025-02-15 12:21
-update_time: 2025/03/13 19:00
+create_time: 2025/02/15 12:21
+update_time: 2025/07/12 23:23
 ---
 
 ## 前期准备
 
-| 工具         | 版本       |
+| 工具 | 版本 |
 | ---------- | -------- |
-| [[JDK]]    | 17       |
-| [[IDEA]]   | 2024.3.3 |
-| [[Tomcat]] | 11.0.4   |
+| [[JDK]] | 17 |
+| [[IDEA]] | 2024.3.3 |
+| [[Tomcat]] | 11.0.4 |
 
 > [!important]
-> **确保已配置 [[JDK#^a4ee2f|JAVA_HOME]] 环境变量**。
+> **确保已配置 [[JDK#配置系统环境变量|JAVA_HOME]] 环境变量**。
 
 ## 下载 & 安装
 
