@@ -3,8 +3,8 @@ tags:
   - DevKit
   - SQL/MySQL
   - EnvironmentSetup
-create_time: 2024-12-28T17:27:00
-update_time: 2025/06/28 23:28
+create_time: 2024/12/16 10:48
+update_time: 2025/07/12 23:43
 ---
 
 ## 下载 & 安装
@@ -19,12 +19,12 @@ update_time: 2025/06/28 23:28
 
 1. 双击运行下载的安装程序
 2. 选择 Custom 安装类型，可以自定义 MySQL 的安装路径
-   ![](https://img.xiaorang.fun/202502251753628.png)
+ ![](https://img.xiaorang.fun/202502251753628.png)
 3. 选择安装 MySQL Server 和 MySQL Workbench 两款产品
-   ![](https://img.xiaorang.fun/202502251753629.png)
-   首先分别点击右侧准备安装的产品，然后再分别点击下方的 Advanced Options 高级选项，可以分别选择每款产品各自的安装路径。
-   ![](https://img.xiaorang.fun/202503162240237.png)
-   ![](https://img.xiaorang.fun/202503162240238.png)
+ ![](https://img.xiaorang.fun/202502251753629.png)
+ 首先分别点击右侧准备安装的产品，然后再分别点击下方的 Advanced Options 高级选项，可以分别选择每款产品各自的安装路径。
+ ![](https://img.xiaorang.fun/202503162240237.png)
+ ![](https://img.xiaorang.fun/202503162240238.png)
 4. 然后一直点击 Next 即可
 5. 在设置密码阶段可以根据实际情况进行设置，如果是自己学习所用的话可以配置一个简单点的密码，如 `123456`
 

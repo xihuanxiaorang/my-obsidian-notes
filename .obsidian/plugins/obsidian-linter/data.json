@@ -118,15 +118,15 @@
       "extra-auto-correct-files": []
     },
     "blockquote-style": {
-      "enabled": false,
+      "enabled": true,
       "style": "space"
     },
     "convert-bullet-list-markers": {
       "enabled": true
     },
     "default-language-for-code-fences": {
-      "enabled": false,
-      "default-language": ""
+      "enabled": true,
+      "default-language": "text"
     },
     "emphasis-style": {
       "enabled": false,
@@ -143,7 +143,7 @@
       "preserve-start": false
     },
     "proper-ellipsis": {
-      "enabled": false
+      "enabled": true
     },
     "quote-style": {
       "enabled": true,
@@ -166,15 +166,15 @@
     },
     "strong-style": {
       "enabled": true,
-      "style": "asterisk"
+      "style": "consistent"
     },
     "two-spaces-between-lines-with-content": {
       "enabled": false,
       "line-break-indicator": "  "
     },
     "unordered-list-style": {
-      "enabled": false,
-      "list-style": "-"
+      "enabled": true,
+      "list-style": "consistent"
     },
     "compact-yaml": {
       "enabled": true,
@@ -214,7 +214,7 @@
       "enabled": false
     },
     "paragraph-blank-lines": {
-      "enabled": false
+      "enabled": true
     },
     "remove-empty-lines-between-list-markers-and-checklists": {
       "enabled": true

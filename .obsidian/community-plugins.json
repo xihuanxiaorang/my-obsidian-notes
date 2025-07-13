@@ -15,7 +15,6 @@
   "obsidian-plantuml",
   "oz-clear-unused-images",
   "tray",
-  "obsidian-linter",
   "obsidian-emoji-toolbar",
   "obsidian-kanban",
   "obsidian-image-toolkit",
@@ -38,8 +37,9 @@
   "obsidian-auto-link-title",
   "highlightr-plugin",
   "dataview",
-  "obsidian-text-format",
   "obsidian-git",
   "obsidian-minimal-settings",
-  "pdf-plus"
+  "pdf-plus",
+  "obsidian-text-format",
+  "obsidian-linter"
 ]
