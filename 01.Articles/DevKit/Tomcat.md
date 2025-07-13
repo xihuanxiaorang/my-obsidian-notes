@@ -4,8 +4,8 @@ tags:
   - DevKit
 refrence_url:
   - https://www.bilibili.com/video/BV16u4m1c7YX?vd_source=84272a2d7f72158b38778819be5bc6ad
-create_time: 2025-02-20 11:57
-update_time: 2025/06/28 23:29
+create_time: 2025/02/20 11:57
+update_time: 2025/07/13 13:06
 ---
 
 ## 简介
@@ -43,7 +43,7 @@ Apache Tomcat 实现了部分 Jakarta EE（原 Java EE）技术。不同版本�
 进入解压后的 `bin` 目录，双击 `startup.bat` 启动 Tomcat 服务。
 ![](https://img.xiaorang.fun/202502210001576.png)
 
-打开浏览器，访问 http://localhost:8080/ ，出现如下界面则说明 Tomcat 服务已成功启动！
+打开浏览器，访问 http://localhost:8080/，出现如下界面则说明 Tomcat 服务已成功启动！
 ![](https://img.xiaorang.fun/202502210001577.png)
 
 ## 控制台编码设置
@@ -52,7 +52,7 @@ Apache Tomcat 实现了部分 Jakarta EE（原 Java EE）技术。不同版本�
 1. 打开 Tomcat 配置目录下的 `conf/logging.properties` 文件。
 2. 找到文件中的第 `51` 行，修改日志输出编码为 `GBK`：
 
-	```
+	```text
 	java.util.logging.ConsoleHandler.encoding = GBK
 	```
 

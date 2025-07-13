@@ -3,8 +3,8 @@ tags:
   - DevKit
   - Frontend/Python
   - EnvironmentSetup
-create_time: 2025-02-09 21:52
-update_time: 2025/06/28 23:31
+create_time: 2025/02/09 21:52
+update_time: 2025/07/13 13:03
 ---
 
 ## 简介
@@ -69,7 +69,7 @@ Conda 存在如下两个版本：
 
 在用户目录下使用记事本打开 `.condarc` 文件，先清空文件中原有内容，然后拷贝以下内容至该文件中：
 
-```
+```text
 channels:
   - defaults
 show_channel_urls: true

@@ -2,8 +2,8 @@
 tags:
   - DevKit
   - Frontend/Python
-create_time: 2024-12-28T17:30:00
-update_time: 2025/06/28 23:29
+create_time: 2024/12/19 23:08
+update_time: 2025/07/13 13:05
 ---
 
 > [!tip]
@@ -20,7 +20,7 @@ update_time: 2025/06/28 23:29
 4. 在 **Optional Features** 界面时，建议勾选以下全部选项：
    ![](https://img.xiaorang.fun/202502251802825.png)
 	- **Documentation**：推荐：安装 Python 官方文档，方便在本地查阅帮助信息。
-	- **pip** （必须勾选）：安装 `pip`，用于管理和安装第三方 Python 包。
+	- **pip**（必须勾选）：安装 `pip`，用于管理和安装第三方 Python 包。
 	- **td/tk and IDLE**：推荐：安装 `tkinter`（GUI 库）和 IDLE（自带的开发环境），便于学习和开发。
 	- **Python test suite**：推荐：安装标准库的测试套件，如果你需要验证或调试 Python 标准库时会用到。
 	- **py launcher**：必须：安装全局 `py` 启动器，便于在命令行运行 Python。建议同时勾选 **"for all users"**，以便所有账户都能使用 `py` 启动器。

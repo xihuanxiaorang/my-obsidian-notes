@@ -2,8 +2,8 @@
 tags:
   - Frontend
   - EnvironmentSetup
-create_time: 2024-12-28T17:22:00
-update_time: 2025/03/13 22:06
+create_time: 2024/12/12 23:23
+update_time: 2025/07/13 13:05
 ---
 
  [nrm](https://github.com/Pana/nrm)（npm registry manager）是 npm 的镜像源管理工具，使用它可以快速切换 npm 镜像源。

@@ -2,8 +2,8 @@
 tags:
   - DevKit
   - EnvironmentSetup
-create_time: 2024-12-28T17:27:00
-update_time: 2025/06/28 23:28
+create_time: 2024/12/16 10:54
+update_time: 2025/07/13 12:58
 ---
 
 ## 快捷键
@@ -11,7 +11,7 @@ update_time: 2025/06/28 23:28
 ### 常用编辑操作
 
 - **快速修复 / 生成变量、导入包、重构代码**：`Alt + Enter`
-- **生成构造方法、Getter/Setter、`equals()`/`hashCode()`、`toString()`、测试方法等**：`Alt + Insert`
+- **生成构造方法、Getter/Setter、`equals()` / `hashCode()`、`toString()`、测试方法等**：`Alt + Insert`
 - **复制当前行**：`Ctrl + D`
 - **删除当前行**：`Ctrl + Y`
 - **移动当前行**：`Shift + Alt + ↑ / ↓`
@@ -81,11 +81,11 @@ File ➡ Settings ➡ Editor ➡ File Types ➡ Ignore Files and Folders，配�
    ![](https://img.xiaorang.fun/202502251743002.png)
 2. 弹出 "Project Structure" 窗口，点击 "项目"，选择 "SDK"。
    ![](https://img.xiaorang.fun/202502251743003.png)
-3. 选择下拉框中的 "下载 JDK..."。
+3. 选择下拉框中的 "下载 JDK…"。
    ![](https://img.xiaorang.fun/202502251743004.png)
 4. 弹出 "下载 JDK" 窗口，选择自己需要的 JDK 版本（如 1.8，17 等等），供应商（如 Amazon，Oracle 等）以及安装路径，最后点击 "下载" 按钮，等待下载完成即可。
    ![](https://img.xiaorang.fun/202502251743005.png)
-5. 耐心等待下载安装完成...
+5. 耐心等待下载安装完成…
    ![](https://img.xiaorang.fun/202502251743006.png)
 6. 如果 "SDK" 处的文字不再显示红色就代表已经下载安装完成，最后点击 "确定" 按钮就大功告成啦🌸🌸🌸
    ![](https://img.xiaorang.fun/202502251743007.png)
@@ -100,6 +100,7 @@ File ➡ Settings ➡ Editor ➡ File Types ➡ Ignore Files and Folders，配�
 ### 欢迎界面
 
 要在 IDEA 启动时显示 **Welcome Screen**（欢迎界面）：
+
 - 依次点击：**File** → **Settings** → **Appearance & Behavior** → **System Settings**
 - 取消勾选 **"Reopen projects on startup"**（启动时重新打开项目）
 - 点击 **OK**
@@ -108,25 +109,25 @@ File ➡ Settings ➡ Editor ➡ File Types ➡ Ignore Files and Folders，配�
 
 ## 插件
 
-+ 使用 IDE 内置插件系统安装（推荐）
+- 使用 IDE 内置插件系统安装（推荐）
     - **Preferences (Settings)** → **Plugins** → **Marketplace** → 搜索插件名称 → 点击 **Install** 按钮进行安装；
-+ 手动安装
+- 手动安装
     - 到 [JetBrains Marketplace](https://plugins.jetbrains.com/) 上下载与你的 IDE 兼容的最新版本的插件包；
-    - **Preferences (Settings)** > **Plugins** > ⚙ > **从磁盘安装插件...** > 选择插件包并安装（无需解压）
+    - **Preferences (Settings)** > **Plugins** > ⚙ > **从磁盘安装插件…** > 选择插件包并安装（无需解压）
 
 安装好后重新启动 **IDE** 即可。
 
 ### Translation
 
 > [!quote]
-> 插件地址： [Translation - IntelliJ IDEs Plugin | Marketplace (jetbrains.com)](https://plugins.jetbrains.com/plugin/8579-translation)
+> 插件地址：[Translation - IntelliJ IDEs Plugin | Marketplace (jetbrains.com)](https://plugins.jetbrains.com/plugin/8579-translation)
 > 官方文档地址：[TranslationPlugin ❤️ Yii.Guxing (yiiguxing.github.io)](https://yiiguxing.github.io/TranslationPlugin/#/)
 
 TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。它集成了<u>谷歌翻译</u>、<u>微软翻译</u>、<u>DeepL 翻译</u>、<u>有道翻译</u>、<u>百度翻译</u>等众多翻译引擎，在你的 IDE 内随时对想要翻译的文本、代码注释、代码文档等进行翻译。
 
-大多数翻译服务都需要注册账号才能访问他们的服务（如：OpenAI、DeepL、有道翻译等）。因此您可能需要注册一个帐号，并获取其**认证密钥**，然后在插件内绑定**认证密钥**：**Preferences (Settings)** → **Tools** → **Translation** → **常规** → **翻译引擎** → **配置...**
+大多数翻译服务都需要注册账号才能访问他们的服务（如：OpenAI、DeepL、有道翻译等）。因此您可能需要注册一个帐号，并获取其**认证密钥**，然后在插件内绑定**认证密钥**：**Preferences (Settings)** → **Tools** → **Translation** → **常规** → **翻译引擎** → **配置…**
 
-以**有道翻译**为例，登陆控制台 → 应用总览 → 创建应用 → 填写相关信息（如应用名称：IntelliJ IDEA Translation，选择服务：文本翻译和文档翻译，接入方式选择：API，应用类别：实用工具） → 确定。
+以**有道翻译**为例，登陆控制台 → 应用总览 → 创建应用 → 填写相关信息（如应用名称：IntelliJ IDEA Translation，选择服务：文本翻译和文档翻译，接入方式选择：API，应用类别：实用工具）→ 确定。
 ![](https://img.xiaorang.fun/202502251743008.png)
 
 ![](https://img.xiaorang.fun/202502251743009.png)
@@ -137,21 +138,21 @@ TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。
 ### LeetCode Editor
 
 > [!quote]
-> 插件地址： [LeetCode Editor - IntelliJ IDEs Plugin | Marketplace (jetbrains.com)](https://plugins.jetbrains.com/plugin/12132-leetcode-editor)
-> 官方文档地址： [leetcode-editor/README_ZH.md at master · shuzijun/leetcode-editor (github.com)](https://github.com/shuzijun/leetcode-editor/blob/master/README_ZH.md)
+> 插件地址：[LeetCode Editor - IntelliJ IDEs Plugin | Marketplace (jetbrains.com)](https://plugins.jetbrains.com/plugin/12132-leetcode-editor)
+> 官方文档地址：[leetcode-editor/README_ZH.md at master · shuzijun/leetcode-editor (github.com)](https://github.com/shuzijun/leetcode-editor/blob/master/README_ZH.md)
 
 文档已经详细介绍了插件的使用方法，借鉴官方的自定义代码生成配置，一步步摸索完善，如下所示：
 ![](https://img.xiaorang.fun/202502251743011.png)
 
-+ CodeFileName
+- CodeFileName
 
-	```
+	```text
 	$!velocityTool.camelCaseName(${question.titleSlug})_${question.frontendQuestionId}
 	```
 
-+ TemplateConstant
+- TemplateConstant
 
-	```
+	```text
 	package fun.xiaorang.leetcode.editor.cn;
 	
 	/**
@@ -200,7 +201,7 @@ TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。
 
 [ja-netfilter](https://zhile.io/2021/11/29/ja-netfilter-javaagent-lib.html) 作者 `zhile` 提到 [JetBrains新版本区域选择的坑](https://zhile.io/2024/09/05/jetbrains-2024-2-region.html)，新版 IDEA 为中国用户提供了专门的激活验证 API，因此我们也需要编辑对应的配置文件。
 
-编辑 `config-jetbrains\url.conf` 文件，新增以下内容用于把新的域名也拦截。
+编辑 `config-jetbrains\url. conf` 文件，新增以下内容用于把新的域名也拦截。
 
 ```properties
 PREFIX,https://account.jetbrains.com.cn/lservice/rpc/validateKey.action

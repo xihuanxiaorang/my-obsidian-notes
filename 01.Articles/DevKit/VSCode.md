@@ -2,8 +2,8 @@
 tags:
   - DevKit
   - EnvironmentSetup
-create_time: 2024-12-31 19:00
-update_time: 2025/06/28 23:29
+create_time: 2025/01/11 23:22
+update_time: 2025/07/13 13:08
 ---
 
 > [!quote]
@@ -62,13 +62,13 @@ update_time: 2025/06/28 23:29
 
 ### 字体推荐：Fira Code
 
-[Fira Code](https://github.com/tonsky/FiraCode) 是一款免费开源的等宽字体，专为程序员设计，支持 **编程连字（ligatures）** —— 可将 `!==`、`>=` 等符号组合显示为更具可读性的符号，让代码视觉更整洁、结构更清晰。
+[Fira Code](https://github.com/tonsky/FiraCode) 是一款免费开源的等宽字体，专为程序员设计，支持 **编程连字（ligatures）**——可将 `!==`、`>=` 等符号组合显示为更具可读性的符号，让代码视觉更整洁、结构更清晰。
 
 - 前往 [GitHub Releases](https://github.com/tonsky/FiraCode/releases) 下载字体文件并安装；
 - 打开 VS Code 设置，搜索 `Font Family`；
 - 设置字体为：
 
-	```
+	```text
 	Fira Code, Consolas, 'Courier New', monospace
 	```
 

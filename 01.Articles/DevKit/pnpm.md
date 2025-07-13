@@ -3,11 +3,11 @@ tags:
   - Frontend
   - DevKit
   - EnvironmentSetup
-create_time: 2024-12-28T17:29:00
-update_time: 2025/06/28 23:29
+create_time: 2024/12/16 11:19
+update_time: 2025/07/13 13:05
 ---
 
-前期准备：『 [[nvm]] | [[Node.js]] 』& [[nrm]]
+前期准备：『[[nvm]] | [[Node.js]]』& [[nrm]]
 
 ## 介绍
 
@@ -42,7 +42,7 @@ pnpm config set global-dir "E:\devsoft\pnpm-store\global"
 pnpm config set store-dir "E:\devsoft\pnpm-store\pnpm-store"
 ```
 
-配置完成后，pnpm 会生成一个全局配置文件，通常位于 `~/AppData/Local/pnpm/config/rc` （Windows）。你可以通过 `pnpm config list` 命令查看所有配置项。
+配置完成后，pnpm 会生成一个全局配置文件，通常位于 `~/AppData/Local/pnpm/config/rc`（Windows）。你可以通过 `pnpm config list` 命令查看所有配置项。
 ![](https://img.xiaorang.fun/202502251802044.png)
 
 通过上述配置，可以实现对 pnpm 全局依赖、缓存和状态文件的统一管理，提升维护效率，并便于快速定位和解决问题。
@@ -56,7 +56,7 @@ pnpm config set store-dir "E:\devsoft\pnpm-store\pnpm-store"
 3. 在弹出的 "系统属性" 窗口中，点击 "环境变量"。
 4. 配置 Path 系统变量。
     1. 在 "系统变量" 中找到 Path 变量，点击 "编辑"。
-    2. 点击 "新建"，输入 pnpm 的全局可执行文件目录，如 `E:\devsoft\pnpm-store` ，然后尽量将其 "上移"。
+    2. 点击 "新建"，输入 pnpm 的全局可执行文件目录，如 `E:\devsoft\pnpm-store`，然后尽量将其 "上移"。
     3. 最后一路点击 "确定" 进行保存配置。
 
 ## 常用命令
@@ -76,7 +76,7 @@ pnpm config set store-dir "E:\devsoft\pnpm-store\pnpm-store"
 | 清理缓存    | `pnpm store prune`              | `npm cache clean --force`      |
 | 运行脚本    | `pnpm run <script>`             | `npm run <script>`             |
 | 脚本快捷方式  | `pnpm start` , `pnpm test`       | `npm start` , `npm test`        |
-| 工作区支持   | `pnpm workspaces` （内置支持）         | `npm workspaces` （需启用）          |
+| 工作区支持   | `pnpm workspaces`（内置支持）| `npm workspaces`（需启用）|
 | 全局配置查看  | `pnpm config list`              | `npm config list`              |
 | 设置全局配置  | `pnpm config set <key> <value>` | `npm config set <key> <value>` |
 | 查看缓存目录  | `pnpm store path`               | `npm config get cache`         |

@@ -214,7 +214,7 @@
       "enabled": false
     },
     "paragraph-blank-lines": {
-      "enabled": true
+      "enabled": false
     },
     "remove-empty-lines-between-list-markers-and-checklists": {
       "enabled": true
@@ -223,14 +223,14 @@
       "enabled": false
     },
     "remove-space-around-characters": {
-      "enabled": false,
+      "enabled": true,
       "include-fullwidth-forms": true,
       "include-cjk-symbols-and-punctuation": true,
       "include-dashes": true,
       "other-symbols": ""
     },
     "remove-space-before-or-after-characters": {
-      "enabled": true,
+      "enabled": false,
       "characters-to-remove-space-before": "_",
       "characters-to-remove-space-after": "_. "
     },

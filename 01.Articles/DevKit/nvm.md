@@ -3,8 +3,8 @@ tags:
   - Frontend
   - DevKit
   - EnvironmentSetup
-create_time: 2024-12-28T17:29:00
-update_time: 2025/06/28 23:29
+create_time: 2024/12/16 11:14
+update_time: 2025/07/13 13:05
 ---
 
 [nvm](https://github.com/nvm-sh/nvm) (Node Version Manager) 是一个用于管理 Node.js 版本的工具，可以让用户在同一台机器上安装和切换多个 Node.js 版本，非常适合开发环境中需要兼容不同 Node.js 版本的场景。
@@ -30,17 +30,17 @@ nvm npm_mirror https://npmmirror.com/mirrors/npm/
 
 ## 常用命令
 
-- `nvm list available` ：列出所有可安装的 Node.js 版本。
+- `nvm list available`：列出所有可安装的 Node.js 版本。
   ![](https://img.xiaorang.fun/202502251800602.png)
-- `nvm install <version>` ：安装指定版本，如 `nvm install 18` 。
+- `nvm install <version>`：安装指定版本，如 `nvm install 18`。
   ![](https://img.xiaorang.fun/202502251800603.png)
-- `nvm use <version>` ：切换到指定版本，如 `nvm use 18` 。
+- `nvm use <version>`：切换到指定版本，如 `nvm use 18`。
   ![](https://img.xiaorang.fun/202502251800604.png)
-- `nvm list` ：查看本地已安装的 node 版本，并高亮显示当前正在使用的 Node.js 版本。
+- `nvm list`：查看本地已安装的 node 版本，并高亮显示当前正在使用的 Node.js 版本。
   ![](https://img.xiaorang.fun/202502251800605.png)
-- `nvm current` ：显示当前正在使用的 Node.js 版本。
+- `nvm current`：显示当前正在使用的 Node.js 版本。
   ![](https://img.xiaorang.fun/202502251800606.png)
-- `nvm uninstall <version>` ：卸载指定版本，将删除该版本下安装的所有包，如 `nvm uninstall 18.20.4` 。
+- `nvm uninstall <version>`：卸载指定版本，将删除该版本下安装的所有包，如 `nvm uninstall 18.20.4`。
   ![](https://img.xiaorang.fun/202502251800607.png)
 
 ## npm 配置
@@ -51,8 +51,8 @@ nvm npm_mirror https://npmmirror.com/mirrors/npm/
 
 在修改 npm 默认配置之前，首先在 Node.js 安装目录（如：E:\devsoft\nodejs）下创建两个文件夹：node_global 用于存放全局模块，node_cache 用于存放全局缓存。
 
-- 全局模块路径： `npm config set prefix "E:\devsoft\nodejs\node_global"` ；
-- 全局缓存路径： `npm config set cache "E:\devsoft\nodejs\node_cache"` ；
+- 全局模块路径：`npm config set prefix "E:\devsoft\nodejs\node_global"`；
+- 全局缓存路径：`npm config set cache "E:\devsoft\nodejs\node_cache"`；
 
 最后，可以通过 `npm config ls` 命令查看修改后的 npm 配置，如下所示：
 ![](https://img.xiaorang.fun/202502251800608.png)
@@ -65,7 +65,7 @@ nvm npm_mirror https://npmmirror.com/mirrors/npm/
 4. 在 "系统变量" 区域，可以看见安装 nvm 时已帮我们新建的 `NVM_HOME` 和 `NVM_SYMLINK` 变量。
 5. 配置 Path 系统变量。
 	1. 在 "系统变量" 中找到 Path 变量，点击 "编辑"。
-	2. 点击 "新建"，添加 `%NVM_SYMLINK%\node_global` ，然后尽量将其 "上移"。
+	2. 点击 "新建"，添加 `%NVM_SYMLINK%\node_global`，然后尽量将其 "上移"。
 	3. 最后一路点击 "确定" 进行保存配置。
 
 ### 镜像源配置

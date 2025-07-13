@@ -2,8 +2,8 @@
 tags:
   - Frontend/Vite
   - DevKit
-create_time: 2025-05-17T12:59:00
-update_time: 2025/06/28 23:29
+create_time: 2025/05/17 12:59
+update_time: 2025/07/13 13:07
 ---
 
 ## 环境变量与模式
@@ -23,7 +23,7 @@ Vite 通过 `import.meta.env` 对象提供了一组内置常量，这些常量�
 
 ### 自定义环境变量
 
-**Vite 会自动将 `.env` 文件中的环境变量注入至 `import.meta.env` 对象中**。不过，为了防止意外将敏感变量暴露到客户端，**只有以 `VITE_` 前缀命名的变量**才会暴露给经过 Vite 处理的代码。该前缀可通过 [`envPrefix`](https://cn.vite.dev/config/shared-options.html#envprefix) 配置项进行自定义。 ^595cb7
+**Vite 会自动将 `.env` 文件中的环境变量注入至 `import.meta.env` 对象中**。不过，为了防止意外将敏感变量暴露到客户端，**只有以 `VITE_` 前缀命名的变量**才会暴露给经过 Vite 处理的代码。该前缀可通过 [`envPrefix`](https://cn.vite.dev/config/shared-options.html#envprefix) 配置项进行自定义。^595cb7
 
 例如下面这些环境变量：
 
@@ -140,7 +140,7 @@ NODE_ENV=development
 
 需要注意，`NODE_ENV`（即 `process.env.NODE_ENV`）与 Vite 的 "模式"（`mode`）是两个不同的概念。下表展示了不同命令组合对二者的影响：
 
-| 命令                                                   | NODE_ENV        | 模式（`mode`）      |
+| 命令                                                   | NODE_ENV        | 模式（`mode`）|
 | ---------------------------------------------------- | --------------- | --------------- |
 | `vite build`                                         | `"production"`  | `"production"`  |
 | `vite build --mode development`                      | `"production"`  | `"development"` |
@@ -162,9 +162,9 @@ NODE_ENV=development
 | `--mode staging`     | `"staging"`            |
 
 > [!tip] `.env` 文件中的 `NODE_ENV`
-> `NODE_ENV=...` 可通过命令行参数或者在 `.env` 文件中指定。若在 `.env.[mode]` 中指定了 `NODE_ENV`，则可以使用模式来控制其值。尽管如此，`NODE_ENV` 与模式（`mode`）仍然是两个不同的概念。
+> `NODE_ENV=…` 可通过命令行参数或者在 `.env` 文件中指定。若在 `.env.[mode]` 中指定了 `NODE_ENV`，则可以使用模式来控制其值。尽管如此，`NODE_ENV` 与模式（`mode`）仍然是两个不同的概念。
 >
-> 使用命令行设置 `NODE_ENV=...` 的优势在于，它可以在 Vite 配置解析前生效，使你能在 `vite.config.ts` 中通过 `process.env.NODE_ENV` 读取该值，而无需等待 `.env` 文件加载。
+> 使用命令行设置 `NODE_ENV=…` 的优势在于，它可以在 Vite 配置解析前生效，使你能在 `vite.config.ts` 中通过 `process.env.NODE_ENV` 读取该值，而无需等待 `.env` 文件加载。
 
 ## 配置
 
@@ -659,7 +659,7 @@ Components({
     - 官方支持自动导入：[`@varlet/import-resolver`](https://github.com/varletjs/varlet/blob/dev/packages/varlet-import-resolver/README.md)
 - [VEUI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/veui.ts)
 - [View UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/view-ui.ts)
-- [Vuetify](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/vuetify.ts) （建议优先使用其官方插件），支持 [v3 + vite](https://www.npmjs.com/package/vite-plugin-vuetify), [v3 + webpack](https://www.npmjs.com/package/webpack-plugin-vuetify), [v2 + webpack](https://npmjs.com/package/vuetify-loader)
+- [Vuetify](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/vuetify.ts)（建议优先使用其官方插件），支持 [v3 + vite](https://www.npmjs.com/package/vite-plugin-vuetify), [v3 + webpack](https://www.npmjs.com/package/webpack-plugin-vuetify), [v2 + webpack](https://npmjs.com/package/vuetify-loader)
 - [VueUse Components](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/vueuse.ts)
 - [VueUse Directives](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/vueuse-directive.ts)
 - [Dev UI](https://github.com/antfu/unplugin-vue-components/blob/main/src/core/resolvers/devui.ts)

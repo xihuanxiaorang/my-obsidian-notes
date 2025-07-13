@@ -3,8 +3,8 @@ tags:
   - Github
   - DevKit/Git
   - DevKit
-create_time: 2024-12-28T18:02:00
-update_time: 2025/03/24 23:10
+create_time: 2025/02/08 23:16
+update_time: 2025/07/13 13:00
 ---
 
 ## 如何提交一个 PR？
@@ -168,8 +168,8 @@ endif
 
 此部分效果主要分为如下两种：
 
-+ 普通的小徽章：[badges/shields: Concise, consistent, and legible badges in SVG and raster format (github.com)](https://github.com/badges/shields)
-+ Github Profile Page 访问统计小徽章：[antonkomarev/github-profile-views-counter: It counts how many times your GitHub profile has been viewed. Free cloud micro-service.](https://github.com/antonkomarev/github-profile-views-counter)
+- 普通的小徽章：[badges/shields: Concise, consistent, and legible badges in SVG and raster format (github.com)](https://github.com/badges/shields)
+- Github Profile Page 访问统计小徽章：[antonkomarev/github-profile-views-counter: It counts how many times your GitHub profile has been viewed. Free cloud micro-service.](https://github.com/antonkomarev/github-profile-views-counter)
 
 #### 打字机效果
 
@@ -241,13 +241,10 @@ endif
 
 1. 创建一个新的 Github Access Token：点击 Github 右上角的头像 → settings → Developer Settings → Personal access tokens (classic) → Generate new token (classic)
    ![](https://img.xiaorang.fun/202502251904887.png)
-
 2. 为当前仓库创建一个名为 `GH_TOKEN` 的密钥，值为上一步创建的 Github Access Token：前往当前仓库 Settings → Secrets and variables → Actions secrets and variables → New Repository secret。
    ![](https://img.xiaorang.fun/202502251905688.png)
-
 3. 修改工作流权限：前往当前仓库 Settings → Actions → General → Workflow permissions → 设置为读写权限。
    ![](https://img.xiaorang.fun/202502251905905.png)
-
 4. 在当前仓库的 `.github/workflows` 目录下创建一个名为 `snake.yml` 的新工作流文件，内容如下所示：
 
 	```yaml
@@ -319,10 +316,8 @@ endif
 3. 在您最喜欢的编辑器（IDE）中安装 [WakaTime 插件](https://wakatime.com/plugins)
 4. 粘贴您的 API 密钥到插件设置中，如下所示：
     ![](https://img.xiaorang.fun/202502251906623.png)
-
 5. 为当前仓库创建一个名为 `WAKATIME_API_KEY` 的密钥，值为上一步中拷贝的 API 密钥：前往当前仓库 Settings → Secrets and variables → Actions secrets and variables → New Repository secret。
     ![](https://img.xiaorang.fun/202502251906080.png)
-
 6. 在当前仓库的 `.github/workflows` 目录下创建一个名为 `waka-readme.yml` 的新工作流文件，内容如下所示：
 
 	```yaml
@@ -490,7 +485,7 @@ jobs:
 
 ### 参考资料🎁
 
-+ 📃文档
+- 📃文档
     - [kyechan99/capsule-render: 🌈 Dynamic Coloful Image Render (github.com)](https://github.com/kyechan99/capsule-render)
     - [DenverCoder1/readme-typing-svg: ⚡ Dynamically generated, customizable SVG that gives the appearance of typing and deleting text for use on your profile page, repositories, or website. (github.com)](https://github.com/DenverCoder1/readme-typing-svg)
     - [badges/shields: Concise, consistent, and legible badges in SVG and raster format (github.com)](https://github.com/badges/shields)
@@ -502,7 +497,7 @@ jobs:
     - [Platane/snk: 🟩⬜ Generates a snake game from a github user contributions graph and output a screen capture as animated svg or gif](https://github.com/Platane/snk)
     - [athul/waka-readme: Wakatime Weekly Metrics on your Profile Readme. (github.com)](https://github.com/athul/waka-readme)
     - [abhisheknaiidu/awesome-github-profile-readme: 😎 A curated list of awesome GitHub Profile which updates in real time](https://github.com/abhisheknaiidu/awesome-github-profile-readme)
-+ 📺视频
+- 📺视频
     - [GitHub 个人主页极简美化教程！](https://www.bilibili.com/video/BV1Cp421X7UJ?vd_source=84272a2d7f72158b38778819be5bc6ad)
     - [Github个人主页美化教程](https://www.bilibili.com/video/BV1KT411L7t7?vd_source=84272a2d7f72158b38778819be5bc6ad)
     - [给Github主页加上贪吃蛇效果，让您的主页与众不同](https://www.bilibili.com/video/BV1W94y1v7cB?vd_source=84272a2d7f72158b38778819be5bc6ad)
