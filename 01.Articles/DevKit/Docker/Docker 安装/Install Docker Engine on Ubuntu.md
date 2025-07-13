@@ -2,7 +2,7 @@
 tags:
   - DevKit/Docker
 create_time: 2025/07/05 22:03
-update_time: 2025/07/12 22:47
+update_time: 2025/07/13 18:45
 priority: 1
 ---
 
@@ -54,7 +54,7 @@ Codename:       jammy
 - `docker-doc`
 - `podman-docker`
 
-此外，Docker Engine 已内置 `containerd` 和 `runc` （打包在 `containerd.io` 中）。若系统中已安装它们的独立版本，也应一并卸载以避免冲突。
+此外，Docker Engine 已内置 `containerd` 和 `runc`（打包在 `containerd.io` 中）。若系统中已安装它们的独立版本，也应一并卸载以避免冲突。
 
 可使用以下命令批量卸载上述可能冲突的软件包：
 
@@ -65,7 +65,7 @@ for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker c
 若未安装上述软件包，`apt-get` 会提示无可卸载项。
 
 > [!note]
-> 卸载 Docker 并不会自动清除 `/var/lib/docker/` 目录中的镜像、容器、数据卷和网络数据。如需彻底清理并重新安装，请参考下方「 [[#卸载 Docker Engine]] 」部分。
+> 卸载 Docker 并不会自动清除 `/var/lib/docker/` 目录中的镜像、容器、数据卷和网络数据。如需彻底清理并重新安装，请参考下方「[[#卸载 Docker Engine]]」部分。
 
 ## 安装方式
 
@@ -83,18 +83,22 @@ Docker Engine 提供多种安装方式，根据实际需求选择适合的安装
 1. 配置 `apt` 软件源
 
 	```bash
-	# Add Docker's official GPG key:
+	# 更新软件包索引并安装依赖
 	sudo apt-get update
 	sudo apt-get install ca-certificates curl
+	
+	# 添加 Docker GPG 密钥
 	sudo install -m 0755 -d /etc/apt/keyrings
 	sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 	sudo chmod a+r /etc/apt/keyrings/docker.asc
 	
-	# Add the repository to Apt sources:
+	# 添加 Docker 软件源
 	echo \
-	  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-	  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
-	  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+		"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+		$(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+		sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+		
+	# 更新软件包索引
 	sudo apt-get update
 	```
 
@@ -103,6 +107,14 @@ Docker Engine 提供多种安装方式，根据实际需求选择适合的安装
 	```bash
 	sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 	```
+
+	该命令将安装以下组件：
+	- `docker-ce`：Docker Engine 核心服务
+	- `docker-ce-cli`：Docker 命令行客户端工具
+	- `containerd.io`：容器运行时（由 Docker 使用）
+	- `docker-buildx-plugin`：多架构构建支持插件（BuildKit 扩展）
+	- `docker-compose-plugin`：Compose 插件
+	- `docker-ce-rootless-extras`：无 Root 模式支持
 
 	示例输出：
 

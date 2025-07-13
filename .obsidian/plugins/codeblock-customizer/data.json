@@ -331,7 +331,7 @@
         "codeblock": {
           "activeLineColor": "--color-base-30",
           "backgroundColor": "--code-background",
-          "highlightColor": "--text-highlight-bg",
+          "highlightColor": "#F4E7B6",
           "alternateHighlightColors": {},
           "languageBorderColors": {},
           "textColor": "#A30505",
@@ -400,7 +400,7 @@
   "alternateHighlightColorName": "",
   "languageBorderColorName": "",
   "foldAllCommand": false,
-  "settingsType": "printToPDF",
+  "settingsType": "codeblock",
   "langSpecificSettingsType": "",
   "languageSpecificLanguageName": ""
 }
