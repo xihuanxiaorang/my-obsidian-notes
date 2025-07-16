@@ -331,7 +331,7 @@
         "codeblock": {
           "activeLineColor": "--color-base-30",
           "backgroundColor": "--code-background",
-          "highlightColor": "#F4E7B6",
+          "highlightColor": "#FFC86440",
           "alternateHighlightColors": {},
           "languageBorderColors": {},
           "textColor": "#A30505",

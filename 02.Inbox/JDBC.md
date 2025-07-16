@@ -1,8 +1,8 @@
 ---
 tags:
   - Java
-create_time: 2025-03-09T23:40:00
-update_time: 2025/06/22 16:34
+create_time: 2025/03/06 18:59
+update_time: 2025/07/16 12:06
 ---
 
 ## 简介
@@ -98,7 +98,7 @@ public class User {
 3. **创建操作对象（Create Statement）**：通过连接对象创建 `Statement` 或 `PreparedStatement`。
 4. **执行 SQL（Execute Statement）**：使用 `Statement` 中的 `executeQuery()` 或 `executeUpdate()` 执行查询或更新语句。
 5. **处理结果（Process Results）**：通过 `ResultSet` 读取和处理查询结果。
-6. **关闭连接，释放资源（Close Connection）**：通过 `try-with-resources` 自动关闭 `ResultSet`、`Statement` 和 `Connection`，释放资源。
+6. **关闭连接，释放资源（Close Connection）**：通过 [[Item9 Prefer try-with-resources to try-finally#try-with-resources|try-with-resources]] 自动关闭 `ResultSet`、`Statement` 和 `Connection`，释放资源。
 
 ### 加载驱动
 
@@ -177,9 +177,9 @@ public class Driver extends NonRegisteringDriver implements java.sql.Driver {
 > - 🤔 咦！？能不能通过配置文件指定驱动类呢？这样更换数据库驱动时，就不用修改代码了。例如：`driver-name:com.mysql.cj.jdbc.Driver`。
 > - 😩 不过，这样还是不够完美……我还得记住不同数据库厂商提供的 `Driver` 类名！这也太麻烦了吧！头发本来就不多了，换驱动还得查文档，太不友好了。
 > - 🧐 能不能和数据库厂商商量一下，让他们直接把配置文件也一并提供？程序员省事，厂商也省事！程序员不用了解驱动类名，厂商还能方便地升级驱动。
-> * 😎 听起来是个好主意！不过，如果厂商提供配置文件，程序如何读取它呢？
+> - 😎 听起来是个好主意！不过，如果厂商提供配置文件，程序如何读取它呢？
 > - 🏆 还记得 `ClassLoader` 吗？它不仅可以加载类，还能通过 `getResource()` 或 `getResources()` 读取 classpath 下的文件。只要和厂商**事先约定好配置文件的路径和格式**，就能通过它读取配置！
-> * 🎉 你 TN 的还真是个天才！！！这套机制，我们就叫它 **SPI** 吧！
+> - 🎉 你 TN 的还真是个天才！！！这套机制，我们就叫它 **SPI** 吧！
 
 这种设计既简化了开发，又提升了代码的可维护性，堪称一举两得！
 
@@ -187,13 +187,13 @@ public class Driver extends NonRegisteringDriver implements java.sql.Driver {
 
 自 Java 6 起，JDBC 开始支持 [[SPI 机制]]。驱动 jar 包中需提供如下配置文件：
 
-```
+```text
 META-INF/services/java.sql.Driver
 ```
 
 文件内容为驱动类的全限定类名：
 
-```
+```text
 com.mysql.cj.jdbc.Driver
 ```
 
@@ -566,8 +566,8 @@ public void testPreparedStatementQuery() {
 
 默认情况下，`PreparedStatement` **不会执行预编译**，需要在数据库连接 URL 中添加额外参数：
 
-- `useServerPrepStmts=true` – 启用服务端预编译（MySQL 4.1 之前的版本不支持）。
-- `cachePrepStmts=true` – 启用预编译语句缓存，避免重复编译。
+- `useServerPrepStmts=true`–启用服务端预编译（MySQL 4.1 之前的版本不支持）。
+- `cachePrepStmts=true`–启用预编译语句缓存，避免重复编译。
 
 举个栗子：
 
@@ -641,7 +641,7 @@ public void testPreparedStatementSQLInjection() {
 
 ### 批处理支持检测
 
-部分 JDBC 驱动可能不支持批处理，可使用 `DatabaseMetaData.supportsBatchUpdates ()` 方法进行检测。
+部分 JDBC 驱动可能不支持批处理，可使用 `DatabaseMetaData. supportsBatchUpdates ()` 方法进行检测。
 
 ```java
 @Test
@@ -735,7 +735,7 @@ jdbc:mysql://localhost:3306/jdbc-study?useUnicode=true&characterEncoding=utf-8&u
 >
 > - **默认值**：67108864（64M）
 > - **范围**：1K - 1G（需为 1024 倍数）
->
+> 
 > 调整 `max_allowed_packet`：
 >
 > ```sql
@@ -843,7 +843,7 @@ INSERT INTO `user` (`name`, `age`, `birthday`, `salary`, `note`) VALUES ('三十
  }
  ```
 
-测试结果如下所示：出现异常。 ![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202142759.png)
+测试结果如下所示：出现异常。![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202142759.png)
 
 然后查看数据库用户表中的数据：
 ![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202143410.png)
@@ -876,7 +876,7 @@ INSERT INTO `user` (`name`, `age`, `birthday`, `salary`, `note`) VALUES ('三十
  }
 ```
 
-测试结果如下所示：出现异常。 ![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202143003.png)
+测试结果如下所示：出现异常。![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202143003.png)
 
 然后查看数据库用户表中的数据：
 ![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202143026.png)
@@ -889,7 +889,7 @@ INSERT INTO `user` (`name`, `age`, `birthday`, `salary`, `note`) VALUES ('三十
 
 传统的 jdbc 开发形式存在的问题:
 
-- 普通的 JDBC 数据库连接使用【DriverManager】来获取，每次向数据库建立连接的时候都要将 【Connection】加载到内存中，再验证用户名和密码（保守估计需要花费 0.05s～1s 的时间）；
+- 普通的 JDBC 数据库连接使用【DriverManager】来获取，每次向数据库建立连接的时候都要将【Connection】加载到内存中，再验证用户名和密码（保守估计需要花费 0.05s～1s 的时间）；
 - 需要【数据库连接】的时候，就向数据库申请一个，执行完成后再【断开连接】。这样的方式将会消耗大量的资源和时间。数据库的连接资源并没有得到很好的重复利用。若同时有几百人甚至几千人在线，频繁的进行数据库连接操作将占用很多的系统资源，严重的甚至会造成服务器的崩溃；
 - 对于每一次数据库连接，使用完后都得断开。否则，如果程序出现异常而未能关闭，将会导致数据库系统中的内存泄漏，最终将导致重启数据库；（回忆：何为 Java 的内存泄漏？）
 - 这种开发方式不能控制【被创建的连接对象数】，系统资源会被毫无顾及的分配出去，如连接过多，也可能导致内存泄漏，服务器崩溃；
@@ -914,7 +914,7 @@ INSERT INTO `user` (`name`, `age`, `birthday`, `salary`, `note`) VALUES ('三十
 特别注意：
 
 - 数据源和数据库连接不同，数据源无需创建多个，它是产生数据库连接的工厂，通常情况下，一个应用只需要一个数据源，当然也会有多数据源的情况。
-- 当数据库访问结束后，程序还是像以前一样关闭数据库连接：`conn.close ()`；但 `conn.close ()` 并没有关闭数据库的物理连接，它仅仅把数据库连接释放，归还给了数据库连接池。
+- 当数据库访问结束后，程序还是像以前一样关闭数据库连接：`conn. close ()`；但 `conn. close ()` 并没有关闭数据库的物理连接，它仅仅把数据库连接释放，归还给了数据库连接池。
 
 #### Druid（德鲁伊）
 
@@ -1036,8 +1036,8 @@ dataSource.maximumPoolSize=10
  }
 
  ```
-点击测试按钮，测试结果如下所示： ![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202147282.png)
+点击测试按钮，测试结果如下所示：![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202147282.png)
 
-查询数据库，检验是否真的执行成功： ![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202148155.png)
+查询数据库，检验是否真的执行成功：![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202309202148155.png)
 
 可以发现，数据库 `user` 表中确实增加了一条数据！
