@@ -1,14 +1,15 @@
 ---
 tags:
   - Java/EffectiveJava
+description: 优先使用 try-with-resources 而非 try-finally
 priority: 9
 create_time: 2025/07/15 19:08
-update_time: 2025/07/17 11:57
+update_time: 2025/07/17 23:23
 ---
 
 ## Don't rely on finalizers or cleaners
 
-`finalizer` 和 `cleaner` 曾被用作资源释放失败时的兜底方案，但它们并不可靠（详见 [[Item 8: Avoid finalizers and cleaners]]）：
+`finalizer` 和 `cleaner` 曾被用作资源释放失败时的兜底方案，但它们并不可靠（详见 [[Item 8 Avoid finalizers and cleaners]]）：
 
 - 执行时机不可预测，甚至可能永远不会执行
 - 显著增加垃圾回收负担，影响系统性能
@@ -89,7 +90,7 @@ static void copy(String src, String dst) throws IOException {
 
 ## Exception suppression
 
-若 `try` 块与 `close()` 方法同时抛出异常时：
+若 `try` 块与 `close()` 方法同时抛出异常：
 
 - `close()` 方法抛出的异常：
 	- 会被抑制并附加在主异常上

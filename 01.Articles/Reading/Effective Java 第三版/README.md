@@ -2,7 +2,7 @@
 tags:
   - Java/EffectiveJava
 create_time: 2025/07/15 18:45
-update_time: 2025/07/15 19:12
+update_time: 2025/07/17 16:14
 ---
 
 ## 章节索引
@@ -37,10 +37,10 @@ const sortedGroups = Array.from(grouped.entries())
 // 渲染分组及表格
 for (const [group, { items }] of sortedGroups) {
   dv.header(3, `📁 ${group || "未分组"}`);
-  dv.table(["📄 文件", "📅 创建时间", "🕓 修改时间"],
+  dv.table(["📄 文件", "📝 描述", "📅 创建时间", "🕓 修改时间"],
     items
       .sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999))
-      .map(p => [p.file.link, p.file.ctime, p.file.mtime ?? "无"])
+      .map(p => [p.file.link, p.description ?? "—", p.file.ctime, p.file.mtime ?? "无"])
   );
 }
 ```

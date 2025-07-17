@@ -38,21 +38,7 @@
             }
           },
           {
-            "id": "60328f3a2876e45a",
-            "type": "leaf",
-            "state": {
-              "type": "split-diff-view",
-              "state": {
-                "aFile": "01.Articles/Reading/Effective Java 第三版/创建和销毁对象/Item9 Prefer try-with-resources to try-finally.md",
-                "bFile": "01.Articles/Reading/Effective Java 第三版/创建和销毁对象/Item9 Prefer try-with-resources to try-finally.md",
-                "aRef": ""
-              },
-              "icon": "diff",
-              "title": "Diff: Item9 Prefer try-with-resources to try-finally"
-            }
-          },
-          {
-            "id": "f3aa7a07376ce4eb",
+            "id": "36243f056f6b1e91",
             "type": "leaf",
             "state": {
               "type": "webviewer",
@@ -64,23 +50,9 @@
               "icon": "globe-2",
               "title": "GitHub - HugoMatilla/Effective-JAVA-Summary: Summary of the book Effective Java 2nd Edition by Joshua Bloch"
             }
-          },
-          {
-            "id": "d19b7fd3e648e804",
-            "type": "leaf",
-            "state": {
-              "type": "webviewer",
-              "state": {
-                "url": "https://github.com/clxering/Effective-Java-3rd-edition-Chinese-English-bilingual/blob/dev/Chapter-2/Chapter-2-Item-8-Avoid-finalizers-and-cleaners.md",
-                "title": "Effective-Java-3rd-edition-Chinese-English-bilingual/Chapter-2/Chapter-2-Item-8-Avoid-finalizers-and-cleaners.md at dev · clxering/Effective-Java-3rd-edition-Chinese-English-bilingual · GitHub",
-                "mode": "webview"
-              },
-              "icon": "globe-2",
-              "title": "Effective-Java-3rd-edition-Chinese-English-bilingual/Chapter-2/Chapter-2-Item-8-Avoid-finalizers-and-cleaners.md at dev · clxering/Effective-Java-3rd-edition-Chinese-English-bilingual · GitHub"
-            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -163,7 +135,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 355
+    "width": 348.5
   },
   "right": {
     "id": "18e4f182b17f06f1",
@@ -208,12 +180,13 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "02.Inbox/Dockerfile 构建镜像.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "大纲"
+              "title": "Dockerfile 构建镜像 的大纲"
             }
           },
           {
@@ -277,14 +250,21 @@
       "pdf-plus:PDF++: Toggle auto-paste": true
     }
   },
-  "active": "60328f3a2876e45a",
+  "active": "7f3f8e206c183eb2",
   "lastOpenFiles": [
+    "01.Articles/Reading/Effective Java 第三版/Chapter3 Methods Common to All  Objects/README.md",
+    "01.Articles/Reading/Effective Java 第三版/Chapter2 Creating and Destorying Objects/README.md",
     "01.Articles/Reading/Effective Java 第三版/README.md",
+    "01.Articles/Reading/Effective Java 第三版/Chapter3 Methods Common to All  Objects/Item10 Obey the general contract when overriding equals.md",
+    "01.Articles/Reading/Effective Java 第三版/Chapter2 Creating and Destorying Objects/Item9 Prefer try-with-resources to try-finally.md",
+    "01.Articles/Reading/Effective Java 第三版/Chapter3 Methods Common to All  Objects",
+    "02.Inbox/Dockerfile 构建镜像.md",
     "Resources/Effective-JAVA-Summary.md",
-    "01.Articles/Reading/Effective Java 第三版/创建和销毁对象/Item9 Prefer try-with-resources to try-finally.md",
+    "01.Articles/Java/Basic/Java8新特性/README.md",
+    "01.Articles/SourceCodeAnalysis/README.md",
+    "01.Articles/Reading/Effective Java 第三版/Chapter2 Creating and Destorying Objects",
     "01.Articles/Java/README.md",
     "02.Inbox/JDBC.md",
-    "02.Inbox/Dockerfile 构建镜像.md",
     "01.Articles/LeetCode/1097 - 游戏玩法分析 V.md",
     "02.Inbox/工厂方法模式.md",
     "03.Excalidraw/JDBC 标准.md",
@@ -298,18 +278,13 @@
     "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
     "01.Articles/Reading/Effective Java 第三版/创建和销毁对象",
     "01.Articles/Reading/Effective Java 第三版",
-    "01.Articles/Java/Basic/Java8新特性/README.md",
     "01.Articles/Java/Basic/Java8 新特性.md",
     "01.Articles/Tools/Obsidian/Obsidian - 插件篇/README.md",
     "01.Articles/Tools/Zetero/README.md",
     "01.Articles/WxMiniProgram/README.md",
     "Recommend/Books/README.md",
     "01.Articles/DesignPattern/README.md",
-    "01.Articles/DevKit/Docker/README.md",
-    "01.Articles/Java/Basic/Java8新特性/Optional.md",
-    "01.Articles/Java/Basic/Java8新特性/Stream API.md",
     "01.Articles/Java/Basic/Java8新特性",
-    "Resources/Docker 实战教程 - 从零到实战 - Docker 容器化 - DockerFile&DockerCompose.md",
     "Zttachments/Pasted image 20250710231241.png",
     "Zttachments/Pasted image 20250707192652.png",
     "Zttachments/Pasted image 20250706224029.png",
@@ -324,9 +299,7 @@
     "01.Articles/DevKit/GithubActions",
     "01.Articles/Tools/Zetero",
     "01.Articles/DevKit/Maven",
-    "01.Articles/SourceCodeHandwritten",
     "Zttachments/Pasted image 20250629232651.png",
-    "01.Articles/Uniapp & UniCloud",
     "01.Articles/Reading/Hello 算法/02 - 链表.canvas",
     "04.Canvas/SQL JOINS.canvas",
     "04.Canvas/未命名 1.canvas",
