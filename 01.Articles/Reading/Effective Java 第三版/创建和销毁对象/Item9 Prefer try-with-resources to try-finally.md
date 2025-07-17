@@ -3,40 +3,26 @@ tags:
   - Java/EffectiveJava
 priority: 9
 create_time: 2025/07/15 19:08
-update_time: 2025/07/16 22:35
+update_time: 2025/07/17 11:57
 ---
 
-## 显式关闭资源为何如此重要？
+## Don't rely on finalizers or cleaners
 
-Java 标准库中大量资源类（如 `InputStream`、`OutputStream`、`java.sql.Connection` 等）都要求显式调用 `close()` 方法进行释放。若未及时关闭，可能造成严重的性能问题。例如：
+`finalizer` 和 `cleaner` 曾被用作资源释放失败时的兜底方案，但它们并不可靠（详见 [[Item 8: Avoid finalizers and cleaners]]）：
+
+- 执行时机不可预测，甚至可能永远不会执行
+- 显著增加垃圾回收负担，影响系统性能
+- 无法保证关键资源（如文件或数据库连接）被及时释放
+
+未显式关闭资源可能导致：
 
 - 内存泄漏（Memory Leak）
-- 文件描述符耗尽（File Descriptor Exhaustion）
-- 数据库连接池耗尽（Connection Pool Exhaustion）
+- 文件句柄耗尽（File Descriptor Exhaustion）
+- 数据库连接池枯竭（Connection Pool Exhaustion）
 
-虽然部分类实现了 `finalize()` 方法，作为关闭失败时的兜底方案，但这种做法并不可靠（详见：[[Item8 Avoid finalizers and cleaners]]）：
+## Avoid try-finally for resource closing
 
-- Finalizer 的执行时机不可控，甚至可能永远不会执行
-- 会显著增加垃圾回收负担，影响性能
-- 无法保证资源被及时释放
-
-## try-finally
-
-在 Java 7 之前，`try-finally` 是确保资源在异常或提前返回情况下仍能被正确关闭的标准写法：
-
-```java
-// try-finally - No longer the best way to close resources!
-static String firstLineOfFile(String path) throws IOException {
-  BufferedReader br = new BufferedReader(new FileReader(path));
-  try {
-    return br.readLine();
-  } finally {
-    br.close();
-  }
-}
-```
-
-在处理多个资源时，try-finally 的可读性和可维护性就显著下降：
+虽然使用 `try-finally` 手动释放资源曾是标准写法，但是在同时处理多个资源时存在明显缺陷：
 
 ```java
 // try-finally is ugly when used with more than one resource!
@@ -59,27 +45,26 @@ static void copy(String src, String dst) throws IOException {
 }
 ```
 
-存在的问题：
-
-- 嵌套层级多、结构混乱，可读性差
-- 每个资源都需单独封装，极易遗漏或写错
+- 嵌套层级深，结构混乱，可读性差
+- 每个资源都需单独包裹，极易遗漏或写错
 - 随着资源数量增加，代码膨胀严重
 
-## try-with-resources
+## Use try-with-resources
 
-Java 7 引入的 `try-with-resources` 语法从根本上解决了上述问题。只要资源类**实现了 `AutoCloseable` 接口**，即可使用该结构：
+自 Java 7 起，推荐使用 try-with-resources，适用于实现了 `AutoCloseable` 接口的资源类（如大多数 I/O、数据库类）：
 
 ```java
-interface AutoCloseable {
-	void close() throws Exception;
+try (Resource res = new Resource()) {
+  // use res
 }
 ```
 
-Java 标准库及主流第三方库中的大多数资源类都已实现该接口。你在自定义资源类时，也应遵循这一规范。
+特性：
+- 自动关闭资源，发生异常时也能安全释放
+- 支持多个资源，按声明顺序打开、按逆序关闭
+- 写法简洁，结构清晰，可读性强
 
-### 示例
-
-使用 try-with-resources 重写的 `firstLineOfFile` 方法，清晰简洁，能自动关闭资源：
+✅ 推荐用法：
 
 ```java
 // try-with-resources - the the best way to close resources!
@@ -90,9 +75,7 @@ static String firstLineOfFile(String path) throws IOException {
 }
 ```
 
-在传统写法中，多个资源需要嵌套多个 try-finally，而使用 try-with-resources 则非常简洁：
-
-```java
+```java hl:3
 // try-with-resources on multiple resources - short and sweet
 static void copy(String src, String dst) throws IOException {
   try (InputStream in = new FileInputStream(src); OutputStream out = new FileOutputStream(dst)) {
@@ -104,19 +87,19 @@ static void copy(String src, String dst) throws IOException {
 }
 ```
 
-**多个资源可在同一个 `try` 中声明，按顺序打开、按逆序关闭，无需嵌套，即可确保每个资源都被正确释放。**
+## Exception suppression
 
-### 异常抑制机制
+若 `try` 块与 `close()` 方法同时抛出异常时：
 
-当 `try` 块和 `close()` 方法都抛出异常时，关闭过程中的异常会被抑制并附加到主异常：
+- `close()` 方法抛出的异常：
+	- 会被抑制并附加在主异常上
+	- 可通过 `Throwable.getSuppressed()` 方法访问
+	- 在异常堆栈中以 "Suppressed" 标记显示
+- JVM 默认保留主异常，以便调试和防止丢失关键异常信息。
 
-- 在异常堆栈中以 "Suppressed" 标记显示
-- 可通过 `Throwable.getSuppressed()` 方法访问
-- 有助于定位关闭资源过程中的问题，同时保持主异常的信息完整。
+## With catch support
 
-### 配合 catch 使用
-
-try-with-resources 同样支持 `catch` 块，可直接用于异常处理，无需额外嵌套。以下是一个稍作简化的示例：当读取失败时返回默认值。
+try-with-resources 可结合 `catch` 使用，处理异常更优雅：
 
 ```java
 // try-with-resources with a catch clause
@@ -129,14 +112,7 @@ static String firstLineOfFile(String path, String defaultVal) {
 }
 ```
 
-## 总结
+## Never forget
 
-> [!important]
-> 在处理需要关闭的资源时，应始终**优先使用 try-with-resources 而非 try-finally**。
-
-- 写法简洁，结构清晰，可读性强
-- 自动关闭资源，避免遗漏
-- 支持多资源，处理更安全
-- 可抑制关闭异常，提升调试能力
-
-try-with-resources 是现代 Java 开发中不可或缺的资源管理机制，应作为默认首选。
+- 始终优先使用 try-with-resources 而非 try-finally
+- 确保资源类实现 `AutoCloseable` 接口

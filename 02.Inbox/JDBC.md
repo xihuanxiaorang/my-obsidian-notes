@@ -2,7 +2,7 @@
 tags:
   - Java
 create_time: 2025/03/06 18:59
-update_time: 2025/07/16 12:06
+update_time: 2025/07/17 11:59
 ---
 
 ## 简介
@@ -40,9 +40,9 @@ COLLATE=utf8mb4_general_ci
 COMMENT='用户表';
 ```
 
-✅ 将存储引擎设置为 `InnoDB`，支持事务和外键。
-✅ 字符集设置为 `utf8mb4`，兼容所有 Unicode 字符（包括 emoji）。
-✅ 排序规则设置为 `utf8mb4_general_ci`，忽略大小写，提升查询性能。
+- 将存储引擎设置为 `InnoDB`，支持事务和外键。
+- 字符集设置为 `utf8mb4`，兼容所有 Unicode 字符（包括 emoji）。
+- 排序规则设置为 `utf8mb4_general_ci`，忽略大小写，提升查询性能。
 
 插入测试数据：
 
@@ -98,7 +98,7 @@ public class User {
 3. **创建操作对象（Create Statement）**：通过连接对象创建 `Statement` 或 `PreparedStatement`。
 4. **执行 SQL（Execute Statement）**：使用 `Statement` 中的 `executeQuery()` 或 `executeUpdate()` 执行查询或更新语句。
 5. **处理结果（Process Results）**：通过 `ResultSet` 读取和处理查询结果。
-6. **关闭连接，释放资源（Close Connection）**：通过 [[Item9 Prefer try-with-resources to try-finally#try-with-resources|try-with-resources]] 自动关闭 `ResultSet`、`Statement` 和 `Connection`，释放资源。
+6. **关闭连接，释放资源（Close Connection）**：通过 [[Item9 Prefer try-with-resources to try-finally#Use try-with-resources|try-with-resources]] 自动关闭 `ResultSet`、`Statement` 和 `Connection`，释放资源。
 
 ### 加载驱动
 
