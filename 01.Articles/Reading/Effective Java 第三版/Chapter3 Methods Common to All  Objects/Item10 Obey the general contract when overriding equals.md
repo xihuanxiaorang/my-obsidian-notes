@@ -4,7 +4,7 @@ tags:
 description: 覆盖 equals 时需遵守的约定
 priority: 10
 create_time: 2025/07/17 16:01
-update_time: 2025/07/17 23:26
+update_time: 2025/07/21 21:44
 ---
 
 **_Don't override if:_**
@@ -53,6 +53,6 @@ public boolean equals (Object o){
 
 **_Never Forget_**
 
-- 重写 `equals` 时，必须同时重写 `hashCode`，详见 [[Item 11 Always override hashCode when you  override equals]]。
+- 重写 `equals` 时，必须同时重写 `hashCode`，详见 [[Item11 Always override hashCode when you  override equals]]。
 - 避免过度设计，实现应尽可能简洁清晰。
-- `equals` 的参数类型必须为 `Object`，否则是重载（overload）而非重写（override），将导致预期外的行为。
+- `equals()` 的参数类型必须为 `Object`，否则是重载（overload）而非重写（override），将导致预期外的行为。
