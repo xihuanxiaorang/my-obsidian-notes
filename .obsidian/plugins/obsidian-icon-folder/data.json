@@ -92,6 +92,5 @@
   "01.Articles/DevKit/Maven": "RiRouteLine",
   "01.Articles/Tools/Zetero": "RiFilePdf2Line",
   "01.Articles/DevKit/GithubActions": "RiGithubLine",
-  "01.Articles/SaToken": "RiShieldLine",
-  "01.Articles/Math": "RiNumber0"
+  "01.Articles/SaToken": "RiShieldLine"
 }

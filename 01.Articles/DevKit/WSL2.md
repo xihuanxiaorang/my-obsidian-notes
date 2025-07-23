@@ -3,7 +3,9 @@ tags:
   - DevKit
   - EnvironmentSetup
 create_time: 2024/12/16 16:06
-update_time: 2025/07/13 13:09
+update_time: 2025/07/21 22:40
+refrence_url:
+  - https://www.bilibili.com/video/BV1tW42197za?vd_source=84272a2d7f72158b38778819be5bc6ad
 ---
 
 > [!quote]
@@ -254,74 +256,3 @@ echo $ZSH
 	```bash
 	sed -i 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting)/g' ~/.zshrc
 	```
-
-## 问题合集
-
-### WSL 无法访问 localhost 代理的解决方案
-
-#### ❓问题现象
-
-```text
-WSL: 检测到 localhost 代理配置，但未镜像到 WSL。NAT 模式下的 WSL 不支持 localhost 代理。
-```
-
-该问题表示：你的 Windows 主机设置了本地代理（如 Clash 启动在 `127.0.0.1:7897`），但 WSL 无法访问该地址，导致无法联网。
-
-#### ✅解决方案
-
-##### 步骤一：查看 Windows 代理监听地址和端口
-
-在 **Windows PowerShell** 中运行：
-
-```bash
-netstat -ano | findstr LISTENING | findstr 789
-```
-
-你可能会看到如下输出：
-
-```bash
-TCP    127.0.0.1:7897   ...   LISTENING
-```
-
-如果监听地址是 `127.0.0.1`，说明该代理仅对 Windows 主机本地可见，WSL 无法访问。你需要将它绑定到 `0.0.0.0` 或找到可访问的主机 IP。
-
-![](https://img.xiaorang.fun/202506261309845.png)
-
-##### 步骤二：找出 WSL 能访问的 Windows 主机 IP
-
-在 WSL 中执行：
-
-```bash
-ip route | grep default
-```
-
-示例输出：
-
-```bash
-default via 172.29.144.1 dev eth0
-```
-
-表示 WSL 可通过 `172.29.144.1` 访问 Windows 主机服务。
-
-![](https://img.xiaorang.fun/202506261309847.png)
-
-##### 步骤三：测试代理是否可用
-
-假设你确认 Windows 中 Clash 监听端口是 `7897`，可以在 WSL 中运行：
-
-```bash
-curl -x http://172.29.144.1:7897 https://www.google.com -I
-```
-
-如果返回 `HTTP/1.1 200 OK` 或 `HTTP/2 200`，说明代理已连通。
-
-##### 步骤四：设置代理环境变量
-
-在当前终端中设置代理（临时有效）：
-
-```bash
-export http_proxy=http://172.29.144.1:7897
-export https_proxy=http://172.29.144.1:7897
-```
-
-若需长期生效，可添加到 `~/.zshrc` 或 `~/.bashrc` 中。
