@@ -161,6 +161,9 @@ body.is-mobile .kofi-button.sticky {
 .canvas-node[data-text-align=right] {
   text-align: right;
 }
+.canvas-node[data-shape] .canvas-node-container .markdown-preview-view.markdown-rendered {
+  transform: unset;
+}
 .canvas-node[data-shape=pill] .canvas-node-container {
   border-radius: 5000px;
 }

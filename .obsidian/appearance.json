@@ -3,7 +3,7 @@
   "cssTheme": "Border",
   "interfaceFontFamily": "仓耳今楷01",
   "monospaceFontFamily": "JetBrains Mono",
-  "textFontFamily": "仓耳今楷01,JetBrains Mono NL",
+  "textFontFamily": "仓耳今楷01,JetBrains Mono",
   "baseFontSize": 14,
   "baseFontSizeAction": true,
   "enabledCssSnippets": [
