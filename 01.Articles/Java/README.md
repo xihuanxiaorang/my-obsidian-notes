@@ -2,13 +2,13 @@
 tags:
   - Java
 create_time: 2025/06/29 13:16
-update_time: 2025/07/23 19:15
+update_time: 2025/07/28 18:27
 ---
 
 ## 章节索引
 
 ```dataviewjs
-const pages = dv.pages("#Java")
+const pages = dv.pages("#Java/JavaSE")
   .where(p => p.file.path.includes(dv.current().file.folder) && p.file.name !== dv.current().file.name);
 
 // 获取分组字段（章节）

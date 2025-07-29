@@ -1,8 +1,8 @@
 ---
 tags:
-  - Java
-create_time: 2024-12-28T17:52:00
-update_time: 2025/06/24 15:57
+  - Java/JavaSE
+create_time: 2024/12/14 19:01
+update_time: 2025/07/29 19:27
 ---
 
 ## 简介
@@ -134,7 +134,7 @@ public interface InternetService {
 
 3. 配置文件 `resources/META-INF/services/fun.xiaorang.study.java.core.spi.demo.service.InternetService`
 
-	```
+	```text
 	fun.xiaorang.study.java.core.spi.demo.service.impl.ChinaMobile
 	fun.xiaorang.study.java.core.spi.demo.service.impl.BeijingChinaMobile
 	```
@@ -166,7 +166,7 @@ public interface InternetService {
 
 3. 配置文件 `resources/META-INF/services/fun.xiaorang.study.java.core.spi.demo.service.InternetService`
 
-	```
+	```text
 	fun.xiaorang.study.java.core.spi.demo.service.impl.ChinaUnicom
 	```
 
@@ -208,11 +208,11 @@ SpringBoot 启动时**默认只会扫描当前项目的包结构，并将其中�
 > [!chat-bubble]+ 💬 假设你是 SpringBoot 的开发人员，现在需要实现自动配置机制：
 >
 > - 👨‍💼 Leader：不能脱离 SpringBoot 原有体系，别重复造轮子！
-> + 👨‍💻 没问题，我们可以继续使用 `@Configuration` 注解，让配置类注入到 IoC 容器中。
+> - 👨‍💻 没问题，我们可以继续使用 `@Configuration` 注解，让配置类注入到 IoC 容器中。
 > - 👨‍💼 Leader：可 SpringBoot 默认只扫描主项目包，外部依赖中的配置类怎么注入？
-> + 👨‍💻 要不让用户加个 `@ComponentScan` 注解，手动指定要扫描的包路径？
+> - 👨‍💻 要不让用户加个 `@ComponentScan` 注解，手动指定要扫描的包路径？
 > - 👨‍💼 Leader：那就不是"自动"配置了，用户还得操心！
-> + 👨‍💻 嗯……要不我们参考一下 Java 的 SPI 机制，用配置文件指定要加载的类？
+> - 👨‍💻 嗯……要不我们参考一下 Java 的 SPI 机制，用配置文件指定要加载的类？
 
 ![[Java SPI & SpringBoot 自动配置设计思想| 1500]]
 
@@ -226,7 +226,7 @@ SpringBoot 启动时**默认只会扫描当前项目的包结构，并将其中�
 - 提供了两个自动配置类：`MybatisAutoConfiguration` 和 `MybatisLanguageDriverAutoConfiguration`
 - 在 `resources/META-INF/spring.factories` 文件中，按照 SpringBoot 的[[#配置文件规范|约定]]配置自动加载清单：
 
-	```
+	```text
 	org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 	org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration,\
 	org.mybatis.spring.boot.autoconfigure.MybatisLanguageDriverAutoConfiguration
