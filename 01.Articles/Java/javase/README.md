@@ -1,9 +1,18 @@
 ---
 tags:
   - Java/JavaSE
-update_time: 2025/07/29 19:29
+update_time: 2025/07/29 22:21
 create_time: 2025/06/29 13:17
 ---
+
+## 章节索引
+
+```dataview
+TABLE file.ctime AS "📅 创建时间", file.mtime AS "🕓 修改时间" 
+FROM ""
+WHERE contains(file.path, this.file.folder) AND file.name != this.file.name
+SORT priority ASC
+```
 
 ## 参考资料
 
