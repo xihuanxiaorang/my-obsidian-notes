@@ -4,13 +4,13 @@ tags:
 priority: 11
 description: 重写 equals 时必须同时重写 hashCode
 create_time: 2025/07/18 17:44
-update_time: 2025/07/21 21:42
+update_time: 2025/07/31 19:15
 ---
 
 **_Contract（<span style="font-size:10px;">约定</span>）of hashCode：_**
 
 - 对于同一个对象，只要参与 `equals()` 比较的字段未被修改，多次调用 `hashCode()` 方法都必须返回相同的整数值。
-- 若两个对象通过 `equals()` 判断为相等，则它们的哈希值也必须相等；反之不成立。则说 "对象相等"是"哈希值相等"的充分不必要条件。
+- 若两个对象通过 `equals()` 判断为相等，则它们的哈希值也必须相等；反之不成立。则说 "对象相等"是"哈希值相等"的[[充分条件与必要条件#充分不必要条件与必要不充分条件|充分不必要条件]]。
 - 不相等的对象不要求必须返回不同的哈希值，但建议尽可能不同以提升哈希表的性能。
 
 **_The Recipe（<span style="font-size:10px;">实现步骤</span>）:_**

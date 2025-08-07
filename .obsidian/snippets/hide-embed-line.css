@@ -1,0 +1,9 @@
+.markdown-preview-view .markdown-embed,
+.markdown-rendered .markdown-embed {
+  border-left: none;
+  padding-left: 0;
+}
+
+.markdown-preview-view .markdown-embed-content {
+  margin-left: 0;
+}

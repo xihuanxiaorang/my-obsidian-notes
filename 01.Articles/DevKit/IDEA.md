@@ -3,7 +3,7 @@ tags:
   - DevKit
   - EnvironmentSetup
 create_time: 2024/12/16 10:54
-update_time: 2025/07/13 12:58
+update_time: 2025/08/06 19:06
 ---
 
 ## 快捷键
@@ -171,6 +171,10 @@ TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。
 	  ${question.code}
 	}
 	```
+
+### 主题
+
+- [Catppuccin Theme](https://plugins.jetbrains.com/plugin/18682-catppuccin-theme)
 
 ## Tips✨
 

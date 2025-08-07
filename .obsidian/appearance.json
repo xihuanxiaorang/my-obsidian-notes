@@ -10,7 +10,8 @@
     "extended-colorschemes",
     "ChatBubble",
     "clutter-free-headings",
-    "dark-image"
+    "dark-image",
+    "hide-embed-line"
   ],
   "accentColor": "",
   "showRibbon": true
