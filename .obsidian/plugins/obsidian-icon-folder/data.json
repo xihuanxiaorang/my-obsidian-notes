@@ -6,6 +6,7 @@
     "emojiStyle": "native",
     "iconColor": null,
     "recentlyUsedIcons": [
+      "RiStarLine",
       "RiNumber0",
       "RiCloudLine",
       "RiShieldLine",
@@ -14,8 +15,7 @@
       "RiRouteLine",
       "RiGitBranchLine",
       "RiFireLine",
-      "RiMiniProgramFill",
-      "RiMiniProgramLine"
+      "RiMiniProgramFill"
     ],
     "recentlyUsedIconsSize": 10,
     "rules": [],
@@ -66,7 +66,6 @@
   "PDF": "RiFilePdf2Line",
   "01.Articles/LeetCode": "RiQuillPenFill",
   "01.Articles/Tools/Obsidian": "LiFolderArchive",
-  "01.Articles/Tools/Obsidian/Obsidian - 插件篇": "RiPlug2Line",
   "Resources": "RiLinksLine",
   "00.Overview/任务清单.md": "RiTaskLine",
   "01.Articles/JavaScript": "RiJavascriptFill",
@@ -92,5 +91,7 @@
   "01.Articles/DevKit/Maven": "RiRouteLine",
   "01.Articles/Tools/Zetero": "RiFilePdf2Line",
   "01.Articles/DevKit/GithubActions": "RiGithubLine",
-  "01.Articles/SaToken": "RiShieldLine"
+  "01.Articles/SaToken": "RiShieldLine",
+  "01.Articles/Tools/Obsidian/插件篇": "RiPlug2Line",
+  "01.Articles/Tools/Obsidian/核心篇": "RiStarLine"
 }

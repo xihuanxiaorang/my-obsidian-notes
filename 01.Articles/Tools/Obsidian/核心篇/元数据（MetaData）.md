@@ -2,16 +2,14 @@
 tags:
   - Tool
   - Obsidian
-create_time: 2025-02-07 18:42
-update_time: 2025/06/29 22:47
+create_time: 2025/02/07 18:42
+update_time: 2025/08/07 23:11
 priority: 1
 ---
 
-## 元数据（Metadata）
-
 在 Obsidian 中，元数据指的是笔记中嵌入的结构化信息，用于补充描述当前文件的属性或内容。它们不直接显示在正文中，但可以被插件或用户查询、引用、分类等操作。
 
-### YAML Frontmatter（前置元数据）
+## YAML Frontmatter（前置元数据）
 
 YAML Frontmatter 是位于笔记最顶部、用 `---` 包裹的结构化内容块，采用 YAML 语法，常用于为笔记添加额外信息，以供插件识别和调用。
 
@@ -29,7 +27,7 @@ status: 完成
 - 采用 `key:value` 的键值对形式；
 - 支持多种数据类型：字符串、数组、布尔值、数字、日期等；
 - 被广泛用于分类、筛选、排序、自动生成目录、任务管理等场景；
-- 可被如 [[01.Articles/Tools/Obsidian/Obsidian - 插件篇/Dataview#Dataview|Dataview]]、Templater、Tasks 等插件读取与操作。
+- 可被如 [[01.Articles/Tools/Obsidian/插件篇/Dataview#Dataview|Dataview]]、Templater、Tasks 等插件读取与操作。
 
 常见字段：
 
@@ -38,17 +36,17 @@ status: 完成
 | `title`    | 字符串    | 显式设置当前笔记标题，通常用于替代文件名作为显示标题       |
 | `aliases`  | 列表     | 定义该笔记的别名，可用于搜索、链接或引用匹配           |
 | `tags`     | 列表或字符串 | 定义笔记的标签（如 `#tag`），用于归类、过滤等       |
-| `created`  | 日期或字符串 | 自定义笔记的创建时间（格式不限，推荐 `YYYY-MM-DD`） |
+| `created`  | 日期或字符串 | 自定义笔记的创建时间（格式不限，推荐 `YYYY-MM-DD`）|
 | `updated`  | 日期或字符串 | 自定义最近更新时间，适合用于版本记录               |
 | `author`   | 字符串    | 笔记作者信息，可用于知识库作者识别                |
-| `status`   | 字符串    | 用户自定义状态字段（如 `草稿`、`完成`、`计划中`）     |
-| `type`     | 字符串    | 分类字段，适合用于区分不同类型的笔记（如 `项目`、`文档`）  |
-| `source`   | 字符串    | 数据来源或引用出处说明（如网页、书籍等）             |
+| `status`   | 字符串    | 用户自定义状态字段（如 `草稿`、`完成`、`计划中`）|
+| `type`     | 字符串    | 分类字段，适合用于区分不同类型的笔记（如 `项目`、`文档`）|
+| `source`   | 字符串    | 数据来源或引用出处说明（如网页、书籍等）|
 | `summary`  | 字符串    | 内容简述，用于概览或摘要展示                   |
-| `priority` | 字符串或数字 | 优先级标记，常配合任务使用（如 `high`、`1`）      |
+| `priority` | 字符串或数字 | 优先级标记，常配合任务使用（如 `high`、`1`）|
 | `related`  | 列表     | 相关链接、文件名或参考资料列表                  |
 
-### Inline Fields（内联字段）
+## Inline Fields（内联字段）
 
 在笔记正文中以 `键::值` 形式直接嵌入：
 
@@ -62,34 +60,34 @@ status: 完成
 - 多用于局部注解、轻量元信息记录；
 - 支持多个字段在一篇笔记中同时存在。
 
-### 文件元数据（系统字段）
+## 文件元数据（系统字段）
 
 这些是 Obsidian 或操作系统自动记录的属性，无需用户手动编辑：
 
 | 字段名                | 类型      | 含义说明                                 |
 | ------------------ | ------- | ------------------------------------ |
 | `file.name`        | 字符串     | 文件名，不包含扩展名 `.md`                     |
-| `file.ext`         | 字符串     | 文件扩展名（通常为 `md`）                      |
-| `file.path`        | 字符串     | 文件相对路径（包含文件夹结构）                      |
+| `file.ext`         | 字符串     | 文件扩展名（通常为 `md`）|
+| `file.path`        | 字符串     | 文件相对路径（包含文件夹结构）|
 | `file.folder`      | 字符串     | 文件所在文件夹的相对路径                         |
 | `file.link`        | 内部链接    | 指向该文件的内部链接 `[[文件名]]`                 |
-| `file.ctime`       | 日期时间    | 文件创建时间（Create Time）                  |
-| `file.mtime`       | 日期时间    | 文件上次修改时间（Modified Time）              |
-| `file.day`         | 日期      | 文件创建日期（保留日期部分，适合用于时间线展示）             |
-| `file.size`        | 数值（字节）  | 文件大小，单位为字节                           |
-| `file.inlinks`     | 列表      | 所有链接到当前文件的其他文件（反向链接）                 |
-| `file.outlinks`    | 列表      | 当前文件中链接到的所有其他文件（正向链接）                |
-| `file.etags`       | 列表      | 文件中出现的所有标签（包括 YAML 和正文中的 `#标签`）      |
+| `file.ctime`       | 日期时间    | 文件创建时间（Create Time）|
+| `file.mtime`       | 日期时间    | 文件上次修改时间（Modified Time）|
+| `file.day`         | 日期      | 文件创建日期（保留日期部分，适合用于时间线展示）|
+| `file.size`        | 数值（字节）| 文件大小，单位为字节                           |
+| `file.inlinks`     | 列表      | 所有链接到当前文件的其他文件（反向链接）|
+| `file.outlinks`    | 列表      | 当前文件中链接到的所有其他文件（正向链接）|
+| `file.etags`       | 列表      | 文件中出现的所有标签（包括 YAML 和正文中的 `#标签`）|
 | `file.tags`        | 列表 / 空值 | YAML 前置元数据中定义的 `tags` 字段，若无则为 `null` |
-| `file.tasks`       | 列表      | 当前文件中识别出的所有任务项（如 `- [ ]` 形式）         |
-| `file.frontmatter` | 字典      | YAML 前置元数据（全部键值对组成的对象）               |
+| `file.tasks`       | 列表      | 当前文件中识别出的所有任务项（如 `- [ ]` 形式）|
+| `file.frontmatter` | 字典      | YAML 前置元数据（全部键值对组成的对象）|
 | `file.aliases`     | 列表      | YAML 中定义的 `aliases`（别名）字段            |
-| `file.lists`       | 列表      | 当前文件中所有 Markdown 列表项（包括子项）           |
-| `file.words`       | 数值      | 文件的字数统计（Dataview 自动统计）               |
-| `file.lines`       | 数值      | 文件的总行数（依赖 Dataview 或相关插件）            |
+| `file.lists`       | 列表      | 当前文件中所有 Markdown 列表项（包括子项）|
+| `file.words`       | 数值      | 文件的字数统计（Dataview 自动统计）|
+| `file.lines`       | 数值      | 文件的总行数（依赖 Dataview 或相关插件）|
 
 - `ctime` 和 `mtime` 可用于自动添加创建/修改时间戳；
 - `inlinks` 和 `outlinks` 对知识图谱与双向链接分析非常有用；
 - `file.linked` 与 `file.unlinked` 可用于筛选"孤立笔记"或"无引用文档"。
 
-上述字段大部分由 [[01.Articles/Tools/Obsidian/Obsidian - 插件篇/Dataview#Dataview|Dataview]] 或 Templater 插件支持读取。
+上述字段大部分由 [[01.Articles/Tools/Obsidian/插件篇/Dataview#Dataview|Dataview]] 或 Templater 插件支持读取。

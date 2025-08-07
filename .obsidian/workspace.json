@@ -29,7 +29,7 @@
               "type": "markdown",
               "state": {
                 "file": "02.Inbox/类加载器.md",
-                "mode": "preview",
+                "mode": "source",
                 "source": false,
                 "backlinks": false
               },
@@ -43,10 +43,10 @@
             "state": {
               "type": "excalidraw",
               "state": {
-                "file": "03.Excalidraw/Drawing 2025-08-04 12.31.32.excalidraw.md"
+                "file": "03.Excalidraw/类加载流程图.md"
               },
               "icon": "excalidraw-icon",
-              "title": "Drawing 2025-08-04 12.31.32.excalidraw"
+              "title": "类加载流程图"
             }
           }
         ],
@@ -251,14 +251,20 @@
   },
   "active": "7f3f8e206c183eb2",
   "lastOpenFiles": [
-    "02.Inbox/工厂方法模式.md",
+    "01.Articles/Tools/Obsidian/README.md",
+    "03.Excalidraw/类加载流程图.md",
     "02.Inbox/类加载器.md",
+    "01.Articles/Tools/Obsidian/核心篇/元数据（MetaData）.md",
+    "01.Articles/Tools/Obsidian/插件篇/README.md",
+    "01.Articles/Tools/Obsidian/核心篇",
+    "01.Articles/Tools/Obsidian/插件篇/Tasks.md",
+    "01.Articles/Tools/Obsidian/插件篇/Dataview.md",
+    "02.Inbox/工厂方法模式.md",
     "02.Inbox/SPI 机制.md",
     "01.Articles/DevKit/IDEA.md",
     "01.Articles/DevKit/Navicat16.md",
     "01.Articles/DevKit/Navicat17.md",
     "01.Articles/Java/JavaSE/代码块.md",
-    "03.Excalidraw/Drawing 2025-08-04 12.31.32.excalidraw.md",
     "02.Inbox/反射.md",
     "Zttachments/Pasted image 20250804132021.png",
     "02.Inbox/泛型.md",
@@ -273,13 +279,7 @@
     "01.Articles/Java/JavaSE/内部类.md",
     "01.Articles/JavaScript/reduce.md",
     "01.Articles/DevKit/Windows Terminal.md",
-    "01.Articles/面试宝典/README.md",
-    "01.Articles/InterviewGuide/README.md",
     "01.Articles/InterviewGuide",
-    "01.Articles/DevKit/内网穿透工具/README.md",
-    "01.Articles/DevKit/内网穿透工具/nps.md",
-    "01.Articles/DevKit/内网穿透工具/DingTalk.md",
-    "01.Articles/DevKit/内网穿透工具/NATAPP.md",
     "01.Articles/DevKit/内网穿透工具",
     "01.Articles/DevKit/Docker/Docker 核心",
     "01.Articles/DevKit/Docker/Docker 实例",
@@ -287,7 +287,6 @@
     "01.Articles/DevKit/Maven",
     "01.Articles/DevKit/Git",
     "01.Articles/DevKit/GithubActions",
-    "01.Articles/DevKit/Docker",
     "Zttachments/Pasted image 20250720192740.png",
     "01.Articles/Reading/阿里巴巴Java开发手册-嵩山版/分层领域模型规约(DO,PO,BO,DTO,VO).canvas",
     "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
