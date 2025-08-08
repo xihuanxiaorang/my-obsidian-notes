@@ -33,14 +33,67 @@
         "focus": true
       },
       "openFile": false,
-      "openFileInMode": "default"
+      "openFileInMode": "default",
+      "fileOpening": {
+        "location": "tab",
+        "direction": "vertical",
+        "focus": true,
+        "mode": "default"
+      }
     },
     {
       "id": "221ad2d1-0d47-449b-be80-69df44b99032",
       "name": "macro - add a task & create the task file",
       "type": "Macro",
       "command": true,
-      "macroId": "b61ed318-8685-442b-873c-50164f25fc42"
+      "macro": {
+        "id": "b61ed318-8685-442b-873c-50164f25fc42",
+        "name": "add a task & create the task file",
+        "commands": [
+          {
+            "name": "capture - add a task",
+            "type": "Choice",
+            "id": "7775532e-b2ef-42e9-8667-f1ab710a2e3b",
+            "choiceId": "90d5d2bd-fd5c-47c3-aca8-06de5a2b8f0c"
+          },
+          {
+            "name": "template - create the task file",
+            "type": "NestedChoice",
+            "id": "138500d0-ce0a-4d82-bb13-069aff91c4b8",
+            "choice": {
+              "id": "e5d8d4ef-2a90-4796-b1b2-b92c0afb16d7",
+              "name": "template - create the task file",
+              "type": "Template",
+              "command": false,
+              "templatePath": "Templates/Basic.md",
+              "fileNameFormat": {
+                "enabled": true,
+                "format": "{{value:task}}"
+              },
+              "folder": {
+                "enabled": true,
+                "folders": [
+                  "02.Inbox"
+                ],
+                "chooseWhenCreatingNote": false,
+                "createInSameFolderAsActiveFile": false,
+                "chooseFromSubfolders": false
+              },
+              "appendLink": false,
+              "openFileInNewTab": {
+                "enabled": false,
+                "direction": "vertical",
+                "focus": true
+              },
+              "openFile": true,
+              "openFileInMode": "default",
+              "fileExistsMode": "Nothing",
+              "setFileExistsBehavior": true
+            }
+          }
+        ]
+      },
+      "runOnStartup": false
     },
     {
       "id": "8695d6df-6f42-44ff-b40d-891fdc18120b",
@@ -70,66 +123,23 @@
       "openFile": true,
       "openFileInMode": "default",
       "fileExistsMode": "Increment the file name",
-      "setFileExistsBehavior": false
-    }
-  ],
-  "macros": [
-    {
-      "name": "add a task & create the task file",
-      "id": "b61ed318-8685-442b-873c-50164f25fc42",
-      "commands": [
-        {
-          "name": "capture - add a task",
-          "type": "Choice",
-          "id": "7775532e-b2ef-42e9-8667-f1ab710a2e3b",
-          "choiceId": "90d5d2bd-fd5c-47c3-aca8-06de5a2b8f0c"
-        },
-        {
-          "name": "template - create the task file",
-          "type": "NestedChoice",
-          "id": "138500d0-ce0a-4d82-bb13-069aff91c4b8",
-          "choice": {
-            "id": "e5d8d4ef-2a90-4796-b1b2-b92c0afb16d7",
-            "name": "template - create the task file",
-            "type": "Template",
-            "command": false,
-            "templatePath": "Templates/Basic.md",
-            "fileNameFormat": {
-              "enabled": true,
-              "format": "{{value:task}}"
-            },
-            "folder": {
-              "enabled": true,
-              "folders": [
-                "02.Inbox"
-              ],
-              "chooseWhenCreatingNote": false,
-              "createInSameFolderAsActiveFile": false,
-              "chooseFromSubfolders": false
-            },
-            "appendLink": false,
-            "openFileInNewTab": {
-              "enabled": false,
-              "direction": "vertical",
-              "focus": true
-            },
-            "openFile": true,
-            "openFileInMode": "default",
-            "fileExistsMode": "Nothing",
-            "setFileExistsBehavior": true
-          }
-        }
-      ],
-      "runOnStartup": false
+      "setFileExistsBehavior": false,
+      "fileOpening": {
+        "location": "tab",
+        "direction": "vertical",
+        "focus": true,
+        "mode": "default"
+      }
     }
   ],
   "inputPrompt": "single-line",
   "devMode": false,
   "templateFolderPath": "Templates",
   "announceUpdates": true,
-  "version": "1.18.1",
+  "version": "2.1.0",
   "disableOnlineFeatures": true,
   "enableRibbonIcon": false,
+  "showCaptureNotification": true,
   "ai": {
     "defaultModel": "Ask me",
     "defaultSystemPrompt": "As an AI assistant within Obsidian, your primary goal is to help users manage their ideas and knowledge more effectively. Format your responses using Markdown syntax. Please use the [[Obsidian]] link format. You can write aliases for the links by writing [[Obsidian|the alias after the pipe symbol]]. To use mathematical notation, use LaTeX syntax. LaTeX syntax for larger equations should be on separate lines, surrounded with double dollar signs ($$). You can also inline math expressions by wrapping it in $ symbols. For example, use $$w_{ij}^{\text{new}}:=w_{ij}^{\text{current}}+etacdotdelta_jcdot x_{ij}$$ on a separate line, but you can write \"($eta$ = learning rate, $delta_j$ = error term, $x_{ij}$ = input)\" inline.",
@@ -191,6 +201,8 @@
     "incrementFileNameSettingMoveToDefaultBehavior": true,
     "mutualExclusionInsertAfterAndWriteToBottomOfFile": true,
     "setVersionAfterUpdateModalRelease": true,
-    "addDefaultAIProviders": true
+    "addDefaultAIProviders": true,
+    "removeMacroIndirection": true,
+    "migrateFileOpeningSettings": true
   }
 }

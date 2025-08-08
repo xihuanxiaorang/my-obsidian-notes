@@ -18,7 +18,12 @@
     "useCustomEmojiForTasksPlugin": false,
     "removeTagsForTasksPlugin": false,
     "enableKanbanPluginReminderFormat": true,
+    "yearMonthDisplayFormat": "YYYY, MMMM",
+    "monthDayDisplayFormat": "MM/DD",
+    "shortDateWithWeekdayDisplayFormat": "M/DD (ddd)",
+    "timeDisplayFormat": "HH:mm",
     "editDetectionSec": 10,
-    "reminderCheckIntervalSec": 5
+    "reminderCheckIntervalSec": 5,
+    "weekStart": "1"
   }
 }

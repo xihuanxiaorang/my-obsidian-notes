@@ -61,6 +61,7 @@
     "video_date": "date",
     "url": "text",
     "date": "date",
-    "source": "text"
+    "source": "text",
+    "excalidraw-embed-md": "checkbox"
   }
 }
