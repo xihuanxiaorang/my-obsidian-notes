@@ -1,6 +1,19 @@
 {
   "scanned": true,
-  "reminders": {},
+  "reminders": {
+    "00.Overview/任务清单.md": [
+      {
+        "title": "[[Maven]] 🔼 ➕ 2025-02-14",
+        "time": "2025-02-15",
+        "rowNumber": 28
+      },
+      {
+        "title": "[[HTML5]] 🔺 ➕ 2025-02-08",
+        "time": "2025-02-14",
+        "rowNumber": 29
+      }
+    ]
+  },
   "debug": false,
   "settings": {
     "reminderTime": "10:00",

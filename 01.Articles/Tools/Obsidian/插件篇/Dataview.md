@@ -25,7 +25,7 @@ priority: 10
 > [!quote]
 > [DQL, JS and Inlines - Dataview](https://blacksmithgu.github.io/obsidian-dataview/queries/dql-js-inline/)
 
-Dataview 支持将笔记视为结构化数据，提供了**四种查询方式**，可灵活读取和展示笔记中的[[元数据（MetaData）#元数据（Metadata）|元数据]]。所有查询都写在 Markdown 文件中，通过代码块或行内代码实时渲染，自动响应仓库中的内容变化。
+Dataview 支持将笔记视为结构化数据，提供了**四种查询方式**，可灵活读取和展示笔记中的[[Metadata#元数据（Metadata）|元数据]]。所有查询都写在 Markdown 文件中，通过代码块或行内代码实时渲染，自动响应仓库中的内容变化。
 
 ### Dataview Query Language（DQL）
 

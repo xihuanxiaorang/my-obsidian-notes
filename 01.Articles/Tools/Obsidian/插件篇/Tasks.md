@@ -1,9 +1,9 @@
 ---
 tags:
   - Obsidian/Plugin
-create_time: 2025-04-11T18:33:00
-update_time: 2025/06/29 22:47
-priority: 20
+create_time: 2025/04/11 18:32
+update_time: 2025/08/08 18:36
+priority: 11
 ---
 
 [Tasks](https://github.com/obsidian-tasks-group/obsidian-tasks) 插件为 Obsidian 提供了更强大的任务管理功能，主要特点包括：
@@ -41,7 +41,7 @@ priority: 20
 - [ ] Send Kate a birthday card - with a scheduled date 🔁 every January on the 4th ⏳ 2023-01-04
 ```
 
-## 创建任务查询
+## 任务查询
 
 ### 查询语法 (第三人称)
 
@@ -52,7 +52,7 @@ priority: 20
 	- 完成日期：done before/after/on 日期
 - 无到期日：no due date
 - 到期日过滤：due before/after/on 日期
-	- 日期可使用 today, yesterday, tomorrow, next week， last Friday, in two weeks 等
+	- 日期可使用 today, yesterday, tomorrow, next week，last Friday, in two weeks 等
 - 路径
 	- 要搜寻：path includes 路径
 	- 不搜寻：path does not include 路径
