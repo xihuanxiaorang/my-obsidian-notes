@@ -22,10 +22,7 @@
   "quickadd",
   "templater-obsidian",
   "hide-folders",
-  "file-order",
-  "improved-random-note",
   "remotely-save",
-  "obsidian-projects",
   "file-explorer-note-count",
   "advanced-canvas",
   "better-export-pdf",
@@ -38,9 +35,6 @@
   "highlightr-plugin",
   "dataview",
   "obsidian-git",
-  "obsidian-minimal-settings",
-  "pdf-plus",
   "obsidian-linter",
-  "obsidian-text-format",
   "cloze"
 ]
