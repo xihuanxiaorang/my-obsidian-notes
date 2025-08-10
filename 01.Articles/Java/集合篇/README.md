@@ -1,16 +1,19 @@
 ---
 tags:
   - Java/Collection
-  - Interview
-create_time: 2024-12-28T17:46:00
-update_time: 2025/04/14 18:46
+create_time: 2024/12/12 23:55
+update_time: 2025/08/10 23:27
 ---
 
 ```plantuml
 @startuml
+title 集合架构体系图
 
 ' 设置背景为深色
 skinparam backgroundColor #1E1E1E
+
+' 设置标题文字颜色为白色
+skinparam titleFontColor white
 
 ' 设置默认文本颜色为白色
 skinparam defaultTextColor white

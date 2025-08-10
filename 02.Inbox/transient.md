@@ -1,8 +1,8 @@
 ---
 tags:
   - Java
-create_time: 2025-01-05 21:51
-update_time: 2025/01/05 22:28
+create_time: 2025/01/05 21:51
+update_time: 2025/08/10 23:27
 ---
 
 `transient` 是 Java 中的修饰符，用于修饰类中的成员变量，表示这些变量**不会被序列化**。当一个对象通过 `ObjectOutputStream` 被序列化时，被 `transient` 修饰的变量的值不会被保存到序列化文件中。
@@ -105,7 +105,7 @@ public class TransientExample {
 
 **运行结果**：
 
-```
+```text
 User{username='admin', password='null'}
 ```
 

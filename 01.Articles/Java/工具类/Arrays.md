@@ -1,8 +1,8 @@
 ---
 tags:
   - Java/CodeUtil
-create_time: 2024-12-22 18:40
-update_time: 2025/04/21 17:43
+create_time: 2024/12/22 18:40
+update_time: 2025/08/10 23:28
 ---
 
 ## copyOf
@@ -72,7 +72,7 @@ System.arraycopy(array1, 0, array2, 0, 3);
 System.out.println(Arrays.toString(array2)); // [1, 2, 3, null, null]
 ```
 
-通过 `System.arraycopy` 可以实现在数组指定位置处插入元素的功能。如下所示： ^30f810
+通过 `System.arraycopy` 可以实现在数组指定位置处插入元素的功能。如下所示：^30f810
 
 ```java
 Long[] array1 = new Long[]{1L, 2L, 3L, null, null, null};
