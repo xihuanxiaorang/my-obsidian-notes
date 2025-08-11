@@ -2,7 +2,7 @@
 tags:
   - Java/Collection
 create_time: 2024/12/12 23:55
-update_time: 2025/08/10 23:27
+update_time: 2025/08/11 13:36
 ---
 
 ```plantuml
@@ -27,9 +27,10 @@ skinparam ClassFontColor white
 skinparam ClassAttributeIconColor #A0A0A0
 skinparam ClassStereotypeFontColor #A0A0A0
 
-' 设置连接线颜色和箭头颜色
-skinparam ArrowColor #A0A0A0
-skinparam LineColor #A0A0A0
+' 连接线和箭头
+skinparam ArrowColor #CCCCCC
+skinparam LineColor #CCCCCC
+skinparam ArrowFontColor #FFFFFF
 
 interface Iterable {}
 interface Collection extends Iterable {}

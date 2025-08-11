@@ -3,8 +3,8 @@ tags:
   - SourceCodeAnalysis
   - DataStructure
   - Java/Collection
-create_time: 2025-01-02 23:31
-update_time: 2025/06/07 11:45
+create_time: 2025/01/10 17:18
+update_time: 2025/08/11 13:35
 version: JDK8
 priority: 10
 ---
@@ -32,9 +32,10 @@ priority: 10
 	skinparam ClassAttributeIconColor #A0A0A0
 	skinparam ClassStereotypeFontColor #A0A0A0
 	
-	' 设置连接线颜色和箭头颜色
-	skinparam ArrowColor #A0A0A0
-	skinparam LineColor #A0A0A0
+	' 连接线和箭头
+	skinparam ArrowColor #CCCCCC
+	skinparam LineColor #CCCCCC
+	skinparam ArrowFontColor #FFFFFF
 	
 	class LinkedList<E> extends AbstractSequentialList implements List, Deque, Cloneable, Serializable {}
 	class AbstractSequentialList<E> extends AbstractList {}

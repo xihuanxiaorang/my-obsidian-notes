@@ -1,8 +1,8 @@
 ---
 tags:
   - Java/DesignPattern
-create_time: 2025-02-28T18:42:00
-update_time: 2025/06/21 23:21
+create_time: 2025/07/31 18:48
+update_time: 2025/08/11 13:50
 priority: 1
 ---
 
@@ -12,6 +12,26 @@ priority: 1
 
 ```plantuml
 @startuml
+
+' 深色背景
+skinparam backgroundColor #1E1E1E
+skinparam defaultTextColor white
+
+' 类外观
+skinparam ClassBackgroundColor #2D2D2D
+skinparam ClassBorderColor #AAAAAA
+skinparam ClassFontColor #FFFFFF
+skinparam ClassStereotypeFontColor #66D9EF   ' 类 stereotype 文字亮青
+skinparam ClassAttributeFontColor #E6E6E6    ' 属性文字浅灰
+
+' 属性/方法图标颜色
+skinparam ClassAttributeIconColor #FFD966    ' 属性图标亮黄
+skinparam ClassMethodIconColor #80FF80       ' 方法图标亮绿
+
+' 连接线和箭头
+skinparam ArrowColor #CCCCCC
+skinparam LineColor #CCCCCC
+skinparam ArrowFontColor #FFFFFF
 
 class Teacher {
   - name: String
@@ -44,9 +64,29 @@ class Teacher {
 	```plantuml
 	@startuml
 	
+	' 深色背景
+	skinparam backgroundColor #1E1E1E
+	skinparam defaultTextColor white
+	
+	' 类外观
+	skinparam ClassBackgroundColor #2D2D2D
+	skinparam ClassBorderColor #AAAAAA
+	skinparam ClassFontColor #FFFFFF
+	skinparam ClassStereotypeFontColor #66D9EF   ' 类 stereotype 文字亮青
+	skinparam ClassAttributeFontColor #E6E6E6    ' 属性文字浅灰
+	
+	' 属性/方法图标颜色
+	skinparam ClassAttributeIconColor #FFD966    ' 属性图标亮黄
+	skinparam ClassMethodIconColor #80FF80       ' 方法图标亮绿
+	
+	' 连接线和箭头
+	skinparam ArrowColor #CCCCCC
+	skinparam LineColor #CCCCCC
+	skinparam ArrowFontColor #FFFFFF
+	
 	class IdcardUtil {
-	  - {static} CHINA_ID_MIN_LENGT: int = 15
-	  + {static} isValidCard(String idCard): boolean
+		- {static} CHINA_ID_MIN_LENGT: int = 15
+		+ {static} isValidCard(String idCard): boolean
 	}
 	
 	@enduml
@@ -57,12 +97,32 @@ class Teacher {
 	```plantuml
 	@startuml
 	
+	' 深色背景
+	skinparam backgroundColor #1E1E1E
+	skinparam defaultTextColor white
+	
+	' 类外观
+	skinparam ClassBackgroundColor #2D2D2D
+	skinparam ClassBorderColor #AAAAAA
+	skinparam ClassFontColor #FFFFFF
+	skinparam ClassStereotypeFontColor #66D9EF   ' 类 stereotype 文字亮青
+	skinparam ClassAttributeFontColor #E6E6E6    ' 属性文字浅灰
+	
+	' 属性/方法图标颜色
+	skinparam ClassAttributeIconColor #FFD966    ' 属性图标亮黄
+	skinparam ClassMethodIconColor #80FF80       ' 方法图标亮绿
+	
+	' 连接线和箭头
+	skinparam ArrowColor #CCCCCC
+	skinparam LineColor #CCCCCC
+	skinparam ArrowFontColor #FFFFFF
+	
 	abstract class Employee {
-	  - address: String
-	  - name: String
-	  - number: int
-	  + mailCheck()
-	  + {abstract} computePay(): double
+		- address: String
+		- name: String
+		- number: int
+		+ mailCheck()
+		+ {abstract} computePay(): double
 	}
 	
 	@enduml
@@ -74,6 +134,26 @@ class Teacher {
 
 ```plantuml
 @startuml
+
+' 深色背景
+skinparam backgroundColor #1E1E1E
+skinparam defaultTextColor white
+
+' 类外观
+skinparam ClassBackgroundColor #2D2D2D
+skinparam ClassBorderColor #AAAAAA
+skinparam ClassFontColor #FFFFFF
+skinparam ClassStereotypeFontColor #66D9EF   ' 类 stereotype 文字亮青
+skinparam ClassAttributeFontColor #E6E6E6    ' 属性文字浅灰
+
+' 属性/方法图标颜色
+skinparam ClassAttributeIconColor #FFD966    ' 属性图标亮黄
+skinparam ClassMethodIconColor #80FF80       ' 方法图标亮绿
+
+' 连接线和箭头
+skinparam ArrowColor #CCCCCC
+skinparam LineColor #CCCCCC
+skinparam ArrowFontColor #FFFFFF
 
 interface List <<interface>> {
   + size(): int
@@ -102,6 +182,26 @@ interface List <<interface>> {
 
 ```plantuml
 @startuml
+
+' 深色背景
+skinparam backgroundColor #1E1E1E
+skinparam defaultTextColor white
+
+' 类外观
+skinparam ClassBackgroundColor #2D2D2D
+skinparam ClassBorderColor #AAAAAA
+skinparam ClassFontColor #FFFFFF
+skinparam ClassStereotypeFontColor #66D9EF   ' 类 stereotype 文字亮青
+skinparam ClassAttributeFontColor #E6E6E6    ' 属性文字浅灰
+
+' 属性/方法图标颜色
+skinparam ClassAttributeIconColor #FFD966    ' 属性图标亮黄
+skinparam ClassMethodIconColor #80FF80       ' 方法图标亮绿
+
+' 连接线和箭头
+skinparam ArrowColor #CCCCCC
+skinparam LineColor #CCCCCC
+skinparam ArrowFontColor #FFFFFF
 
 class Person {
   - name: String
@@ -133,6 +233,26 @@ Person <|-- Teacher
 ```plantuml
 @startuml
 
+' 深色背景
+skinparam backgroundColor #1E1E1E
+skinparam defaultTextColor white
+
+' 类外观
+skinparam ClassBackgroundColor #2D2D2D
+skinparam ClassBorderColor #AAAAAA
+skinparam ClassFontColor #FFFFFF
+skinparam ClassStereotypeFontColor #66D9EF   ' 类 stereotype 文字亮青
+skinparam ClassAttributeFontColor #E6E6E6    ' 属性文字浅灰
+
+' 属性/方法图标颜色
+skinparam ClassAttributeIconColor #FFD966    ' 属性图标亮黄
+skinparam ClassMethodIconColor #80FF80       ' 方法图标亮绿
+
+' 连接线和箭头
+skinparam ArrowColor #CCCCCC
+skinparam LineColor #CCCCCC
+skinparam ArrowFontColor #FFFFFF
+
 class Car {
   + move()
 }
@@ -162,6 +282,26 @@ Vehicle <|.. Ship
 ```plantuml
 @startuml
 
+' 深色背景
+skinparam backgroundColor #1E1E1E
+skinparam defaultTextColor white
+
+' 类外观
+skinparam ClassBackgroundColor #2D2D2D
+skinparam ClassBorderColor #AAAAAA
+skinparam ClassFontColor #FFFFFF
+skinparam ClassStereotypeFontColor #66D9EF   ' 类 stereotype 文字亮青
+skinparam ClassAttributeFontColor #E6E6E6    ' 属性文字浅灰
+
+' 属性/方法图标颜色
+skinparam ClassAttributeIconColor #FFD966    ' 属性图标亮黄
+skinparam ClassMethodIconColor #80FF80       ' 方法图标亮绿
+
+' 连接线和箭头
+skinparam ArrowColor #CCCCCC
+skinparam LineColor #CCCCCC
+skinparam ArrowFontColor #FFFFFF
+
 class Customer {
   - address: Address
 }
@@ -179,6 +319,26 @@ Customer --> Address
 
 ```plantuml
 @startuml
+
+' 深色背景
+skinparam backgroundColor #1E1E1E
+skinparam defaultTextColor white
+
+' 类外观
+skinparam ClassBackgroundColor #2D2D2D
+skinparam ClassBorderColor #AAAAAA
+skinparam ClassFontColor #FFFFFF
+skinparam ClassStereotypeFontColor #66D9EF   ' 类 stereotype 文字亮青
+skinparam ClassAttributeFontColor #E6E6E6    ' 属性文字浅灰
+
+' 属性/方法图标颜色
+skinparam ClassAttributeIconColor #FFD966    ' 属性图标亮黄
+skinparam ClassMethodIconColor #80FF80       ' 方法图标亮绿
+
+' 连接线和箭头
+skinparam ArrowColor #CCCCCC
+skinparam LineColor #CCCCCC
+skinparam ArrowFontColor #FFFFFF
 
 class Customer {
   - products: Product[]
@@ -207,6 +367,26 @@ Customer "1" <--> "0..*" Product
 ```plantuml
 @startuml
 
+' 深色背景
+skinparam backgroundColor #1E1E1E
+skinparam defaultTextColor white
+
+' 类外观
+skinparam ClassBackgroundColor #2D2D2D
+skinparam ClassBorderColor #AAAAAA
+skinparam ClassFontColor #FFFFFF
+skinparam ClassStereotypeFontColor #66D9EF   ' 类 stereotype 文字亮青
+skinparam ClassAttributeFontColor #E6E6E6    ' 属性文字浅灰
+
+' 属性/方法图标颜色
+skinparam ClassAttributeIconColor #FFD966    ' 属性图标亮黄
+skinparam ClassMethodIconColor #80FF80       ' 方法图标亮绿
+
+' 连接线和箭头
+skinparam ArrowColor #CCCCCC
+skinparam LineColor #CCCCCC
+skinparam ArrowFontColor #FFFFFF
+
 class Node {
   - next: Node
 }
@@ -222,6 +402,26 @@ Node <-- Node
 
 ```plantuml
 @startuml
+
+' 深色背景
+skinparam backgroundColor #1E1E1E
+skinparam defaultTextColor white
+
+' 类外观
+skinparam ClassBackgroundColor #2D2D2D
+skinparam ClassBorderColor #AAAAAA
+skinparam ClassFontColor #FFFFFF
+skinparam ClassStereotypeFontColor #66D9EF   ' 类 stereotype 文字亮青
+skinparam ClassAttributeFontColor #E6E6E6    ' 属性文字浅灰
+
+' 属性/方法图标颜色
+skinparam ClassAttributeIconColor #FFD966    ' 属性图标亮黄
+skinparam ClassMethodIconColor #80FF80       ' 方法图标亮绿
+
+' 连接线和箭头
+skinparam ArrowColor #CCCCCC
+skinparam LineColor #CCCCCC
+skinparam ArrowFontColor #FFFFFF
 
 class Car {
   - engine: Engine
@@ -240,6 +440,26 @@ Car o--> Engine
 
 ```plantuml
 @startuml
+
+' 深色背景
+skinparam backgroundColor #1E1E1E
+skinparam defaultTextColor white
+
+' 类外观
+skinparam ClassBackgroundColor #2D2D2D
+skinparam ClassBorderColor #AAAAAA
+skinparam ClassFontColor #FFFFFF
+skinparam ClassStereotypeFontColor #66D9EF   ' 类 stereotype 文字亮青
+skinparam ClassAttributeFontColor #E6E6E6    ' 属性文字浅灰
+
+' 属性/方法图标颜色
+skinparam ClassAttributeIconColor #FFD966    ' 属性图标亮黄
+skinparam ClassMethodIconColor #80FF80       ' 方法图标亮绿
+
+' 连接线和箭头
+skinparam ArrowColor #CCCCCC
+skinparam LineColor #CCCCCC
+skinparam ArrowFontColor #FFFFFF
 
 class Person {
   - head: Head
@@ -266,6 +486,26 @@ Person *--> Torso
 
 ```plantuml
 @startuml
+
+' 深色背景
+skinparam backgroundColor #1E1E1E
+skinparam defaultTextColor white
+
+' 类外观
+skinparam ClassBackgroundColor #2D2D2D
+skinparam ClassBorderColor #AAAAAA
+skinparam ClassFontColor #FFFFFF
+skinparam ClassStereotypeFontColor #66D9EF   ' 类 stereotype 文字亮青
+skinparam ClassAttributeFontColor #E6E6E6    ' 属性文字浅灰
+
+' 属性/方法图标颜色
+skinparam ClassAttributeIconColor #FFD966    ' 属性图标亮黄
+skinparam ClassMethodIconColor #80FF80       ' 方法图标亮绿
+
+' 连接线和箭头
+skinparam ArrowColor #CCCCCC
+skinparam LineColor #CCCCCC
+skinparam ArrowFontColor #FFFFFF
 
 class Driver {
   + drive(Car car)

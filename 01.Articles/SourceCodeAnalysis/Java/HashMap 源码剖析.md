@@ -3,8 +3,8 @@ tags:
   - SourceCodeAnalysis
   - DataStructure
   - Java/Collection
-create_time: 2024-12-24 17:50
-update_time: 2025/06/07 11:46
+create_time: 2025/01/10 17:18
+update_time: 2025/08/11 13:34
 version: JDK8
 priority: 20
 ---
@@ -32,9 +32,10 @@ priority: 20
 	skinparam ClassAttributeIconColor #A0A0A0
 	skinparam ClassStereotypeFontColor #A0A0A0
 	
-	' 设置连接线颜色和箭头颜色
-	skinparam ArrowColor #A0A0A0
-	skinparam LineColor #A0A0A0
+	' 连接线和箭头
+	skinparam ArrowColor #CCCCCC
+	skinparam LineColor #CCCCCC
+	skinparam ArrowFontColor #FFFFFF
 	
 	class HashMap<K, V> extends AbstractMap implements Map,Serializable,Cloneable {}
 	class AbstractMap<K, V> implements Map {}
@@ -262,7 +263,7 @@ public HashMap(int initialCapacity, float loadFactor) {
 
 1. 校验参数 `initialCapacity`（初始容量）和 `loadFactor`（加载因子）的合法性，不符合要求时抛出异常。
 2. 调用 [[#tableSizeFor 方法]]，计算 >= initialCapacity 的最小 2 的幂（如 16、32），以确保数组容量始终为 2 的幂次方。
-3. `threshold` 暂时保存了计算出的数组容量，而不是正常的扩容阈值（`capacity * loadFactor`）。这是因为数组尚未初始化，只有在首次[[#添加元素]]时才会： ^f1dccd
+3. `threshold` 暂时保存了计算出的数组容量，而不是正常的扩容阈值（`capacity * loadFactor`）。这是因为数组尚未初始化，只有在首次[[#添加元素]]时才会：^f1dccd
    - 利用 `threshold` 初始化数组容量；
    - 重新计算正确的扩容阈值 `capacity * loadFactor`。
 
@@ -423,14 +424,14 @@ V putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) {
 
 1. 确定新数组的容量和扩容阈值
    1. **旧数组容量 `oldCap > 0`**，说明数组已经初始化过，当前流程为扩容：
-      - 新数组容量： `newCap = oldCap << 1`，（即旧数组容量的两倍）。
-      - 新扩容阈值： `newThr = oldThr << 1`（即旧扩容阈值的两倍）。
+      - 新数组容量：`newCap = oldCap << 1`，（即旧数组容量的两倍）。
+      - 新扩容阈值：`newThr = oldThr << 1`（即旧扩容阈值的两倍）。
    2. **旧扩容阈值 > 0 && 旧数组容量 = 0**，说明数组尚未初始化，但已通过有参构造器指定了初始容量和加载因子，当前流程为数组初始化：
-      - 新数组容量：直接使用 `oldThr` 的值作为 `newCap`，即目标初始容量。 [[#^f1dccd]]
+      - 新数组容量：直接使用 `oldThr` 的值作为 `newCap`，即目标初始容量。[[#^f1dccd]]
       - 新扩容阈值：根据加载因子计算，`newThr = newCap * loadFactor`。
    3. **旧扩容阈值 = 0 && 旧数组容量 = 0**，说明数组尚未初始化，且未通过构造器指定初始容量，当前流程为默认初始化：
-      - 新数组容量： `newCap = DEFAULT_INITIAL_CAPACITY = 16`。
-      - 新扩容阈值： `newThr = DEFAULT_INITIAL_CAPACITY * DEFAULT_LOAD_FACTOR = 12`。
+      - 新数组容量：`newCap = DEFAULT_INITIAL_CAPACITY = 16`。
+      - 新扩容阈值：`newThr = DEFAULT_INITIAL_CAPACITY * DEFAULT_LOAD_FACTOR = 12`。
 2. 创建新数组 & 更新指针
    - 用新数组容量 `newCap` 创建数组 `newTab`，并将其赋值给 `table`。
    - 同时将新扩容阈值 `newThr` 更新到 `threshold`。
@@ -575,7 +576,7 @@ final Node<K,V>[] resize() {
    - 数组长度是否大于 0 (`n > 0`)。
    - 目标下标位置的元素是否存在 (`tab[(n - 1) & hash] != null`)。
 2. 定位目标节点：
-   - 检查首节点 (`first`)： [[#^4ae9ff]]
+   - 检查首节点 (`first`)：[[#^4ae9ff]]
      - 比较其 `hash` 值是否相等。
      - 检查 `key` 引用是否相同或通过 `equals` 方法判定为相等。
    - 若匹配，则直接返回该节点。

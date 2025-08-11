@@ -3,8 +3,8 @@ tags:
   - SourceCodeAnalysis
   - DataStructure
   - Java/Collection
-create_time: 2024-12-24 17:50
-update_time: 2025/06/07 11:45
+create_time: 2025/01/10 17:18
+update_time: 2025/08/11 13:33
 version: JDK8
 priority: 1
 ---
@@ -32,9 +32,10 @@ priority: 1
 	skinparam ClassAttributeIconColor #A0A0A0
 	skinparam ClassStereotypeFontColor #A0A0A0
 	
-	' 设置连接线颜色和箭头颜色
-	skinparam ArrowColor #A0A0A0
-	skinparam LineColor #A0A0A0
+	' 连接线和箭头
+	skinparam ArrowColor #CCCCCC
+	skinparam LineColor #CCCCCC
+	skinparam ArrowFontColor #FFFFFF
 	
 	class ArrayList<E> extends AbstractList implements List,RandomAccess,Cloneable,Serializable {}
 	class AbstractList<E> extends AbstractCollection implements List {}
@@ -60,10 +61,10 @@ ArrayList 底层使用的是**顺序表**，即基于[[01 - 数组.canvas|数组
 其特点如下所示：
 
 1. **连续存储**：所有元素在内存中按顺序连续存储，地址相邻。
-2. **随机访问**： 由于元素连续存储，可以**通过下标或索引来快速访问顺序表中的任意元素**。这种随机访问的时间复杂度为 O (1)，即不受顺序表长度的影响，具有高效的特点。
-3. **插入和删除效率相对较低**： 在顺序表中插入或删除元素，特别是在中间位置，可能需要移动大量元素。这会导致插入和删除的平均时间复杂度为 O (n)。
+2. **随机访问**：由于元素连续存储，可以**通过下标或索引来快速访问顺序表中的任意元素**。这种随机访问的时间复杂度为 O (1)，即不受顺序表长度的影响，具有高效的特点。
+3. **插入和删除效率相对较低**：在顺序表中插入或删除元素，特别是在中间位置，可能需要移动大量元素。这会导致插入和删除的平均时间复杂度为 O (n)。
 4. **动态扩容开销**：如果顺序表容量不足，需要进行动态扩容，即**重新分配更大的数组并复制数据**。这个过程可能会带来一定的时间开销。
-5. **适用场景**： 适合频繁访问和随机读取的场景，但不适合频繁插入或删除。
+5. **适用场景**：适合频繁访问和随机读取的场景，但不适合频繁插入或删除。
 
 ## 知识储备
 
@@ -207,7 +208,7 @@ public boolean add(E e) {
 4. 元素个数加一 `size++`；
 
    > [!Note]
-   >
+   > 
    > 数组中的某个区段整体往后挪的时候，一定是后面的先动！否则的话，会出现数据覆盖的情况!
 
    对应到代码中则体现为**倒序遍历**，**用前一个元素的值覆盖后一个元素的值**。如下所示：
@@ -263,7 +264,7 @@ private void rangeCheckForAdd(int index) {
 2. 数组所需最小的容量确定之后，需要判断当前数组的容量是否小于所需的最小容量，如果是的话，则需要进行扩容操作；
 3. 扩容操作：
 	1. **确定新数组容量大小**。公式：`newCapacity = oldCapacity + (oldCapacity >> 1)`，其中 `oldCapacity >> 1` 进行位运算，右移一位，即为 `oldCapacity` 的一半 => **新数组的容量 = 原数组容量的 1.5 倍** = 原数组容量 + 原数组容量 >> 1；
-	2. **数据拷贝**。新数组容量大小确定之后，则需要进行数据拷贝操作。 `Arrays.copyOf ()` 方法实际上就是创建一个新的数组，然后在方法的内部调用 [[Arrays#System.arraycopy 方法]] 将原数组中的所有数据全部拷贝到新创建的数组中。
+	2. **数据拷贝**。新数组容量大小确定之后，则需要进行数据拷贝操作。`Arrays.copyOf ()` 方法实际上就是创建一个新的数组，然后在方法的内部调用 [[Arrays#System.arraycopy 方法]] 将原数组中的所有数据全部拷贝到新创建的数组中。
 
 ```java hl:9,35
 private void ensureCapacityInternal(int minCapacity) {
