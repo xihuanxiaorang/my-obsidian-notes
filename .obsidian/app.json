@@ -1,4 +1,5 @@
 {
+  "showRibbon": true,
   "promptDelete": false,
   "tabSize": 2,
   "readableLineLength": false,

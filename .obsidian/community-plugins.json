@@ -11,7 +11,6 @@
   "easy-typing-obsidian",
   "codeblock-customizer",
   "obsidian-outliner",
-  "table-editor-obsidian",
   "obsidian-plantuml",
   "oz-clear-unused-images",
   "tray",
@@ -36,5 +35,8 @@
   "dataview",
   "obsidian-git",
   "obsidian-linter",
-  "cloze"
+  "cloze",
+  "obsidian-quiet-outline",
+  "canvas-mindmap",
+  "manual-sorting"
 ]

@@ -10,9 +10,9 @@
     "extended-colorschemes",
     "ChatBubble",
     "clutter-free-headings",
-    "dark-image",
-    "hide-embed-line"
+    "hide-embed-line",
+    "dark-image"
   ],
   "accentColor": "",
-  "showRibbon": true
+  "nativeMenus": false
 }
