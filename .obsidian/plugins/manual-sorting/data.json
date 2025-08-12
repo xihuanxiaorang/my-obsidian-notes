@@ -1,426 +1,81 @@
 {
   "customFileOrder": {
     "/": [
-      "00.Overview",
-      "01.Articles",
-      "02.Inbox",
-      "03.Excalidraw",
-      "04.Canvas",
+      "Overview",
+      "Articles",
+      "Inbox",
+      "Excalidraw",
+      "Canvas",
       "PDF",
       "Recommend",
       "Resources",
       "Templates",
       "Zttachments"
     ],
-    "00.Overview": [
-      "00.Overview/任务清单.md"
+    "Canvas": [
+      "Canvas/代码生成器.canvas"
     ],
-    "01.Articles": [
-      "01.Articles/AI",
-      "01.Articles/Announcements",
-      "01.Articles/DataStructure & Algorithm",
-      "01.Articles/DesignPattern",
-      "01.Articles/DevKit",
-      "01.Articles/HTML & CSS",
-      "01.Articles/InterviewGuide",
-      "01.Articles/Java",
-      "01.Articles/JavaScript",
-      "01.Articles/LeetCode",
-      "01.Articles/Media",
-      "01.Articles/Misc",
-      "01.Articles/Mybatis",
-      "01.Articles/MySQL",
-      "01.Articles/Projects",
-      "01.Articles/Reading",
-      "01.Articles/SaToken",
-      "01.Articles/SourceCodeAnalysis",
-      "01.Articles/SourceCodeHandwritten",
-      "01.Articles/Spring",
-      "01.Articles/SpringBoot",
-      "01.Articles/SpringCloud",
-      "01.Articles/SpringSecurity",
-      "01.Articles/Tools",
-      "01.Articles/TypeScript",
-      "01.Articles/Uniapp & UniCloud",
-      "01.Articles/Vue",
-      "01.Articles/WxMiniProgram"
+    "Excalidraw": [
+      "Excalidraw/fonts",
+      "Excalidraw/Scripts",
+      "Excalidraw/单向链表-删除元素.md",
+      "Excalidraw/汉诺塔.md",
+      "Excalidraw/类加载器的层级结构.md",
+      "Excalidraw/排序算法-鸡尾酒排序.md",
+      "Excalidraw/排序算法-冒泡排序.md",
+      "Excalidraw/双向链表-删除头节点.md",
+      "Excalidraw/双向链表-删除尾节点.md",
+      "Excalidraw/双向链表-删除指定位置节点.md",
+      "Excalidraw/双向链表-在头部添加节点.md",
+      "Excalidraw/双向链表-在尾部添加节点.md",
+      "Excalidraw/双向链表-在指定位置插入节点.md",
+      "Excalidraw/双向链表数据结构.md",
+      "Excalidraw/通用表表达式-粉丝关系示例图.md",
+      "Excalidraw/通用表表达式-粉丝关系示例图2.md",
+      "Excalidraw/通用表表达式-好友关系示例图.md",
+      "Excalidraw/线性表.md",
+      "Excalidraw/寻找2的幂次方最小值的示意图.md",
+      "Excalidraw/C语言知识点01-结构体.md",
+      "Excalidraw/C语言知识点02-指针.md",
+      "Excalidraw/C语言知识点03-函数的参数传递.md",
+      "Excalidraw/Game 贪吃蛇游戏设计图.md",
+      "Excalidraw/HashMap 底层数据结构.md",
+      "Excalidraw/HashMap 数组下标计算.md",
+      "Excalidraw/HTML 标签属性.md",
+      "Excalidraw/HTML 单标签.md",
+      "Excalidraw/HTML 基本骨架.md",
+      "Excalidraw/HTML 双标签.md",
+      "Excalidraw/Java SPI & SpringBoot 自动配置设计思想.md",
+      "Excalidraw/Java SPI 机制栗子.md",
+      "Excalidraw/Java SPI 机制栗子架构图.md",
+      "Excalidraw/Java SPI 运行流程.md",
+      "Excalidraw/JDBC 标准.md",
+      "Excalidraw/JDBC 预编译执行流程.md",
+      "Excalidraw/JDBC 执行流程.md",
+      "Excalidraw/Maven-模型结构图.md",
+      "Excalidraw/SpringBoot 自动配置.md",
+      "Excalidraw/SpringBoot 自动配置核心流程.md",
+      "Excalidraw/SQL - 窗口函数 - 窗口大小选项.md",
+      "Excalidraw/SQL - 窗口函数 vs 聚合函数.md",
+      "Excalidraw/SQL - 执行顺序.md",
+      "Excalidraw/SQL - FULL OUTER JOIN.md",
+      "Excalidraw/SQL - INNER JOIN.md",
+      "Excalidraw/SQL - LEFT EXCLUDING JOIN.md",
+      "Excalidraw/SQL - LEFT JOIN.md",
+      "Excalidraw/SQL - OUTER EXCLUDING JOIN.md",
+      "Excalidraw/SQL - RIGHT EXCLUDING JOIN.md",
+      "Excalidraw/SQL - RIGHT JOIN.md",
+      "Excalidraw/SQL JOINS.md"
     ],
-    "01.Articles/AI": [
-      "01.Articles/AI/Ollama.md",
-      "01.Articles/AI/Open-WebUI.md",
-      "01.Articles/AI/README.md"
+    "Excalidraw/fonts": [
+      "Excalidraw/fonts/仓耳今楷01-W04.ttf"
     ],
-    "01.Articles/Announcements": [
-      "01.Articles/Announcements/宣布：GitHub Copilot 在 VSCode 中推出免费版，GitHub 开发者已达 1.5 亿！.md",
-      "01.Articles/Announcements/WebStorm 和 Rider 现在对非商业用途免费了.md"
+    "Excalidraw/Scripts": [
+      "Excalidraw/Scripts/Downloaded"
     ],
-    "01.Articles/DataStructure & Algorithm": [
-      "01.Articles/DataStructure & Algorithm/Algorithm",
-      "01.Articles/DataStructure & Algorithm/DataStructure",
-      "01.Articles/DataStructure & Algorithm/README.md"
-    ],
-    "01.Articles/DataStructure & Algorithm/Algorithm": [
-      "01.Articles/DataStructure & Algorithm/Algorithm/排序算法",
-      "01.Articles/DataStructure & Algorithm/Algorithm/汉诺塔.md"
-    ],
-    "01.Articles/DataStructure & Algorithm/Algorithm/排序算法": [
-      "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/鸡尾酒排序.md",
-      "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/快速排序.md",
-      "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/冒泡排序.md",
-      "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/README.md"
-    ],
-    "01.Articles/DataStructure & Algorithm/DataStructure": [
-      "01.Articles/DataStructure & Algorithm/DataStructure/线性表.md"
-    ],
-    "01.Articles/DesignPattern": [
-      "01.Articles/DesignPattern/创建型",
-      "01.Articles/DesignPattern/七大设计原则.md",
-      "01.Articles/DesignPattern/README.md",
-      "01.Articles/DesignPattern/UML 类图.md"
-    ],
-    "01.Articles/DesignPattern/创建型": [
-      "01.Articles/DesignPattern/创建型/单例模式.md",
-      "01.Articles/DesignPattern/创建型/简单工厂模式.md"
-    ],
-    "01.Articles/DevKit": [
-      "01.Articles/DevKit/内网穿透工具",
-      "01.Articles/DevKit/Docker",
-      "01.Articles/DevKit/Git",
-      "01.Articles/DevKit/GithubActions",
-      "01.Articles/DevKit/Maven",
-      "01.Articles/DevKit/Cloudflare.md",
-      "01.Articles/DevKit/Conda.md",
-      "01.Articles/DevKit/Cursor.md",
-      "01.Articles/DevKit/Github.md",
-      "01.Articles/DevKit/IDEA.md",
-      "01.Articles/DevKit/JDK.md",
-      "01.Articles/DevKit/MySQL.md",
-      "01.Articles/DevKit/Navicat16.md",
-      "01.Articles/DevKit/Navicat17.md",
-      "01.Articles/DevKit/nginx.md",
-      "01.Articles/DevKit/Node.js.md",
-      "01.Articles/DevKit/nrm.md",
-      "01.Articles/DevKit/nvm.md",
-      "01.Articles/DevKit/pnpm.md",
-      "01.Articles/DevKit/python.md",
-      "01.Articles/DevKit/thefuck.md",
-      "01.Articles/DevKit/Tomcat.md",
-      "01.Articles/DevKit/UNPKG.md",
-      "01.Articles/DevKit/Vite.md",
-      "01.Articles/DevKit/VSCode.md",
-      "01.Articles/DevKit/Windows PowerShell.md",
-      "01.Articles/DevKit/Windows Terminal.md",
-      "01.Articles/DevKit/WSL2.md"
-    ],
-    "01.Articles/DevKit/内网穿透工具": [
-      "01.Articles/DevKit/内网穿透工具/DingTalk.md",
-      "01.Articles/DevKit/内网穿透工具/NATAPP.md",
-      "01.Articles/DevKit/内网穿透工具/nps.md",
-      "01.Articles/DevKit/内网穿透工具/README.md"
-    ],
-    "01.Articles/DevKit/Docker": [
-      "01.Articles/DevKit/Docker/Docker 安装",
-      "01.Articles/DevKit/Docker/Docker 核心",
-      "01.Articles/DevKit/Docker/Docker 实例",
-      "01.Articles/DevKit/Docker/README.md"
-    ],
-    "01.Articles/DevKit/Docker/Docker 安装": [
-      "01.Articles/DevKit/Docker/Docker 安装/Docker 镜像加速.md",
-      "01.Articles/DevKit/Docker/Docker 安装/Install Docker Desktop on Windows.md",
-      "01.Articles/DevKit/Docker/Docker 安装/Install Docker Engine on Ubuntu.md"
-    ],
-    "01.Articles/DevKit/Docker/Docker 核心": [
-      "01.Articles/DevKit/Docker/Docker 核心/Docker 镜像.md",
-      "01.Articles/DevKit/Docker/Docker 核心/Docker 容器.md",
-      "01.Articles/DevKit/Docker/Docker 核心/Docker 数据卷.md"
-    ],
-    "01.Articles/DevKit/Docker/Docker 实例": [
-      "01.Articles/DevKit/Docker/Docker 实例/Docker 安装 MySQL.md",
-      "01.Articles/DevKit/Docker/Docker 实例/Docker 安装 Redis.md"
-    ],
-    "01.Articles/DevKit/Git": [
-      "01.Articles/DevKit/Git/Git.md",
-      "01.Articles/DevKit/Git/README.md"
-    ],
-    "01.Articles/DevKit/GithubActions": [
-      "01.Articles/DevKit/GithubActions/README.md"
-    ],
-    "01.Articles/DevKit/Maven": [
-      "01.Articles/DevKit/Maven/README.md"
-    ],
-    "01.Articles/HTML & CSS": [
-      "01.Articles/HTML & CSS/README.md",
-      "01.Articles/HTML & CSS/SCSS 模块引入方式.md",
-      "01.Articles/HTML & CSS/SCSS 与 CSS 变量最佳实践.md"
-    ],
-    "01.Articles/InterviewGuide": [
-      "01.Articles/InterviewGuide/README.md"
-    ],
-    "01.Articles/Java": [
-      "01.Articles/Java/工具类",
-      "01.Articles/Java/关键字",
-      "01.Articles/Java/核心篇",
-      "01.Articles/Java/集合篇",
-      "01.Articles/Java/README.md"
-    ],
-    "01.Articles/Java/工具类": [
-      "01.Articles/Java/工具类/Arrays.md"
-    ],
-    "01.Articles/Java/关键字": [],
-    "01.Articles/Java/核心篇": [
-      "01.Articles/Java/核心篇/代码块.md",
-      "01.Articles/Java/核心篇/类加载器.md",
-      "01.Articles/Java/核心篇/枚举.md",
-      "01.Articles/Java/核心篇/内部类.md",
-      "01.Articles/Java/核心篇/README.md"
-    ],
-    "01.Articles/Java/集合篇": [
-      "01.Articles/Java/集合篇/README.md"
-    ],
-    "01.Articles/JavaScript": [
-      "01.Articles/JavaScript/reduce.md"
-    ],
-    "01.Articles/LeetCode": [
-      "01.Articles/LeetCode/1097 - 游戏玩法分析 V.md"
-    ],
-    "01.Articles/Media": [
-      "01.Articles/Media/排序算法-快速排序.md",
-      "01.Articles/Media/Cursor - 初体验.md"
-    ],
-    "01.Articles/Misc": [
-      "01.Articles/Misc/充分条件与必要条件.md",
-      "01.Articles/Misc/个人网站备案流程.md",
-      "01.Articles/Misc/全面了解 RSS.md",
-      "01.Articles/Misc/DevIssues.md",
-      "01.Articles/Misc/Misc & Ideas & Inbox & Articles.md"
-    ],
-    "01.Articles/Mybatis": [
-      "01.Articles/Mybatis/README.md"
-    ],
-    "01.Articles/MySQL": [
-      "01.Articles/MySQL/窗口函数.md",
-      "01.Articles/MySQL/通用表表达式.md",
-      "01.Articles/MySQL/行列转换.md",
-      "01.Articles/MySQL/用户留存率.md",
-      "01.Articles/MySQL/README.md",
-      "01.Articles/MySQL/SQL 执行顺序.md",
-      "01.Articles/MySQL/SQL JOINS.md"
-    ],
-    "01.Articles/Projects": [
-      "01.Articles/Projects/vue3-element-template"
-    ],
-    "01.Articles/Projects/vue3-element-template": [
-      "01.Articles/Projects/vue3-element-template/创建项目.md",
-      "01.Articles/Projects/vue3-element-template/协作规范.md",
-      "01.Articles/Projects/vue3-element-template/README.md"
-    ],
-    "01.Articles/Reading": [
-      "01.Articles/Reading/阿里巴巴Java开发手册-嵩山版",
-      "01.Articles/Reading/Effective Java 第三版",
-      "01.Articles/Reading/Hello 算法"
-    ],
-    "01.Articles/Reading/阿里巴巴Java开发手册-嵩山版": [
-      "01.Articles/Reading/阿里巴巴Java开发手册-嵩山版/分层领域模型规约(DO,PO,BO,DTO,VO).canvas"
-    ],
-    "01.Articles/Reading/Effective Java 第三版": [
-      "01.Articles/Reading/Effective Java 第三版/Chapter2 Creating and Destorying Objects",
-      "01.Articles/Reading/Effective Java 第三版/Chapter3 Methods Common to All  Objects",
-      "01.Articles/Reading/Effective Java 第三版/README.md"
-    ],
-    "01.Articles/Reading/Effective Java 第三版/Chapter2 Creating and Destorying Objects": [
-      "01.Articles/Reading/Effective Java 第三版/Chapter2 Creating and Destorying Objects/Item9 Prefer try-with-resources to try-finally.md",
-      "01.Articles/Reading/Effective Java 第三版/Chapter2 Creating and Destorying Objects/README.md"
-    ],
-    "01.Articles/Reading/Effective Java 第三版/Chapter3 Methods Common to All  Objects": [
-      "01.Articles/Reading/Effective Java 第三版/Chapter3 Methods Common to All  Objects/Item10 Obey the general contract when overriding equals.md",
-      "01.Articles/Reading/Effective Java 第三版/Chapter3 Methods Common to All  Objects/Item11 Always override hashCode when you  override equals.md",
-      "01.Articles/Reading/Effective Java 第三版/Chapter3 Methods Common to All  Objects/README.md"
-    ],
-    "01.Articles/Reading/Hello 算法": [
-      "01.Articles/Reading/Hello 算法/01 - 数组.canvas",
-      "01.Articles/Reading/Hello 算法/02 - 链表.canvas"
-    ],
-    "01.Articles/SaToken": [
-      "01.Articles/SaToken/README.md"
-    ],
-    "01.Articles/SourceCodeAnalysis": [
-      "01.Articles/SourceCodeAnalysis/Java",
-      "01.Articles/SourceCodeAnalysis/README.md"
-    ],
-    "01.Articles/SourceCodeAnalysis/Java": [
-      "01.Articles/SourceCodeAnalysis/Java/ArrayList 源码剖析.md",
-      "01.Articles/SourceCodeAnalysis/Java/HashMap 源码剖析.md",
-      "01.Articles/SourceCodeAnalysis/Java/LinkedList 源码剖析.md"
-    ],
-    "01.Articles/SourceCodeHandwritten": [
-      "01.Articles/SourceCodeHandwritten/README.md"
-    ],
-    "01.Articles/Spring": [
-      "01.Articles/Spring/README.md"
-    ],
-    "01.Articles/SpringBoot": [
-      "01.Articles/SpringBoot/README.md"
-    ],
-    "01.Articles/SpringCloud": [
-      "01.Articles/SpringCloud/README.md"
-    ],
-    "01.Articles/SpringSecurity": [
-      "01.Articles/SpringSecurity/README.md"
-    ],
-    "01.Articles/Tools": [
-      "01.Articles/Tools/Obsidian",
-      "01.Articles/Tools/Zetero",
-      "01.Articles/Tools/篡改猴(Tampermonkey).md",
-      "01.Articles/Tools/软件卸载工具.md",
-      "01.Articles/Tools/手绘风格的开源白板 Excalidraw 搭建教程.md",
-      "01.Articles/Tools/手摸手教你搭建部署 Vitepress 博客.md",
-      "01.Articles/Tools/ABDownloadManager.md",
-      "01.Articles/Tools/Auto Dark Mode.md",
-      "01.Articles/Tools/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md",
-      "01.Articles/Tools/curl.md",
-      "01.Articles/Tools/FFmpeg.md",
-      "01.Articles/Tools/Github + PicList 搭建个人图床.md",
-      "01.Articles/Tools/noMeiryoUI - 更换 Windows 默认字体.md",
-      "01.Articles/Tools/Office Tool Plus.md",
-      "01.Articles/Tools/PayPal.md",
-      "01.Articles/Tools/Typora.md",
-      "01.Articles/Tools/yt-dlp.md"
-    ],
-    "01.Articles/Tools/Obsidian": [
-      "01.Articles/Tools/Obsidian/插件篇",
-      "01.Articles/Tools/Obsidian/核心篇",
-      "01.Articles/Tools/Obsidian/README.md"
-    ],
-    "01.Articles/Tools/Obsidian/插件篇": [
-      "01.Articles/Tools/Obsidian/插件篇/Dataview.md",
-      "01.Articles/Tools/Obsidian/插件篇/README.md",
-      "01.Articles/Tools/Obsidian/插件篇/Remotely Save.md",
-      "01.Articles/Tools/Obsidian/插件篇/Tasks.md"
-    ],
-    "01.Articles/Tools/Obsidian/核心篇": [
-      "01.Articles/Tools/Obsidian/核心篇/Metadata.md"
-    ],
-    "01.Articles/Tools/Zetero": [
-      "01.Articles/Tools/Zetero/README.md"
-    ],
-    "01.Articles/TypeScript": [
-      "01.Articles/TypeScript/README.md"
-    ],
-    "01.Articles/Uniapp & UniCloud": [
-      "01.Articles/Uniapp & UniCloud/README.md"
-    ],
-    "01.Articles/Vue": [
-      "01.Articles/Vue/基础篇",
-      "01.Articles/Vue/README.md"
-    ],
-    "01.Articles/Vue/基础篇": [
-      "01.Articles/Vue/基础篇/创建一个 Vue 应用.md",
-      "01.Articles/Vue/基础篇/通过 CDN 使用 Vue.md"
-    ],
-    "01.Articles/WxMiniProgram": [
-      "01.Articles/WxMiniProgram/README.md"
-    ],
-    "02.Inbox": [
-      "02.Inbox/Java8新特性",
-      "02.Inbox/1757 - 可回收且低脂的产品.md",
-      "02.Inbox/侧边栏之动态路由菜单递归渲染.md",
-      "02.Inbox/策略模式.md",
-      "02.Inbox/抽象工厂模式.md",
-      "02.Inbox/反射.md",
-      "02.Inbox/泛型.md",
-      "02.Inbox/工厂方法模式.md",
-      "02.Inbox/模板语法.md",
-      "02.Inbox/双亲委派模型.md",
-      "02.Inbox/通用右键菜单组件.md",
-      "02.Inbox/响应式状态.md",
-      "02.Inbox/正则表达式.md",
-      "02.Inbox/注解.md",
-      "02.Inbox/准备工作.md",
-      "02.Inbox/ApiFox.md",
-      "02.Inbox/DeepSeek-R1.md",
-      "02.Inbox/Dockerfile 构建镜像.md",
-      "02.Inbox/HTML5.md",
-      "02.Inbox/Java9 新特性.md",
-      "02.Inbox/JDBC.md",
-      "02.Inbox/MapStruct.md",
-      "02.Inbox/Maven.md",
-      "02.Inbox/MySQL 事务.md",
-      "02.Inbox/Nacos-Discovery&Config.md",
-      "02.Inbox/SPI 机制.md",
-      "02.Inbox/Suspense.md",
-      "02.Inbox/Teleport.md",
-      "02.Inbox/transient.md"
-    ],
-    "02.Inbox/Java8新特性": [
-      "02.Inbox/Java8新特性/Lambda 表达式.md",
-      "02.Inbox/Java8新特性/Optional.md",
-      "02.Inbox/Java8新特性/README.md",
-      "02.Inbox/Java8新特性/Stream API.md"
-    ],
-    "03.Excalidraw": [
-      "03.Excalidraw/fonts",
-      "03.Excalidraw/Scripts",
-      "03.Excalidraw/单向链表-删除元素.md",
-      "03.Excalidraw/汉诺塔.md",
-      "03.Excalidraw/类加载器的层级结构.md",
-      "03.Excalidraw/排序算法-鸡尾酒排序.md",
-      "03.Excalidraw/排序算法-冒泡排序.md",
-      "03.Excalidraw/双向链表-删除头节点.md",
-      "03.Excalidraw/双向链表-删除尾节点.md",
-      "03.Excalidraw/双向链表-删除指定位置节点.md",
-      "03.Excalidraw/双向链表-在头部添加节点.md",
-      "03.Excalidraw/双向链表-在尾部添加节点.md",
-      "03.Excalidraw/双向链表-在指定位置插入节点.md",
-      "03.Excalidraw/双向链表数据结构.md",
-      "03.Excalidraw/通用表表达式-粉丝关系示例图.md",
-      "03.Excalidraw/通用表表达式-粉丝关系示例图2.md",
-      "03.Excalidraw/通用表表达式-好友关系示例图.md",
-      "03.Excalidraw/线性表.md",
-      "03.Excalidraw/寻找2的幂次方最小值的示意图.md",
-      "03.Excalidraw/C语言知识点01-结构体.md",
-      "03.Excalidraw/C语言知识点02-指针.md",
-      "03.Excalidraw/C语言知识点03-函数的参数传递.md",
-      "03.Excalidraw/Game 贪吃蛇游戏设计图.md",
-      "03.Excalidraw/HashMap 底层数据结构.md",
-      "03.Excalidraw/HashMap 数组下标计算.md",
-      "03.Excalidraw/HTML 标签属性.md",
-      "03.Excalidraw/HTML 单标签.md",
-      "03.Excalidraw/HTML 基本骨架.md",
-      "03.Excalidraw/HTML 双标签.md",
-      "03.Excalidraw/Java SPI & SpringBoot 自动配置设计思想.md",
-      "03.Excalidraw/Java SPI 机制栗子.md",
-      "03.Excalidraw/Java SPI 机制栗子架构图.md",
-      "03.Excalidraw/Java SPI 运行流程.md",
-      "03.Excalidraw/JDBC 标准.md",
-      "03.Excalidraw/JDBC 预编译执行流程.md",
-      "03.Excalidraw/JDBC 执行流程.md",
-      "03.Excalidraw/Maven-模型结构图.md",
-      "03.Excalidraw/SpringBoot 自动配置.md",
-      "03.Excalidraw/SpringBoot 自动配置核心流程.md",
-      "03.Excalidraw/SQL - 窗口函数 - 窗口大小选项.md",
-      "03.Excalidraw/SQL - 窗口函数 vs 聚合函数.md",
-      "03.Excalidraw/SQL - 执行顺序.md",
-      "03.Excalidraw/SQL - FULL OUTER JOIN.md",
-      "03.Excalidraw/SQL - INNER JOIN.md",
-      "03.Excalidraw/SQL - LEFT EXCLUDING JOIN.md",
-      "03.Excalidraw/SQL - LEFT JOIN.md",
-      "03.Excalidraw/SQL - OUTER EXCLUDING JOIN.md",
-      "03.Excalidraw/SQL - RIGHT EXCLUDING JOIN.md",
-      "03.Excalidraw/SQL - RIGHT JOIN.md",
-      "03.Excalidraw/SQL JOINS.md"
-    ],
-    "03.Excalidraw/fonts": [
-      "03.Excalidraw/fonts/仓耳今楷01-W04.ttf"
-    ],
-    "03.Excalidraw/Scripts": [
-      "03.Excalidraw/Scripts/Downloaded"
-    ],
-    "03.Excalidraw/Scripts/Downloaded": [
-      "03.Excalidraw/Scripts/Downloaded/Boolean Operations.md",
-      "03.Excalidraw/Scripts/Downloaded/Slideshow.md"
-    ],
-    "04.Canvas": [
-      "04.Canvas/代码生成器.canvas"
+    "Excalidraw/Scripts/Downloaded": [
+      "Excalidraw/Scripts/Downloaded/Boolean Operations.md",
+      "Excalidraw/Scripts/Downloaded/Slideshow.md"
     ],
     "PDF": [
       "PDF/SQL窗口函数速查表.pdf"
@@ -972,6 +627,351 @@
       "Zttachments/ON JAVA 中文版 基础卷.jpg",
       "Zttachments/ON JAVA 中文版 进阶卷.jpg",
       "Zttachments/Spring 5核心原理与30个类手写实战.jpg"
+    ],
+    "Inbox": [
+      "Inbox/Java8新特性",
+      "Inbox/1757 - 可回收且低脂的产品.md",
+      "Inbox/侧边栏之动态路由菜单递归渲染.md",
+      "Inbox/策略模式.md",
+      "Inbox/抽象工厂模式.md",
+      "Inbox/反射.md",
+      "Inbox/泛型.md",
+      "Inbox/工厂方法模式.md",
+      "Inbox/模板语法.md",
+      "Inbox/双亲委派模型.md",
+      "Inbox/通用右键菜单组件.md",
+      "Inbox/响应式状态.md",
+      "Inbox/正则表达式.md",
+      "Inbox/注解.md",
+      "Inbox/准备工作.md",
+      "Inbox/ApiFox.md",
+      "Inbox/DeepSeek-R1.md",
+      "Inbox/Dockerfile 构建镜像.md",
+      "Inbox/HTML5.md",
+      "Inbox/Java9 新特性.md",
+      "Inbox/JDBC.md",
+      "Inbox/MapStruct.md",
+      "Inbox/Maven.md",
+      "Inbox/MySQL 事务.md",
+      "Inbox/Nacos-Discovery&Config.md",
+      "Inbox/SPI 机制.md",
+      "Inbox/Suspense.md",
+      "Inbox/Teleport.md",
+      "Inbox/transient.md"
+    ],
+    "Inbox/Java8新特性": [
+      "Inbox/Java8新特性/Lambda 表达式.md",
+      "Inbox/Java8新特性/Optional.md",
+      "Inbox/Java8新特性/README.md",
+      "Inbox/Java8新特性/Stream API.md"
+    ],
+    "Articles": [
+      "Articles/AI",
+      "Articles/Announcements",
+      "Articles/DataStructure & Algorithm",
+      "Articles/DesignPattern",
+      "Articles/DevKit",
+      "Articles/HTML & CSS",
+      "Articles/InterviewGuide",
+      "Articles/Java",
+      "Articles/JavaScript",
+      "Articles/LeetCode",
+      "Articles/Media",
+      "Articles/Misc",
+      "Articles/Mybatis",
+      "Articles/MySQL",
+      "Articles/Projects",
+      "Articles/Reading",
+      "Articles/SaToken",
+      "Articles/SourceCodeAnalysis",
+      "Articles/SourceCodeHandwritten",
+      "Articles/Spring",
+      "Articles/SpringBoot",
+      "Articles/SpringCloud",
+      "Articles/SpringSecurity",
+      "Articles/Tools",
+      "Articles/TypeScript",
+      "Articles/Uniapp & UniCloud",
+      "Articles/Vue",
+      "Articles/WxMiniProgram"
+    ],
+    "Articles/AI": [
+      "Articles/AI/Ollama.md",
+      "Articles/AI/Open-WebUI.md",
+      "Articles/AI/README.md"
+    ],
+    "Articles/Announcements": [
+      "Articles/Announcements/宣布：GitHub Copilot 在 VSCode 中推出免费版，GitHub 开发者已达 1.5 亿！.md",
+      "Articles/Announcements/WebStorm 和 Rider 现在对非商业用途免费了.md"
+    ],
+    "Articles/DataStructure & Algorithm": [
+      "Articles/DataStructure & Algorithm/Algorithm",
+      "Articles/DataStructure & Algorithm/DataStructure",
+      "Articles/DataStructure & Algorithm/README.md"
+    ],
+    "Articles/DesignPattern": [
+      "Articles/DesignPattern/创建型",
+      "Articles/DesignPattern/七大设计原则.md",
+      "Articles/DesignPattern/README.md",
+      "Articles/DesignPattern/UML 类图.md"
+    ],
+    "Articles/DevKit": [
+      "Articles/DevKit/内网穿透工具",
+      "Articles/DevKit/Docker",
+      "Articles/DevKit/Git",
+      "Articles/DevKit/GithubActions",
+      "Articles/DevKit/Maven",
+      "Articles/DevKit/Cloudflare.md",
+      "Articles/DevKit/Conda.md",
+      "Articles/DevKit/Cursor.md",
+      "Articles/DevKit/Github.md",
+      "Articles/DevKit/IDEA.md",
+      "Articles/DevKit/JDK.md",
+      "Articles/DevKit/MySQL.md",
+      "Articles/DevKit/Navicat16.md",
+      "Articles/DevKit/Navicat17.md",
+      "Articles/DevKit/nginx.md",
+      "Articles/DevKit/Node.js.md",
+      "Articles/DevKit/nrm.md",
+      "Articles/DevKit/nvm.md",
+      "Articles/DevKit/pnpm.md",
+      "Articles/DevKit/python.md",
+      "Articles/DevKit/thefuck.md",
+      "Articles/DevKit/Tomcat.md",
+      "Articles/DevKit/UNPKG.md",
+      "Articles/DevKit/Vite.md",
+      "Articles/DevKit/VSCode.md",
+      "Articles/DevKit/Windows PowerShell.md",
+      "Articles/DevKit/Windows Terminal.md",
+      "Articles/DevKit/WSL2.md"
+    ],
+    "Articles/HTML & CSS": [
+      "Articles/HTML & CSS/README.md",
+      "Articles/HTML & CSS/SCSS 模块引入方式.md",
+      "Articles/HTML & CSS/SCSS 与 CSS 变量最佳实践.md"
+    ],
+    "Articles/InterviewGuide": [
+      "Articles/InterviewGuide/README.md"
+    ],
+    "Articles/Java": [
+      "Articles/Java/工具类",
+      "Articles/Java/关键字",
+      "Articles/Java/核心篇",
+      "Articles/Java/集合篇",
+      "Articles/Java/README.md"
+    ],
+    "Articles/JavaScript": [
+      "Articles/JavaScript/reduce.md"
+    ],
+    "Articles/LeetCode": [
+      "Articles/LeetCode/1097 - 游戏玩法分析 V.md"
+    ],
+    "Articles/Media": [
+      "Articles/Media/排序算法-快速排序.md",
+      "Articles/Media/Cursor - 初体验.md"
+    ],
+    "Articles/Misc": [
+      "Articles/Misc/充分条件与必要条件.md",
+      "Articles/Misc/个人网站备案流程.md",
+      "Articles/Misc/全面了解 RSS.md",
+      "Articles/Misc/DevIssues.md",
+      "Articles/Misc/Misc & Ideas & Inbox & Articles.md"
+    ],
+    "Articles/Mybatis": [
+      "Articles/Mybatis/README.md"
+    ],
+    "Articles/MySQL": [
+      "Articles/MySQL/窗口函数.md",
+      "Articles/MySQL/通用表表达式.md",
+      "Articles/MySQL/行列转换.md",
+      "Articles/MySQL/用户留存率.md",
+      "Articles/MySQL/README.md",
+      "Articles/MySQL/SQL 执行顺序.md",
+      "Articles/MySQL/SQL JOINS.md"
+    ],
+    "Articles/Projects": [
+      "Articles/Projects/vue3-element-template"
+    ],
+    "Articles/Reading": [
+      "Articles/Reading/阿里巴巴Java开发手册-嵩山版",
+      "Articles/Reading/Effective Java 第三版",
+      "Articles/Reading/Hello 算法"
+    ],
+    "Articles/SaToken": [
+      "Articles/SaToken/README.md"
+    ],
+    "Articles/SourceCodeAnalysis": [
+      "Articles/SourceCodeAnalysis/Java",
+      "Articles/SourceCodeAnalysis/README.md"
+    ],
+    "Articles/Spring": [
+      "Articles/Spring/README.md"
+    ],
+    "Articles/SourceCodeHandwritten": [
+      "Articles/SourceCodeHandwritten/README.md"
+    ],
+    "Articles/SpringBoot": [
+      "Articles/SpringBoot/README.md"
+    ],
+    "Articles/SpringSecurity": [
+      "Articles/SpringSecurity/README.md"
+    ],
+    "Articles/Tools": [
+      "Articles/Tools/Obsidian",
+      "Articles/Tools/Zetero",
+      "Articles/Tools/篡改猴(Tampermonkey).md",
+      "Articles/Tools/软件卸载工具.md",
+      "Articles/Tools/手绘风格的开源白板 Excalidraw 搭建教程.md",
+      "Articles/Tools/手摸手教你搭建部署 Vitepress 博客.md",
+      "Articles/Tools/ABDownloadManager.md",
+      "Articles/Tools/Auto Dark Mode.md",
+      "Articles/Tools/Cloudflare R2 + PicList 搭建最佳个人图床！免费、稳定、国内&国外都能访问.md",
+      "Articles/Tools/curl.md",
+      "Articles/Tools/FFmpeg.md",
+      "Articles/Tools/Github + PicList 搭建个人图床.md",
+      "Articles/Tools/noMeiryoUI - 更换 Windows 默认字体.md",
+      "Articles/Tools/Office Tool Plus.md",
+      "Articles/Tools/PayPal.md",
+      "Articles/Tools/Typora.md",
+      "Articles/Tools/yt-dlp.md"
+    ],
+    "Articles/Uniapp & UniCloud": [
+      "Articles/Uniapp & UniCloud/README.md"
+    ],
+    "Articles/WxMiniProgram": [
+      "Articles/WxMiniProgram/README.md"
+    ],
+    "Articles/Vue": [
+      "Articles/Vue/基础篇",
+      "Articles/Vue/README.md"
+    ],
+    "Articles/TypeScript": [
+      "Articles/TypeScript/README.md"
+    ],
+    "Articles/SpringCloud": [
+      "Articles/SpringCloud/README.md"
+    ],
+    "Articles/DataStructure & Algorithm/Algorithm": [
+      "Articles/DataStructure & Algorithm/Algorithm/排序算法",
+      "Articles/DataStructure & Algorithm/Algorithm/汉诺塔.md"
+    ],
+    "Articles/DataStructure & Algorithm/DataStructure": [
+      "Articles/DataStructure & Algorithm/DataStructure/线性表.md"
+    ],
+    "Articles/DesignPattern/创建型": [
+      "Articles/DesignPattern/创建型/单例模式.md",
+      "Articles/DesignPattern/创建型/简单工厂模式.md"
+    ],
+    "Articles/DevKit/Docker": [
+      "Articles/DevKit/Docker/Docker 安装",
+      "Articles/DevKit/Docker/Docker 核心",
+      "Articles/DevKit/Docker/Docker 实例",
+      "Articles/DevKit/Docker/README.md"
+    ],
+    "Articles/DevKit/Git": [
+      "Articles/DevKit/Git/Git.md",
+      "Articles/DevKit/Git/README.md"
+    ],
+    "Articles/DevKit/GithubActions": [
+      "Articles/DevKit/GithubActions/README.md"
+    ],
+    "Articles/DevKit/Maven": [
+      "Articles/DevKit/Maven/README.md"
+    ],
+    "Articles/DevKit/内网穿透工具": [
+      "Articles/DevKit/内网穿透工具/DingTalk.md",
+      "Articles/DevKit/内网穿透工具/NATAPP.md",
+      "Articles/DevKit/内网穿透工具/nps.md",
+      "Articles/DevKit/内网穿透工具/README.md"
+    ],
+    "Articles/Java/关键字": [],
+    "Articles/Java/工具类": [
+      "Articles/Java/工具类/Arrays.md"
+    ],
+    "Articles/Java/核心篇": [
+      "Articles/Java/核心篇/代码块.md",
+      "Articles/Java/核心篇/类加载器.md",
+      "Articles/Java/核心篇/枚举.md",
+      "Articles/Java/核心篇/内部类.md",
+      "Articles/Java/核心篇/README.md"
+    ],
+    "Articles/Java/集合篇": [
+      "Articles/Java/集合篇/README.md"
+    ],
+    "Articles/Projects/vue3-element-template": [
+      "Articles/Projects/vue3-element-template/创建项目.md",
+      "Articles/Projects/vue3-element-template/协作规范.md",
+      "Articles/Projects/vue3-element-template/README.md"
+    ],
+    "Articles/Reading/Effective Java 第三版": [
+      "Articles/Reading/Effective Java 第三版/Chapter2 Creating and Destorying Objects",
+      "Articles/Reading/Effective Java 第三版/Chapter3 Methods Common to All  Objects",
+      "Articles/Reading/Effective Java 第三版/README.md"
+    ],
+    "Articles/Reading/Hello 算法": [
+      "Articles/Reading/Hello 算法/01 - 数组.canvas",
+      "Articles/Reading/Hello 算法/02 - 链表.canvas"
+    ],
+    "Articles/Reading/阿里巴巴Java开发手册-嵩山版": [
+      "Articles/Reading/阿里巴巴Java开发手册-嵩山版/分层领域模型规约(DO,PO,BO,DTO,VO).canvas"
+    ],
+    "Articles/SourceCodeAnalysis/Java": [
+      "Articles/SourceCodeAnalysis/Java/ArrayList 源码剖析.md",
+      "Articles/SourceCodeAnalysis/Java/HashMap 源码剖析.md",
+      "Articles/SourceCodeAnalysis/Java/LinkedList 源码剖析.md"
+    ],
+    "Articles/Tools/Obsidian": [
+      "Articles/Tools/Obsidian/插件篇",
+      "Articles/Tools/Obsidian/核心篇",
+      "Articles/Tools/Obsidian/README.md"
+    ],
+    "Articles/Tools/Zetero": [
+      "Articles/Tools/Zetero/README.md"
+    ],
+    "Articles/Vue/基础篇": [
+      "Articles/Vue/基础篇/创建一个 Vue 应用.md",
+      "Articles/Vue/基础篇/通过 CDN 使用 Vue.md"
+    ],
+    "Articles/DataStructure & Algorithm/Algorithm/排序算法": [
+      "Articles/DataStructure & Algorithm/Algorithm/排序算法/鸡尾酒排序.md",
+      "Articles/DataStructure & Algorithm/Algorithm/排序算法/快速排序.md",
+      "Articles/DataStructure & Algorithm/Algorithm/排序算法/冒泡排序.md",
+      "Articles/DataStructure & Algorithm/Algorithm/排序算法/README.md"
+    ],
+    "Articles/DevKit/Docker/Docker 安装": [
+      "Articles/DevKit/Docker/Docker 安装/Docker 镜像加速.md",
+      "Articles/DevKit/Docker/Docker 安装/Install Docker Desktop on Windows.md",
+      "Articles/DevKit/Docker/Docker 安装/Install Docker Engine on Ubuntu.md"
+    ],
+    "Articles/DevKit/Docker/Docker 实例": [
+      "Articles/DevKit/Docker/Docker 实例/Docker 安装 MySQL.md",
+      "Articles/DevKit/Docker/Docker 实例/Docker 安装 Redis.md"
+    ],
+    "Articles/DevKit/Docker/Docker 核心": [
+      "Articles/DevKit/Docker/Docker 核心/Docker 镜像.md",
+      "Articles/DevKit/Docker/Docker 核心/Docker 容器.md",
+      "Articles/DevKit/Docker/Docker 核心/Docker 数据卷.md"
+    ],
+    "Articles/Reading/Effective Java 第三版/Chapter2 Creating and Destorying Objects": [
+      "Articles/Reading/Effective Java 第三版/Chapter2 Creating and Destorying Objects/Item9 Prefer try-with-resources to try-finally.md",
+      "Articles/Reading/Effective Java 第三版/Chapter2 Creating and Destorying Objects/README.md"
+    ],
+    "Articles/Reading/Effective Java 第三版/Chapter3 Methods Common to All  Objects": [
+      "Articles/Reading/Effective Java 第三版/Chapter3 Methods Common to All  Objects/Item10 Obey the general contract when overriding equals.md",
+      "Articles/Reading/Effective Java 第三版/Chapter3 Methods Common to All  Objects/Item11 Always override hashCode when you  override equals.md",
+      "Articles/Reading/Effective Java 第三版/Chapter3 Methods Common to All  Objects/README.md"
+    ],
+    "Articles/Tools/Obsidian/插件篇": [
+      "Articles/Tools/Obsidian/插件篇/Dataview.md",
+      "Articles/Tools/Obsidian/插件篇/README.md",
+      "Articles/Tools/Obsidian/插件篇/Remotely Save.md",
+      "Articles/Tools/Obsidian/插件篇/Tasks.md"
+    ],
+    "Articles/Tools/Obsidian/核心篇": [
+      "Articles/Tools/Obsidian/核心篇/Metadata.md"
+    ],
+    "Overview": [
+      "Overview/任务清单.md"
     ]
   },
   "draggingEnabled": true,

@@ -39,5 +39,8 @@
   "Appearance-dark@@card-highlight-dark": true,
   "Editor@@line-hover-indicator": true,
   "Editor@@seamless-embeds": true,
-  "Components@@file-names-untrim": false
+  "Components@@file-names-untrim": false,
+  "Components@@scrollbar-hide": false,
+  "Components@@restored-scrollbars": false,
+  "Components@@setting-item-title-icon-remove": false
 }

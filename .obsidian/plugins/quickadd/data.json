@@ -73,7 +73,7 @@
               "folder": {
                 "enabled": true,
                 "folders": [
-                  "02.Inbox"
+                  "Inbox"
                 ],
                 "chooseWhenCreatingNote": false,
                 "createInSameFolderAsActiveFile": false,
@@ -88,7 +88,13 @@
               "openFile": true,
               "openFileInMode": "default",
               "fileExistsMode": "Nothing",
-              "setFileExistsBehavior": true
+              "setFileExistsBehavior": true,
+              "fileOpening": {
+                "location": "tab",
+                "direction": "vertical",
+                "mode": "default",
+                "focus": true
+              }
             }
           }
         ]

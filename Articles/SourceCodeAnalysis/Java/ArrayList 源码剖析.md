@@ -56,7 +56,7 @@ priority: 1
 
 ## 底层数据结构（顺序表）
 
-ArrayList 底层使用的是**顺序表**，即基于[[01 - 数组.canvas|数组]]实现的[[01.Articles/DataStructure & Algorithm/DataStructure/线性表|线性表]]。它通过连续存储单元依次存储数据元素，逻辑上和物理上都保持元素的相邻性。
+ArrayList 底层使用的是**顺序表**，即基于[[01 - 数组.canvas|数组]]实现的[[Articles/DataStructure & Algorithm/DataStructure/线性表|线性表]]。它通过连续存储单元依次存储数据元素，逻辑上和物理上都保持元素的相邻性。
 
 其特点如下所示：
 
