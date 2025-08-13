@@ -14,5 +14,6 @@
     "dark-image"
   ],
   "accentColor": "",
-  "nativeMenus": false
+  "nativeMenus": false,
+  "showRibbon": true
 }

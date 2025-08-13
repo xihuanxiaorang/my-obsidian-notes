@@ -3,7 +3,7 @@ tags:
   - DevKit
   - EnvironmentSetup
 create_time: 2024/12/16 10:54
-update_time: 2025/08/06 19:06
+update_time: 2025/08/13 12:59
 ---
 
 ## 快捷键
@@ -142,7 +142,7 @@ TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。
 > 官方文档地址：[leetcode-editor/README_ZH.md at master · shuzijun/leetcode-editor (github.com)](https://github.com/shuzijun/leetcode-editor/blob/master/README_ZH.md)
 
 文档已经详细介绍了插件的使用方法，借鉴官方的自定义代码生成配置，一步步摸索完善，如下所示：
-![](https://img.xiaorang.fun/202502251743011.png)
+![](https://img.xiaorang.fun/202508131259575.png)
 
 - CodeFileName
 
@@ -150,25 +150,25 @@ TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。
 	$!velocityTool.camelCaseName(${question.titleSlug})_${question.frontendQuestionId}
 	```
 
-- TemplateConstant
+- CodeTemplate
 
 	```text
-	package fun.xiaorang.leetcode.editor.cn;
+	package fun.xiaorang.study.leetcode.editor.cn;
 	
 	/**
 	 * @author liulei
-	 * @description <a href="https://leetcode.cn/problems/${question.titleSlug}/" style="font-weight:bold;font-size:11px;">LeetCode.${question.frontendQuestionId}.${question.title}<a/>
+	 * @description <a href="https://leetcode.cn/problems/${question.titleSlug}/" style="font-weight:bold;font-size:11px;">${question.frontendQuestionId}.${question.title}<a/>
 	 * @github <a href="https://github.com/xihuanxiaorang/java-study">java-study</a>
 	
 	 * @Copyright 博客：<a href="https://docs.xiaorang.fun">小让の码场</a>  - show me the code
 	 * @date $!velocityTool.date()
 	 */
 	public class $!velocityTool.camelCaseName(${question.titleSlug})_${question.frontendQuestionId} {
-	  public static void main(String[] args) {
-	       Solution solution = new $!velocityTool.camelCaseName(${question.titleSlug})_${question.frontendQuestionId}().new Solution();
-	  }
-	  
-	  ${question.code}
+		public static void main(String[] args) {
+				 Solution solution = new $!velocityTool.camelCaseName(${question.titleSlug})_${question.frontendQuestionId}().new Solution();
+		}
+		
+		${question.code}
 	}
 	```
 
