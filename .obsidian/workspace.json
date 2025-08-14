@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "Articles/LeetCode/1097 - 游戏玩法分析 V.md",
-                "mode": "preview",
+                "mode": "source",
                 "source": false,
                 "backlinks": false
               },
@@ -244,7 +244,9 @@
   "active": "7f3f8e206c183eb2",
   "lastOpenFiles": [
     "Articles/LeetCode/1097 - 游戏玩法分析 V.md",
+    "Templates/Tutorial.md",
     "Inbox/1757 - 可回收的低脂产品.md",
+    "Templates/Auto Callout.md",
     "Inbox/模板语法.md",
     "Templates/LeetCode.md",
     "Inbox/1757 - 可回收且低脂的产品.md",
@@ -268,8 +270,6 @@
     "Articles/SourceCodeAnalysis/Java/ArrayList 源码剖析.md",
     "Articles/Java/核心篇/README.md",
     "Articles/DataStructure & Algorithm/Algorithm/汉诺塔.md",
-    "Articles/DataStructure & Algorithm/Algorithm/排序算法/快速排序.md",
-    "Articles/DesignPattern/README.md",
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/README",
     "Articles/Java/集合篇",
     "Articles/Java/关键字",
