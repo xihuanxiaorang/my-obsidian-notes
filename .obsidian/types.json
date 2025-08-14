@@ -62,6 +62,7 @@
     "url": "text",
     "date": "date",
     "source": "text",
-    "excalidraw-embed-md": "checkbox"
+    "excalidraw-embed-md": "checkbox",
+    "categories": "multitext"
   }
 }
