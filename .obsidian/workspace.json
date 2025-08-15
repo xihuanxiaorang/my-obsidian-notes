@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Inbox/704. 二分查找.md",
+                "file": "Articles/LeetCode/704. 二分查找.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
@@ -162,7 +162,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Inbox/704. 二分查找.md",
+                "file": "Articles/LeetCode/704. 二分查找.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -239,13 +239,14 @@
   },
   "active": "7f3f8e206c183eb2",
   "lastOpenFiles": [
-    "Zttachments/二分查找 - 左闭右闭.gif",
-    "Excalidraw/Drawing 2025-08-14 19.26.49.excalidraw.md",
-    "Inbox/704. 二分查找.md",
-    "Excalidraw/线性表.md",
-    "Excalidraw/类加载器的层级结构.md",
+    "Zttachments/binary_search_ranges.png",
     "Articles/LeetCode/1757. 可回收的低脂产品.md",
     "Articles/LeetCode/1097. 游戏玩法分析 V.md",
+    "Articles/LeetCode/704. 二分查找.md",
+    "Zttachments/二分查找 - 左闭右闭.gif",
+    "Excalidraw/Drawing 2025-08-14 19.26.49.excalidraw.md",
+    "Excalidraw/线性表.md",
+    "Excalidraw/类加载器的层级结构.md",
     "Inbox/模板语法.md",
     "Templates/Tutorial.md",
     "Templates/Auto Callout.md",
@@ -286,7 +287,6 @@
     "Zttachments/Pasted image 20250707192652.png",
     "Zttachments/Pasted image 20250706224029.png",
     "Zttachments/Pasted image 20250630221520.png",
-    "Zttachments/Pasted image 20250630225126.png",
     "Articles/Reading/Hello 算法/02 - 链表.canvas",
     "04.Canvas/SQL JOINS.canvas",
     "04.Canvas/未命名 1.canvas",

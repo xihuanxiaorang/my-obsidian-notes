@@ -178,6 +178,7 @@
       "Articles/JavaScript/reduce.md"
     ],
     "Articles/LeetCode": [
+      "Articles/LeetCode/704. 二分查找.md",
       "Articles/LeetCode/1757. 可回收的低脂产品.md",
       "Articles/LeetCode/1097. 游戏玩法分析 V.md"
     ],
@@ -385,7 +386,6 @@
       "Excalidraw/Scripts/Downloaded/Slideshow.md"
     ],
     "Inbox": [
-      "Inbox/704. 二分查找.md",
       "Inbox/Java8新特性",
       "Inbox/侧边栏之动态路由菜单递归渲染.md",
       "Inbox/策略模式.md",
