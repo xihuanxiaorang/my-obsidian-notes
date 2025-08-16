@@ -4,22 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "bceec4485713b668",
+        "id": "5a4cc91deef813c7",
         "type": "tabs",
         "children": [
           {
-            "id": "f14340ba2242fe6f",
+            "id": "6e2479d04cbe776b",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Inbox/27. 移除元素.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "27. 移除元素"
+              "title": "新标签页"
             }
           }
         ]
@@ -150,13 +145,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Inbox/27. 移除元素.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "27. 移除元素 的大纲"
+              "title": "大纲"
             }
           },
           {
@@ -227,11 +221,12 @@
   },
   "active": "7f3f8e206c183eb2",
   "lastOpenFiles": [
+    "Articles/LeetCode/977. 有序数组的平方.md",
+    "Articles/LeetCode/704. 二分查找.md",
+    "Articles/LeetCode/27. 移除元素.md",
     "Excalidraw/Drawing 2025-08-15 19.13.25.excalidraw.md",
-    "Inbox/27. 移除元素.md",
     "Templates/LeetCode.md",
     "Excalidraw/Drawing 2025-08-14 19.26.49.excalidraw.md",
-    "Articles/LeetCode/704. 二分查找.md",
     "Zttachments/binary_search_ranges.png",
     "Articles/LeetCode/1757. 可回收的低脂产品.md",
     "Articles/LeetCode/1097. 游戏玩法分析 V.md",
@@ -255,7 +250,6 @@
     "Overview/任务清单.md",
     "Inbox/反射.md",
     "Articles/Java/核心篇/类加载器.md",
-    "Articles/Java/工具类/Arrays.md",
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/README",
     "Articles/Java/集合篇",
     "Articles/Java/关键字",
