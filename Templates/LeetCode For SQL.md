@@ -1,6 +1,7 @@
 ---
 tags:
   - LeetCode
+  - SQL
 level: 
 categories: 
 create_time: <% tp.file.creation_date() %>
