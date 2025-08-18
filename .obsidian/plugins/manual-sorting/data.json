@@ -325,6 +325,7 @@
       "Canvas/代码生成器.canvas"
     ],
     "Excalidraw": [
+      "Excalidraw/Drawing 2025-08-18 11.18.05.excalidraw.md",
       "Excalidraw/fonts",
       "Excalidraw/Scripts",
       "Excalidraw/单向链表-删除元素.md",
@@ -387,7 +388,7 @@
       "Excalidraw/Scripts/Downloaded/Slideshow.md"
     ],
     "Inbox": [
-      "Inbox/209. 长度最小的子数组.md",
+      "Articles/LeetCode/209. 长度最小的子数组.md",
       "Inbox/Java8新特性",
       "Inbox/侧边栏之动态路由菜单递归渲染.md",
       "Inbox/策略模式.md",
