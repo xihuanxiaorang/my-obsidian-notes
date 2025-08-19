@@ -1,0 +1,24 @@
+properties:
+  note.Director:
+    displayName: 导演
+  note.Stars:
+    displayName: 主演
+  note.Watched:
+    displayName: 是否观看
+views:
+  - type: cards
+    name: 表格
+    filters:
+      and:
+        - file.folder == "Recommend/Movies"
+    order:
+      - file.name
+      - Director
+      - Stars
+      - Watched
+      - file.ctime
+      - file.mtime
+    sort:
+      - property: rating
+        direction: DESC
+    image: note.cover

@@ -3,7 +3,7 @@ tags:
   - DevKit
   - EnvironmentSetup
 create_time: 2024/12/16 10:54
-update_time: 2025/08/13 12:59
+update_time: 2025/08/18 18:08
 ---
 
 ## 快捷键
@@ -163,9 +163,10 @@ TranslationPlugin 是一个基于 IntelliJ IDE/Android Studio 的翻译插件。
 	 * @Copyright 博客：<a href="https://docs.xiaorang.fun">小让の码场</a>  - show me the code
 	 * @date $!velocityTool.date()
 	 */
+	@SuppressWarnings({"all"})
 	public class $!velocityTool.camelCaseName(${question.titleSlug})_${question.frontendQuestionId} {
 		public static void main(String[] args) {
-				 Solution solution = new $!velocityTool.camelCaseName(${question.titleSlug})_${question.frontendQuestionId}().new Solution();
+			final Solution solution = new $!velocityTool.camelCaseName(${question.titleSlug})_${question.frontendQuestionId}().new Solution();
 		}
 		
 		${question.code}

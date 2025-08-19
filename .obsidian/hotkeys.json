@@ -81,5 +81,13 @@
       "modifiers": [],
       "key": "F12"
     }
+  ],
+  "obsidian-linter:lint-file": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "S"
+    }
   ]
 }

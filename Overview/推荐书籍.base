@@ -1,0 +1,13 @@
+views:
+  - type: cards
+    name: 视图
+    filters:
+      and:
+        - file.folder == "Recommend/Books"
+    order:
+      - file.name
+      - author
+      - tags
+      - file.mtime
+      - file.ctime
+    image: note.cover

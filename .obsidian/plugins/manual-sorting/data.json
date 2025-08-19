@@ -178,11 +178,12 @@
       "Articles/JavaScript/reduce.md"
     ],
     "Articles/LeetCode": [
-      "Articles/LeetCode/977. 有序数组的平方.md",
-      "Articles/LeetCode/27. 移除元素.md",
-      "Articles/LeetCode/704. 二分查找.md",
-      "Articles/LeetCode/1757. 可回收的低脂产品.md",
-      "Articles/LeetCode/1097. 游戏玩法分析 V.md"
+      "Articles/LeetCode/27.移除元素.md",
+      "Articles/LeetCode/209.长度最小的子数组.md",
+      "Articles/LeetCode/704.二分查找.md",
+      "Articles/LeetCode/977.有序数组的平方.md",
+      "Articles/LeetCode/1097.游戏玩法分析 V.md",
+      "Articles/LeetCode/1757.可回收的低脂产品.md"
     ],
     "Articles/Media": [
       "Articles/Media/排序算法-快速排序.md",
@@ -325,7 +326,6 @@
       "Canvas/代码生成器.canvas"
     ],
     "Excalidraw": [
-      "Excalidraw/Drawing 2025-08-18 11.18.05.excalidraw.md",
       "Excalidraw/fonts",
       "Excalidraw/Scripts",
       "Excalidraw/单向链表-删除元素.md",
@@ -388,7 +388,7 @@
       "Excalidraw/Scripts/Downloaded/Slideshow.md"
     ],
     "Inbox": [
-      "Articles/LeetCode/209. 长度最小的子数组.md",
+      "Articles/LeetCode/59.螺旋矩阵 II.md",
       "Inbox/Java8新特性",
       "Inbox/侧边栏之动态路由菜单递归渲染.md",
       "Inbox/策略模式.md",
@@ -425,6 +425,8 @@
       "Inbox/Java8新特性/Stream API.md"
     ],
     "Overview": [
+      "Overview/推荐电影.base",
+      "Overview/推荐书籍.base",
       "Overview/任务清单.md"
     ],
     "PDF": [
@@ -444,7 +446,6 @@
       "Recommend/Books/MySQL是怎样运行的.md",
       "Recommend/Books/ON JAVA 中文版 基础卷.md",
       "Recommend/Books/ON JAVA 中文版 进阶卷.md",
-      "Recommend/Books/README.md",
       "Recommend/Books/Spring 5核心原理与30个类手写实战.md"
     ],
     "Recommend/Movies": [
@@ -466,8 +467,7 @@
       "Recommend/Movies/肖申克的救赎.md",
       "Recommend/Movies/心灵捕手.md",
       "Recommend/Movies/寻梦环游记.md",
-      "Recommend/Movies/这个杀手不太冷.md",
-      "Recommend/Movies/README.md"
+      "Recommend/Movies/这个杀手不太冷.md"
     ],
     "Resources": [
       "Resources/“门徒计划” - Web前端方向 - LeetCode 必刷题.md",
