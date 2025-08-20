@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Articles/LeetCode/203.移除链表元素.md",
+                "file": "Inbox/707.设计链表.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "203.移除链表元素"
+              "title": "707.设计链表"
             }
           }
         ]
@@ -150,13 +150,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Articles/LeetCode/203.移除链表元素.md",
+                "file": "Inbox/707.设计链表.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "203.移除链表元素 的大纲"
+              "title": "707.设计链表 的大纲"
             }
           },
           {
@@ -226,10 +226,15 @@
       "graph:查看关系图谱": false
     }
   },
-  "active": "23308d36141eb4fb",
+  "active": "7f3f8e206c183eb2",
   "lastOpenFiles": [
-    "Excalidraw/链表删除节点.md",
     "Articles/LeetCode/203.移除链表元素.md",
+    "Inbox/707.设计链表.md",
+    "Inbox/Java8新特性/Lambda 表达式.md",
+    "Inbox/侧边栏之动态路由菜单递归渲染.md",
+    "Inbox/策略模式.md",
+    "Inbox/203.移除链表元素.md",
+    "Excalidraw/链表删除节点.md",
     "Articles/LeetCode/59.螺旋矩阵 II.md",
     "Excalidraw/双向链表-删除指定位置节点.md",
     "Overview/任务清单.md",
@@ -256,15 +261,10 @@
     "Recommend/Books/大话设计模式.md",
     "Recommend/Books/Spring 5核心原理与30个类手写实战.md",
     "Recommend/Books/README.md",
-    "Excalidraw/59. 螺旋矩阵Ⅱ.md",
     "Zttachments/Pasted image 20250819165206.png",
     "Zttachments/阿甘正传.png",
     "Zttachments/触不可及.png",
     "Zttachments/Pasted Image 20250818233511_073.png",
-    "Articles/DevKit/IDEA.md",
-    "Excalidraw/Drawing 2025-08-16 22.42.34.excalidraw.md",
-    "Articles/DevKit/VSCode.md",
-    "Inbox/反射.md",
     "Zttachments/binary_search_ranges.png",
     "Zttachments/二分查找 - 左闭右闭.gif",
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/README",
