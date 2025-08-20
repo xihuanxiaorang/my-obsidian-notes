@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Inbox/203.移除链表元素.md",
+                "file": "Articles/LeetCode/203.移除链表元素.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
@@ -150,7 +150,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Inbox/203.移除链表元素.md",
+                "file": "Articles/LeetCode/203.移除链表元素.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -226,11 +226,19 @@
       "graph:查看关系图谱": false
     }
   },
-  "active": "7f3f8e206c183eb2",
+  "active": "23308d36141eb4fb",
   "lastOpenFiles": [
-    "Zttachments/Pasted image 20250819230620.png",
+    "Excalidraw/链表删除节点.md",
+    "Articles/LeetCode/203.移除链表元素.md",
     "Articles/LeetCode/59.螺旋矩阵 II.md",
-    "Inbox/203.移除链表元素.md",
+    "Excalidraw/双向链表-删除指定位置节点.md",
+    "Overview/任务清单.md",
+    "Overview/推荐书籍.base",
+    "Recommend/Books/ECMAScript 6 入门教程.md",
+    "Recommend/Books/图解Java多线程设计模式.md",
+    "Overview/推荐电影.base",
+    "Recommend/Movies/盗梦空间.md",
+    "Zttachments/Pasted image 20250819230620.png",
     "Articles/LeetCode/1757.可回收的低脂产品.md",
     "Articles/LeetCode/977.有序数组的平方.md",
     "Articles/LeetCode/704.二分查找.md",
@@ -241,14 +249,11 @@
     "Articles/LeetCode/1097.游戏玩法分析 V.md",
     "Templates/LeetCode For Algorithm.md",
     "Zttachments/Pasted image 20250819175328.png",
-    "Overview/推荐电影.base",
-    "Overview/推荐书籍.base",
     "Recommend/Movies/当幸福来敲门.md",
     "Zttachments/当幸福来敲门.png",
     "Recommend/Books/Untitled.md",
     "Zttachments/大话设计模式.jpg",
     "Recommend/Books/大话设计模式.md",
-    "Recommend/Books/ECMAScript 6 入门教程.md",
     "Recommend/Books/Spring 5核心原理与30个类手写实战.md",
     "Recommend/Books/README.md",
     "Excalidraw/59. 螺旋矩阵Ⅱ.md",
@@ -260,13 +265,8 @@
     "Excalidraw/Drawing 2025-08-16 22.42.34.excalidraw.md",
     "Articles/DevKit/VSCode.md",
     "Inbox/反射.md",
-    "Inbox/Suspense.md",
-    "Templates/Tutorial.md",
-    "Excalidraw/Drawing 2025-08-15 19.13.25.excalidraw.md",
-    "Excalidraw/Drawing 2025-08-14 19.26.49.excalidraw.md",
     "Zttachments/binary_search_ranges.png",
     "Zttachments/二分查找 - 左闭右闭.gif",
-    "Zttachments/Pasted image 20250813125758.png",
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/README",
     "Articles/Java/集合篇",
     "Articles/Java/关键字",

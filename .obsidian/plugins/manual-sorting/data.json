@@ -329,6 +329,7 @@
     "Excalidraw": [
       "Excalidraw/fonts",
       "Excalidraw/Scripts",
+      "Excalidraw/链表删除节点.md",
       "Excalidraw/单向链表-删除元素.md",
       "Excalidraw/汉诺塔.md",
       "Excalidraw/类加载器的层级结构.md",
@@ -389,7 +390,7 @@
       "Excalidraw/Scripts/Downloaded/Slideshow.md"
     ],
     "Inbox": [
-      "Inbox/203.移除链表元素.md",
+      "Articles/LeetCode/203.移除链表元素.md",
       "Inbox/Java8新特性",
       "Inbox/侧边栏之动态路由菜单递归渲染.md",
       "Inbox/策略模式.md",

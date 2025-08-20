@@ -11,3 +11,4 @@ views:
       - file.mtime
       - file.ctime
     image: note.cover
+    imageAspectRatio: 1.3

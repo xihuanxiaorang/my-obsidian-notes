@@ -22,3 +22,4 @@ views:
       - property: rating
         direction: DESC
     image: note.cover
+    imageAspectRatio: 1.3
