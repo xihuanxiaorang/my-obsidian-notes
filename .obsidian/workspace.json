@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "daae130ecdef9137",
+        "id": "a41904421e5dce82",
         "type": "tabs",
         "children": [
           {
-            "id": "3db505aa7cb745ca",
+            "id": "583625c4da00b746",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -223,6 +223,7 @@
   "active": "7f3f8e206c183eb2",
   "lastOpenFiles": [
     "Articles/LeetCode/707.设计链表.md",
+    "Articles/SourceCodeAnalysis/Java/LinkedList 源码剖析.md",
     "Articles/LeetCode/203.移除链表元素.md",
     "Excalidraw/双向链表-在指定位置前插入节点.md",
     "Excalidraw/双向链表-删除指定位置节点.md",
@@ -230,7 +231,6 @@
     "Articles/Tools/yt-dlp.md",
     "Excalidraw/双向链表数据结构.md",
     "Excalidraw/单向链表数据结构（虚拟头节点）.md",
-    "Articles/SourceCodeAnalysis/Java/LinkedList 源码剖析.md",
     "Excalidraw/单向链表-删除节点.md",
     "Excalidraw/单向链表-插入节点.md",
     "Excalidraw/双向链表-在头部添加节点.md",
