@@ -4,22 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "ca223fc12ee7d672",
+        "id": "daae130ecdef9137",
         "type": "tabs",
         "children": [
           {
-            "id": "23308d36141eb4fb",
+            "id": "3db505aa7cb745ca",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Inbox/707.设计链表.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "707.设计链表"
+              "title": "新标签页"
             }
           }
         ]
@@ -150,13 +145,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Inbox/707.设计链表.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "707.设计链表 的大纲"
+              "title": "大纲"
             }
           },
           {
@@ -175,7 +169,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Inbox/1757 - 可回收的低脂产品.md",
+                "file": "Inbox/707.设计链表.md",
                 "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -185,7 +179,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "1757 - 可回收的低脂产品 的反向链接列表"
+              "title": "707.设计链表 的反向链接列表"
             }
           },
           {
@@ -194,12 +188,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Inbox/1757 - 可回收且低脂的产品.md",
+                "file": "Inbox/707.设计链表.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               },
               "icon": "links-going-out",
-              "title": "1757 - 可回收且低脂的产品 的出链列表"
+              "title": "707.设计链表 的出链列表"
             }
           }
         ]
@@ -228,45 +222,45 @@
   },
   "active": "7f3f8e206c183eb2",
   "lastOpenFiles": [
+    "Articles/LeetCode/707.设计链表.md",
     "Articles/LeetCode/203.移除链表元素.md",
-    "Inbox/707.设计链表.md",
+    "Excalidraw/双向链表-在指定位置前插入节点.md",
+    "Excalidraw/双向链表-删除指定位置节点.md",
+    "Excalidraw/双向链表数据结构（虚拟头尾节点）.md",
+    "Articles/Tools/yt-dlp.md",
+    "Excalidraw/双向链表数据结构.md",
+    "Excalidraw/单向链表数据结构（虚拟头节点）.md",
+    "Articles/SourceCodeAnalysis/Java/LinkedList 源码剖析.md",
+    "Excalidraw/单向链表-删除节点.md",
+    "Excalidraw/单向链表-插入节点.md",
+    "Excalidraw/双向链表-在头部添加节点.md",
+    "Excalidraw/双向链表-在尾部添加节点.md",
+    "Excalidraw/通用表表达式-粉丝关系示例图.md",
+    "Zttachments/Pasted image 20250821221609.png",
+    "Excalidraw/链表删除节点.md",
+    "Articles/SourceCodeAnalysis/Java/HashMap 源码剖析.md",
+    "Articles/Java/核心篇/类加载器.md",
+    "Excalidraw/Drawing 2025-08-21 16.19.21.excalidraw.md",
+    "Inbox/双亲委派模型.md",
     "Inbox/Java8新特性/Lambda 表达式.md",
     "Inbox/侧边栏之动态路由菜单递归渲染.md",
     "Inbox/策略模式.md",
     "Inbox/203.移除链表元素.md",
-    "Excalidraw/链表删除节点.md",
     "Articles/LeetCode/59.螺旋矩阵 II.md",
-    "Excalidraw/双向链表-删除指定位置节点.md",
     "Overview/任务清单.md",
     "Overview/推荐书籍.base",
     "Recommend/Books/ECMAScript 6 入门教程.md",
-    "Recommend/Books/图解Java多线程设计模式.md",
     "Overview/推荐电影.base",
-    "Recommend/Movies/盗梦空间.md",
     "Zttachments/Pasted image 20250819230620.png",
-    "Articles/LeetCode/1757.可回收的低脂产品.md",
-    "Articles/LeetCode/977.有序数组的平方.md",
-    "Articles/LeetCode/704.二分查找.md",
-    "Articles/LeetCode/27.移除元素.md",
-    "Articles/LeetCode/209.长度最小的子数组.md",
     "Inbox/未命名.base",
-    "Templates/LeetCode For SQL.md",
-    "Articles/LeetCode/1097.游戏玩法分析 V.md",
-    "Templates/LeetCode For Algorithm.md",
     "Zttachments/Pasted image 20250819175328.png",
-    "Recommend/Movies/当幸福来敲门.md",
     "Zttachments/当幸福来敲门.png",
-    "Recommend/Books/Untitled.md",
     "Zttachments/大话设计模式.jpg",
-    "Recommend/Books/大话设计模式.md",
-    "Recommend/Books/Spring 5核心原理与30个类手写实战.md",
-    "Recommend/Books/README.md",
     "Zttachments/Pasted image 20250819165206.png",
     "Zttachments/阿甘正传.png",
     "Zttachments/触不可及.png",
     "Zttachments/Pasted Image 20250818233511_073.png",
     "Zttachments/binary_search_ranges.png",
-    "Zttachments/二分查找 - 左闭右闭.gif",
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/README",
     "Articles/Java/集合篇",
     "Articles/Java/关键字",

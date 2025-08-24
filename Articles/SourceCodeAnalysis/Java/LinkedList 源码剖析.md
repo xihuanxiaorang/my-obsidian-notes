@@ -4,7 +4,7 @@ tags:
   - DataStructure
   - Java/Collection
 create_time: 2025/01/10 17:18
-update_time: 2025/08/11 13:35
+update_time: 2025/08/22 16:23
 version: JDK8
 priority: 10
 ---
@@ -228,9 +228,9 @@ void linkLast(E e) {
 关键步骤示意图如下所示：
 ![[双向链表-在尾部添加节点|1200]]
 
-#### 在指定位置插入节点
+#### 在指定位置前插入节点
 
-通过 `add(int index, E element)` 方法可以在链表指定位置插入节点。具体代码实现如下：
+通过 `add(int index, E element)` 方法可以在链表指定位置前插入节点。具体代码实现如下：
 
 ```java
 public void add(int index, E element) {
@@ -275,7 +275,7 @@ void linkBefore(E e, Node<E> succ) {
 5. **更新状态**：增加链表节点个数 `size` 和结构修改次数 `modCount`。
 
 关键步骤示意图如下所示：
-![[双向链表-在指定位置插入节点|1200]]
+![[双向链表-在指定位置前插入节点|1200]]
 
 ### 删除节点✨
 
