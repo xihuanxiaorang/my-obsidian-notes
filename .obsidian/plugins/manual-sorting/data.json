@@ -329,6 +329,7 @@
       "Canvas/代码生成器.canvas"
     ],
     "Excalidraw": [
+      "Excalidraw/206.反转链表（双指针、头插法）.md",
       "Excalidraw/fonts",
       "Excalidraw/Scripts",
       "Excalidraw/汉诺塔.md",
@@ -394,7 +395,7 @@
       "Excalidraw/Scripts/Downloaded/Slideshow.md"
     ],
     "Inbox": [
-      "Articles/LeetCode/707.设计链表.md",
+      "Inbox/206.反转链表.md",
       "Inbox/Java8新特性",
       "Inbox/侧边栏之动态路由菜单递归渲染.md",
       "Inbox/策略模式.md",
