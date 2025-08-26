@@ -4,19 +4,22 @@
     "type": "split",
     "children": [
       {
-        "id": "48c5605f7ad24766",
+        "id": "39f8d3f10ab1bf36",
         "type": "tabs",
         "children": [
           {
-            "id": "8cc471eedcdb5d60",
+            "id": "ee6fd59aef69757c",
             "type": "leaf",
             "state": {
-              "type": "excalidraw",
+              "type": "markdown",
               "state": {
-                "file": "Excalidraw/206.反转链表（双指针、头插法）.md"
+                "file": "Articles/LeetCode/206.反转链表.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": false
               },
-              "icon": "excalidraw-icon",
-              "title": "206.反转链表（双指针、头插法）"
+              "icon": "lucide-file",
+              "title": "206.反转链表"
             }
           }
         ]
@@ -147,13 +150,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Excalidraw/206.反转链表（双指针、头插法）.md",
+                "file": "Articles/LeetCode/206.反转链表.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "206.反转链表（双指针、头插法） 的大纲"
+              "title": "206.反转链表 的大纲"
             }
           },
           {
@@ -225,12 +228,26 @@
   },
   "active": "7f3f8e206c183eb2",
   "lastOpenFiles": [
-    "Excalidraw/Drawing 2025-08-24 23.30.28.excalidraw.md",
+    "Inbox/策略模式.md",
+    "Articles/LeetCode/206.反转链表.md",
     "Excalidraw/206.反转链表（双指针、头插法）.md",
-    "Inbox/206.反转链表.md",
+    "Excalidraw/206.反转链表（递归）.md",
+    "Articles/DataStructure & Algorithm/Algorithm/排序算法/README.md",
+    "Resources/经典动态规划.md",
+    "Resources/动态规划 DP 算法.md",
+    "Articles/DataStructure & Algorithm/Algorithm/排序算法/冒泡排序.md",
+    "Articles/DataStructure & Algorithm/Algorithm/排序算法/快速排序.md",
+    "Articles/DataStructure & Algorithm/Algorithm/排序算法/鸡尾酒排序.md",
+    "Articles/DataStructure & Algorithm/Algorithm/汉诺塔.md",
+    "Zttachments/Pasted image 20250825232537.png",
+    "Zttachments/Pasted image 20250825182256.png",
+    "Zttachments/Pasted image 20250825182234.png",
+    "Zttachments/Pasted image 20250825182221.png",
+    "Articles/AI/Ollama.md",
+    "Articles/LeetCode/707.设计链表.md",
+    "Excalidraw/Drawing 2025-08-24 23.30.28.excalidraw.md",
     "Zttachments/Pasted image 20250824225927.png",
     "Zttachments/Pasted image 20250824225913.png",
-    "Articles/LeetCode/707.设计链表.md",
     "Articles/SourceCodeAnalysis/Java/LinkedList 源码剖析.md",
     "Articles/LeetCode/203.移除链表元素.md",
     "Excalidraw/双向链表-在指定位置前插入节点.md",
@@ -243,27 +260,13 @@
     "Excalidraw/单向链表-插入节点.md",
     "Excalidraw/双向链表-在头部添加节点.md",
     "Excalidraw/双向链表-在尾部添加节点.md",
-    "Excalidraw/通用表表达式-粉丝关系示例图.md",
     "Zttachments/Pasted image 20250821221609.png",
-    "Excalidraw/链表删除节点.md",
-    "Articles/SourceCodeAnalysis/Java/HashMap 源码剖析.md",
-    "Articles/Java/核心篇/类加载器.md",
-    "Excalidraw/Drawing 2025-08-21 16.19.21.excalidraw.md",
-    "Inbox/双亲委派模型.md",
-    "Inbox/Java8新特性/Lambda 表达式.md",
-    "Inbox/侧边栏之动态路由菜单递归渲染.md",
-    "Inbox/策略模式.md",
-    "Inbox/203.移除链表元素.md",
     "Overview/推荐书籍.base",
     "Overview/推荐电影.base",
     "Zttachments/Pasted image 20250819230620.png",
     "Inbox/未命名.base",
     "Zttachments/Pasted image 20250819175328.png",
     "Zttachments/当幸福来敲门.png",
-    "Zttachments/大话设计模式.jpg",
-    "Zttachments/Pasted image 20250819165206.png",
-    "Zttachments/阿甘正传.png",
-    "Zttachments/触不可及.png",
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/README",
     "Articles/Java/集合篇",
     "Articles/Java/关键字",

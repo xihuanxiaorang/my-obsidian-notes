@@ -61,10 +61,10 @@
       "Articles/DataStructure & Algorithm/Algorithm/汉诺塔.md"
     ],
     "Articles/DataStructure & Algorithm/Algorithm/排序算法": [
+      "Articles/DataStructure & Algorithm/Algorithm/排序算法/README.md",
       "Articles/DataStructure & Algorithm/Algorithm/排序算法/鸡尾酒排序.md",
       "Articles/DataStructure & Algorithm/Algorithm/排序算法/快速排序.md",
-      "Articles/DataStructure & Algorithm/Algorithm/排序算法/冒泡排序.md",
-      "Articles/DataStructure & Algorithm/Algorithm/排序算法/README.md"
+      "Articles/DataStructure & Algorithm/Algorithm/排序算法/冒泡排序.md"
     ],
     "Articles/DataStructure & Algorithm/DataStructure": [
       "Articles/DataStructure & Algorithm/DataStructure/线性表.md"
@@ -181,6 +181,7 @@
       "Articles/LeetCode/59.螺旋矩阵 II.md",
       "Articles/LeetCode/27.移除元素.md",
       "Articles/LeetCode/203.移除链表元素.md",
+      "Articles/LeetCode/206.反转链表.md",
       "Articles/LeetCode/209.长度最小的子数组.md",
       "Articles/LeetCode/704.二分查找.md",
       "Articles/LeetCode/707.设计链表.md",
@@ -329,6 +330,7 @@
       "Canvas/代码生成器.canvas"
     ],
     "Excalidraw": [
+      "Excalidraw/206.反转链表（递归）.md",
       "Excalidraw/206.反转链表（双指针、头插法）.md",
       "Excalidraw/fonts",
       "Excalidraw/Scripts",
@@ -395,7 +397,7 @@
       "Excalidraw/Scripts/Downloaded/Slideshow.md"
     ],
     "Inbox": [
-      "Inbox/206.反转链表.md",
+      "Articles/LeetCode/206.反转链表.md",
       "Inbox/Java8新特性",
       "Inbox/侧边栏之动态路由菜单递归渲染.md",
       "Inbox/策略模式.md",
