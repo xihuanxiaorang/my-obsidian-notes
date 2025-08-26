@@ -14,24 +14,12 @@
               "type": "markdown",
               "state": {
                 "file": "Articles/LeetCode/206.反转链表.md",
-                "mode": "preview",
+                "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
               "title": "206.反转链表"
-            }
-          },
-          {
-            "id": "058dd69e7d31b1ba",
-            "type": "leaf",
-            "state": {
-              "type": "excalidraw",
-              "state": {
-                "file": "Excalidraw/206.反转链表（递归）.md"
-              },
-              "icon": "excalidraw-icon",
-              "title": "206.反转链表（递归）"
             }
           }
         ]
@@ -238,10 +226,11 @@
       "graph:查看关系图谱": false
     }
   },
-  "active": "7f3f8e206c183eb2",
+  "active": "1f33e2f30c66c371",
   "lastOpenFiles": [
-    "Excalidraw/206.反转链表（递归）.md",
+    "Excalidraw/206.反转链表（回溯细节示意图）.md",
     "Articles/LeetCode/206.反转链表.md",
+    "Excalidraw/206.反转链表（递归整体示意图）.md",
     "Inbox/策略模式.md",
     "Excalidraw/206.反转链表（双指针、头插法）.md",
     "Articles/DataStructure & Algorithm/Algorithm/排序算法/README.md",
@@ -271,7 +260,6 @@
     "Excalidraw/单向链表-删除节点.md",
     "Excalidraw/单向链表-插入节点.md",
     "Excalidraw/双向链表-在头部添加节点.md",
-    "Excalidraw/双向链表-在尾部添加节点.md",
     "Zttachments/Pasted image 20250821221609.png",
     "Overview/推荐书籍.base",
     "Overview/推荐电影.base",
