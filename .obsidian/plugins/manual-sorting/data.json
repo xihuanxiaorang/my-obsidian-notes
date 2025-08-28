@@ -13,7 +13,6 @@
       "Zttachments"
     ],
     "Articles": [
-      "Articles/Resources",
       "Articles/AI",
       "Articles/Announcements",
       "Articles/DataStructure & Algorithm",
@@ -179,8 +178,10 @@
       "Articles/JavaScript/reduce.md"
     ],
     "Articles/LeetCode": [
-      "Articles/LeetCode/59.螺旋矩阵 II.md",
+      "Articles/LeetCode/19.删除链表的倒数第 N 个结点.md",
       "Articles/LeetCode/27.移除元素.md",
+      "Articles/LeetCode/59.螺旋矩阵 II.md",
+      "Articles/LeetCode/142.环形链表 II.md",
       "Articles/LeetCode/203.移除链表元素.md",
       "Articles/LeetCode/206.反转链表.md",
       "Articles/LeetCode/209.长度最小的子数组.md",
@@ -247,7 +248,6 @@
       "Articles/Reading/Hello 算法/01 - 数组.canvas",
       "Articles/Reading/Hello 算法/02 - 链表.canvas"
     ],
-    "Articles/Resources": [],
     "Articles/SaToken": [
       "Articles/SaToken/README.md"
     ],
@@ -401,7 +401,6 @@
       "Excalidraw/Scripts/Downloaded/Slideshow.md"
     ],
     "Inbox": [
-      "Articles/LeetCode/19.删除链表的倒数第 N 个结点.md",
       "Inbox/Java8新特性",
       "Inbox/侧边栏之动态路由菜单递归渲染.md",
       "Inbox/策略模式.md",
