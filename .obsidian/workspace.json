@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "16fbb5beb8468dd0",
+        "id": "ca3b55b6a68e56e7",
         "type": "tabs",
         "children": [
           {
-            "id": "72a71d4852969a3a",
+            "id": "a33bd782a7d5ddcb",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -222,6 +222,7 @@
   },
   "active": "7f3f8e206c183eb2",
   "lastOpenFiles": [
+    "Articles/LeetCode/349.两个数组的交集.md",
     "Articles/LeetCode/242.有效的字母异位词.md",
     "Inbox/19.删除链表的倒数第 N 个结点.md",
     "Articles/Resources/设计模式.md",
@@ -247,7 +248,6 @@
     "Articles/Resources/小谷充电宝.md",
     "Articles/Resources/新系统设计.md",
     "Articles/Resources/微信小程序.md",
-    "Articles/Resources/Git教程.md",
     "Zttachments/Pasted image 20250826190943.png",
     "Articles/Resources",
     "Zttachments/Pasted image 20250828185543.png",
