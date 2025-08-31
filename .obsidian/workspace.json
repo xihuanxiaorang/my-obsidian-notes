@@ -4,22 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "dd7b26149cd53fc0",
+        "id": "56d2351a6bf5f0b1",
         "type": "tabs",
         "children": [
           {
-            "id": "dc199d3e72520fc7",
+            "id": "f15c9f2503a1858c",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Articles/LeetCode/1.两数之和.md",
-                "mode": "preview",
-                "source": false,
-                "backlinks": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "1.两数之和"
+              "title": "新标签页"
             }
           }
         ]
@@ -150,13 +145,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Articles/LeetCode/1.两数之和.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "1.两数之和 的大纲"
+              "title": "大纲"
             }
           },
           {
@@ -228,10 +222,12 @@
   },
   "active": "7f3f8e206c183eb2",
   "lastOpenFiles": [
-    "Articles/LeetCode/19.删除链表的倒数第 N 个结点.md",
+    "Articles/LeetCode/454.四数相加 II.md",
     "Articles/LeetCode/1.两数之和.md",
-    "Articles/LeetCode/349.两个数组的交集.md",
     "Articles/LeetCode/242.有效的字母异位词.md",
+    "Overview/推荐电影.base",
+    "Articles/LeetCode/19.删除链表的倒数第 N 个结点.md",
+    "Articles/LeetCode/349.两个数组的交集.md",
     "Inbox/19.删除链表的倒数第 N 个结点.md",
     "Articles/Resources/设计模式.md",
     "Articles/Resources/黑马头条.md",
@@ -253,7 +249,6 @@
     "Articles/Resources/动力商城.md",
     "Articles/Resources/乐尚代驾.md",
     "Articles/Resources/音乐小程序.md",
-    "Articles/Resources/小谷充电宝.md",
     "Zttachments/Pasted image 20250826190943.png",
     "Articles/Resources",
     "Zttachments/Pasted image 20250828185543.png",
@@ -266,7 +261,6 @@
     "Zttachments/Pasted image 20250825182234.png",
     "Zttachments/Pasted image 20250825182221.png",
     "Overview/推荐书籍.base",
-    "Overview/推荐电影.base",
     "Inbox/未命名.base",
     "01.Articles/DataStructure & Algorithm/Algorithm/排序算法/README",
     "Articles/Java/集合篇",
